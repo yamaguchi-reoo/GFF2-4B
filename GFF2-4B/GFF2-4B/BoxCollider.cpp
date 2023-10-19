@@ -1,25 +1,64 @@
 #include "BoxCollider.h"
 
-//BoxColliderとの当たり判定
-bool BoxCollider::HitBox(BoxCollider* bCollider)
+int BoxCollider::HitBox(BoxCollider* bCollider)
 {
-	bool ret = false; //返り値
+	bool ret = 0; //返り値
 
 	//自分の当たり判定の範囲
-	float mx1 = location.x;
-	float my1 = location.y;
-	float mx2 = mx1 + erea.width;
-	float my2 = my1 + erea.height;
+	float my_x[2]{ 0,0 };
+	float my_y[2]{ 0,0 };
 
 	//相手の当たり判定の範囲
-	float px1 = bCollider->GetLocation().x;
-	float py1 = bCollider->GetLocation().y;
-	float px2 = px1 + bCollider->GetErea().width;
-	float py2 = py1 + bCollider->GetErea().height;
+	float sub_x[2]{ 0,0 };
+	float sub_y[2]{ 0,0 };
 
-	if ((mx1 < px2) && (px1 < mx2) && (my1 < py2) && (py1 < my2)) //当たり判定
+	//自分の当たり判定の範囲の計算
+	my_x[0] = location.x;
+	my_y[0] = location.y;
+	my_x[1] = my_x[0] + erea.width;
+	my_y[1] = my_y[0] + erea.height;
+
+	//相手の当たり判定の範囲の計算
+	sub_x[0] = bCollider->GetLocation().x;
+	sub_y[0] = bCollider->GetLocation().y;
+	sub_x[1] = sub_x[0] + bCollider->GetErea().width;
+	sub_y[1] = sub_y[0] + bCollider->GetErea().height;
+
+	//StageFloorの横の範囲内
+	if (my_x[0] < sub_x[1] - 5 &&
+		sub_x[0] + 5 < my_x[1])
 	{
-		ret = true;
+		//PlayerがStageFloorより下へ行こうとした場合
+		if (my_y[1] > sub_y[0] &&
+			my_y[0] < sub_y[0])
+		{
+			return 1;
+		}
+
+		//PlayerがStageFloorより上へ行こうとした場合
+		if (my_y[0] < sub_y[1] &&
+			my_y[1] > sub_y[1])
+		{
+			return 2;
+		}
+	}
+
+	//StaegFloorの縦の範囲内
+	else if (my_y[0] < sub_y[1] - 5 &&
+		sub_y[0] + 5 < my_y[1])
+	{
+		//PlayerがStageFloorより右へ行こうとした場合
+		if (my_x[1] > sub_x[0] &&
+			my_x[0] < sub_x[0])
+		{
+			return 4;
+		}
+		//PlayerがStageFloorより左へ行こうとした場合
+		if (my_x[0] < sub_x[1] &&
+			my_x[1]>sub_x[1])
+		{
+			return 3;
+		}
 	}
 
 	return ret;

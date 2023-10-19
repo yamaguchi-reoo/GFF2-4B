@@ -23,8 +23,8 @@ protected:
 	Erea erea; //”ÍˆÍ
 public:
 
-	//“–‚½‚è”»’è
-	bool HitBox(BoxCollider* bCollider);
+	//“–‚½‚è”»’è(0=“–‚½‚Á‚Ä‚¢‚È‚¢ 1=ã‚É“–‚½‚Á‚Ä‚¢‚é 2=‰º‚É“–‚½‚Á‚Ä‚¢‚é 3=‰E‚É“–‚½‚Á‚Ä‚¢‚é 4=¶‚É“–‚½‚Á‚Ä‚¢‚é)
+	int HitBox(BoxCollider* bCollider);
 
 	//’†SÀ•W‚Ìæ“¾
 	Location GetLocation()const;

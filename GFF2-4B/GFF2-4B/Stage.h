@@ -2,7 +2,7 @@
 #include "BoxCollider.h"
 
 class Stage:
-	private BoxCollider
+	public BoxCollider
 {
 private:
 	

@@ -2,10 +2,10 @@
 
 Stage::Stage()
 {
-	location.x = 0;
-	location.y = 700;
+	location.x = 100;
+	location.y = 600;
 	erea.height = 200;
-	erea.width = SCREEN_WIDTH;
+	erea.width = 300;
 }
 
 Stage::~Stage()
