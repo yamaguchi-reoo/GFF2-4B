@@ -15,7 +15,6 @@ private:
     Stage* stage;   //床のオブジェクト
     Zakuro* zakuro;
     Himawari* himawari;
-    int flg;
     int flg;        //
     int count;      //実験用
 public:
