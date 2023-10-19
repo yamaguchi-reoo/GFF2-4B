@@ -17,6 +17,7 @@ Player::Player()
 	{
 		acs[i] = 0;
 	}
+	onfloor_flg = false;
 }
 
 Player::~Player() 
@@ -26,6 +27,11 @@ Player::~Player()
 
 void Player::Update()
 {
+	//è∞Ç…êGÇÍÇƒÇ¢Ç»Ç¢Ç»ÇÁ
+	if (onfloor_flg == false)
+	{
+		GiveGravity();
+	}
 	//ç∂à⁄ìÆ
 	if (PadInput::TipLeftLStick(STICKL_X) <= 0.5)
 	{
@@ -53,11 +59,17 @@ void Player::Update()
 	//ÉWÉÉÉìÉv
 	if (PadInput::OnButton(XINPUT_BUTTON_A) == true)
 	{
+		acs[UP] = 15;
+	}
+	//í èÌçUåÇ
+	if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
+	{
 	}
 
 	//à⁄ìÆèàóù
 	location.x = location.x - acs[LEFT] + acs[RIGHT];
-
+	location.y = location.y - acs[UP] + acs[DOWN];
+	DecAcs(UP);
 }
 
 void Player::Draw()const
@@ -72,13 +84,29 @@ void Player::GiveGravity()
 	{
 		acs[DOWN] += 0.2f;
 	}
-	location.y = location.y + G_POWER + acs[DOWN];
 }
 
 void Player::DecAcs(int num)
 {
 	if (acs[num] > 0)
 	{
-		acs[num] -= 0.2f;
+		acs[num] -= 0.4f;
 	}
+}
+
+void Player::OnFloor()
+{
+	acs[DOWN] = 0;
+	acs[UP] = 0;
+	onfloor_flg = true;
+}
+
+void Player::NotOnFloor()
+{
+	onfloor_flg = false;
+}
+
+void Player::Push(int num)
+{
+	acs[num] += 10;
 }

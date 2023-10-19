@@ -12,11 +12,12 @@ class GameMain :
 {
 private:
     Player* player; //プレイヤーのオブジェクト
-    Stage* stage;   //床のオブジェクト
+    Stage* stage[2];   //床のオブジェクト
     Zakuro* zakuro;
     Himawari* himawari;
     int flg;        //
-    int count;      //実験用
+    int count[2];      //実験用
+    bool onfloor_flg;      //実験用
 public:
     //コンストラクタ
     GameMain();

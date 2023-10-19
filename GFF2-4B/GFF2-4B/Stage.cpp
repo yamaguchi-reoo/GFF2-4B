@@ -1,11 +1,11 @@
 #include "Stage.h"
 
-Stage::Stage()
+Stage::Stage(float _x, float _y, float _width, float _height)
 {
-	location.x = 100;
-	location.y = 600;
-	erea.height = 200;
-	erea.width = 300;
+	location.x = _x;
+	location.y = _y;
+	erea.height = _height;
+	erea.width = _width;
 }
 
 Stage::~Stage()
