@@ -3,15 +3,16 @@
 #include "fps.h"
 #include "PadInput.h"
 #include "GameMain.h"
+#include "common.h"
 
 //メインプログラム 開始
 
 int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR LpCmdLine, _In_ int NCmdShow) {
-    SetMainWindowText("bf");         // ウィンドウタイトルを設定
+    SetMainWindowText("GFF2-4B");         // ウィンドウタイトルを設定
 
     ChangeWindowMode(TRUE);                        // ウインドウモードで起動
 
-    SetGraphMode(1920, 1280, 32); // ウインドウのサイズ
+    SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32); // ウインドウのサイズ
 
     if (DxLib_Init() == -1) return -1;             // DXライブラリの初期化処理
 
