@@ -1,8 +1,9 @@
 #pragma once
+#include"BoxCollider.h"
 //‰¼‘zƒNƒ‰ƒX
 class GameMain;
 
-class CharaBase
+class CharaBase : public BoxCollider
 {
 protected:
 	int image = 0;
