@@ -5,6 +5,8 @@
 GameMain::GameMain()
 {
 	stage = new Stage();
+	zakuro = new Zakuro();
+	himawari = new Himawari();
 	flg = false;
 }
 
@@ -24,6 +26,7 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
+	
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);
 
@@ -32,4 +35,6 @@ void GameMain::Draw() const
 	if (flg == true) {
 		DrawString(300, 300,"flg", 0xffffff);
 	}
+	zakuro->Draw();
+	himawari->Draw();
 }

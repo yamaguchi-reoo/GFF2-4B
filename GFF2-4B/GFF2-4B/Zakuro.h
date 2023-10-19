@@ -1,16 +1,18 @@
 #pragma once
 #include "CharaBase.h"
-class Zakuro :
-    public CharaBase
+
+//仮想クラス
+
+class Zakuro :public CharaBase
 {
 private:
-public:
-    //コンストラクタ
-    Zakuro();
-    //デストラクタ
-    ~Zakuro();
 
-    void Update(GameMain* main)override;
-    void Draw()const override;
+public:
+	Zakuro();
+	~Zakuro();
+
+	void Update(GameMain* main)override;
+	void Draw()const override;
+
 };
 

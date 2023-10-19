@@ -12,6 +12,4 @@ private:
 	virtual void Update(GameMain* main) = 0;
 
 	virtual void Draw()const = 0;
-
-	virtual void Hit() = 0;
 };

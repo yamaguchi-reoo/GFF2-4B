@@ -1,12 +1,18 @@
 #pragma once
 #include "AbstractScene.h"
 #include "Stage.h"
+#include "Himawari.h"
+#include "Zakuro.h"
+
+class Himawari;
 
 class GameMain :
     public AbstractScene
 {
 private:
     Stage* stage;   //床のオブジェクト
+    Zakuro* zakuro;
+    Himawari* himawari;
     int flg;
 public:
     //コンストラクタ
