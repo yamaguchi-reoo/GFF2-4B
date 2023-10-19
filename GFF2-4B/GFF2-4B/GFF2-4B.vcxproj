@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="Zakuro.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="Himawari.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="CharaBase.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="Scroll.h" />
     <ClInclude Include="Zakuro.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GameMain.h" />

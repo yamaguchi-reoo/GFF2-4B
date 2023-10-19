@@ -17,6 +17,8 @@ private:
     Himawari* himawari;
     int flg;        //
     int count;      //実験用
+
+    
 public:
     //コンストラクタ
     GameMain();
