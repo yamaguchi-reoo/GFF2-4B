@@ -2,12 +2,12 @@
 
 SceneScroll::SceneScroll()
 {
-	stage_image = LoadGraph("resouce/images/SampleStage2.png");
+	stage_image = LoadGraph("resource/images/SampleStage2.png");
 	try 
 	{
 		if (stage_image == -1)
 		{
-			throw"resouce/images/SampleStage2.png";
+			throw"resource/images/SampleStage2.png";
 		}
 	}
 	catch (int& err)
