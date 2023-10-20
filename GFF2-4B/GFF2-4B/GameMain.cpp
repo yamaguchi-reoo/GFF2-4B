@@ -40,7 +40,7 @@ AbstractScene* GameMain::Update()
 		if (player->HitBox(stage[i]) == true)
 		{
 			//G‚ê‚½–Ê‚É‰ž‚¶‚Ä‰Ÿ‚µo‚·
-			player->Push(i,stage[i]->GetCenterLocation());
+			player->Push(i,stage[i]->GetLocation(), stage[i]->GetErea());
 		}
 	}
 
