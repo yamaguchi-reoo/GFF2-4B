@@ -12,9 +12,14 @@ GameMain::GameMain()
 	{
 		count[i] = 0;
 	}
+
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
+
+	for (int i = 0; i < BAMBOO_NUM; i++) {
+		bamboo[i] = new Bamboo(i * 60);
+	}
 	flg = false;
 	onfloor_flg = false;
 }
@@ -74,4 +79,9 @@ void GameMain::Draw() const
 	zakuro->Draw(); // ザクロ
 	himawari->Draw();// ひまわり
 	iruka->Draw();// イルカ
+
+	for (int i = 0; i < BAMBOO_NUM; i++) {
+		bamboo[i]->Draw();
+	}
+	
 }

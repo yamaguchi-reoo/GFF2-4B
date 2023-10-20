@@ -5,6 +5,7 @@
 #include "Himawari.h"
 #include "Zakuro.h"
 #include "Iruka.h"
+#include "bamboo.h"
 
 class GameMain :
     public AbstractScene
@@ -12,9 +13,13 @@ class GameMain :
 private:
     Player* player;    //プレイヤーのオブジェクト
     Stage* stage[2];   //床のオブジェクト
+
+    //エネミー
     Zakuro* zakuro;    //ザクロ
     Himawari* himawari;//ひまわり
     Iruka* iruka;      //イルカ
+
+    Bamboo* bamboo[BAMBOO_NUM];
     int flg;        //
     int count[2];      //実験用
     bool onfloor_flg;      //実験用
