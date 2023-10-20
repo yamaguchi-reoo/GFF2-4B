@@ -5,6 +5,8 @@ class Player :
 	public BoxCollider
 {
 private:
+	float move_speed;		//移動速度(左右)
+	float jump_power;		//跳躍力
 	float acs[4]; //加速度 0=下方向 1=上方向 2=右方向 3=左方向
 
 	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
@@ -12,6 +14,7 @@ private:
 	bool rightwall_flg;			//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;			//いずれかの左壁に触れているかどうか
 	bool apply_gravity;				//重力を適用するかどうか
+	bool jump_flg;					//ジャンプ中か
 public:
 	Player();
 	~Player();

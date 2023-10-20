@@ -10,3 +10,5 @@
 #define LEFT_END 360
 #define RIGHT_END 100
 #define FLOOR_NUM 2	//°‚Ì”
+
+#define BAMBOO_NUM 3 //’|‚ÌÏ‚Ü‚ê‚Ä‚¢‚é”
