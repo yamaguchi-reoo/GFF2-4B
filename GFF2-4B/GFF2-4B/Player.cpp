@@ -127,6 +127,7 @@ void Player::OnFloor(int num,Location _sub)
 
 void Player::TouchCeiling()
 {
+	acs[DOWN] = acs[UP];
 	acs[UP] = 0;
 	touch_ceil_flg = true;
 }
@@ -155,7 +156,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		location.y = _sub_location.y- erea.height;
 		OnFloor(num, _sub_location);
 	}
-	if(location.y - erea.height + 10 > _sub_location.y)
+	if (location.y - erea.height + 10 > _sub_location.y)
 	{
 		location.y = _sub_location.y + erea.height;
 		TouchCeiling();

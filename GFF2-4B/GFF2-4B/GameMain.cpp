@@ -6,7 +6,7 @@
 GameMain::GameMain()
 {
 	player = new Player();
-	stage[0] = new Stage(0, 800, 1980, 100);
+	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
 	stage[1] = new Stage(200, 500, 100, 100);
 	for (int i = 0; i < 2; i++)
 	{
