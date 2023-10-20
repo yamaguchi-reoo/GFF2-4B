@@ -88,6 +88,7 @@ void GameMain::Draw() const
 	if (flg == true) {
 		DrawString(300, 300,"flg", 0xffffff);
 	}
-	zakuro->Draw();
-	himawari->Draw();
+	//エネミーの描画
+	zakuro->Draw(); // ザクロ
+	himawari->Draw();// ひまわり
 }

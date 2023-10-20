@@ -1,7 +1,6 @@
 #include "Zakuro.h"
 #include "DxLib.h"
 
-
 Zakuro::Zakuro()
 {
 	location.x = 290;
@@ -9,8 +8,6 @@ Zakuro::Zakuro()
 	erea.height = 400;
 	erea.width = 400;
 
-	image = 0;
-	speed = 0;
 }
 Zakuro::~Zakuro()
 {
@@ -18,6 +15,7 @@ Zakuro::~Zakuro()
 }
 void Zakuro::Update(GameMain* main)
 {
+
 }
 
 void Zakuro::Draw() const
