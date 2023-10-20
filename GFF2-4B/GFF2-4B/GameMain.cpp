@@ -14,6 +14,7 @@ GameMain::GameMain()
 	}
 	zakuro = new Zakuro();
 	himawari = new Himawari();
+	iruka = new Iruka();
 	flg = false;
 	onfloor_flg = false;
 }
@@ -25,6 +26,9 @@ GameMain::~GameMain()
 	{
 		delete stage[i];
 	}
+	delete zakuro;
+	delete himawari;
+	delete iruka;
 }
 
 AbstractScene* GameMain::Update()
@@ -69,4 +73,5 @@ void GameMain::Draw() const
 	//エネミーの描画
 	zakuro->Draw(); // ザクロ
 	himawari->Draw();// ひまわり
+	iruka->Draw();// イルカ
 }

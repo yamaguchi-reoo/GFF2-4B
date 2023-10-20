@@ -5,8 +5,8 @@ Zakuro::Zakuro()
 {
 	location.x = 290;
 	location.y = 640;
-	erea.height = 400;
-	erea.width = 400;
+	erea.height = 50;
+	erea.width = 50;
 
 }
 Zakuro::~Zakuro()
