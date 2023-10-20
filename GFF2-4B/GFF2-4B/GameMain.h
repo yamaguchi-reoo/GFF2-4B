@@ -6,6 +6,7 @@
 #include "Zakuro.h"
 #include "Iruka.h"
 #include "bamboo.h"
+#include "Scroll.h"
 
 class GameMain :
     public AbstractScene
@@ -20,6 +21,8 @@ private:
     Iruka* iruka;      //イルカ
 
     Bamboo* bamboo[BAMBOO_NUM];
+    SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
+
     int flg;        //
     int count[2];      //実験用
     bool onfloor_flg;      //実験用
