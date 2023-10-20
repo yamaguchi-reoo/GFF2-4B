@@ -33,39 +33,17 @@ AbstractScene* GameMain::Update()
 	player->Update();
 	//falseに設定しなおす
 	onfloor_flg = false;
+	//床の数だけ繰り返す
 	for (int i = 0; i < 2; i++)
 	{
 		stage[i]->Update();
-		//プレイヤーが地面に触れた時に着地する
-		switch (player->HitBox(stage[i]))
+		if (player->HitBox(stage[i]) == true)
 		{
-		case 0:
-			count[i] = 0;
-			break;
-		case 1:
-			count[i] = 1;
-			onfloor_flg = true;
-			break;
-		case 2:
-			count[i] = 2;
-			break;
-		case 3:
-			count[i] = 3;
-			break;
-		case 4:
-			count[i] = 4;
-			break;
+			//触れた面に応じて押し出す
+			player->Push(i,stage[i]->GetCenterLocation());
 		}
 	}
-	if (onfloor_flg == true)
-	{
-		player->OnFloor();
-	}
-	else
-	{
-		player->NotOnFloor();
-	}
-		
+
 	if (KeyInput::OnKey(KEY_INPUT_A)) {
 		flg = true;
 	}
@@ -82,7 +60,7 @@ void GameMain::Draw() const
 	player->Draw();
 	for (int i = 0; i < 2; i++)
 	{
-		DrawFormatString(0, 100+(i*20), 0x00ff00, "%d", count[i]);
+		//DrawFormatString(0, 100+(i*20), 0x00ff00, "%d", count[i]);
 		stage[i]->Draw();
 	}
 	if (flg == true) {

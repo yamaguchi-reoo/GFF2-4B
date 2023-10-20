@@ -17,7 +17,11 @@ Player::Player()
 	{
 		acs[i] = 0;
 	}
-	onfloor_flg = false;
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
+	apply_gravity = true;
 }
 
 Player::~Player() 
@@ -27,10 +31,23 @@ Player::~Player()
 
 void Player::Update()
 {
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		if (onfloor_flg[i] == true)
+		{
+			apply_gravity = false;
+		}
+	}
 	//床に触れていないなら
-	if (onfloor_flg == false)
+	if (apply_gravity == true)
 	{
 		GiveGravity();
+	}
+	//重力が働くかの判定をリセット
+	apply_gravity = true;
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
 	}
 	//左移動
 	if (PadInput::TipLeftLStick(STICKL_X) <= 0.5)
@@ -94,19 +111,42 @@ void Player::DecAcs(int num)
 	}
 }
 
-void Player::OnFloor()
+void Player::OnFloor(int num)
 {
 	acs[DOWN] = 0;
 	acs[UP] = 0;
-	onfloor_flg = true;
+	onfloor_flg[num] = true;
 }
 
-void Player::NotOnFloor()
+void Player::NotOnFloor(int num)
 {
-	onfloor_flg = false;
+	onfloor_flg[num] = false;
 }
 
-void Player::Push(int num)
+void Player::TouchCeiling(int num)
 {
-	acs[num] += 10;
+	acs[DOWN] = 10;
+}
+
+void Player::Push(int num,Location _sub)
+{
+	Location p_center;
+	p_center.x = location.x + (erea.width / 2);
+	p_center.y = location.y + (erea.height / 2);
+
+	if (_sub.x != 0 && _sub.y != 0)
+	{
+		if (p_center.y < _sub.y)
+		{
+			OnFloor(num);
+		}
+		else
+		{
+			TouchCeiling(num);
+		}
+	}
+	else
+	{
+		NotOnFloor(num);
+	}
 }
