@@ -6,9 +6,9 @@
 GameMain::GameMain()
 {
 	player = new Player();
-	scene_scroll = new SceneScroll();
+	//scene_scroll = new SceneScroll();
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
-	stage[1] = new Stage(200, 500, 100, 100);
+	stage[1] = new Stage(200, 300, 200, 50);
 	for (int i = 0; i < 2; i++)
 	{
 		count[i] = 0;
@@ -28,7 +28,7 @@ GameMain::GameMain()
 GameMain::~GameMain()
 {
 	delete player;
-	delete scene_scroll;
+	//delete scene_scroll;
 	for (int i = 0; i < 2; i++)
 	{
 		delete stage[i];
