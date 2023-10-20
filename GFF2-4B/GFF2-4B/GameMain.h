@@ -4,6 +4,7 @@
 #include "Stage.h"
 #include "Himawari.h"
 #include "Zakuro.h"
+#include "Scroll.h"
 
 class Himawari;
 
@@ -15,6 +16,8 @@ private:
     Stage* stage[2];   //床のオブジェクト
     Zakuro* zakuro;
     Himawari* himawari;
+    SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
+
     int flg;        //
     int count[2];      //実験用
     bool onfloor_flg;      //実験用
