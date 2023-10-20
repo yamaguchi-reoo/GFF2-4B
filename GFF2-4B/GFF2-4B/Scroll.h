@@ -1,6 +1,6 @@
 #pragma once
 #include "Dxlib.h"
-#include "GameMain.h"
+#include "BoxCollider.h"
 #include "common.h"
 
 class SceneScroll
@@ -17,7 +17,7 @@ public:
 	//デストラクタ
 	~SceneScroll();
 	//描画以外の更新に関する処理
-	void Update(Location player);
+	void Update(Location player, float acs_l, float acs_r);
 	//描画更新に関する処理
 	void Draw();
 };

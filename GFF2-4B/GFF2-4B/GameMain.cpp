@@ -33,6 +33,8 @@ AbstractScene* GameMain::Update()
 {
 	//XV
 	player->Update();
+	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
+
 	//false‚ÉÝ’è‚µ‚È‚¨‚·
 	onfloor_flg = false;
 	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
@@ -54,7 +56,8 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
-	
+	scene_scroll->Draw();
+
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);
 
