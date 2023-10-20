@@ -6,14 +6,22 @@
 GameMain::GameMain()
 {
 	player = new Player();
+	scene_scroll = new SceneScroll();
+	stage[0] = new Stage(0, 800, 1980, 100);
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
 	stage[1] = new Stage(200, 500, 100, 100);
 	for (int i = 0; i < 2; i++)
 	{
 		count[i] = 0;
 	}
+
 	zakuro = new Zakuro();
 	himawari = new Himawari();
+	iruka = new Iruka();
+
+	for (int i = 0; i < BAMBOO_NUM; i++) {
+		bamboo[i] = new Bamboo(i * 60);
+	}
 	flg = false;
 	onfloor_flg = false;
 }
@@ -21,10 +29,14 @@ GameMain::GameMain()
 GameMain::~GameMain()
 {
 	delete player;
+	delete scene_scroll;
 	for (int i = 0; i < 2; i++)
 	{
 		delete stage[i];
 	}
+	delete zakuro;
+	delete himawari;
+	delete iruka;
 }
 
 AbstractScene* GameMain::Update()
@@ -66,6 +78,13 @@ void GameMain::Draw() const
 	if (flg == true) {
 		DrawString(300, 300,"flg", 0xffffff);
 	}
-	zakuro->Draw();
-	himawari->Draw();
+	//エネミーの描画
+	zakuro->Draw(); // ザクロ
+	himawari->Draw();// ひまわり
+	iruka->Draw();// イルカ
+
+	for (int i = 0; i < BAMBOO_NUM; i++) {
+		bamboo[i]->Draw();
+	}
+	
 }

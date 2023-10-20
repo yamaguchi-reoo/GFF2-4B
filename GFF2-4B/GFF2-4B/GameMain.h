@@ -4,17 +4,25 @@
 #include "Stage.h"
 #include "Himawari.h"
 #include "Zakuro.h"
-
-class Himawari;
+#include "Iruka.h"
+#include "bamboo.h"
+#include "Scroll.h"
 
 class GameMain :
     public AbstractScene
 {
 private:
-    Player* player; //プレイヤーのオブジェクト
+    Player* player;    //プレイヤーのオブジェクト
     Stage* stage[2];   //床のオブジェクト
-    Zakuro* zakuro;
-    Himawari* himawari;
+
+    //エネミー
+    Zakuro* zakuro;    //ザクロ
+    Himawari* himawari;//ひまわり
+    Iruka* iruka;      //イルカ
+
+    Bamboo* bamboo[BAMBOO_NUM];
+    SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
+
     int flg;        //
     int count[2];      //実験用
     bool onfloor_flg;      //実験用
