@@ -11,13 +11,20 @@ Player::Player()
 {
 	location.x = 100;
 	location.y = 400;
-	erea.height = 100;
-	erea.width = 50;
+	erea.height = 150;
+	erea.width = 75;
 	for (int i = 0; i < 4; i++)
 	{
 		acs[i] = 0;
 	}
-	onfloor_flg = false;
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
+	touch_ceil_flg = false;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	apply_gravity = true;
 }
 
 Player::~Player() 
@@ -27,15 +34,25 @@ Player::~Player()
 
 void Player::Update()
 {
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		if (onfloor_flg[i] == true)
+		{
+			apply_gravity = false;
+		}
+	}
 	//床に触れていないなら
-	if (onfloor_flg == false)
+	if (apply_gravity == true)
 	{
 		GiveGravity();
 	}
+
+	Reset();
+
 	//左移動
 	if (PadInput::TipLeftLStick(STICKL_X) <= 0.5)
 	{
-		if (acs[LEFT] <= ACS_MAX)
+		if (acs[LEFT] <= ACS_MAX && rightwall_flg == false)
 		{
 			acs[LEFT] += 0.2f;
 		}
@@ -47,7 +64,7 @@ void Player::Update()
 	//右移動
 	if (PadInput::TipLeftLStick(STICKL_X) >= -0.5)
 	{	
-		if (acs[RIGHT] <= ACS_MAX)
+		if (acs[RIGHT] <= ACS_MAX && leftwall_flg == false)
 		{
 			acs[RIGHT] += 0.2f;
 		}
@@ -59,11 +76,12 @@ void Player::Update()
 	//ジャンプ
 	if (PadInput::OnButton(XINPUT_BUTTON_A) == true)
 	{
-		acs[UP] = 15;
+		acs[UP] = 17;
 	}
 	//通常攻撃
 	if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
 	{
+
 	}
 
 	//移動処理
@@ -90,23 +108,85 @@ void Player::DecAcs(int num)
 {
 	if (acs[num] > 0)
 	{
-		acs[num] -= 0.4f;
+		acs[num] -= 0.8f;
+	}
+	else
+	{
+		acs[num] = 0;
 	}
 }
 
-void Player::OnFloor()
+void Player::OnFloor(int num,Location _sub)
 {
 	acs[DOWN] = 0;
+	acs[UP] = 0.05f;
+	onfloor_flg[num] = true;
+}
+
+
+
+void Player::TouchCeiling()
+{
 	acs[UP] = 0;
-	onfloor_flg = true;
+	touch_ceil_flg = true;
 }
 
-void Player::NotOnFloor()
+void Player::TouchRightWall()
 {
-	onfloor_flg = false;
+	acs[RIGHT] = 0;
+	rightwall_flg = true;
 }
 
-void Player::Push(int num)
+void Player::TouchLeftWall()
 {
-	acs[num] += 10;
+	acs[LEFT] = 0;
+	leftwall_flg = true;
+}
+
+
+void Player::Push(int num,Location _sub_location, Erea _sub_erea)
+{
+	Location p_center;
+	p_center.x = location.x + (erea.width / 2);
+	p_center.y = location.y + (erea.height / 2);
+
+	if (location.y +erea.height-10 < _sub_location.y)
+	{
+		location.y = _sub_location.y- erea.height;
+		OnFloor(num, _sub_location);
+	}
+	if(location.y - erea.height + 10 > _sub_location.y)
+	{
+		location.y = _sub_location.y + erea.height;
+		TouchCeiling();
+	}
+	if (p_center.x < _sub_location.x)
+	{
+		if (onfloor_flg[num] == false && touch_ceil_flg == false)
+		{
+			location.x = _sub_location.x - erea.width;
+			TouchRightWall();
+		}
+	}
+	else
+	{
+		if (onfloor_flg[num] == false && touch_ceil_flg == false)
+		{
+			location.x = _sub_location.x + _sub_erea.width;
+			TouchLeftWall();
+		}
+	}
+}
+
+void Player::Reset()
+{
+	//重力が働くかの判定をリセット
+	apply_gravity = true;
+	touch_ceil_flg = false;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
 }

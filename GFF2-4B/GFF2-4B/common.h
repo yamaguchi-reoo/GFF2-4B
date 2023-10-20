@@ -9,3 +9,4 @@
 //スクロール関連
 #define LEFT_END 360
 #define RIGHT_END 100
+#define FLOOR_NUM 2	//床の数
