@@ -11,7 +11,7 @@ struct ColerBase
 	int maxFlg;   //(0:ゲージMAX未満 1:ゲージMAX)
 };
 
-class KYOUKA
+class PowerGauge
 {
 private:
 	ColerBase magenta; //マゼンタ
@@ -19,4 +19,11 @@ private:
 	ColerBase yellow;  //イエロー
 
 	int image[3];  //画像用変数
+
+public: 
+	PowerGauge();  //コンストラクタ
+	~PowerGauge(); //デストラクタ
+
+	void Update();
+	void Draw()const;
 };
