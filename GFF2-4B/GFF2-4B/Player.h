@@ -1,25 +1,30 @@
 #pragma once
-#include "BoxCollider.h"
+#include "CharaBase.h"
+#include "GameMain.h"
+
+class GameMain;
 
 class Player :
-	public BoxCollider
+	public CharaBase
 {
 private:
 	float move_speed;		//移動速度(左右)
 	float jump_power;		//跳躍力
 	float acs[4]; //加速度 0=下方向 1=上方向 2=右方向 3=左方向
-
+	bool direction;					//顔の向き(0=右向き 1=左向き)
 	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
 	bool touch_ceil_flg;			//いずれかの天井に触れているかどうか
 	bool rightwall_flg;			//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;			//いずれかの左壁に触れているかどうか
 	bool apply_gravity;				//重力を適用するかどうか
 	bool jump_flg;					//ジャンプ中か
+
+	float external_move[4];				//外部から加わるプレイヤーを移動させる力 0=下方向 1=上方向 2=右方向 3=左方向
 public:
 	Player();
 	~Player();
-	void Update();
-	void Draw()const;
+	void Update(GameMain* main)override;
+	void Draw()const override;
 	//重力が働く
 	void GiveGravity();
 	//減速処理(num = 方向)
@@ -38,4 +43,6 @@ public:
 	void Reset();
 	//プレイヤーの加速量取得 0=下方向 1=上方向 2=右方向 3=左方向
 	float GetAcs(int num) { return acs[num]; }
+	//プレイヤーの移動(_direction = 移動する方向(false=右方向 true=左方向) _move=移動量)
+	void MovePlayer(bool _direction,float _move);
 };

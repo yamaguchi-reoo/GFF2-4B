@@ -44,7 +44,7 @@ Location BoxCollider::GetLocation()const
 }
 Location BoxCollider::GetCenterLocation()const
 {
-	Location ret;
+	Location ret = { 0 };
 	ret.x = location.x + erea.width / 2;
 	ret.y = location.y + erea.height / 2;
 	return ret;

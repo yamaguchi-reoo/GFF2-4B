@@ -19,9 +19,11 @@ Player::Player()
 	erea.width = 75;
 	move_speed = DEFAULT_MOVE_SPEED;
 	jump_power = DEFAULT_JUMP_POWER;
+	direction = false;
 	for (int i = 0; i < 4; i++)
 	{
 		acs[i] = 0;
+		external_move[i] = 0;
 	}
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
@@ -39,7 +41,7 @@ Player::~Player()
 
 }
 
-void Player::Update()
+void Player::Update(GameMain* main)
 {
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
@@ -53,8 +55,6 @@ void Player::Update()
 	{
 		GiveGravity();
 	}
-
-	Reset();
 
 	//¶ˆÚ“®
 	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5)
@@ -95,12 +95,22 @@ void Player::Update()
 	//’ÊíUŒ‚
 	if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
 	{
-
+		main->SpawnAttack(location);
 	}
 
 	//ˆÚ“®ˆ—
-	location.x = location.x - acs[LEFT] + acs[RIGHT];
-	location.y = location.y - acs[UP] + acs[DOWN];
+	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
+	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
+	//Šç‚Ì•ûŒüˆ—
+	if (acs[LEFT] + acs[RIGHT] > 0)
+	{
+		direction = false;
+	}
+	else
+	{
+		direction = true;
+	}
+	Reset();
 }
 
 void Player::Draw()const
@@ -162,7 +172,7 @@ void Player::TouchLeftWall()
 
 void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 {
-	Location p_center;
+	Location p_center = { 0 };
 	p_center.x = location.x + (erea.width / 2);
 	p_center.y = location.y + (erea.height / 2);
 
@@ -208,5 +218,21 @@ void Player::Reset()
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		onfloor_flg[i] = false;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		external_move[i] = 0;
+	}
+}
+
+void Player::MovePlayer(bool _direction, float _move)
+{
+	if (_direction == false)
+	{
+		external_move[RIGHT] += _move;
+	}
+	else
+	{
+		external_move[LEFT] += _move;
 	}
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "AbstractScene.h"
 #include "Player.h"
+#include "Attack.h"
 #include "Stage.h"
 #include "Himawari.h"
 #include "Zakuro.h"
@@ -8,13 +9,15 @@
 #include "bamboo.h"
 #include "Scroll.h"
 
+class Player;
+
 class GameMain :
     public AbstractScene
 {
 private:
     Player* player;    //プレイヤーのオブジェクト
     Stage* stage[2];   //床のオブジェクト
-
+    Attack* attack;
     //エネミー
     Zakuro* zakuro;    //ザクロ
     Himawari* himawari;//ひまわり
@@ -37,5 +40,8 @@ public:
 
     //描画に関することを実装
     void Draw() const override;
+
+    //攻撃を発生させる(_location = 攻撃したプレイヤーor敵の中心座標)
+    void SpawnAttack(Location _location);
 };
 
