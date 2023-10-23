@@ -44,6 +44,7 @@ AbstractScene* GameMain::Update()
 	player->Update();
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
 	zakuro->Update(this);
+	iruka->Update(this);
 
 	//falseに設定しなおす
 	onfloor_flg = false;
@@ -58,7 +59,11 @@ AbstractScene* GameMain::Update()
 		}
 	}
 	
-
+	//イルカがプレイヤーの真上のとき落下
+	if (iruka->GetLocation().x == player->GetLocation().x) {
+		iruka->Get_Fall_Flg();
+		
+	}
 
 	if (KeyInput::OnKey(KEY_INPUT_A)) {
 		flg = true;
