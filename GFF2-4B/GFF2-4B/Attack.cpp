@@ -19,13 +19,13 @@ void Attack::Update(Location _location, Erea _erea)
 		//âEï˚å¸Ç…çUåÇÇ∑ÇÈ
 		if (attack_data.direction == false)
 		{
-			//location.x = _location.x +(_erea.width / 2);
-			//location.y = _location.y + ATTACK_EREA_SHIFT_Y;
+			location.x = _location.x +(_erea.width / 2);
+			location.y = _location.y + ATTACK_EREA_SHIFT_Y;
 		}
 		else
 		{
-			//location.x = _location.x - erea.width - (_erea.width / 2);
-			//location.y = _location.y + ATTACK_EREA_SHIFT_Y;
+			location.x = _location.x - erea.width - (_erea.width / 2);
+			location.y = _location.y + ATTACK_EREA_SHIFT_Y;
 		}
 		if (--attack_data.attack_time <= 0)
 		{

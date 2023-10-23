@@ -277,7 +277,7 @@ AttackData Player::CreateAttactData()
 	attack_data.width = 100;
 	attack_data.height = 100;
 	attack_data.who_attack = false;
-	attack_data.attack_time = 100;
+	attack_data.attack_time = 10;
 	attack_data.direction = direction;		
 	return attack_data;
 }
