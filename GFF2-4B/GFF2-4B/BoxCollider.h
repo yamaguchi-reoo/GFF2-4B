@@ -2,6 +2,15 @@
 #include "dxlib.h"
 #include"common.h"
 
+struct AttackData {
+	float center_x;		//中心座標(x)
+	float center_y;		//中心座標(y)
+	float height;		//高さ
+	float width;		//幅
+	bool who_attack;	//誰の攻撃か（false = 自分 true = 敵）
+	int attack_time;	//どれくらい判定がその場に居続けるか
+	bool direction;		//X座標を基準にしてどの方向に攻撃を発生させるかの判断(0=右 1=左)
+};
 //中心座標
 struct Location
 {

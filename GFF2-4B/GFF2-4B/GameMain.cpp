@@ -7,18 +7,20 @@ GameMain::GameMain()
 {
 	player = new Player();
 	scene_scroll = new SceneScroll();
-	attack = new Attack();
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
 	stage[1] = new Stage(200, 300, 200, 50);
-	for (int i = 0; i < 2; i++)
-	{
-		count[i] = 0;
-	}
 
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
-
+	for (int i = 0; i < 10; i++)
+	{
+		attack[i] = new Attack();
+	}
+	for (int i = 0; i < 2; i++)
+	{
+		count[i] = 0;
+	}
 	for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i] = new Bamboo(i * 60);
 	}
@@ -30,9 +32,13 @@ GameMain::~GameMain()
 {
 	delete player;
 	//delete scene_scroll;
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		delete stage[i];
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		delete attack[i];
 	}
 	delete zakuro;
 	delete himawari;
@@ -44,26 +50,22 @@ AbstractScene* GameMain::Update()
 	//XV
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
 	zakuro->Update(this);
-
 	player->Update(this);
-	attack->Update(player->GetLocation());
-	//false‚Éİ’è‚µ‚È‚¨‚·
-	onfloor_flg = false;
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		attack[i]->Update(player->GetCenterLocation(), player->GetErea());
+	}
 	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
 	for (int i = 0; i < 2; i++)
 	{
 		stage[i]->Update();
-		if (player->HitBox(stage[i]) == true)
-		{
-			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-			player->Push(i,stage[i]->GetLocation(), stage[i]->GetErea());
-		}
 	}
-	
-
+	//“–‚½‚è”»’èŠÖ˜A‚Ìˆ—‚ğs‚¤
+	HitCheck();
 
 	if (KeyInput::OnKey(KEY_INPUT_A)) {
 		flg = true;
+		player->ApplyDamage(1);
 	}
 	return this;
 }
@@ -74,11 +76,13 @@ void GameMain::Draw() const
 
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);
-
 	//•`‰æ
 	player->Draw();
-	attack->Draw();
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		attack[i]->Draw();
+	}
+	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		//DrawFormatString(0, 100+(i*20), 0x00ff00, "%d", count[i]);
 		stage[i]->Draw();
@@ -97,7 +101,34 @@ void GameMain::Draw() const
 	
 }
 
-void GameMain::SpawnAttack(Location _location)
+void GameMain::SpawnAttack(AttackData _attackdata)
 {
-	attack->SpawnAttack(_location);
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		if (attack[i]->GetAttackFlg() == false)
+		{
+			attack[i]->SpawnAttack(_attackdata);
+			break;
+		}
+	}
+}
+
+void GameMain::HitCheck()
+{
+	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		if (player->HitBox(stage[i]) == true)
+		{
+			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
+			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
+		}
+	}
+
+	//UŒ‚‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		//if (attack[i]->HitBox(/*“G*/) == true && /*ƒvƒŒƒCƒ„[‚ªo‚µ‚½UŒ‚‚©*/)
+		//{
+	}
 }
