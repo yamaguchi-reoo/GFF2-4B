@@ -2,12 +2,12 @@
 
 SceneScroll::SceneScroll()
 {
-	stage_image = LoadGraph("resouce/images/SampleStage2.png");
+	stage_image = LoadGraph("resource/images/SampleStage2.png");
 	try 
 	{
 		if (stage_image == -1)
 		{
-			throw"resouce/images/SampleStage2.png";
+			throw"resource/images/SampleStage2.png";
 		}
 	}
 	catch (int& err)
@@ -21,18 +21,26 @@ SceneScroll::SceneScroll()
 SceneScroll::~SceneScroll()
 {
 }
-void SceneScroll::Update(Location player)
+void SceneScroll::Update(Location player, float acs_l, float acs_r)
 {
 	//左スクロール
 	if (player.x >= LEFT_END)
 	{
+		scroll_x -= acs_l;
+
 		//左端到着処理
 		player.x = LEFT_END - 1;
 	}
 	//右スクロール
 	if (player.x <= RIGHT_END)
 	{
+		scroll_x += acs_r;
+
 		//右端到着処理
 		player.x = RIGHT_END + 1;
 	}
+}
+void SceneScroll::Draw()
+{
+	DrawGraph(0, 0, stage_image, FALSE);
 }
