@@ -39,3 +39,4 @@ public:
 	//プレイヤーの加速量取得 0=下方向 1=上方向 2=右方向 3=左方向
 	float GetAcs(int num) { return acs[num]; }
 };
+

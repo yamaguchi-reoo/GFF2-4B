@@ -43,6 +43,7 @@ AbstractScene* GameMain::Update()
 	//XV
 	player->Update();
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
+	zakuro->Update(this);
 
 	//false‚Éİ’è‚µ‚È‚¨‚·
 	onfloor_flg = false;
