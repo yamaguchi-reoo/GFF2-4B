@@ -255,7 +255,7 @@ void Player::MovePlayer(ScrollData _scroll)
 	}
 	else
 	{
-		external_move[LEFT] = _move;
+		external_move[LEFT] = _scroll.move;
 	}
 }
 
