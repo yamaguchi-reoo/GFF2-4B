@@ -1,0 +1,1 @@
+#include "Kyouka.h"
