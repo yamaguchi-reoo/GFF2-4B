@@ -13,10 +13,12 @@
 
 Player::Player()
 {
+	old_location = { 0 };
 	location.x = 100;
 	location.y = 400;
-	erea.height = 150;
-	erea.width = 75;
+	erea.height = PLAYER_HEIGHT;
+	erea.width = PLAYER_WIDTH;
+	hp = 10;
 	move_speed = DEFAULT_MOVE_SPEED;
 	jump_power = DEFAULT_JUMP_POWER;
 	direction = false;
@@ -95,18 +97,20 @@ void Player::Update(GameMain* main)
 	//通常攻撃
 	if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
 	{
-		main->SpawnAttack(location);
+		main->SpawnAttack(CreateAttactData());
 	}
 
+	//1フレーム前の座標を保存
+	old_location = location;
 	//移動処理
 	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
 	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
 	//顔の方向処理
-	if (acs[LEFT] + acs[RIGHT] > 0)
+	if (old_location.x < location.x)
 	{
 		direction = false;
 	}
-	else
+	if (old_location.x > location.x)
 	{
 		direction = true;
 	}
@@ -115,10 +119,28 @@ void Player::Update(GameMain* main)
 
 void Player::Draw()const
 {
+	SetFontSize(24);
 	DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, true);
+	if (direction == false)
+	{
+		DrawBox(location.x+ erea.width-40, location.y+10, location.x + erea.width, location.y + 40, 0x00ff00, true);
+	}
+	else
+	{
+		DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
+	}
+	//hp表示（仮）
+	DrawBox(10, 10, 250, 60, 0x000000, true);
+	DrawString(20, 12, "HP", 0xffffff);
+	for (int i = 0; i < hp; i++)
+	{
+		DrawBox(20 + i * 21, 30, 40 + i * 21, 50, 0xff0000, true);
+	}
+	//デバッグ用表示
 	for (int i = 0; i < 4; i++)
 	{
-		DrawFormatString(100, 100+i*30, 0x00ff00, "%f", acs[i]);
+		DrawFormatString(0, 100+i*30, 0x00ff00, "%f", acs[i]);/*
+		DrawFormatString(200, 100+i*30, 0x00ff00, "%f", external_move[i]);*/
 	}
 
 }
@@ -137,7 +159,7 @@ void Player::DecAcs(int num)
 	{
 		acs[num] -= 0.5f;
 	}
-	else
+	if (acs[num] < 0)
 	{
 		acs[num] = 0;
 	}
@@ -229,10 +251,33 @@ void Player::MovePlayer(bool _direction, float _move)
 {
 	if (_direction == false)
 	{
-		external_move[RIGHT] += _move;
+		external_move[RIGHT] = _move;
 	}
 	else
 	{
-		external_move[LEFT] += _move;
+		external_move[LEFT] = _move;
 	}
+}
+
+void Player::ApplyDamage(int num)
+{
+	hp -= num;
+	if (hp < 0)
+	{
+		//仮にHPをリセットする
+		hp = 5;
+	}
+}
+
+AttackData Player::CreateAttactData()
+{
+	AttackData attack_data;
+	attack_data.center_x = location.x + (erea.width/2);
+	attack_data.center_y = location.y + (erea.height/2);
+	attack_data.width = 100;
+	attack_data.height = 100;
+	attack_data.who_attack = false;
+	attack_data.attack_time = 100;
+	attack_data.direction = direction;		
+	return attack_data;
 }
