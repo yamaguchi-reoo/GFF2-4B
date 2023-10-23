@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Attack.cpp" />
     <ClCompile Include="bamboo.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Scroll.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractScene.h" />
+    <ClInclude Include="Attack.h" />
     <ClInclude Include="bamboo.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="CharaBase.h" />

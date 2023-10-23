@@ -2,11 +2,10 @@
 #include "CharaBase.h"
 
 //‰¼‘zƒNƒ‰ƒX
-
 class Zakuro :public CharaBase
 {
 private:
-
+	bool zakuro_flg;
 public:
 	Zakuro();
 	~Zakuro();
