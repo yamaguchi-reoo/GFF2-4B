@@ -8,7 +8,6 @@ GameMain::GameMain()
 	player = new Player();
 	scene_scroll = new SceneScroll();
 	attack = new Attack();
-	//scene_scroll = new SceneScroll();
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
 	stage[1] = new Stage(200, 300, 200, 50);
 	for (int i = 0; i < 2; i++)
@@ -43,7 +42,6 @@ GameMain::~GameMain()
 AbstractScene* GameMain::Update()
 {
 	//XV
-	player->Update();
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
 	zakuro->Update(this);
 
