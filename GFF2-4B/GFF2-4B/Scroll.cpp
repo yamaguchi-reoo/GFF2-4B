@@ -26,21 +26,21 @@ void SceneScroll::Update(Location player, float acs_l, float acs_r)
 	//左スクロール
 	if (player.x >= LEFT_END)
 	{
-		scroll_x -= acs_l;
+		//スクロール発生座標の左端にプレイヤーが到着した場合、座標を加速度分後ろにする
+		player.x = LEFT_END - acs_l;
 
-		//左端到着処理
-		player.x = LEFT_END - 1;
+		scroll_x -= acs_l;
 	}
 	//右スクロール
 	if (player.x <= RIGHT_END)
 	{
-		scroll_x += acs_r;
+		//スクロール処理発生X座標の左端にプレイヤーが到着した場合、座標を加速度分後ろにする
+		player.x = RIGHT_END + acs_r;
 
-		//右端到着処理
-		player.x = RIGHT_END + 1;
+		scroll_x += acs_r;
 	}
 }
 void SceneScroll::Draw()
 {
-	DrawGraph(0, 0, stage_image, FALSE);
+	DrawGraph((int)scroll_x, 0, stage_image, FALSE);
 }
