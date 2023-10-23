@@ -142,6 +142,8 @@ void Player::Draw()const
 		DrawFormatString(0, 100+i*30, 0x00ff00, "%f", acs[i]);/*
 		DrawFormatString(200, 100+i*30, 0x00ff00, "%f", external_move[i]);*/
 	}
+	DrawFormatString(200, 100, 0x00ff00, "%f",location.x);
+
 
 }
 
@@ -251,11 +253,11 @@ void Player::MovePlayer(ScrollData _scroll)
 {
 	if (_scroll.direction == true)
 	{
-		external_move[RIGHT] += _scroll.move;
+		external_move[RIGHT] += (_scroll.move + acs[LEFT]);
 	}
 	else
 	{
-		external_move[LEFT] = _scroll.move;
+		external_move[LEFT] += (_scroll.move + acs[RIGHT]);
 	}
 }
 

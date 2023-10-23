@@ -3,7 +3,7 @@
 SceneScroll::SceneScroll()
 {
 	stage_image = LoadGraph("resource/images/SampleStage2.png");
-	try 
+	try
 	{
 		if (stage_image == -1)
 		{
@@ -41,17 +41,19 @@ void SceneScroll::Draw()
 ScrollData SceneScroll::PlayerScroll(Location player)
 {
 	ScrollData scroll_data{};
-	if (player.x >= LEFT_END)
+	scroll_data.direction = false;
+	scroll_data.move = 1.0;
+	if (player.x <= LEFT_END)
 	{
 		//スクロール処理発生X座標の左端にプレイヤーが到着した場合、座標を加速度分後ろにする
-		scroll_data.direction = false;
-		scroll_data.move += 1;
+		scroll_data.direction = true;
+		scroll_data.move += 0.0;
 	}
-	if (player.x <= RIGHT_END)
+	if (player.x >= RIGHT_END)
 	{
 		//スクロール処理発生X座標の右端にプレイヤーが到着した場合、座標を加速度分後ろにする
-		scroll_data.direction = true;
-		scroll_data.move -= 10;
+		scroll_data.direction = false;
+		scroll_data.move -= 1.0;
 	}
 	return scroll_data;
 }

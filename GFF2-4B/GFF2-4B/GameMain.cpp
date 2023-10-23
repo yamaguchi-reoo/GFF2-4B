@@ -34,7 +34,7 @@ GameMain::GameMain()
 GameMain::~GameMain()
 {
 	delete player;
-	//delete scene_scroll;
+	delete scene_scroll;
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		delete stage[i];
