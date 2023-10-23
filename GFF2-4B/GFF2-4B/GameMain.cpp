@@ -6,7 +6,7 @@
 GameMain::GameMain()
 {
 	player = new Player();
-	scene_scroll = new SceneScroll();
+	//scene_scroll = new SceneScroll();
 	stage[0] = new Stage(0, 800, 1980, 100);
 	stage[1] = new Stage(200, 500, 100, 100);
 	for (int i = 0; i < 2; i++)
@@ -28,7 +28,7 @@ GameMain::GameMain()
 GameMain::~GameMain()
 {
 	delete player;
-	delete scene_scroll;
+	//delete scene_scroll;
 	for (int i = 0; i < 2; i++)
 	{
 		delete stage[i];
@@ -54,6 +54,8 @@ AbstractScene* GameMain::Update()
 			player->Push(i,stage[i]->GetLocation(), stage[i]->GetErea());
 		}
 	}
+	
+
 
 	if (KeyInput::OnKey(KEY_INPUT_A)) {
 		flg = true;
