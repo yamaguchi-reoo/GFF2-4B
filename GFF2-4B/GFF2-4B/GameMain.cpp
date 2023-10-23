@@ -43,6 +43,7 @@ AbstractScene* GameMain::Update()
 {
 	//XV
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
+	scene_scroll->PlayerScroll(player->GetLocation());
 	zakuro->Update(this);
 
 	player->Update(this);

@@ -3,6 +3,11 @@
 #include "BoxCollider.h"
 #include "common.h"
 
+struct ScrollData
+{
+	bool direction;
+	float move;
+};
 class SceneScroll
 {
 private:
@@ -18,6 +23,8 @@ public:
 	~SceneScroll();
 	//描画以外の更新に関する処理
 	void Update(Location player, float acs_l, float acs_r);
+	//プレイヤーの行動範囲を固定する処理
+	ScrollData PlayerScroll(Location player);
 	//描画更新に関する処理
 	void Draw();
 };

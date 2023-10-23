@@ -225,14 +225,14 @@ void Player::Reset()
 	}
 }
 
-void Player::MovePlayer(bool _direction, float _move)
+void Player::MovePlayer(ScrollData _scroll)
 {
-	if (_direction == false)
+	if (_scroll.direction == true)
 	{
-		external_move[RIGHT] += _move;
+		external_move[RIGHT] += _scroll.move;
 	}
 	else
 	{
-		external_move[LEFT] += _move;
+		external_move[LEFT] += _scroll.move;
 	}
 }
