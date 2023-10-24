@@ -9,6 +9,7 @@
 #include "Iruka.h"
 #include "bamboo.h"
 #include "Scroll.h"
+#include "PowerGauge.h"
 
 #define ATTACK_NUM 10   //画面に存在できる最大の攻撃数
 
@@ -28,6 +29,8 @@ private:
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
+
+    PowerGauge* powergauge;  //強化ゲージのオブジェクト
 
     int flg;        //
     int count[2];      //実験用

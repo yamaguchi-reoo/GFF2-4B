@@ -139,6 +139,7 @@ void Player::Draw()const
 	}
 	DrawFormatString(location.x, location.y, 0x000000, "%d", player_state);
 
+
 }
 
 void Player::GiveGravity()
@@ -242,15 +243,15 @@ void Player::Reset()
 	}
 }
 
-void Player::ForciblyMovePlayer(bool _direction, float _move)
+void Player::MovePlayer(ScrollData _scroll)
 {
-	if (_direction == false)
+	if (_scroll.direction == true)
 	{
-		external_move[RIGHT] = _move;
+		external_move[RIGHT] += (_scroll.move + acs[LEFT]);
 	}
 	else
 	{
-		external_move[LEFT] = _move;
+		external_move[LEFT] += (_scroll.move + acs[RIGHT]);
 	}
 }
 
