@@ -18,6 +18,7 @@ Effect::~Effect()
 
 void Effect::Curve()
 {
+
 	splash.x -= v;
 	splash.y -= v;
 }
@@ -33,6 +34,11 @@ void Effect::Update()
 	if (hit_flg == true)
 	{
 		Curve();
+	}
+
+	if (splash.y == 85)
+	{
+		hit_flg = false;
 	}
 }
 
