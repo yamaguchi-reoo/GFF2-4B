@@ -10,23 +10,32 @@
 #define DEFAULT_MOVE_SPEED 0.3f			//基本移動速度(左右)
 #define DEFAULT_JUMP_POWER 26			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
+#define DEFAULT_ATTACK_INTERVAL	40		//基本攻撃間隔(フレーム)
 
 Player::Player()
 {
+	player_state = IDOL_RIGHT;
 	old_location = { 0 };
 	location.x = 100;
 	location.y = 400;
 	erea.height = PLAYER_HEIGHT;
 	erea.width = PLAYER_WIDTH;
+	who = 0;
 	hp = 10;
 	move_speed = DEFAULT_MOVE_SPEED;
 	jump_power = DEFAULT_JUMP_POWER;
 	direction = false;
+	attack_interval_count = 0;
+	attack_interval = DEFAULT_ATTACK_INTERVAL;
+	attack_step = 0;
+	attack_time = 0;
+	attack_motion_flg = false;
 	for (int i = 0; i < 4; i++)
 	{
 		acs[i] = 0;
 		external_move[i] = 0;
 	}
+	acs_max = ACS_MAX;
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		onfloor_flg[i] = false;
@@ -36,6 +45,7 @@ Player::Player()
 	leftwall_flg = false;
 	apply_gravity = true;
 	jump_flg = false;
+	powerup_flg = false;
 }
 
 Player::~Player() 
@@ -45,6 +55,7 @@ Player::~Player()
 
 void Player::Update(GameMain* main)
 {
+	//重力を加えるかの処理
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		if (onfloor_flg[i] == true)
@@ -55,94 +66,80 @@ void Player::Update(GameMain* main)
 	//床に触れていないなら
 	if (apply_gravity == true)
 	{
+		//重力を与える
 		GiveGravity();
 	}
 
-	//左移動
-	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5)
-	{
-		if (acs[LEFT] <= ACS_MAX && rightwall_flg == false)
-		{
-			acs[LEFT] += move_speed;
-		}
-	}
-	else
-	{
-		DecAcs(LEFT);
-	}
-
-	//右移動
-	if (PadInput::TipLeftLStick(STICKL_X) >= 0.5)
-	{	
-		if (acs[RIGHT] <= ACS_MAX && leftwall_flg == false)
-		{
-			acs[RIGHT] += move_speed;
-		}
-	}
-	else
-	{
-		DecAcs(RIGHT);
-	}
-	//ジャンプ
-	if (PadInput::OnButton(XINPUT_BUTTON_A) == true && jump_flg == false)
-	{
-		acs[UP] = jump_power;
-		jump_flg = true;
-	}
-	else
-	{
-		//ジャンプしていない時は上に加速する力を弱める
-		DecAcs(UP);
-	}
-	//通常攻撃
-	if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
-	{
-		main->SpawnAttack(CreateAttactData());
-	}
-
-	//1フレーム前の座標を保存
-	old_location = location;
 	//移動処理
-	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
-	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
+	Move();
+
+	//攻撃
+	Attack(main);
+
+	//強化テスト用
+	if (PadInput::OnButton(XINPUT_BUTTON_X) == true)
+	{
+		SetPowerUp();
+	}
+	//強化テスト用
+	if (PadInput::OnButton(XINPUT_BUTTON_Y) == true)
+	{
+		StopPowerUp();
+	}
+
 	//顔の方向処理
-	if (old_location.x < location.x)
+	if (acs[LEFT] < acs[RIGHT])
 	{
 		direction = false;
 	}
-	if (old_location.x > location.x)
+	if (acs[LEFT] > acs[RIGHT])
 	{
 		direction = true;
 	}
+	//プレイヤーの状態を更新する
+	UpdatePlayerState();
+	//各移動用変数をリセット
 	Reset();
 }
 
 void Player::Draw()const
 {
 	SetFontSize(24);
-	DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, true);
-	if (direction == false)
+	//強化状態でないなら
+	if (powerup_flg == false)
 	{
-		DrawBox(location.x+ erea.width-40, location.y+10, location.x + erea.width, location.y + 40, 0x00ff00, true);
+		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, true);
+		//顔の向き
+		if (direction == false)
+		{
+			DrawBox(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
+		}
+		else
+		{
+			DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
+		}
 	}
 	else
 	{
-		DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
+		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
+		//顔の向き
+		if (direction == false)
+		{
+			DrawBox(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0xff0000, true);
+		}
+		else
+		{
+			DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0xff0000, true);
+		}
 	}
-	//hp表示（仮）
-	DrawBox(10, 10, 250, 60, 0x000000, true);
-	DrawString(20, 12, "HP", 0xffffff);
-	for (int i = 0; i < hp; i++)
-	{
-		DrawBox(20 + i * 21, 30, 40 + i * 21, 50, 0xff0000, true);
-	}
+
 	//デバッグ用表示
 	for (int i = 0; i < 4; i++)
 	{
 		DrawFormatString(0, 100+i*30, 0x00ff00, "%f", acs[i]);/*
 		DrawFormatString(200, 100+i*30, 0x00ff00, "%f", external_move[i]);*/
 	}
-	DrawFormatString(200, 100, 0x00ff00, "%f",location.x);
+	DrawFormatString(location.x, location.y, 0x000000, "%d", player_state);
 
 
 }
@@ -193,7 +190,6 @@ void Player::TouchLeftWall()
 	leftwall_flg = true;
 }
 
-
 void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 {
 	Location p_center = { 0 };
@@ -203,7 +199,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	//床に触れた時
 	if (location.y +erea.height-12 < _sub_location.y)
 	{
-		location.y = _sub_location.y- erea.height;
+		location.y = _sub_location.y- erea.height+0.1f;
 		OnFloor(num, _sub_location);
 	}
 	//天井に触れた時
@@ -249,7 +245,7 @@ void Player::Reset()
 	}
 }
 
-void Player::MovePlayer(ScrollData _scroll)
+void Player::ForciblyMovePlayer(ScrollData _scroll)
 {
 	if (_scroll.direction == true)
 	{
@@ -274,12 +270,162 @@ void Player::ApplyDamage(int num)
 AttackData Player::CreateAttactData()
 {
 	AttackData attack_data;
-	attack_data.center_x = location.x + (erea.width/2);
-	attack_data.center_y = location.y + (erea.height/2);
+	attack_data.x = location.x + (erea.width/2);
+	attack_data.y = location.y + (erea.height/2);
 	attack_data.width = 100;
 	attack_data.height = 100;
-	attack_data.who_attack = false;
+	attack_data.who_attack = 0;
 	attack_data.attack_time = 10;
-	attack_data.direction = direction;		
+	attack_data.direction = direction;	
+	attack_data.damage = 1;
 	return attack_data;
+}
+
+void Player::SetPowerUp()
+{
+	powerup_flg = true;
+	acs_max = ACS_MAX * 2;
+	jump_power = DEFAULT_JUMP_POWER * 1.1;
+	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;
+}
+
+void Player::StopPowerUp()
+{
+	powerup_flg = false;
+	acs_max = ACS_MAX;
+	jump_power = DEFAULT_JUMP_POWER;
+	attack_interval = DEFAULT_ATTACK_INTERVAL;
+}
+
+void Player::Attack(GameMain* main)
+{
+	//攻撃
+	if (PadInput::OnButton(XINPUT_BUTTON_B) == true && attack_interval_count <= 0)
+	{
+		//ジャンプ中でないなら
+		if (jump_flg == false)
+		{
+			main->SpawnAttack(CreateAttactData());
+			attack_interval_count = attack_interval;
+			attack_time = 10;
+		}
+		//ジャンプ中なら
+		else
+		{
+
+		}
+	}
+	//攻撃間隔用変数
+	if (attack_interval_count > 0)
+	{
+		attack_interval_count--;
+	}
+	//攻撃演出用
+	if (--attack_time > 0)
+	{
+		attack_motion_flg = true;
+	}
+	else
+	{
+		attack_motion_flg = false;
+	}
+}
+
+void Player::Move()
+{
+	//左移動
+	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5)
+	{
+		if (acs[LEFT] <= acs_max && rightwall_flg == false)
+		{
+			acs[LEFT] += move_speed;
+		}
+	}
+	else
+	{
+		DecAcs(LEFT);
+	}
+
+	//右移動
+	if (PadInput::TipLeftLStick(STICKL_X) >= 0.5)
+	{
+		if (acs[RIGHT] <= acs_max && leftwall_flg == false)
+		{
+			acs[RIGHT] += move_speed;
+		}
+	}
+	else
+	{
+		DecAcs(RIGHT);
+	}
+	//ジャンプ
+	if (PadInput::OnButton(XINPUT_BUTTON_A) == true && jump_flg == false)
+	{
+		acs[UP] = jump_power;
+		jump_flg = true;
+	}
+	else
+	{
+		//ジャンプしていない時は上に加速する力を弱める
+		DecAcs(UP);
+	}
+
+	//1フレーム前の座標を保存
+	old_location = location;
+	//移動処理
+	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
+	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
+}
+
+void Player::UpdatePlayerState()
+{
+	//顔の向きによって変える
+	//右向き
+	if (direction == false)
+	{
+		//重力が加わっているなら
+		if (apply_gravity == true)
+		{
+			player_state = FALL_RIGHT;
+		}
+		//重力が加わっていない（地面にいるなら）
+		else
+		{
+			player_state = IDOL_RIGHT;
+		}
+		//攻撃中なら
+		if (attack_motion_flg == true)
+		{
+			player_state = ATTACK_RIGHT_ONE;
+		}
+	}
+	//左向き
+	else
+	{
+		//重力が加わっているなら
+		if (apply_gravity == true)
+		{
+			player_state = FALL_LEFT;
+		}
+		//重力が加わっていない（地面にいるなら）
+		else
+		{
+			player_state = IDOL_LEFT;
+		}
+		//攻撃中なら
+		if (attack_motion_flg == true)
+		{
+			player_state = ATTACK_LEFT_ONE;
+		}
+	}
+	//右に移動しているなら
+	if (acs[LEFT] < acs[RIGHT])
+	{
+		player_state = MOVE_RIGHT;
+	}
+	//左に移動しているなら
+	if (acs[LEFT] > acs[RIGHT])
+	{
+		player_state = MOVE_LEFT;
+	}
 }
