@@ -89,8 +89,8 @@ public:
 	//プレイヤーの加速量取得 0=下方向 1=上方向 2=右方向 3=左方向
 	float GetAcs(int num) { return acs[num]; }
 
-	//プレイヤーの移動(_direction = 移動する方向(false=右方向 true=左方向) _move=移動量)
-	void MovePlayer(ScrollData _scroll);
+	//強制的なプレイヤーの移動(_direction = 移動する方向(false=右方向 true=左方向) _move=移動量)
+	void ForciblyMovePlayer(ScrollData _scroll);
 
 	//ダメージを受けた時の処理(num = ダメージ量)
 	void ApplyDamage(int num);

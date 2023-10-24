@@ -243,7 +243,7 @@ void Player::Reset()
 	}
 }
 
-void Player::MovePlayer(ScrollData _scroll)
+void Player::ForciblyMovePlayer(ScrollData _scroll)
 {
 	if (_scroll.direction == true)
 	{

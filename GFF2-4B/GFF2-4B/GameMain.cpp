@@ -56,7 +56,7 @@ AbstractScene* GameMain::Update()
 	scene_scroll->PlayerScroll(player->GetLocation());
 	if(scene_scroll->ActionRangeBorder(player->GetLocation()) == true)
 	{
-		player->MovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
+		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
 	}
 	zakuro->Update(this);
 	iruka->Update(this);
