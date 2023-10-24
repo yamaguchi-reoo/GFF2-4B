@@ -1,15 +1,19 @@
 #include "Effect.h"
 
-#include <math.h>
+
 
 Effect::Effect()
 {
-	splash.x = 500;
+	splash.x = 600;
 	splash.y = 500;
 	splash.r = 15;
 	splash.color_flg = 0x00ffff;
 
-	v = 5;
+	speed = 5;
+	angle = 200;
+	timer = 0.8;
+	g = 0.98;
+
 }
 
 Effect::~Effect()
@@ -18,9 +22,11 @@ Effect::~Effect()
 
 void Effect::Curve()
 {
-
-	splash.x -= v;
-	splash.y -= v;
+	float rad = angle * (float)M_PI / 180;
+	vx = speed * sinf(rad) * timer;
+	vy = speed * cosf(rad) * timer + (g * timer * timer)/ 2;
+	splash.x = splash.x - vx;
+	splash.y = splash.y - vy;
 }
 
 void Effect::Update()
@@ -36,7 +42,7 @@ void Effect::Update()
 		Curve();
 	}
 
-	if (splash.y == 85)
+	if (splash.y < 85)
 	{
 		hit_flg = false;
 	}

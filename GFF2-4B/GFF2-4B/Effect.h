@@ -3,6 +3,9 @@
 #include "common.h"
 #include "PadInput.h"
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 //しぶき
 struct Splash
 {
@@ -19,7 +22,14 @@ private:
 	Splash splash;	//オブジェクト化
 
 	bool hit_flg; //テスト用(true->敵に攻撃が当たったとき)
-	float v; //ベクトル
+	
+	float vx,vy; //ベクトル
+	int speed;	//スピード
+	float angle; //角度
+	float timer; //タイマー
+	float g;	//重力
+
+	float h, w;
 
 public:
 	Effect();
