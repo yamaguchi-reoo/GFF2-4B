@@ -20,11 +20,14 @@ private:
 	GuegeBase cyan;    //シアン
 	GuegeBase yellow;  //イエロー
 	GuegeBase black;   //黒
-	
+
+	int powerFlg; //(0:それ以外　1:強化中)
+
+	int flamelate; //フレーム数
 
 	int image[3];  //画像用変数
 
-public: 
+public:
 	PowerGauge();  //コンストラクタ
 	~PowerGauge(); //デストラクタ
 
@@ -32,4 +35,7 @@ public:
 	void Draw()const;
 
 	float VolumeCalculate(float volume, float h); //ゲージの溜まり具合を計算
+	void VolumeSet();  //ゲージの溜まり具合を計算した値を代入
+	void BlackGauge(); //時間経過で黒のゲージを減らす
+	int PowerGaugeState(); //強化状態かどうか渡す
 };

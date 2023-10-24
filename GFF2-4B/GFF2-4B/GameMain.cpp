@@ -63,6 +63,16 @@ AbstractScene* GameMain::Update()
 	player->Update(this);
 	powergauge->Update();
 
+
+	if (powergauge->PowerGaugeState() == 1)
+	{
+		player->SetPowerUp();
+	}
+	else if(powergauge->PowerGaugeState() == 2)
+	{
+		player->StopPowerUp();
+	}
+
 	//ƒCƒ‹ƒJ—Ž‰º”»’è
 	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
 		iruka->Get_Fall_Flg();
