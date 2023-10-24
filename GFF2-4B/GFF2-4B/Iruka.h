@@ -4,10 +4,11 @@ class Iruka :
     public CharaBase
 {
 private:
-    float fpscount;
+    float fps_count;//フレーム
 
-    bool iruka_flg;
-    bool fall_flg;
+    bool iruka_flg; //左右移動（false = 左　true =　右）
+    bool fall_flg;  //落下用フラグ
+    int direction;	//顔の向き(0 = 右向き 1 = 左向き 2 = 右向き落下 3 = 左向き落下)
 
 public:
     //コンストラクタ
