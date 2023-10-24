@@ -56,8 +56,8 @@ void Zakuro::Draw() const
 AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
-	attack_data.center_x = location.x + (erea.width / 2);
-	attack_data.center_y = location.y + (erea.height / 2);
+	attack_data.x = location.x + (erea.width / 2);
+	attack_data.y = location.y + (erea.height / 2);
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = false;

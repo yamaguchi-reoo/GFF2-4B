@@ -17,4 +17,6 @@ public:
 	void SpawnAttack(AttackData _attackdata);
 	//UŒ‚‚ª”­¶‚µ‚Ä‚¢‚é‚©”»’f
 	bool GetAttackFlg() { return attack_flg; }
+	//Šeî•ñ‚ğæ“¾
+	AttackData GetAttackData() { return attack_data; }
 };
