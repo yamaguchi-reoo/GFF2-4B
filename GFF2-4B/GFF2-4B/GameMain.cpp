@@ -189,7 +189,7 @@ void GameMain::HitCheck()
 		//同じようにひまわりとイルカも
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるものなら
-		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack == ENEMY)
+		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER)
 		{
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);

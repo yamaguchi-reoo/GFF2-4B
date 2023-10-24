@@ -36,6 +36,7 @@ class Player :
 	public CharaBase
 {
 private:
+	int frame;						//フレーム測定
 	Location old_location;			//1フレーム前の座標
 	PlayerState player_state;
 	float move_speed;				//移動速度(左右)
@@ -56,6 +57,12 @@ private:
 	bool jump_flg;					//ジャンプ中か
 	bool powerup_flg;				//強化状態か
 	float external_move[4];			//外部から加わるプレイヤーを移動させる力 0=下方向 1=上方向 2=右方向 3=左方向
+
+	//画像用変数
+	int player_image[17];			//プレイヤー画像
+
+	int anim_num[4] = { 0,1,2,1 };
+	int player_anim;				//プレイヤー画像アニメーション用
 public:
 	Player();
 	~Player();

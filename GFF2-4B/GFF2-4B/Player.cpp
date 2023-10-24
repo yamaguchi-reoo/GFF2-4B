@@ -12,8 +12,11 @@
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
 #define DEFAULT_ATTACK_INTERVAL	40		//基本攻撃間隔(フレーム)
 
+#define PLAYER_IMAGE_SHIFT_X 50			//画像ずらし用
+#define PLAYER_IMAGE_SHIFT_Y 50			//画像ずらし用
 Player::Player()
 {
+	frame = 0;
 	player_state = IDOL_RIGHT;
 	old_location = { 0 };
 	location.x = 100;
@@ -46,6 +49,9 @@ Player::Player()
 	apply_gravity = true;
 	jump_flg = false;
 	powerup_flg = false;
+
+	LoadDivGraph("resource/images/PlayerAnimation.png", 17, 6, 3, 256, 256, player_image);
+	player_anim = 0;
 }
 
 Player::~Player() 
@@ -55,6 +61,7 @@ Player::~Player()
 
 void Player::Update(GameMain* main)
 {
+	frame++;
 	//重力を加えるかの処理
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
@@ -100,6 +107,14 @@ void Player::Update(GameMain* main)
 	UpdatePlayerState();
 	//各移動用変数をリセット
 	Reset();
+	//アニメーション用変数を回す
+	if (frame % 10 == 0)
+	{
+		if (++player_anim > 3)
+		{
+			player_anim = 0;
+		}
+	}
 }
 
 void Player::Draw()const
@@ -140,7 +155,18 @@ void Player::Draw()const
 		DrawFormatString(200, 100+i*30, 0x00ff00, "%f", external_move[i]);*/
 	}
 	DrawFormatString(location.x, location.y, 0x000000, "%d", player_state);
-
+	switch (player_state)
+	{
+	case 0:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[player_state],true);
+		break;
+	case 2:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[player_state+ anim_num[player_anim]], true);
+		break;
+	case 3:
+		//DrawRotaGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, 0.5f,player_image[player_state], true);
+		break;
+	}
 
 }
 
