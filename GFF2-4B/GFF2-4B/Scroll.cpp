@@ -48,13 +48,13 @@ ScrollData SceneScroll::PlayerScroll(Location player)
 	{
 		//スクロール処理発生X座標の左端にプレイヤーが到着した場合、座標を加速度分後ろにする
 		scroll_data.direction = true;
-		scroll_data.move += 1.0;
+		scroll_data.move += 0.01;
 	}
 	if (player.x >= RIGHT_END + 1)
 	{
 		//スクロール処理発生X座標の右端にプレイヤーが到着した場合、座標を加速度分後ろにする
 		scroll_data.direction = false;
-		scroll_data.move += 1.0;
+		scroll_data.move += 0.01;
 	}
 	return scroll_data;
 }
