@@ -24,7 +24,7 @@ SceneScroll::~SceneScroll()
 void SceneScroll::Update(Location player, float acs_l, float acs_r)
 {
 	//ç∂ÉXÉNÉçÅ[Éã
-	if (player.x <= LEFT_END)
+	if (player.x <= LEFT_END && scroll_x >= 0.01)
 	{
 		scroll_x += 6.0;
 		ActionRangeBorder(player);
