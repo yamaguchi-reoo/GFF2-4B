@@ -1,6 +1,7 @@
 #pragma once
 #include "CharaBase.h"
 #include "GameMain.h"
+#include "Scroll.h"
 
 class GameMain;
 
@@ -8,6 +9,7 @@ class Player :
 	public CharaBase
 {
 private:
+	Location old_location;	//1フレーム前の座標
 	float move_speed;		//移動速度(左右)
 	float jump_power;		//跳躍力
 	float acs[4]; //加速度 0=下方向 1=上方向 2=右方向 3=左方向
@@ -25,25 +27,41 @@ public:
 	~Player();
 	void Update(GameMain* main)override;
 	void Draw()const override;
+
 	//重力が働く
 	void GiveGravity();
+
 	//減速処理(num = 方向)
 	void DecAcs(int num);
+
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
 	void OnFloor(int num,Location _sub);
+
 	//天井に触れた時の処理
 	void TouchCeiling();
+
 	//右の壁に触れた時の処理
 	void TouchRightWall();	
+
 	//左の壁に触れた時の処理
 	void TouchLeftWall();
+
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
 	void Push(int num,Location _sub_location, Erea _sub_erea);
+
 	//各判定をリセット
 	void Reset();
+
 	//プレイヤーの加速量取得 0=下方向 1=上方向 2=右方向 3=左方向
 	float GetAcs(int num) { return acs[num]; }
+
 	//プレイヤーの移動(_direction = 移動する方向(false=右方向 true=左方向) _move=移動量)
-	void MovePlayer(bool _direction,float _move);
+	void MovePlayer(ScrollData _scroll);
+
+	//ダメージを受けた時の処理(num = ダメージ量)
+	void ApplyDamage(int num);
+
+	//攻撃をスポーンさせるのに必要な情報をまとめる
+	AttackData CreateAttactData();
 };
 

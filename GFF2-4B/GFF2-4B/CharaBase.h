@@ -8,6 +8,7 @@ class CharaBase : public BoxCollider
 protected:
 	int image = 0;
 	float speed = 0;
+	int hp = 0;
 private:
 	virtual void Update(GameMain* main) = 0;
 
