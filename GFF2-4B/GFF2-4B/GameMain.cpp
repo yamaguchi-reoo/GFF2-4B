@@ -63,13 +63,14 @@ AbstractScene* GameMain::Update()
 	player->Update(this);
 	powergauge->Update();
 
-	//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
 	if (powergauge->PowerGaugeState() == 1)
 	{
+		//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
 		player->SetPowerUp();
 	}
 	else if(powergauge->PowerGaugeState() == 2)
 	{
+		//強化状態解除
 		player->StopPowerUp();
 		powergauge->SetPowerFlg(0);
 	}

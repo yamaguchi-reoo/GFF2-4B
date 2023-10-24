@@ -44,6 +44,10 @@ PowerGauge::~PowerGauge()
 void PowerGauge::Update()
 {
 	
+	SetVolume(0);
+
+	CheckVolumeMax();
+
 	VolumeSet();
 
 	//デバック用(RTをおしたら強化ゲージがMAXになる)
@@ -162,4 +166,64 @@ int PowerGauge::PowerGaugeState()
 void PowerGauge::SetPowerFlg(int i)
 {
 	powerFlg = i;
+}
+
+//プレイヤーが敵を倒したらその敵に応じた色分をゲージに加算
+void PowerGauge::SetVolume(int enemy)
+{
+	switch (enemy)
+	{
+		case 0:
+			//ザクロ
+			if (magenta.maxFlg == 0)
+			{
+				magenta.volume += 15.0f;
+			}
+			if (yellow.maxFlg == 0)
+			{
+				yellow.volume += 5.0f;
+			}
+			if (cyan.maxFlg == 0)
+			{
+				cyan.volume += 5.0f;
+			}
+			break;
+
+		case 1:
+			//イルカ
+			magenta.volume += 5.0f;
+			yellow.volume += 5.0f;
+			cyan.volume += 15.0f;
+			break;
+
+		case 2:
+			//ヒマワリ
+			magenta.volume += 5.0f;
+			yellow.volume += 15.0f;
+			cyan.volume += 5.0f;
+			break;
+
+		default:
+			break;
+	}
+
+}
+
+//CMYのゲージがMAXかチェックする
+void PowerGauge::CheckVolumeMax()
+{
+	if (magenta.volume >= 100.0f)
+	{
+		magenta.maxFlg = 1;
+	}
+
+	if (yellow.volume >= 100.0f)
+	{
+		yellow.maxFlg = 1;
+	}
+
+	if (cyan.volume >= 100.0f)
+	{
+		cyan.maxFlg = 1;
+	}
 }
