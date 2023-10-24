@@ -1,8 +1,6 @@
 #pragma once
-
 #include "common.h"
 #include "PadInput.h"
-
 #define _USE_MATH_DEFINES
 #include <math.h>
 

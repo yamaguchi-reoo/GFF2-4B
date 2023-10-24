@@ -26,6 +26,9 @@ GameMain::GameMain()
 	}
 
 	powergauge = new PowerGauge();
+	
+	//effect
+	effect = new Effect();
 
 	flg = false;
 	onfloor_flg = false;
@@ -47,6 +50,9 @@ GameMain::~GameMain()
 	delete himawari;
 	delete iruka;
 	delete powergauge;
+
+	//effect
+	delete effect;
 }
 
 AbstractScene* GameMain::Update()
@@ -62,6 +68,9 @@ AbstractScene* GameMain::Update()
 	iruka->Update(this);
 	player->Update(this);
 	powergauge->Update();
+
+	//effect
+	effect->Update();
 
 	//ƒCƒ‹ƒJ—Ž‰º”»’è
 	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
@@ -125,6 +134,9 @@ void GameMain::Draw() const
 {
 	scene_scroll->Draw();
 	powergauge->Draw();
+
+	//effect
+	effect->Draw();
 
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);

@@ -25,6 +25,7 @@ private:
     Player* player;    //プレイヤーのオブジェクト
     Stage* stage[FLOOR_NUM];   //床のオブジェクト
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
+
     //エネミー
     Zakuro* zakuro;    //ザクロ
     Himawari* himawari;//ひまわり
