@@ -47,8 +47,8 @@ void Attack::SpawnAttack(AttackData _attackdata)
 {
 	attack_flg = true;
 	attack_data = _attackdata;
-	location.x = attack_data.center_x;
-	location.y = attack_data.center_y;
+	location.x = attack_data.x;
+	location.y = attack_data.y;
 	erea.width = attack_data.width;
 	erea.height = attack_data.height;
 }
