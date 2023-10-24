@@ -23,6 +23,13 @@ PowerGauge::PowerGauge()
 	cyan.ratio = 0.0f;
 	cyan.maxFlg = 0;
 
+	black.x = 151;
+	black.y = 138;
+	black.h = 130;
+	black.volume = 100.0f;
+	black.ratio = 0.0f;
+	black.maxFlg = 1;
+
 	image[0] = LoadGraph("resource/images/強化ゲージ1.png");
 	image[1] = LoadGraph("resource/images/強化ゲージ2.png");
 	image[2] = LoadGraph("resource/images/強化ゲージ3.png");
@@ -38,21 +45,27 @@ void PowerGauge::Update()
 	magenta.ratio = VolumeCalculate(magenta.volume, magenta.h);
 	yellow.ratio = VolumeCalculate(yellow.volume, yellow.h);
 	cyan.ratio = VolumeCalculate(cyan.volume, cyan.h);
-
+	black.ratio = VolumeCalculate(black.volume, black.h);
 }
 
 void PowerGauge::Draw() const
 {
 	DrawGraph(5, 5, image[2], TRUE);
 
-
-	DrawBox(magenta.x - 50, magenta.y - (int)magenta.ratio - 2, magenta.x, magenta.y, 0xe4007f, TRUE);
-	DrawBox(cyan.x - 50, cyan.y - (int)cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
-	DrawBox(yellow.x - 50, yellow.y - (int)yellow.ratio, yellow.x,yellow.y, 0xffff00, TRUE);
-	DrawGraph(20, 12, image[1], TRUE);
-
-
-	DrawGraph(5, 5, image[0], TRUE);
+	if (black.maxFlg == 0)
+	{
+		DrawBox(magenta.x - 50, magenta.y - (int)magenta.ratio - 2, magenta.x, magenta.y, 0xe4007f, TRUE);
+		DrawBox(cyan.x - 50, cyan.y - (int)cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
+		DrawBox(yellow.x - 50, yellow.y - (int)yellow.ratio, yellow.x, yellow.y, 0xffff00, TRUE);
+		DrawGraph(20, 12, image[1], TRUE);
+	}
+	else
+	{
+		DrawBox(black.x - 143, black.y - (int)black.ratio, black.x, black.y, 0xff0000, TRUE);
+		//DrawBox(black.x - 50, black.y - (int)black.ratio, black.x, black.y, 0x000000, TRUE);
+	}
+	
+	//DrawGraph(5, 5, image[0], TRUE);
 
 	//デバック表示
 	DrawFormatString(200,10,0x000000,"%f",magenta.volume / 100 * 45);
