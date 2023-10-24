@@ -128,7 +128,19 @@ void GameMain::HitCheck()
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		//if (attack[i]->HitBox(/*敵*/) == true && /*プレイヤーが出した攻撃か*/)
-		//{
+		//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるものなら
+		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER)
+		{
+			//ザクロのダメージ処理
+
+		}
+		//同じようにひまわりとイルカも
+
+		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるものなら
+		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack == ENEMY)
+		{
+			//プレイヤーのダメージ処理
+			player->ApplyDamage(attack[i]->GetAttackData().damage);
+		}
 	}
 }
