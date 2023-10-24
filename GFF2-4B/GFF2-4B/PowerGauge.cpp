@@ -32,8 +32,6 @@ PowerGauge::PowerGauge()
 
 	powerFlg = 0;
 
-	flamelate = 0;
-
 	image[0] = LoadGraph("resource/images/強化ゲージ1.png");
 	image[1] = LoadGraph("resource/images/強化ゲージ2.png");
 	image[2] = LoadGraph("resource/images/強化ゲージ3.png");
@@ -45,34 +43,27 @@ PowerGauge::~PowerGauge()
 
 void PowerGauge::Update()
 {
-	//デバック用
-	flamelate++;
-
-	if (flamelate == 1)
-	{
-		magenta.volume = 50.0f;
-	}
 	
-
 	VolumeSet();
 
+	//デバック用(RTをおしたら強化ゲージがMAXになる)
 	if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER) == true))
 	{
 		black.volume = 100.0f;
 		black.maxFlg = 1;
 	}
 
+	//強化ゲージがMAXかつ、Xボタンが押されたら強化状態フラグを1に
 	if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_X) == true))
 	{
 		powerFlg = 1;
 	}
 
+	//強化状態フラグが1だったら強化ゲージを減らす
 	if (powerFlg == 1)
 	{
 		BlackGauge();
-	}
-
-	
+	}	
 }
 
 void PowerGauge::Draw() const
@@ -81,6 +72,7 @@ void PowerGauge::Draw() const
 
 	if (black.maxFlg == 0)
 	{
+		//強化ゲージがMAXじゃないとき
 		if (magenta.volume != 0.0f) 
 		{
 			DrawBox(magenta.x - 50, magenta.y - (int)magenta.ratio, magenta.x, magenta.y, 0xe4007f, TRUE);
@@ -98,12 +90,14 @@ void PowerGauge::Draw() const
 	}
 	else
 	{
+		//強化ゲージがMAXのとき
 		DrawBox(black.x - 121, black.y - (int)black.ratio, black.x, black.y, 0x000000, TRUE);
 	}
 	
-	
 	DrawGraph(5, 5, image[0], TRUE);
 
+	//デバック表示
+	DrawFormatString(300, 10, 0xffffff, "%d", powerFlg);
 }
 
 //ゲージの溜まり具合を計算
@@ -132,6 +126,7 @@ void PowerGauge::BlackGauge()
 
 	if (black.volume > 0.0f)
 	{
+		//強化状態で、ゲージが0%になるまで徐々に減らす
 		i = black.volume;
 		black.volume = i - 0.17;
 	}
@@ -151,12 +146,20 @@ int PowerGauge::PowerGaugeState()
 {
 	if (powerFlg == 1)
 	{
+		//強化状態
 		return 1;
 	}
 	else if (powerFlg == 2)
 	{
+		//強化解除
 		return 2;
 	}
 
 	return 0;
+}
+
+//強化状態かどうかを保存する変数の値を変更
+void PowerGauge::SetPowerFlg(int i)
+{
+	powerFlg = i;
 }

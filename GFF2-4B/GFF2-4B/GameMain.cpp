@@ -63,7 +63,7 @@ AbstractScene* GameMain::Update()
 	player->Update(this);
 	powergauge->Update();
 
-
+	//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
 	if (powergauge->PowerGaugeState() == 1)
 	{
 		player->SetPowerUp();
@@ -71,6 +71,7 @@ AbstractScene* GameMain::Update()
 	else if(powergauge->PowerGaugeState() == 2)
 	{
 		player->StopPowerUp();
+		powergauge->SetPowerFlg(0);
 	}
 
 	//イルカ落下判定
