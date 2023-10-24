@@ -8,6 +8,7 @@ Zakuro::Zakuro()
 	location.y = 570;
 	erea.height = 50;
 	erea.width = 50;
+	speed = 2;
 
 	zakuro_flg = false;
 }
@@ -19,14 +20,14 @@ void Zakuro::Update(GameMain* main)
 {
 	//¶ˆÚ“®
 	if (zakuro_flg == false) {
-		location.x--;
+		location.x-=speed;
 		if (location.x < 0) {
 			zakuro_flg = true;
 		}
 	}
 	//‰EˆÚ“®
 	if (zakuro_flg == true) {
-		location.x++;
+		location.x += speed;
 		if (location.x > 500) {
 			zakuro_flg = false;
 		}
