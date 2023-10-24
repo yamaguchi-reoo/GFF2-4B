@@ -54,12 +54,23 @@ AbstractScene* GameMain::Update()
 	//更新
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
 	scene_scroll->PlayerScroll(player->GetLocation());
+	if(scene_scroll->ActionRangeBorder(player->GetLocation()) == true)
+	{
+		player->MovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
+	}
 	zakuro->Update(this);
+	iruka->Update(this);
 	player->Update(this);
 	powergauge->Update();
+
+	//イルカ落下判定
+	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
+		iruka->Get_Fall_Flg();
+	}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Update(player->GetCenterLocation(), player->GetErea());
+		attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 	}
 	//床の数だけ繰り返す
 	for (int i = 0; i < 2; i++)

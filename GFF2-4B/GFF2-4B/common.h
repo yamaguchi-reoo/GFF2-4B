@@ -10,7 +10,7 @@
 
 //スクロール関連
 #define LEFT_END 50.0
-#define RIGHT_END 500.0
+#define RIGHT_END 750.0
 #define FLOOR_NUM 2	//床の数
 
 

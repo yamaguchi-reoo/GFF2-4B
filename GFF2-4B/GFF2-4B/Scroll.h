@@ -25,6 +25,8 @@ public:
 	void Update(Location player, float acs_l, float acs_r);
 	//プレイヤーの行動範囲を固定する処理
 	ScrollData PlayerScroll(Location player);
+	//行動範囲を越えたか判断して値を返す処理
+	int ActionRangeBorder(Location player);
 	//描画更新に関する処理
 	void Draw();
 };
