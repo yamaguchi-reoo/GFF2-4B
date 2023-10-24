@@ -9,8 +9,8 @@
 #define PLAYER_HEIGHT 200	//プレイヤーの高さ
 
 //スクロール関連
-#define LEFT_END	360
-#define RIGHT_END	100
+#define LEFT_END	75
+#define RIGHT_END	750
 #define FLOOR_NUM	2	//床の数
 
 
