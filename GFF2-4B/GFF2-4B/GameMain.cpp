@@ -55,8 +55,14 @@ AbstractScene* GameMain::Update()
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
 	scene_scroll->PlayerScroll(player->GetLocation());
 	zakuro->Update(this);
+	iruka->Update(this);
 	player->Update(this);
 	powergauge->Update();
+
+	//ƒCƒ‹ƒJ—Ž‰º”»’è
+	if (iruka->GetLocation().x == player->GetLocation().x) {
+		iruka->Get_Fall_Flg();
+	}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Update(player->GetCenterLocation(), player->GetErea());
