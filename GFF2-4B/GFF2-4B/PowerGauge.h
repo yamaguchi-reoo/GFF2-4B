@@ -5,9 +5,11 @@
 //3色ゲージ
 struct ColerBase
 {
-	float x;	  //色つける四角の右下座標(x)
-	float y;	  //色つける四角の右下座標(y)
-	float volume; //ゲージの溜まり具合
+	int x;	  //色つける四角の右下座標(x)
+	int y;	  //色つける四角の右下座標(y)
+	float h;  //色つける四角の高さ
+	float volume; //色の溜まり具合
+	float ratio;  //ゲージの溜まり具合
 	int maxFlg;   //(0:ゲージMAX未満 1:ゲージMAX)
 };
 
@@ -26,4 +28,6 @@ public:
 
 	void Update();
 	void Draw()const;
+
+	float VolumeCalculate(float volume, float h); //ゲージの溜まり具合を計算
 };
