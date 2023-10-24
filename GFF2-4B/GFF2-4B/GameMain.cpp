@@ -69,11 +69,45 @@ AbstractScene* GameMain::Update()
 	}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		attack[i]->Update(player->GetCenterLocation(), player->GetErea());
+		//誰が攻撃したかによって攻撃の判定がついていく対象を変える
+		if (attack[i]->GetAttackData().who_attack == player->GetWho())
+		{
+			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
+		}
+		/*************************************************************************************************
+		* 新しい敵を生成するたびに、whoの変数に1、２、と数字を割り振っていき(被りなしで　０はプレイヤー)、
+		* 攻撃を生成するときにその値をattack_data.who_attackに格納し、
+		* ここで画面内の敵の種類分だけifを作り、１種類の敵の数だけforで繰り返す
+		* whoはBoxColliderで定義済み
+		* 
+		*	for(int j = 0; j < (画面内のザクロの数が入っている変数); j++ )
+		*	{
+		*		if (attack[j]->GetAttackData().who_attack == zakuro[j]->GetWho())
+		*		{
+		*			attack[j]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
+		*		}
+		*	}
+		* 
+		* 	for(int j = 0; j < (画面内のひまわりの数が入っている変数); j++ )
+		*	{
+		*		if (attack[j]->GetAttackData().who_attack == himawari[j]->GetWho())
+		*		{
+		*			attack[j]->Update(himawari[j]->GetCenterLocation(), himawari[j]->GetErea());
+		*		}
+		*	}
+		* 
+		* 　for(int i = 0; i < (画面内のいるかの数が入っている変数); i++ )
+		*	{
+		*		if (attack[j]->GetAttackData().who_attack == iruka[j]->GetWho())
+		*		{
+		*			attack[j]->Update(iruka[j]->GetCenterLocation(),iruka[j]->GetErea());
+		*		}
+		*	}
+		*********************************************************************************************/
 		attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 	}
 	//床の数だけ繰り返す
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		stage[i]->Update();
 	}

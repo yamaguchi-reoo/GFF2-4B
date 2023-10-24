@@ -10,7 +10,7 @@
 #define DEFAULT_MOVE_SPEED 0.3f			//基本移動速度(左右)
 #define DEFAULT_JUMP_POWER 26			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
-#define DEFAULT_ATTACK_INTERVAL	60		//基本攻撃間隔(フレーム)
+#define DEFAULT_ATTACK_INTERVAL	40		//基本攻撃間隔(フレーム)
 
 Player::Player()
 {
@@ -20,6 +20,7 @@ Player::Player()
 	location.y = 400;
 	erea.height = PLAYER_HEIGHT;
 	erea.width = PLAYER_WIDTH;
+	who = 0;
 	hp = 10;
 	move_speed = DEFAULT_MOVE_SPEED;
 	jump_power = DEFAULT_JUMP_POWER;
@@ -71,6 +72,7 @@ void Player::Update(GameMain* main)
 
 	//移動処理
 	Move();
+
 	//攻撃
 	Attack(main);
 
@@ -272,7 +274,7 @@ AttackData Player::CreateAttactData()
 	attack_data.y = location.y + (erea.height/2);
 	attack_data.width = 100;
 	attack_data.height = 100;
-	attack_data.who_attack = PLAYER;
+	attack_data.who_attack = 0;
 	attack_data.attack_time = 10;
 	attack_data.direction = direction;	
 	attack_data.damage = 1;
