@@ -2,18 +2,18 @@
 
 PowerGauge::PowerGauge()
 {
-	magenta.x = 0.0f;
-	magenta.y = 0.0f;
+	magenta.x = 387.0f;
+	magenta.y = 68.0f;
 	magenta.volume = 0.0f;
 	magenta.maxFlg = 0;
 
-	cyan.x = 0.0f;
-	cyan.y = 0.0f;
+	cyan.x = 419.0f;
+	cyan.y = 114.0f;
 	cyan.volume = 0.0f;
 	cyan.maxFlg = 0;
 
-	yellow.x = 0.0f;
-	yellow.y = 0.0f;
+	yellow.x = 360.0f;
+	yellow.y = 114.0f;
 	yellow.volume = 0.0f;
 	yellow.maxFlg = 0;
 
@@ -32,8 +32,11 @@ void PowerGauge::Update()
 
 void PowerGauge::Draw() const
 {
+	
+	DrawGraph(285, 10, image[2], TRUE);
+	DrawBox((int)magenta.x - 50, (int)magenta.y - 45, (int)magenta.x, (int)magenta.y, 0xe4007f, TRUE);
+	DrawBox((int)yellow.x - 50, (int)yellow.y - 45, (int)yellow.x, (int)yellow.y, 0xffff00, TRUE);
+	DrawBox((int)cyan.x - 50, (int)cyan.y - 45, (int)cyan.x, (int)cyan.y, 0x00FFFF, TRUE);
+	DrawGraph(300, 17, image[1], TRUE);
 	DrawGraph(285, 10, image[0], TRUE);
-	DrawBox(347, 18, 392, 65, 0xe4007f, TRUE);
-	DrawGraph(300, 3, image[1], TRUE);
-	//DrawGraph(300, 0, image[2], TRUE);
 }
