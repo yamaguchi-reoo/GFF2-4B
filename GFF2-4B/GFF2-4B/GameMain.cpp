@@ -27,6 +27,9 @@ GameMain::GameMain()
 
 	powergauge = new PowerGauge();
 
+	//effect
+	effect = new Effect();
+
 	flg = false;
 	onfloor_flg = false;
 }
@@ -47,6 +50,9 @@ GameMain::~GameMain()
 	delete himawari;
 	delete iruka;
 	delete powergauge;
+
+	//effect
+	delete effect;
 }
 
 AbstractScene* GameMain::Update()
@@ -57,6 +63,10 @@ AbstractScene* GameMain::Update()
 	zakuro->Update(this);
 	player->Update(this);
 	powergauge->Update();
+
+	//effect
+	effect->Update();
+
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Update(player->GetCenterLocation(), player->GetErea());
@@ -80,6 +90,8 @@ void GameMain::Draw() const
 {
 	scene_scroll->Draw();
 	powergauge->Draw();
+
+
 
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);
@@ -106,6 +118,9 @@ void GameMain::Draw() const
 		bamboo[i]->Draw();
 	}
 	
+	//effect
+	effect->Draw();
+
 }
 
 void GameMain::SpawnAttack(AttackData _attackdata)

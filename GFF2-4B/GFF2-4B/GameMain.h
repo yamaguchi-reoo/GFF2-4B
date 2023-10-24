@@ -11,6 +11,9 @@
 #include "Scroll.h"
 #include "PowerGauge.h"
 
+//effect
+#include "Effect.h"
+
 #define ATTACK_NUM 10   //画面に存在できる最大の攻撃数
 
 class Player;
@@ -31,6 +34,8 @@ private:
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
+
+    Effect* effect;     //しぶきエフェクトのオブジェクト
 
     int flg;        //
     int count[2];      //実験用
