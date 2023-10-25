@@ -3,7 +3,7 @@
 PowerGauge::PowerGauge()
 {
 	magenta.x = 109;
-	magenta.y = 65;
+	magenta.y = 64;
 	magenta.h = 45;
 	magenta.volume = 0.0f;
 	magenta.ratio = 0.0f;
@@ -43,31 +43,38 @@ PowerGauge::~PowerGauge()
 
 void PowerGauge::Update()
 {
-	
-	SetVolume(0);
-
-	CheckVolumeMax();
-
-	VolumeSet();
-
-	//デバック用(RTをおしたら強化ゲージがMAXになる)
-	if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER) == true))
+	if (black.maxFlg == 0)
 	{
-		black.volume = 100.0f;
-		black.maxFlg = 1;
+		//デバック用でここに配置
+		SetVolume(0);
+
+		CheckVolumeMax();
+
+		VolumeSet();
+
+		//デバック用(RBをおしたら強化ゲージがMAXになる)
+		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER) == true))
+		{
+			black.volume = 100.0f;
+			black.maxFlg = 1;
+		}
+
 	}
-
-	//強化ゲージがMAXかつ、Xボタンが押されたら強化状態フラグを1に
-	if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_X) == true))
+	else if(black.maxFlg == 1)
 	{
-		powerFlg = 1;
+		//強化ゲージがMAXかつ、Xボタンが押されたら強化状態フラグを1に
+		if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_X) == true))
+		{
+			powerFlg = 1;
+		}
 	}
 
 	//強化状態フラグが1だったら強化ゲージを減らす
 	if (powerFlg == 1)
 	{
 		BlackGauge();
-	}	
+		VolumeSet();
+	}
 }
 
 void PowerGauge::Draw() const
@@ -92,16 +99,21 @@ void PowerGauge::Draw() const
 
 		DrawGraph(20, 12, image[1], TRUE);
 	}
-	else
+	else if ((black.maxFlg == 1) && (powerFlg == 0))
 	{
 		//強化ゲージがMAXのとき
+		DrawBox(black.x - 121, black.y - 115, black.x, black.y, 0x000000, TRUE);
+	}
+	else if(powerFlg == 1)
+	{
+		//強化ゲージがMAXでXボタンが押されたとき
 		DrawBox(black.x - 121, black.y - (int)black.ratio, black.x, black.y, 0x000000, TRUE);
 	}
 	
 	DrawGraph(5, 5, image[0], TRUE);
 
 	//デバック表示
-	DrawFormatString(300, 10, 0xffffff, "%d", powerFlg);
+	DrawFormatString(300, 10, 0xffffff, "%f", magenta.volume);
 }
 
 //ゲージの溜まり具合を計算
@@ -136,12 +148,9 @@ void PowerGauge::BlackGauge()
 	}
 	else
 	{
-		//強化状態が終わったら、強化ゲージを初期状態に戻す
+		//強化状態が終わったら、強化状態を解除して強化ゲージを初期状態に戻す
 		powerFlg = 2;
-		black.maxFlg = 0;
-		magenta.volume = 0.0f;
-		yellow.volume = 0.0f;
-		cyan.volume = 0.0f;
+		InitGauge();
 	}
 }
 
@@ -162,7 +171,7 @@ int PowerGauge::PowerGaugeState()
 	return 0;
 }
 
-//強化状態かどうかを保存する変数の値を変更
+//強化状態かどうかを保存する変数の値を引数の値に変更
 void PowerGauge::SetPowerFlg(int i)
 {
 	powerFlg = i;
@@ -177,30 +186,48 @@ void PowerGauge::SetVolume(int enemy)
 			//ザクロ
 			if (magenta.maxFlg == 0)
 			{
-				magenta.volume += 15.0f;
+				magenta.volume += 1.5f;
 			}
 			if (yellow.maxFlg == 0)
 			{
-				yellow.volume += 5.0f;
+				yellow.volume += 0.5f;
 			}
 			if (cyan.maxFlg == 0)
 			{
-				cyan.volume += 5.0f;
+				cyan.volume += 0.5f;
 			}
 			break;
 
 		case 1:
 			//イルカ
-			magenta.volume += 5.0f;
-			yellow.volume += 5.0f;
-			cyan.volume += 15.0f;
+			if (magenta.maxFlg == 0)
+			{
+				magenta.volume += 0.5f;
+			}
+			if (yellow.maxFlg == 0)
+			{
+				yellow.volume += 0.5f;
+			}
+			if (cyan.maxFlg == 0)
+			{
+				cyan.volume += 1.5f;
+			}
 			break;
 
 		case 2:
 			//ヒマワリ
-			magenta.volume += 5.0f;
-			yellow.volume += 15.0f;
-			cyan.volume += 5.0f;
+			if (magenta.maxFlg == 0)
+			{
+				magenta.volume += 0.5f;
+			}
+			if (yellow.maxFlg == 0)
+			{
+				yellow.volume += 1.5f;
+			}
+			if (cyan.maxFlg == 0)
+			{
+				cyan.volume += 0.5f;
+			}
 			break;
 
 		default:
@@ -209,21 +236,44 @@ void PowerGauge::SetVolume(int enemy)
 
 }
 
-//CMYのゲージがMAXかチェックする
+//CMYKのゲージがMAXかチェックする
 void PowerGauge::CheckVolumeMax()
 {
+	//マゼンタを集めた量が100%以上だったらマゼンタのMAXフラグを1に
 	if (magenta.volume >= 100.0f)
 	{
 		magenta.maxFlg = 1;
 	}
 
+	//イエローを集めた量が100%以上だったらイエローのMAXフラグを1に
 	if (yellow.volume >= 100.0f)
 	{
 		yellow.maxFlg = 1;
 	}
 
+	//シアンを集めた量が100%以上だったらシアンのMAXフラグを1に
 	if (cyan.volume >= 100.0f)
 	{
 		cyan.maxFlg = 1;
 	}
+
+	//CMYが全て100%以上だったら黒のMAXフラグを1に
+	if ((magenta.maxFlg == 1) && (yellow.maxFlg == 1) && (cyan.maxFlg == 1))
+	{
+		black.volume = 100.0f;
+		black.maxFlg = 1;
+	}
+}
+
+//強化状態が終わった後の初期化処理
+void PowerGauge::InitGauge()
+{
+	black.volume = 0.0f;
+	magenta.volume = 0.0f;
+	yellow.volume = 0.0f;
+	cyan.volume = 0.0f;
+	black.maxFlg = 0;
+	magenta.maxFlg = 0;
+	cyan.maxFlg = 0;
+	yellow.maxFlg = 0;
 }

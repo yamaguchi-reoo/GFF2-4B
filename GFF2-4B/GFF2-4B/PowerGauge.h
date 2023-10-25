@@ -36,7 +36,8 @@ public:
 	void VolumeSet();  //ゲージの溜まり具合を計算した値を代入
 	void BlackGauge(); //時間経過で黒のゲージを減らす
 	int PowerGaugeState(); //強化状態かどうか渡す
-	void SetPowerFlg(int i); //強化状態かどうかを保存する変数の値を変更
+	void SetPowerFlg(int i); //強化状態かどうかを保存する変数の値を引数の値に変更
 	void SetVolume(int enemy); //プレイヤーが敵を倒したらその敵に応じた色分をゲージに加算
-	void CheckVolumeMax(); //CMYのゲージがMAXかチェックする
+	void CheckVolumeMax(); //CMYKのゲージがMAXかチェックする
+	void InitGauge(); //強化状態が終わった後の初期化処理
 };
