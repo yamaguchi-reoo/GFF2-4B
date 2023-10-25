@@ -63,6 +63,18 @@ AbstractScene* GameMain::Update()
 	player->Update(this);
 	powergauge->Update();
 
+	if (powergauge->PowerGaugeState() == 1)
+	{
+		//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
+		player->SetPowerUp();
+	}
+	else if(powergauge->PowerGaugeState() == 2)
+	{
+		//強化状態解除
+		player->StopPowerUp();
+		powergauge->SetPowerFlg(0);
+	}
+
 	//イルカ落下判定
 	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
 		iruka->Get_Fall_Flg();

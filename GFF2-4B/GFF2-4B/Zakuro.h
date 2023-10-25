@@ -6,7 +6,6 @@
 class Zakuro :public CharaBase
 {
 private:
-	Location old_location;	//1フレーム前の座標
 	bool zakuro_flg;		//左右移動（false = 左　true =　右）
 	bool direction;					//顔の向き(0=右向き 1=左向き)
 public:
