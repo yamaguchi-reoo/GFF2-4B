@@ -22,31 +22,36 @@ enum PlayerState {
 	ATTACK_LEFT_TWO,
 	ATTACK_LEFT_THREE,
 	ATTACK_LEFT_FOUR,
-	JUMPATTACK_RIGHT,
-	JUMPATTACK_RIGHT_END,
-	JUMPATTACK_LEFT,
-	JUMPATTACK_LEFT_END,
+	JUMP_ATTACK_RIGHT,
+	JUMP_ATTACK_RIGHT_END,
+	JUMP_ATTACK_LEFT,
+	JUMP_ATTACK_LEFT_END,
 	DAMAGE_RIGHT,
 	DAMAGE_LEFT,
 	DEATH_RIGHT,
 	DEATH_LEFT,
 };
 
+
 class Player :
 	public CharaBase
 {
 private:
+	int frame;						//フレーム測定
 	Location old_location;			//1フレーム前の座標
-	PlayerState player_state;
+	PlayerState player_state;		//プレイヤーの状態格納
 	float move_speed;				//移動速度(左右)
 	float jump_power;				//跳躍力
 	float acs[4];					//加速度 0=下方向 1=上方向 2=右方向 3=左方向
 	float acs_max;					//最大加速度
 	int attack_interval_count;		//攻撃の間隔測定用
 	int attack_interval;			//攻撃の間隔
+	int ca_interval_count;			//コンボ攻撃の間隔測定用
+	int combo_attack_interval;		//コンボ攻撃の間隔
 	int attack_step;				//攻撃の段階
 	int attack_time;				//攻撃している時間
-	bool attack_motion_flg;			//攻撃モーション中か判断
+	bool attack_motion_flg[5];		//攻撃モーション中か判断(0から3＝通常攻撃１から４段目　4=落下攻撃)
+	bool attack_anim_flg;			//いずれかの攻撃を行っている最中か判断
 	bool direction;					//顔の向き(0=右向き 1=左向き)
 	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
 	bool touch_ceil_flg;			//いずれかの天井に触れているかどうか
@@ -55,7 +60,17 @@ private:
 	bool apply_gravity;				//重力を適用するかどうか
 	bool jump_flg;					//ジャンプ中か
 	bool powerup_flg;				//強化状態か
+	bool move_flg;					//動ける状態か
 	float external_move[4];			//外部から加わるプレイヤーを移動させる力 0=下方向 1=上方向 2=右方向 3=左方向
+
+	//画像用変数
+	int player_image[17];			//プレイヤー画像
+
+	int walk_anim_num[4] = { 0,1,2,1 };		//歩くアニメーション画像の描画の順番
+	int attack_anim_num[4] = { 0 ,1,2,2 };	//攻撃アニメーション画像の描画の順番
+	int player_anim;						//プレイヤー画像アニメーション用
+	int attack_anim;						//プレイヤー攻撃アニメーション用
+	int player_anim_speed;					//プレイヤーのアニメーション速度
 public:
 	Player();
 	~Player();
@@ -95,8 +110,8 @@ public:
 	//ダメージを受けた時の処理(num = ダメージ量)
 	void ApplyDamage(int num);
 
-	//攻撃をスポーンさせるのに必要な情報をまとめる
-	AttackData CreateAttactData();
+	//攻撃をスポーンさせるのに必要な情報をまとめる(i = どの攻撃か)
+	AttackData CreateAttactData(int i);
 
 	//強化状態に入る
 	void SetPowerUp();
@@ -118,5 +133,8 @@ public:
 
 	//プレイヤーのHPの取得
 	int GetPlayerHP() { return hp; }
+
+	//いずれかの床に触れているか判断する
+	bool OnAnyFloorFlg();
 };
 

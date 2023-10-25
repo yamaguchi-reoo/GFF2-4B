@@ -10,10 +10,22 @@
 #define DEFAULT_MOVE_SPEED 0.3f			//基本移動速度(左右)
 #define DEFAULT_JUMP_POWER 26			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
-#define DEFAULT_ATTACK_INTERVAL	40		//基本攻撃間隔(フレーム)
+#define DEFAULT_ATTACK_INTERVAL	30		//基本攻撃間隔(フレーム)
 
+#define PLAYER_IMAGE_SHIFT_X 75			//画像ずらし用
+#define PLAYER_IMAGE_SHIFT_Y 50			//画像ずらし用
+#define PLAYER_IDOL 0					//立ち姿アニメーション開始地点
+#define PLAYER_WALK 1					//移動アニメーション開始地点
+#define PLAYER_JUMP 4					//ジャンプアニメーション開始地点
+#define PLAYER_ATTACK_ONE 5				//攻撃１段目アニメーション開始地点
+#define PLAYER_ATTACK_TWO 8				//攻撃２段目アニメーション開始地点
+#define PLAYER_ATTACK_THREE 11				//攻撃３段目アニメーション開始地点
+#define PLAYER_ATTACK_FOUR 14				//攻撃４段目アニメーション開始地点
+
+#define PLAYER_ANIM 10					//次の画像に切り替えるまでの時間（フレーム）
 Player::Player()
 {
+	frame = 0;
 	player_state = IDOL_RIGHT;
 	old_location = { 0 };
 	location.x = 100;
@@ -26,10 +38,15 @@ Player::Player()
 	jump_power = DEFAULT_JUMP_POWER;
 	direction = false;
 	attack_interval_count = 0;
+	ca_interval_count = 0;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
 	attack_step = 0;
 	attack_time = 0;
-	attack_motion_flg = false;
+	for (int i = 0; i < 5; i++)
+	{
+		attack_motion_flg[i] = false;
+	}
 	for (int i = 0; i < 4; i++)
 	{
 		acs[i] = 0;
@@ -46,6 +63,12 @@ Player::Player()
 	apply_gravity = true;
 	jump_flg = false;
 	powerup_flg = false;
+	move_flg = true;
+	attack_anim_flg = false;
+	LoadDivGraph("resource/images/PlayerAnimation.png", 17, 6, 3, 256, 256, player_image);
+	player_anim = 0;
+	attack_anim = 0;
+	player_anim_speed = PLAYER_ANIM;
 }
 
 Player::~Player() 
@@ -55,6 +78,7 @@ Player::~Player()
 
 void Player::Update(GameMain* main)
 {
+	frame++;
 	//重力を加えるかの処理
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
@@ -69,7 +93,6 @@ void Player::Update(GameMain* main)
 		//重力を与える
 		GiveGravity();
 	}
-
 	//移動処理
 	Move();
 
@@ -100,6 +123,36 @@ void Player::Update(GameMain* main)
 	UpdatePlayerState();
 	//各移動用変数をリセット
 	Reset();
+	//アニメーション用変数を回す
+	if (frame % player_anim_speed == 0)
+	{
+		if (++player_anim > 3)
+		{
+			player_anim = 0;
+		}
+	}
+	attack_anim_flg = false;
+	for (int i = 0; i < 5; i++)
+	{
+		//いずれかの攻撃を行っている最中ならフラグをtrueにする
+		if (attack_motion_flg[i] == true)
+		{
+			attack_anim_flg = true;
+		}
+	}
+	//攻撃アニメーション用変数を回す
+	if (attack_anim_flg == true)
+	{
+		if (frame % player_anim_speed == 0 && attack_anim < 3)
+		{
+			attack_anim++;
+		}
+	}
+	//攻撃アニメーション用変数をリセット
+	else
+	{
+		attack_anim = 0;
+	}
 }
 
 void Player::Draw()const
@@ -134,13 +187,71 @@ void Player::Draw()const
 	}
 
 	//デバッグ用表示
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		DrawFormatString(0, 100+i*30, 0x00ff00, "%f", acs[i]);/*
+		DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);/*
 		DrawFormatString(200, 100+i*30, 0x00ff00, "%f", external_move[i]);*/
 	}
-	DrawFormatString(location.x, location.y, 0x000000, "%d", player_state);
 
+	//プレイヤー画像表示
+	DrawFormatString(location.x, location.y, 0x000000, "%d", player_state);
+	switch (player_state)
+	{
+	case IDOL_RIGHT:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL],true);
+		break;
+	case IDOL_LEFT:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+		break;
+	case MOVE_RIGHT:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK +walk_anim_num[player_anim]], true);
+		break;
+	case MOVE_LEFT:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y,player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+		break;
+	case JUMP_RIGHT:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+		break;
+	case JUMP_LEFT:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+		break;
+	case FALL_RIGHT:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+		break;
+	case FALL_LEFT:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+		break;
+	case ATTACK_RIGHT_ONE:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_RIGHT_TWO:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_RIGHT_THREE:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_RIGHT_FOUR:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_LEFT_ONE:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_LEFT_TWO:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_LEFT_THREE:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+		break;
+	case ATTACK_LEFT_FOUR:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+		break;
+	case JUMP_ATTACK_RIGHT:
+		DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[12], true);
+		break;
+	case JUMP_ATTACK_LEFT:
+		DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[12], true);
+		break;
+	}
 
 }
 
@@ -267,17 +378,59 @@ void Player::ApplyDamage(int num)
 	}
 }
 
-AttackData Player::CreateAttactData()
+AttackData Player::CreateAttactData(int i)
 {
 	AttackData attack_data;
+	//どの段階の攻撃でも変わらない情報はここで格納する
 	attack_data.x = location.x + (erea.width/2);
 	attack_data.y = location.y + (erea.height/2);
-	attack_data.width = 100;
-	attack_data.height = 100;
 	attack_data.who_attack = 0;
-	attack_data.attack_time = 10;
-	attack_data.direction = direction;	
-	attack_data.damage = 1;
+	attack_data.direction = direction;
+	//攻撃の段階に応じて格納する情報を変える
+	switch (i)
+	{
+		//通常１段目
+	case 0:
+		attack_data.width = 100;
+		attack_data.height = 100;
+		attack_data.attack_time = 10;
+		attack_data.damage = 1;
+		attack_data.delay = 10;
+		break;
+		//通常２段目
+	case 1:
+		attack_data.width = 110;
+		attack_data.height = 110;
+		attack_data.attack_time = 10;
+		attack_data.damage = 1;
+		attack_data.delay = 10;
+		break;
+		//通常３段目
+	case 2:
+		attack_data.width = 120;
+		attack_data.height = 120;
+		attack_data.attack_time = 10;
+		attack_data.damage = 1;
+		attack_data.delay = 10;
+		break;
+		//通常４段目
+	case 3:
+		attack_data.width = 200;
+		attack_data.height = 200;
+		attack_data.attack_time = 10;
+		attack_data.damage = 1;
+		attack_data.delay = 10;
+		break;
+		//ジャンプ攻撃
+	case 4:
+		attack_data.width = 100;
+		attack_data.height = 100;
+		attack_data.attack_time = 2;
+		attack_data.damage = 1;
+		attack_data.delay = 0;
+		break;
+	}
+
 	return attack_data;
 }
 
@@ -287,6 +440,7 @@ void Player::SetPowerUp()
 	acs_max = ACS_MAX * 2;
 	jump_power = DEFAULT_JUMP_POWER * 1.1;
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;
+	player_anim_speed = PLAYER_ANIM / 2;
 }
 
 void Player::StopPowerUp()
@@ -295,6 +449,7 @@ void Player::StopPowerUp()
 	acs_max = ACS_MAX;
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
+	player_anim_speed = PLAYER_ANIM;
 }
 
 void Player::Attack(GameMain* main)
@@ -305,14 +460,50 @@ void Player::Attack(GameMain* main)
 		//ジャンプ中でないなら
 		if (jump_flg == false)
 		{
-			main->SpawnAttack(CreateAttactData());
+			//攻撃間隔の測定を開始
 			attack_interval_count = attack_interval;
-			attack_time = 10;
+			//プレイヤーが移動できない時間
+			if (powerup_flg == false)
+			{
+				attack_time = 30;
+			}
+			else
+			{
+				attack_time = 15;
+			}
+			//一定間隔が過ぎる前に攻撃を行っていたなら
+			if (ca_interval_count > 0)
+			{
+				//最大攻撃ではないなら
+				if (attack_step < 3)
+				{
+					attack_step++;
+				}
+			}
+			//一定間隔が過ぎたら
+			else
+			{
+				//攻撃の段階をリセットする
+				attack_step = 0;
+			}
+			//４段目を撃った後に必ず１段目に戻るようにする
+			if (attack_step >= 3)
+			{
+				ca_interval_count = 0;
+			}
+			//それ以外の攻撃の時には正しい間隔を設定する
+			else
+			{
+				ca_interval_count = combo_attack_interval;
+			}
+			//攻撃を生成する
+			main->SpawnAttack(CreateAttactData(attack_step));
 		}
 		//ジャンプ中なら
 		else
 		{
-
+			//ジャンプ攻撃を行う
+			attack_step = 4;
 		}
 	}
 	//攻撃間隔用変数
@@ -320,21 +511,55 @@ void Player::Attack(GameMain* main)
 	{
 		attack_interval_count--;
 	}
-	//攻撃演出用
-	if (--attack_time > 0)
+	//コンボ攻撃間隔用変数(この数値が０以上の時に攻撃を行うと、次の攻撃を行う)
+	if (ca_interval_count > 0)
 	{
-		attack_motion_flg = true;
+		ca_interval_count--;
 	}
+	//攻撃演出用
+	//ジャンプ攻撃以外なら
+	if (attack_step != 4)
+	{
+		if (--attack_time > 0)
+		{
+			//現在行っている攻撃の段階に応じたフラグをtrueにする
+			attack_motion_flg[attack_step] = true;
+			move_flg = false;
+		}
+		else
+		{
+			//行っていた攻撃の段階に応じたフラグをfalseにする
+			attack_motion_flg[attack_step] = false;
+			move_flg = true;
+		}
+	}
+	//ジャンプ攻撃なら
 	else
 	{
-		attack_motion_flg = false;
+		//空中にいる限り攻撃し続ける
+		if (OnAnyFloorFlg() == false)
+		{
+			//現在行っている攻撃の段階に応じたフラグをtrueにする
+			attack_motion_flg[attack_step] = true;
+			//攻撃を生成する
+			main->SpawnAttack(CreateAttactData(attack_step));
+
+		}
+		//地面についたら攻撃終了
+		else
+		{
+			//現在行っている攻撃の段階に応じたフラグをtrueにする
+			attack_motion_flg[attack_step] = false;
+			//攻撃段階をリセット
+			attack_step = 0;
+		}
 	}
 }
 
 void Player::Move()
 {
 	//左移動
-	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5)
+	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5 && move_flg == true)
 	{
 		if (acs[LEFT] <= acs_max && rightwall_flg == false)
 		{
@@ -347,7 +572,7 @@ void Player::Move()
 	}
 
 	//右移動
-	if (PadInput::TipLeftLStick(STICKL_X) >= 0.5)
+	if (PadInput::TipLeftLStick(STICKL_X) >= 0.5 && move_flg == true)
 	{
 		if (acs[RIGHT] <= acs_max && leftwall_flg == false)
 		{
@@ -359,7 +584,7 @@ void Player::Move()
 		DecAcs(RIGHT);
 	}
 	//ジャンプ
-	if (PadInput::OnButton(XINPUT_BUTTON_A) == true && jump_flg == false)
+	if (PadInput::OnButton(XINPUT_BUTTON_A) == true && jump_flg == false && move_flg == true)
 	{
 		acs[UP] = jump_power;
 		jump_flg = true;
@@ -387,16 +612,46 @@ void Player::UpdatePlayerState()
 		if (apply_gravity == true)
 		{
 			player_state = FALL_RIGHT;
+			if (jump_flg == true && acs[UP] >= acs[DOWN])
+			{
+				player_state = JUMP_RIGHT;
+			}
 		}
 		//重力が加わっていない（地面にいるなら）
 		else
 		{
 			player_state = IDOL_RIGHT;
+			//右に移動しているなら
+			if (acs[LEFT] < acs[RIGHT])
+			{
+				player_state = MOVE_RIGHT;
+			}
+			//左に移動しているなら
+			if (acs[LEFT] > acs[RIGHT])
+			{
+				player_state = MOVE_LEFT;
+			}
 		}
 		//攻撃中なら
-		if (attack_motion_flg == true)
+		if (attack_motion_flg[0] == true)
 		{
 			player_state = ATTACK_RIGHT_ONE;
+		}
+		if (attack_motion_flg[1] == true)
+		{
+			player_state = ATTACK_RIGHT_TWO;
+		}
+		if (attack_motion_flg[2] == true)
+		{
+			player_state = ATTACK_RIGHT_THREE;
+		}
+		if (attack_motion_flg[3] == true)
+		{
+			player_state = ATTACK_RIGHT_FOUR;
+		}
+		if (attack_motion_flg[4] == true)
+		{
+			player_state = JUMP_ATTACK_RIGHT;
 		}
 	}
 	//左向き
@@ -406,26 +661,60 @@ void Player::UpdatePlayerState()
 		if (apply_gravity == true)
 		{
 			player_state = FALL_LEFT;
+			if (jump_flg == true && acs[UP] >= acs[DOWN])
+			{
+				player_state = JUMP_LEFT;
+			}
 		}
 		//重力が加わっていない（地面にいるなら）
 		else
 		{
 			player_state = IDOL_LEFT;
+			//右に移動しているなら
+			if (acs[LEFT] < acs[RIGHT])
+			{
+				player_state = MOVE_RIGHT;
+			}
+			//左に移動しているなら
+			if (acs[LEFT] > acs[RIGHT])
+			{
+				player_state = MOVE_LEFT;
+			}
 		}
 		//攻撃中なら
-		if (attack_motion_flg == true)
+		if (attack_motion_flg[0] == true)
 		{
 			player_state = ATTACK_LEFT_ONE;
 		}
+		if (attack_motion_flg[1] == true)
+		{
+			player_state = ATTACK_LEFT_TWO;
+		}
+		if (attack_motion_flg[2] == true)
+		{
+			player_state = ATTACK_LEFT_THREE;
+		}
+		if (attack_motion_flg[3] == true)
+		{
+			player_state = ATTACK_LEFT_FOUR;
+		}
+		if (attack_motion_flg[4] == true)
+		{
+			player_state = JUMP_ATTACK_LEFT;
+		}
 	}
-	//右に移動しているなら
-	if (acs[LEFT] < acs[RIGHT])
+}
+
+bool Player::OnAnyFloorFlg()
+{
+	bool ret = false;
+	for (int i = 0; i < FLOOR_NUM; i++)
 	{
-		player_state = MOVE_RIGHT;
+		//触れている床があればループを抜ける
+		if (onfloor_flg[i] == true)
+		{
+			ret = true;
+		}
 	}
-	//左に移動しているなら
-	if (acs[LEFT] > acs[RIGHT])
-	{
-		player_state = MOVE_LEFT;
-	}
+	return ret;
 }

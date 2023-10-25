@@ -14,30 +14,31 @@ Attack::~Attack()
 void Attack::Update(Location _location, Erea _erea)
 {
 	//ƒvƒŒƒCƒ„[‚ÌUŒ‚ˆ—
-	if (attack_flg == true)
+	if (attack_flg == true && --attack_data.delay < 0)
 	{
-		//‰E•ûŒü‚ÉUŒ‚‚·‚é
-		if (attack_data.direction == false)
-		{
-			location.x = _location.x +(_erea.width / 2);
-			location.y = _location.y + ATTACK_EREA_SHIFT_Y;
-		}
-		else
-		{
-			location.x = _location.x - erea.width - (_erea.width / 2);
-			location.y = _location.y + ATTACK_EREA_SHIFT_Y;
-		}
-		if (--attack_data.attack_time <= 0)
-		{
-			attack_flg = false;
-		}
-
+			//‰E•ûŒü‚ÉUŒ‚‚·‚é
+			if (attack_data.direction == false)
+			{
+				location.x = _location.x + (_erea.width / 2);
+				location.y = _location.y + ATTACK_EREA_SHIFT_Y;
+			}
+			//¶•ûŒü‚ÉUŒ‚‚·‚é
+			else
+			{
+				location.x = _location.x - erea.width - (_erea.width / 2);
+				location.y = _location.y + ATTACK_EREA_SHIFT_Y;
+			}
+			//Œˆ‚ß‚ç‚ê‚½ŠÔ‚ªŒo‚Á‚½‚çUŒ‚‚ğÁ‚·
+			if (--attack_data.attack_time <= 0)
+			{
+				attack_flg = false;
+			}
 	}
 }
 
 void Attack::Draw()const
 {
-	if (attack_flg == true)
+	if (attack_flg == true && attack_data.delay < 0)
 	{
 		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ff00, false);
 	}

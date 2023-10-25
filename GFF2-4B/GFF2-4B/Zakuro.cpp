@@ -10,9 +10,7 @@ Zakuro::Zakuro()
 	erea.width = 50;
 	speed = 2;
 
-	old_location = { 0,0 };
 	direction = false;
-
 	zakuro_flg = false;
 }
 Zakuro::~Zakuro()
@@ -21,14 +19,7 @@ Zakuro::~Zakuro()
 }
 void Zakuro::Update(GameMain* main)
 {
-	//左移動
-	if (zakuro_flg == false) {
-		location.x-=speed;
-		if (location.x < 0) {
-			zakuro_flg = true;
-			direction = true;
-		}
-	}
+	
 	//右移動
 	if (zakuro_flg == true) {
 		location.x += speed;
@@ -37,16 +28,13 @@ void Zakuro::Update(GameMain* main)
 			direction = false;
 		}
 	}
-	//1フレーム前の座標を保存
-	old_location = location;
-	//顔の方向処理
-	if (old_location.x < location.x)
-	{
-		direction = false;
-	}
-	if (old_location.x > location.x)
-	{
-		direction = true;
+	//左移動
+	if (zakuro_flg == false) {
+		location.x -= speed;
+		if (location.x < 0) {
+			zakuro_flg = true;
+			direction = true;
+		}
 	}
 }
 
@@ -75,6 +63,7 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.who_attack = false;
 	attack_data.attack_time = 0;
 	attack_data.direction = direction;
+	attack_data.delay = 0;
 	return attack_data;
 }
 

@@ -66,6 +66,18 @@ AbstractScene* GameMain::Update()
 	player->Update(this);
 	powergauge->Update();
 
+	if (powergauge->PowerGaugeState() == 1)
+	{
+		//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
+		player->SetPowerUp();
+	}
+	else if(powergauge->PowerGaugeState() == 2)
+	{
+		//強化状態解除
+		player->StopPowerUp();
+		powergauge->SetPowerFlg(0);
+	}
+
 	//イルカ落下判定
 	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
 		iruka->Get_Fall_Flg();
@@ -107,7 +119,6 @@ AbstractScene* GameMain::Update()
 		*		}
 		*	}
 		*********************************************************************************************/
-		attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 	}
 	//床の数だけ繰り返す
 	for (int i = 0; i < FLOOR_NUM; i++)
@@ -192,7 +203,7 @@ void GameMain::HitCheck()
 		//同じようにひまわりとイルカも
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるものなら
-		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack == ENEMY)
+		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER)
 		{
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
