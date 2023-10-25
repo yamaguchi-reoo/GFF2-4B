@@ -63,6 +63,7 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.who_attack = false;
 	attack_data.attack_time = 0;
 	attack_data.direction = direction;
+	attack_data.delay = 0;
 	return attack_data;
 }
 

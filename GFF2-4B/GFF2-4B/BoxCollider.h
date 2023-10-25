@@ -11,6 +11,7 @@ struct AttackData {
 	int attack_time;	//どれくらい判定がその場に居続けるか
 	bool direction;		//X座標を基準にしてどの方向に攻撃を発生させるかの判断(0=右 1=左)
 	int damage;			//与えるダメージ量
+	int delay;			//何フレーム待ってから攻撃するか
 };
 //中心座標
 struct Location

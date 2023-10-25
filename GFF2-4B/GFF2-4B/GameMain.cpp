@@ -116,7 +116,6 @@ AbstractScene* GameMain::Update()
 		*		}
 		*	}
 		*********************************************************************************************/
-		attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 	}
 	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
 	for (int i = 0; i < FLOOR_NUM; i++)
