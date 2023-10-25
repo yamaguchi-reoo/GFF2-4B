@@ -52,8 +52,11 @@ GameMain::~GameMain()
 AbstractScene* GameMain::Update()
 {
 	//XV
+	if (player->GetLocation().x <= SCREEN_LEFT_END)
+	{
+		player->GetLocation().x + 0.01;
+	}
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
-	scene_scroll->PlayerScroll(player->GetLocation());
 	if(scene_scroll->ActionRangeBorder(player->GetLocation()) == true)
 	{
 		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
