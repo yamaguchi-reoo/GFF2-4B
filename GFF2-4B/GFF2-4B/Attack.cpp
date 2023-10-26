@@ -19,14 +19,14 @@ void Attack::Update(Location _location, Erea _erea)
 			//‰E•ûŒü‚ÉUŒ‚‚·‚é
 			if (attack_data.direction == false)
 			{
-				location.x = _location.x + (_erea.width / 2);
-				location.y = _location.y + ATTACK_EREA_SHIFT_Y;
+				location.x = _location.x + (_erea.width / 2) + attack_data.shift_x;
+				location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
 			}
 			//¶•ûŒü‚ÉUŒ‚‚·‚é
 			else
 			{
-				location.x = _location.x - erea.width - (_erea.width / 2);
-				location.y = _location.y + ATTACK_EREA_SHIFT_Y;
+				location.x = _location.x - erea.width - (_erea.width / 2) - attack_data.shift_x;
+				location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
 			}
 			//Œˆ‚ß‚ç‚ê‚½ŠÔ‚ªŒo‚Á‚½‚çUŒ‚‚ğÁ‚·
 			if (--attack_data.attack_time <= 0)
@@ -48,8 +48,6 @@ void Attack::SpawnAttack(AttackData _attackdata)
 {
 	attack_flg = true;
 	attack_data = _attackdata;
-	location.x = attack_data.x;
-	location.y = attack_data.y;
 	erea.width = attack_data.width;
 	erea.height = attack_data.height;
 }
