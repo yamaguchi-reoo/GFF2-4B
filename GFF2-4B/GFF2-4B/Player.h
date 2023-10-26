@@ -40,6 +40,7 @@ private:
 	int frame;						//フレーム測定
 	Location old_location;			//1フレーム前の座標
 	PlayerState player_state;		//プレイヤーの状態格納
+	AttackData player_attack_data[10];	//プレイヤーの攻撃段階と状態に応じたデータをまとめて格納しておく
 	float move_speed;				//移動速度(左右)
 	float jump_power;				//跳躍力
 	float acs[4];					//加速度 0=下方向 1=上方向 2=右方向 3=左方向
@@ -136,5 +137,8 @@ public:
 
 	//いずれかの床に触れているか判断する
 	bool OnAnyFloorFlg();
+
+	//プレイヤーの攻撃データを格納する
+	void SetPlayerAttackData();
 };
 
