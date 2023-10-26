@@ -12,7 +12,10 @@
 #include "PowerGauge.h"
 #include "PlayerHP.h"
 
-#define ATTACK_NUM 100   //画面に存在できる最大の攻撃数
+//effect
+#include "Effect.h"
+
+#define ATTACK_NUM 10   //画面に存在できる最大の攻撃数
 
 class Player;
 
@@ -23,6 +26,7 @@ private:
     Player* player;    //プレイヤーのオブジェクト
     Stage* stage[FLOOR_NUM];   //床のオブジェクト
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
+
     //エネミー
     Zakuro* zakuro;    //ザクロ
     Himawari* himawari;//ひまわり
@@ -33,6 +37,8 @@ private:
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
+
+    Effect* effect;     //しぶきエフェクトのオブジェクト
 
     int flg;        //
     int count[2];      //実験用
