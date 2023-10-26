@@ -12,7 +12,7 @@
 #define LEFT_END	300
 #define RIGHT_END	750
 #define SCREEN_LEFT_END 0
-#define FLOOR_NUM	2	//°‚Ì”
+#define FLOOR_NUM	3	//°‚Ì”
 
 
 #define BAMBOO_NUM 3 //’|‚ÌÏ‚Ü‚ê‚Ä‚¢‚é”

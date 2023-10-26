@@ -3,8 +3,8 @@
 #include"common.h"
 
 struct AttackData {
-	float x;			//左上座標(x)
-	float y;			//左上座標(y)
+	float shift_x;			//X座標にいくつずらすか
+	float shift_y;			//Y座標にいくつずらすか
 	float height;		//高さ
 	float width;		//幅
 	int who_attack;		//誰の攻撃か(whoと合わせて使う)

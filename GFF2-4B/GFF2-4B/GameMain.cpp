@@ -8,8 +8,8 @@ GameMain::GameMain()
 	player = new Player();
 	scene_scroll = new SceneScroll();
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
-	stage[1] = new Stage(200, 300, 200, 50);
-
+	stage[1] = new Stage(200, 450, 200, 50);
+	stage[2] = new Stage(300, 450, 200, 50);
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
@@ -90,7 +90,7 @@ AbstractScene* GameMain::Update()
 			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
 		}
 		/*************************************************************************************************
-		* 新しい敵を生成するたびに、whoの変数に1、２、と数字を割り振っていき(被りなしで　０はプレイヤー)、
+		* 新しい敵を生成するたびに、whoの変数に1、２、3と数字を割り振っていき(被りなしで　０はプレイヤー)、
 		* 攻撃を生成するときにその値をattack_data.who_attackに格納し、
 		* ここで画面内の敵の種類分だけifを作り、１種類の敵の数だけforで繰り返す
 		* whoはBoxColliderで定義済み
@@ -119,6 +119,16 @@ AbstractScene* GameMain::Update()
 		*		}
 		*	}
 		*********************************************************************************************/
+
+		for (int j = 0; j < (1); j++)
+			 {
+			if (attack[j]->GetAttackData().who_attack == zakuro->GetWho())
+				 {
+				attack[j]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
+				
+			}
+			
+		}
 	}
 	//床の数だけ繰り返す
 	for (int i = 0; i < FLOOR_NUM; i++)
