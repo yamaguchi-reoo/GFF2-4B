@@ -37,6 +37,8 @@ void Attack::Update(Location _location, Erea _erea)
 		if (--attack_data.attack_time <= 0)
 		{
 			attack_flg = false;
+			//UŒ‚•s”\
+			can_apply_damage = false;
 		}
 	}
 	else
@@ -48,7 +50,7 @@ void Attack::Update(Location _location, Erea _erea)
 
 void Attack::Draw()const
 {
-	if (can_apply_damage)
+	if (can_apply_damage == true)
 	{
 		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ff00, false);
 	}

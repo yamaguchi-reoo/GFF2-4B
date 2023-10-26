@@ -120,15 +120,14 @@ AbstractScene* GameMain::Update()
 		*	}
 		*********************************************************************************************/
 
-		for (int j = 0; j < (1); j++)
-			 {
-			if (attack[j]->GetAttackData().who_attack == zakuro->GetWho())
-				 {
-				attack[j]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
-				
+		//for (int j = 0; j < (1); j++)
+		//	 {
+			if (attack[i]->GetAttackData().who_attack == zakuro->GetWho())
+			{
+				attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 			}
 			
-		}
+		/*}*/
 	}
 	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
 	for (int i = 0; i < FLOOR_NUM; i++)
