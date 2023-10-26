@@ -84,6 +84,13 @@ void PowerGauge::Update()
 
 void PowerGauge::Draw() const
 {
+#ifdef _DEBUG
+
+	//デバック表示
+	DrawFormatString(300, 10, 0xffffff, "%f", magenta.volume);
+
+#endif // _DEBUG
+
 	DrawGraph(5, 5, image[2], TRUE);
 
 	if (black.maxFlg == 0)
@@ -116,9 +123,6 @@ void PowerGauge::Draw() const
 	}
 	
 	DrawGraph(5, 5, image[0], TRUE);
-
-	//デバック表示
-	//DrawFormatString(300, 10, 0xffffff, "%f", magenta.volume);
 }
 
 //ゲージの溜まり具合を計算
