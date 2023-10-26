@@ -45,7 +45,7 @@ void PowerGauge::Update()
 {
 	if (black.maxFlg == 0)
 	{
-		//デバック用(RBをおしたら強化ゲージがMAXになる)
+		//デバック用(LBをおしたら強化ゲージがMAXになる)
 		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) == true))
 		{
 			magenta.volume += 50.0f;
