@@ -10,6 +10,7 @@
 #include "bamboo.h"
 #include "Scroll.h"
 #include "PowerGauge.h"
+#include "PlayerHP.h"
 
 //effect
 #include "Effect.h"
@@ -35,6 +36,7 @@ private:
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
+    PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 

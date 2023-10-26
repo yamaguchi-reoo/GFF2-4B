@@ -1,5 +1,4 @@
-  #pragma once
-#include "common.h"
+#pragma once
 #include "PadInput.h"
 
 //ÉQÅ[ÉW

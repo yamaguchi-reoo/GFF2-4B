@@ -156,6 +156,7 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
+    <ClCompile Include="PlayerHP.cpp" />
     <ClCompile Include="PowerGauge.cpp" />
     <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="Zakuro.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="Effect.h" />
     <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PowerGauge.h" />
     <ClInclude Include="Scroll.h" />
     <ClInclude Include="Zakuro.h" />

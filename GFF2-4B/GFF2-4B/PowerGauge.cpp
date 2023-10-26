@@ -149,7 +149,7 @@ void PowerGauge::BlackGauge()
 	{
 		//強化状態で、ゲージが0%になるまで徐々に減らす
 		i = black.volume;
-		black.volume = i - 0.17;
+		black.volume = i - 0.17f;
 	}
 	else
 	{
