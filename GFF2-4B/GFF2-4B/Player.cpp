@@ -380,7 +380,7 @@ void Player::ApplyDamage(int num)
 
 AttackData Player::CreateAttactData(int i)
 {
-	AttackData attack_data;
+	AttackData attack_data{};
 	//‚Ç‚Ì’iŠK‚ÌUŒ‚‚Å‚à•Ï‚í‚ç‚È‚¢î•ñ‚Í‚±‚±‚ÅŠi”[‚·‚é
 	attack_data.x = location.x + (erea.width/2);
 	attack_data.y = location.y + (erea.height/2);
