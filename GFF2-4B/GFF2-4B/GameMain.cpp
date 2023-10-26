@@ -13,7 +13,7 @@ GameMain::GameMain()
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i] = new Attack();
 	}
@@ -41,7 +41,7 @@ GameMain::~GameMain()
 	{
 		delete stage[i];
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		delete attack[i];
 	}
@@ -124,15 +124,14 @@ AbstractScene* GameMain::Update()
 		*	}
 		*********************************************************************************************/
 
-		for (int j = 0; j < (1); j++)
-			 {
-			if (attack[j]->GetAttackData().who_attack == zakuro->GetWho())
-				 {
-				attack[j]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
-				
+		//for (int j = 0; j < (1); j++)
+		//	 {
+			if (attack[i]->GetAttackData().who_attack == zakuro->GetWho())
+			{
+				attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 			}
 			
-		}
+		/*}*/
 	}
 	//床の数だけ繰り返す
 	for (int i = 0; i < FLOOR_NUM; i++)
@@ -222,6 +221,8 @@ void GameMain::HitCheck()
 		{
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
+			attack[i]->DeleteAttack();
+			zakuro->Stop_Attack();
 		}
 	}
 }

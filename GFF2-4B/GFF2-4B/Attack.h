@@ -9,6 +9,8 @@ private:
 	AttackData attack_data;		//UŒ‚‚É•K—v‚Èî•ñŠi”[
 	bool attack_flg;	//UŒ‚‚ª”­¶‚µ‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒO
 	bool can_apply_damage;		//ƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚é‚©”»’f
+
+
 public:
 	Attack();
 	~Attack();

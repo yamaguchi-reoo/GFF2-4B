@@ -24,17 +24,21 @@ void Attack::Update(Location _location, Erea _erea)
 		{
 			location.x = _location.x + (_erea.width / 2) + attack_data.shift_x;
 			location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
+
 		}
 		//¶•ûŒü‚ÉUŒ‚‚·‚é
 		else
 		{
 			location.x = _location.x - erea.width - (_erea.width / 2) - attack_data.shift_x;
 			location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
+	
 		}
 		//Œˆ‚ß‚ç‚ê‚½ŠÔ‚ªŒo‚Á‚½‚çUŒ‚‚ğÁ‚·
 		if (--attack_data.attack_time <= 0)
 		{
 			attack_flg = false;
+			//UŒ‚•s”\
+			can_apply_damage = false;
 		}
 	}
 	else
@@ -46,7 +50,7 @@ void Attack::Update(Location _location, Erea _erea)
 
 void Attack::Draw()const
 {
-	if (can_apply_damage)
+	if (can_apply_damage == true)
 	{
 		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ff00, false);
 	}
