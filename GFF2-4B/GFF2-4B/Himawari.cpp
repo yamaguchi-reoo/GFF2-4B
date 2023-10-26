@@ -31,8 +31,8 @@ AttackData Himawari::CreateAttactData()
 {
 	AttackData attack_data;
 	//‚Ç‚Ì’iŠK‚ÌUŒ‚‚Å‚à•Ï‚í‚ç‚È‚¢î•ñ‚Í‚±‚±‚ÅŠi”[‚·‚é
-	attack_data.x = location.x + (erea.width / 2);
-	attack_data.y = location.y + (erea.height / 2);
+	attack_data.shift_x = location.x + (erea.width / 2);
+	attack_data.shift_y = location.y + (erea.height / 2);
 	attack_data.who_attack = 3;
 	attack_data.direction = direction;
 

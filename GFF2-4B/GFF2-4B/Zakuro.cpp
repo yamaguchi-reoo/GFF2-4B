@@ -23,18 +23,18 @@ void Zakuro::Update(GameMain* main)
 {
 	Attack(main);
 	
-	//‰EˆÚ“®
+	//¶ˆÚ“®
 	if (zakuro_flg == true) {
-		location.x += speed;
-		if (location.x > 500) {
+		location.x -= speed;
+		if (location.x < 0) {
 			zakuro_flg = false;
 			direction = false;
 		}
 	}
-	//¶ˆÚ“®
+	//‰EˆÚ“®
 	if (zakuro_flg == false) {
-		location.x -= speed;
-		if (location.x < 0) {
+		location.x += speed;
+		if (location.x > 500) {
 			zakuro_flg = true;
 			direction = true;
 		}
@@ -46,7 +46,7 @@ void Zakuro::Draw() const
 	SetFontSize(20);
 	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
 	DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
-	if (direction == true)
+	if (direction == false)
 	{
 		DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
 	}
@@ -59,14 +59,14 @@ void Zakuro::Draw() const
 AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
-	attack_data.shift_x = 0;
-	attack_data.shift_y = 0;
+	attack_data.shift_x = -erea.width;
+	attack_data.shift_y = erea.height;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
-	attack_data.attack_time = 2;
+	attack_data.attack_time = 500;
 	attack_data.direction = direction;
-	attack_data.delay = 0;
+	attack_data.delay = 50;
 	attack_data.damage = 1;
 
 	return attack_data;
