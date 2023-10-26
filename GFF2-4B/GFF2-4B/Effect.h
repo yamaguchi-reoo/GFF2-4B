@@ -1,7 +1,6 @@
 #pragma once
 #include "common.h"
 #include "PadInput.h"
-#define _USE_MATH_DEFINES
 #include <math.h>
 
 //しぶき
@@ -21,19 +20,14 @@ private:
 
 	bool hit_flg; //テスト用(true->敵に攻撃が当たったとき)
 	
-	float vx,vy; //ベクトル
-	int speed;	//スピード
-	float angle; //角度
-	float timer; //タイマー
-	float g;	//重力
+	float lenge_x, lenge_y;
 
-	float h, w;
+	int vx, vy;
+	float gauge_x, gauge_y;
 
 public:
 	Effect();
 	~Effect();
-
-	void Curve();
 
 	void Update();
 	void Draw()const;
