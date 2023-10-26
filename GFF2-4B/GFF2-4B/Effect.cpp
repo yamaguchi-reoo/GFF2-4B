@@ -13,9 +13,11 @@ Effect::Effect()
 	gauge_x = 70;
 	gauge_y = 80;
 	
+	//ƒQ[ƒW‚Æ‚µ‚Ô‚«‚ÌÀ•W‚Ì·
 	lenge_x = 0;
 	lenge_y = 0;
 
+	//ˆÚ“®—Ê
 	vx = 0;
 	vy = 0;
 }
@@ -28,7 +30,7 @@ Effect::~Effect()
 
 void Effect::Update()
 {
-	
+	//0‚ğ‰Ÿ‚µ‚½‚ç‚µ‚Ô‚«‚ªˆÚ“®‚·‚é
 	if (CheckHitKey(KEY_INPUT_0) == true)
 	{
 		hit_flg = true;
@@ -54,9 +56,4 @@ void Effect::Draw() const
 
 	DrawCircle(splash.x, splash.y, splash.r, splash.color_flg, TRUE);
 
-	DrawFormatString(700, 0, 0x0000ff, "lenge_x:%f", fabs(lenge_x));
-	DrawFormatString(700, 20, 0x0000ff, "lenge_y:%f", fabs(lenge_y));
-
-	DrawFormatString(700, 40, 0x0000ff, "vx:%d", vx);
-	DrawFormatString(700, 60, 0x0000ff, "vy:%d", vy);
 }
