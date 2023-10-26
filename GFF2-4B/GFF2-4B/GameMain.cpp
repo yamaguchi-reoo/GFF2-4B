@@ -155,7 +155,7 @@ void GameMain::Draw() const
 	playerhp->Draw();
 
 	SetFontSize(42);
-	DrawString(400, 0, "GameMain", 0xffffff);
+//	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
 	player->Draw();
 	for (int i = 0; i < ATTACK_NUM; i++)
@@ -168,7 +168,7 @@ void GameMain::Draw() const
 		stage[i]->Draw();
 	}
 	if (flg == true) {
-		DrawString(300, 300,"flg", 0xffffff);
+		//DrawString(300, 300,"flg", 0xffffff);
 	}
 	//エネミーの描画
 	zakuro->Draw(); // ザクロ

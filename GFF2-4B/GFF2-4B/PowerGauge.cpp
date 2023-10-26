@@ -118,7 +118,7 @@ void PowerGauge::Draw() const
 	DrawGraph(5, 5, image[0], TRUE);
 
 	//デバック表示
-	DrawFormatString(300, 10, 0xffffff, "%f", magenta.volume);
+	//DrawFormatString(300, 10, 0xffffff, "%f", magenta.volume);
 }
 
 //ゲージの溜まり具合を計算

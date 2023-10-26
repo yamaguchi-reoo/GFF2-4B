@@ -184,10 +184,10 @@ void Player::Draw()const
 	//デバッグ用表示
 	for (int i = 0; i < 5; i++)
 	{
-		DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
+		//DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
 	}
-	DrawFormatString(360, 360, 0xfffff0, "HP %d", hp);
-	DrawFormatString(360, 380, 0xfffff0, "direction %d", direction);
+	//DrawFormatString(360, 360, 0xfffff0, "HP %d", hp);
+	//DrawFormatString(360, 380, 0xfffff0, "direction %d", direction);
 
 	//プレイヤー画像表示
 	if (hidden_flg == true)

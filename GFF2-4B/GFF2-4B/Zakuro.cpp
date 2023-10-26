@@ -65,7 +65,7 @@ void Zakuro::Update(GameMain* main)
 void Zakuro::Draw() const
 {
 	SetFontSize(20);
-	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
+	//DrawFormatString(200, 0, 0xffffff, "%f", location.x);
 	DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
 	if (direction == false)
 	{

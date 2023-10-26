@@ -49,7 +49,7 @@ void SceneScroll::Update(Location player, float acs_l, float acs_r)
 void SceneScroll::Draw()
 {
 	DrawGraphF(scroll_x, 0.0f, stage_image, FALSE);
-	DrawFormatString(800, 400, 0x00ff00, "%d", scroll_x);
+	//DrawFormatString(800, 400, 0x00ff00, "%d", scroll_x);
 }
 ScrollData SceneScroll::PlayerScroll(Location player)
 {
