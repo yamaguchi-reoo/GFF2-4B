@@ -1,6 +1,8 @@
 #include "Zakuro.h"
 #include "DxLib.h"
 #include "Player.h"
+#include"GameMain.h"
+
 
 Zakuro::Zakuro()
 {
@@ -9,7 +11,7 @@ Zakuro::Zakuro()
 	erea.height = 50;
 	erea.width = 50;
 	speed = 2;
-
+	who = 1;
 	direction = false;
 	zakuro_flg = false;
 }
@@ -19,6 +21,7 @@ Zakuro::~Zakuro()
 }
 void Zakuro::Update(GameMain* main)
 {
+	Attack(main);
 	
 	//‰EˆÚ“®
 	if (zakuro_flg == true) {
@@ -60,11 +63,21 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.y = location.y + (erea.height / 2);
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
-	attack_data.who_attack = false;
-	attack_data.attack_time = 0;
+	attack_data.who_attack = who;
+	attack_data.attack_time = 2;
 	attack_data.direction = direction;
 	attack_data.delay = 0;
+	attack_data.damage = 1;
+
 	return attack_data;
 }
 
 
+void Zakuro::Attack(GameMain* main)
+{
+
+	//UŒ‚‚ð¶¬‚·‚é
+	main->SpawnAttack(CreateAttactData());
+
+
+}

@@ -17,5 +17,6 @@ public:
 
 	//攻撃をスポーンさせるのに必要な情報をまとめる
 	AttackData CreateAttactData();
+	void Attack(GameMain*main);
 };
 
