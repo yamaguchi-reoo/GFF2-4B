@@ -14,15 +14,16 @@
 #define DEFAULT_INVINCIBLE_TIME	80		//基本無敵時間(攻撃を喰らった後)
 
 #define PLAYER_IMAGE_SHIFT_X 80			//画像ずらし用
-#define PLAYER_IMAGE_SHIFT_Y 105			//画像ずらし用
+#define PLAYER_IMAGE_SHIFT_Y 105		//画像ずらし用
 #define PLAYER_IDOL 0					//立ち姿アニメーション開始地点
 #define PLAYER_WALK 1					//移動アニメーション開始地点
 #define PLAYER_JUMP 4					//ジャンプアニメーション開始地点
 #define PLAYER_ATTACK_ONE 5				//攻撃１段目アニメーション開始地点
 #define PLAYER_ATTACK_TWO 8				//攻撃２段目アニメーション開始地点
-#define PLAYER_ATTACK_THREE 11				//攻撃３段目アニメーション開始地点
-#define PLAYER_ATTACK_FOUR 14				//攻撃４段目アニメーション開始地点
-
+#define PLAYER_ATTACK_THREE 11			//攻撃３段目アニメーション開始地点
+#define PLAYER_ATTACK_FOUR 14			//攻撃４段目アニメーション開始地点
+#define PLAYER_JUMP_ATTACK 12			//ジャンプ攻撃アニメーション開始地点
+#define PLAYER_JUMP_ATTACK_END 16		//ジャンプ攻撃（着地）アニメーション開始地点
 #define PLAYER_ANIM 10					//次の画像に切り替えるまでの時間（フレーム）
 Player::Player()
 {
@@ -242,10 +243,16 @@ void Player::Draw()const
 			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case JUMP_ATTACK_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[12], true);
+			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			break;
+		case JUMP_ATTACK_RIGHT_END:
+			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case JUMP_ATTACK_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[12], true);
+			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			break;
+		case JUMP_ATTACK_LEFT_END:
+			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case DAMAGE_RIGHT:
 			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
@@ -483,8 +490,12 @@ void Player::Attack(GameMain* main)
 	}
 	//攻撃演出用
 	//落下攻撃以外なら
-	if (attack_step != 4)
+	switch (attack_step)
 	{
+	case 0:
+	case 1:
+	case 2:
+	case 3:
 		if (--attack_time > 0)
 		{
 			//現在行っている攻撃の段階に応じたフラグをtrueにする
@@ -495,10 +506,8 @@ void Player::Attack(GameMain* main)
 			//行っていた攻撃の段階に応じたフラグをfalseにする
 			attack_motion_flg[attack_step] = false;
 		}
-	}
-	//落下攻撃なら
-	else
-	{
+		break;
+	case 4:
 		//空中にいる限り攻撃し続ける
 		if (OnAnyFloorFlg() == false)
 		{
@@ -508,14 +517,37 @@ void Player::Attack(GameMain* main)
 			main->SpawnAttack(CreateAttactData(attack_step));
 
 		}
-	}
-	//地面についたら攻撃終了
-	if (OnAnyFloorFlg() == true && attack_motion_flg[4] == true)
-	{
-		//落下攻撃のフラグをfalseにする
-		attack_motion_flg[4] = false;
-		//攻撃段階をリセット
-		attack_step = 0;
+		//地面についたら着地攻撃
+		else
+		{
+			//落下攻撃のフラグをfalseにする
+			attack_motion_flg[4] = false;
+			//着地攻撃の発生
+			attack_step = 5;
+			main->SpawnAttack(CreateAttactData(attack_step));
+			//プレイヤーが移動できない時間
+			if (powerup_flg == false)
+			{
+				attack_time = DEFAULT_ATTACK_INTERVAL;
+			}
+			else
+			{
+				attack_time = DEFAULT_ATTACK_INTERVAL / 2;
+			}
+		}
+		break;
+	case 5:
+		if (--attack_time > 0)
+		{
+			//現在行っている攻撃の段階に応じたフラグをtrueにする
+			attack_motion_flg[attack_step] = true;
+		}
+		else
+		{
+			//行っていた攻撃の段階に応じたフラグをfalseにする
+			attack_motion_flg[attack_step] = false;
+		}
+		break;
 	}
 }
 
@@ -666,7 +698,10 @@ void Player::UpdatePlayerState()
 		{
 			player_state = JUMP_ATTACK_RIGHT;
 		}
-
+		if (attack_motion_flg[5] == true)
+		{
+			player_state = JUMP_ATTACK_RIGHT_END;
+		}
 		//ダメージを喰らった状態なら
 		if (damage_flg == true)
 		{
@@ -720,6 +755,10 @@ void Player::UpdatePlayerState()
 		if (attack_motion_flg[4] == true)
 		{
 			player_state = JUMP_ATTACK_LEFT;
+		}
+		if (attack_motion_flg[5] == true)
+		{
+			player_state = JUMP_ATTACK_LEFT_END;
 		}
 
 		//ダメージを喰らった状態なら
@@ -850,4 +889,22 @@ void Player::SetPlayerAttackData()
 	player_attack_data[9].attack_time = 2;
 	player_attack_data[9].damage = 1;
 	player_attack_data[9].delay = 0;
+	//ジャンプ攻撃からの着地攻撃
+	player_attack_data[10].shift_x = 0;
+	player_attack_data[10].shift_y = 50;
+	player_attack_data[10].width = 200;
+	player_attack_data[10].height = 100;
+	player_attack_data[10].who_attack = 0;
+	player_attack_data[10].attack_time = 10;
+	player_attack_data[10].damage = 2;
+	player_attack_data[10].delay = 0;
+	//ジャンプ攻撃からの着地攻撃　強化用
+	player_attack_data[11].shift_x = 0;
+	player_attack_data[11].shift_y = 50;
+	player_attack_data[11].width = 250;
+	player_attack_data[11].height = 100;
+	player_attack_data[11].who_attack = 0;
+	player_attack_data[11].attack_time = 5;
+	player_attack_data[11].damage = 2;
+	player_attack_data[11].delay = 0;
 }
