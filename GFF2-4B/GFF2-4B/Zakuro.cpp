@@ -85,7 +85,7 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
-	attack_data.attack_time = 500;
+	attack_data.attack_time = 5;
 	attack_data.direction = direction;
 	attack_data.delay = 50;
 	attack_data.damage = 1;

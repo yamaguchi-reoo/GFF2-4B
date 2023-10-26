@@ -13,7 +13,7 @@ GameMain::GameMain()
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i] = new Attack();
 	}
@@ -39,7 +39,7 @@ GameMain::~GameMain()
 	{
 		delete stage[i];
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		delete attack[i];
 	}
