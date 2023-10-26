@@ -3,14 +3,15 @@
 #include"common.h"
 
 struct AttackData {
-	float x;			//左上座標(x)
-	float y;			//左上座標(y)
+	float shift_x;			//X座標にいくつずらすか
+	float shift_y;			//Y座標にいくつずらすか
 	float height;		//高さ
 	float width;		//幅
 	int who_attack;		//誰の攻撃か(whoと合わせて使う)
 	int attack_time;	//どれくらい判定がその場に居続けるか
 	bool direction;		//X座標を基準にしてどの方向に攻撃を発生させるかの判断(0=右 1=左)
 	int damage;			//与えるダメージ量
+	int delay;			//何フレーム待ってから攻撃するか
 };
 //中心座標
 struct Location
