@@ -65,6 +65,7 @@ Player::Player()
 	powerup_flg = false;
 	move_flg = true;
 	attack_anim_flg = false;
+	SetPlayerAttackData();
 	LoadDivGraph("resource/images/PlayerAnimation.png", 17, 6, 3, 256, 256, player_image);
 	player_anim = 0;
 	attack_anim = 0;
@@ -100,15 +101,10 @@ void Player::Update(GameMain* main)
 	Attack(main);
 
 	//強化テスト用
-	if (PadInput::OnButton(XINPUT_BUTTON_X) == true)
-	{
-		SetPowerUp();
-	}
-	//強化テスト用
-	if (PadInput::OnButton(XINPUT_BUTTON_Y) == true)
-	{
-		StopPowerUp();
-	}
+	//if (PadInput::OnButton(XINPUT_BUTTON_X) == true)
+	//{
+	//	SetPowerUp();
+	//}
 
 	//顔の方向処理
 	if (acs[LEFT] < acs[RIGHT])
@@ -382,64 +378,9 @@ void Player::ApplyDamage(int num)
 AttackData Player::CreateAttactData(int i)
 {
 	AttackData attack_data;
-	//どの段階の攻撃でも変わらない情報はここで格納する
-	attack_data.who_attack = 0;
+	attack_data = player_attack_data[i * 2 + powerup_flg];
+	//生成の瞬間に応じて変わる情報はここで格納する
 	attack_data.direction = direction;
-	//攻撃の段階に応じて格納する情報を変える
-	switch (i)
-	{
-		//通常１段目
-	case 0:
-		attack_data.shift_x = -erea.width;
-		attack_data.shift_y = -50;
-		attack_data.width = erea.width + 100;
-		attack_data.height = 200;
-		attack_data.attack_time = 10;
-		attack_data.damage = 1;
-		attack_data.delay = 10;
-		break;
-		//通常２段目
-	case 1:
-		attack_data.shift_x = -erea.width;
-		attack_data.shift_y = -70;
-		attack_data.width = erea.width + 100;
-		attack_data.height = 210;
-		attack_data.attack_time = 10;
-		attack_data.damage = 1;
-		attack_data.delay = 10;
-		break;
-		//通常３段目
-	case 2:
-		attack_data.shift_x = -erea.width;
-		attack_data.shift_y = 50;
-		attack_data.width = erea.width + 170;
-		attack_data.height = 100;
-		attack_data.attack_time = 10;
-		attack_data.damage = 1;
-		attack_data.delay = 5;
-		break;
-		//通常４段目
-	case 3:
-		attack_data.shift_x = 0;
-		attack_data.shift_y = -90;
-		attack_data.width = 200;
-		attack_data.height = 200;
-		attack_data.attack_time = 10;
-		attack_data.damage = 1;
-		attack_data.delay = 10;
-		break;
-		//ジャンプ攻撃
-	case 4:
-		attack_data.shift_x = 0;
-		attack_data.shift_y = 100;
-		attack_data.width = 100;
-		attack_data.height = 100;
-		attack_data.attack_time = 2;
-		attack_data.damage = 1;
-		attack_data.delay = 0;
-		break;
-	}
-
 	return attack_data;
 }
 
@@ -727,4 +668,98 @@ bool Player::OnAnyFloorFlg()
 		}
 	}
 	return ret;
+}
+
+void Player::SetPlayerAttackData()
+{
+	//一段階目　
+	player_attack_data[0].shift_x = -erea.width;
+	player_attack_data[0].shift_y = -50;
+	player_attack_data[0].width = erea.width + 100;
+	player_attack_data[0].height = 200;
+	player_attack_data[0].who_attack = 0;
+	player_attack_data[0].attack_time = 10;
+	player_attack_data[0].damage = 1;
+	player_attack_data[0].delay = 10;
+	//一段階目　強化中
+	player_attack_data[1].shift_x = -erea.width;
+	player_attack_data[1].shift_y = -50;
+	player_attack_data[1].width = erea.width + 110;
+	player_attack_data[1].height = 220;
+	player_attack_data[1].who_attack = 0;
+	player_attack_data[1].attack_time = 5;
+	player_attack_data[1].damage = 3;
+	player_attack_data[1].delay = 5;
+	//二段階目
+	player_attack_data[2].shift_x = -erea.width;
+	player_attack_data[2].shift_y = -70;
+	player_attack_data[2].width = erea.width + 100;
+	player_attack_data[2].height = 210;
+	player_attack_data[2].who_attack = 0;
+	player_attack_data[2].attack_time = 10;
+	player_attack_data[2].damage = 1;
+	player_attack_data[2].delay = 10;
+	//二段階目　強化中
+	player_attack_data[3].shift_x = -erea.width;
+	player_attack_data[3].shift_y = -70;
+	player_attack_data[3].width = erea.width + 120;
+	player_attack_data[3].height = 230;
+	player_attack_data[3].who_attack = 0;
+	player_attack_data[3].attack_time = 5;
+	player_attack_data[3].damage = 3;
+	player_attack_data[3].delay = 5;
+	//三段階目
+	player_attack_data[4].shift_x = -erea.width;
+	player_attack_data[4].shift_y = 50;
+	player_attack_data[4].width = erea.width + 170;
+	player_attack_data[4].height = 100;
+	player_attack_data[4].who_attack = 0;
+	player_attack_data[4].attack_time = 10;
+	player_attack_data[4].damage = 1;
+	player_attack_data[4].delay = 5;
+	//三段階目　強化中
+	player_attack_data[5].shift_x = -erea.width;
+	player_attack_data[5].shift_y = 40;
+	player_attack_data[5].width = erea.width + 250;
+	player_attack_data[5].height = 110;
+	player_attack_data[5].who_attack = 0;
+	player_attack_data[5].attack_time = 10;
+	player_attack_data[5].damage = 1;
+	player_attack_data[5].delay = 5;
+	//四段階目
+	player_attack_data[6].shift_x = -erea.width;
+	player_attack_data[6].shift_y = -90;
+	player_attack_data[6].width = erea.width + 150;
+	player_attack_data[6].height = 200;
+	player_attack_data[6].who_attack = 0;
+	player_attack_data[6].attack_time = 10;
+	player_attack_data[6].damage = 1;
+	player_attack_data[6].delay = 10;
+	//四段階目　強化中
+	player_attack_data[7].shift_x = -erea.width;
+	player_attack_data[7].shift_y = -90;
+	player_attack_data[7].width = erea.width + 200;
+	player_attack_data[7].height = 200;
+	player_attack_data[7].who_attack = 0;
+	player_attack_data[7].attack_time = 10;
+	player_attack_data[7].damage = 1;
+	player_attack_data[7].delay = 10;
+	//ジャンプ攻撃
+	player_attack_data[8].shift_x = 0;
+	player_attack_data[8].shift_y = 100;
+	player_attack_data[8].width = 100;
+	player_attack_data[8].height = 100;
+	player_attack_data[8].who_attack = 0;
+	player_attack_data[8].attack_time = 2;
+	player_attack_data[8].damage = 1;
+	player_attack_data[8].delay = 0;
+	//ジャンプ攻撃　強化中
+	player_attack_data[9].shift_x = 0;
+	player_attack_data[9].shift_y = 50;
+	player_attack_data[9].width = 100;
+	player_attack_data[9].height = 150;
+	player_attack_data[9].who_attack = 0;
+	player_attack_data[9].attack_time = 2;
+	player_attack_data[9].damage = 1;
+	player_attack_data[9].delay = 0;
 }

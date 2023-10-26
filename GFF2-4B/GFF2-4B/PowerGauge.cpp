@@ -45,8 +45,13 @@ void PowerGauge::Update()
 {
 	if (black.maxFlg == 0)
 	{
-		//デバック用でここに配置
-		SetVolume(0);
+		//デバック用(LBをおしたら強化ゲージがMAXになる)
+		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) == true))
+		{
+			magenta.volume += 50.0f;
+			cyan.volume += 50.0f;
+			yellow.volume += 50.0f;
+		}
 
 		CheckVolumeMax();
 
@@ -177,57 +182,36 @@ void PowerGauge::SetPowerFlg(int i)
 	powerFlg = i;
 }
 
-//プレイヤーが敵を倒したらその敵に応じた色分をゲージに加算
-void PowerGauge::SetVolume(int enemy)
+//敵が落とした色、量をゲージに加算
+void PowerGauge::SetVolume(int color,int volume)
 {
-	switch (enemy)
+	switch (color)
 	{
 		case 0:
-			//ザクロ
+			//マゼンタ
 			if (magenta.maxFlg == 0)
 			{
-				magenta.volume += 1.5f;
+				magenta.volume += (float)volume;
 			}
-			if (yellow.maxFlg == 0)
-			{
-				yellow.volume += 0.5f;
-			}
-			if (cyan.maxFlg == 0)
-			{
-				cyan.volume += 0.5f;
-			}
+			
 			break;
 
 		case 1:
-			//イルカ
-			if (magenta.maxFlg == 0)
-			{
-				magenta.volume += 0.5f;
-			}
-			if (yellow.maxFlg == 0)
-			{
-				yellow.volume += 0.5f;
-			}
+			//シアン
 			if (cyan.maxFlg == 0)
 			{
-				cyan.volume += 1.5f;
+				cyan.volume += (float)volume;
 			}
+			
 			break;
 
 		case 2:
-			//ヒマワリ
-			if (magenta.maxFlg == 0)
-			{
-				magenta.volume += 0.5f;
-			}
+			//イエロー
 			if (yellow.maxFlg == 0)
 			{
-				yellow.volume += 1.5f;
+				yellow.volume += (float)volume;
 			}
-			if (cyan.maxFlg == 0)
-			{
-				cyan.volume += 0.5f;
-			}
+
 			break;
 
 		default:
