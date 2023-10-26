@@ -517,7 +517,7 @@ void Player::Attack(GameMain* main)
 			main->SpawnAttack(CreateAttactData(attack_step));
 
 		}
-		//地面についたら攻撃終了
+		//地面についたら着地攻撃
 		else
 		{
 			//落下攻撃のフラグをfalseにする
