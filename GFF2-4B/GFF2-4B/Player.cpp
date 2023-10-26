@@ -189,8 +189,7 @@ void Player::Draw()const
 	//デバッグ用表示
 	for (int i = 0; i < 5; i++)
 	{
-		DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);/*
-		DrawFormatString(200, 100+i*30, 0x00ff00, "%f", external_move[i]);*/
+		DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
 	}
 
 	//プレイヤー画像表示
@@ -382,8 +381,6 @@ AttackData Player::CreateAttactData(int i)
 {
 	AttackData attack_data;
 	//どの段階の攻撃でも変わらない情報はここで格納する
-	attack_data.x = location.x + (erea.width/2);
-	attack_data.y = location.y + (erea.height/2);
 	attack_data.who_attack = 0;
 	attack_data.direction = direction;
 	//攻撃の段階に応じて格納する情報を変える
@@ -391,30 +388,38 @@ AttackData Player::CreateAttactData(int i)
 	{
 		//通常１段目
 	case 0:
-		attack_data.width = 100;
-		attack_data.height = 100;
+		attack_data.shift_x = -erea.width;
+		attack_data.shift_y = -50;
+		attack_data.width = erea.width + 100;
+		attack_data.height = 200;
 		attack_data.attack_time = 10;
 		attack_data.damage = 1;
 		attack_data.delay = 10;
 		break;
 		//通常２段目
 	case 1:
-		attack_data.width = 110;
-		attack_data.height = 110;
+		attack_data.shift_x = -erea.width;
+		attack_data.shift_y = -70;
+		attack_data.width = erea.width + 100;
+		attack_data.height = 210;
 		attack_data.attack_time = 10;
 		attack_data.damage = 1;
 		attack_data.delay = 10;
 		break;
 		//通常３段目
 	case 2:
-		attack_data.width = 120;
-		attack_data.height = 120;
+		attack_data.shift_x = -erea.width;
+		attack_data.shift_y = 50;
+		attack_data.width = erea.width + 170;
+		attack_data.height = 100;
 		attack_data.attack_time = 10;
 		attack_data.damage = 1;
-		attack_data.delay = 10;
+		attack_data.delay = 5;
 		break;
 		//通常４段目
 	case 3:
+		attack_data.shift_x = 0;
+		attack_data.shift_y = -90;
 		attack_data.width = 200;
 		attack_data.height = 200;
 		attack_data.attack_time = 10;
@@ -423,6 +428,8 @@ AttackData Player::CreateAttactData(int i)
 		break;
 		//ジャンプ攻撃
 	case 4:
+		attack_data.shift_x = 0;
+		attack_data.shift_y = 100;
 		attack_data.width = 100;
 		attack_data.height = 100;
 		attack_data.attack_time = 2;
@@ -465,11 +472,11 @@ void Player::Attack(GameMain* main)
 			//プレイヤーが移動できない時間
 			if (powerup_flg == false)
 			{
-				attack_time = 30;
+				attack_time = DEFAULT_ATTACK_INTERVAL;
 			}
 			else
 			{
-				attack_time = 15;
+				attack_time = DEFAULT_ATTACK_INTERVAL/2;
 			}
 			//一定間隔が過ぎる前に攻撃を行っていたなら
 			if (ca_interval_count > 0)
@@ -545,14 +552,15 @@ void Player::Attack(GameMain* main)
 			main->SpawnAttack(CreateAttactData(attack_step));
 
 		}
-		//地面についたら攻撃終了
-		else
-		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = false;
-			//攻撃段階をリセット
-			attack_step = 0;
-		}
+	}
+	//地面についたら攻撃終了
+	//確実にジャンプ攻撃を終了させる用
+	if (OnAnyFloorFlg() == true && attack_motion_flg[4] == true)
+	{
+		//ジャンプ攻撃のフラグをfalseにする
+		attack_motion_flg[4] = false;
+		//攻撃段階をリセット
+		attack_step = 0;
 	}
 }
 
