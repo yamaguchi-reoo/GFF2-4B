@@ -27,6 +27,8 @@ GameMain::GameMain()
 
 	powergauge = new PowerGauge();
 
+	playerhp = new PlayerHP();
+
 	flg = false;
 	onfloor_flg = false;
 }
@@ -47,6 +49,7 @@ GameMain::~GameMain()
 	delete himawari;
 	delete iruka;
 	delete powergauge;
+	delete playerhp;
 }
 
 AbstractScene* GameMain::Update()
@@ -65,6 +68,7 @@ AbstractScene* GameMain::Update()
 	iruka->Update(this);
 	player->Update(this);
 	powergauge->Update();
+	playerhp->Update(player->GetPlayerHP());
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -149,6 +153,7 @@ void GameMain::Draw() const
 {
 	scene_scroll->Draw();
 	powergauge->Draw();
+	playerhp->Draw();
 
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);
