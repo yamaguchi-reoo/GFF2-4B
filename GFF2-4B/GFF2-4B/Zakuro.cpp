@@ -13,7 +13,8 @@ Zakuro::Zakuro()
 	speed = 2;
 	who = 1;
 	direction = false;
-	zakuro_flg = false;
+	attack_flg = true;
+	stop_count = 120;
 }
 Zakuro::~Zakuro()
 {
@@ -21,24 +22,44 @@ Zakuro::~Zakuro()
 }
 void Zakuro::Update(GameMain* main)
 {
-	Attack(main);
+	if (attack_flg == true) {
+		Attack(main);
+		//¶ˆÚ“®
+		if (direction == true) {
+			location.x -= speed;
+			if (location.x < 0) {
+
+
+				direction = false;
+			}
+		}
+		//‰EˆÚ“®
+		if (direction == false) {
+			location.x += speed;
+			if (location.x > 500) {
+				direction = true;
+			}
+		}
+	}
+	else {
+
+		//¶ˆÚ“®
+		if (direction == true) {
+			location.x += speed*0.3;
+		}
+		//‰EˆÚ“®
+		if (direction == false) {
+			location.x -= speed*0.3;
+		}
+
+		if (--stop_count <= 0) {
+			attack_flg = true;
+			stop_count = 120;
+		}
+	}
 	
-	//¶ˆÚ“®
-	if (zakuro_flg == true) {
-		location.x -= speed;
-		if (location.x < 0) {
-			zakuro_flg = false;
-			direction = false;
-		}
-	}
-	//‰EˆÚ“®
-	if (zakuro_flg == false) {
-		location.x += speed;
-		if (location.x > 500) {
-			zakuro_flg = true;
-			direction = true;
-		}
-	}
+	
+	
 }
 
 void Zakuro::Draw() const
@@ -81,3 +102,7 @@ void Zakuro::Attack(GameMain* main)
 
 
 }
+
+
+
+
