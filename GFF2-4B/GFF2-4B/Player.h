@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "Scroll.h"
 
-#define ATTACK_NUM 5						//攻撃のレパートリー
+#define ATTACK_NUM 6						//攻撃のレパートリー
 
 class GameMain;
 
@@ -52,7 +52,7 @@ private:
 	bool jump_flg;					//ジャンプ中か
 
 	//攻撃関連
-	AttackData player_attack_data[10];	//プレイヤーの攻撃段階と状態に応じたデータをまとめて格納しておく
+	AttackData player_attack_data[ATTACK_NUM * 2];	//プレイヤーの攻撃段階と状態に応じたデータをまとめて格納しておく
 	int attack_interval_count;		//攻撃の間隔測定用
 	int attack_interval;			//攻撃の間隔
 	int ca_interval_count;			//コンボ攻撃の間隔測定用
