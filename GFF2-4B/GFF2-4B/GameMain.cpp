@@ -8,12 +8,12 @@ GameMain::GameMain()
 	player = new Player();
 	scene_scroll = new SceneScroll();
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
-	stage[1] = new Stage(200, 300, 200, 50);
-
+	stage[1] = new Stage(200, 450, 200, 50);
+	stage[2] = new Stage(300, 450, 200, 50);
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i] = new Attack();
 	}
@@ -39,7 +39,7 @@ GameMain::~GameMain()
 	{
 		delete stage[i];
 	}
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		delete attack[i];
 	}
@@ -90,7 +90,7 @@ AbstractScene* GameMain::Update()
 			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
 		}
 		/*************************************************************************************************
-		* 新しい敵を生成するたびに、whoの変数に1、２、と数字を割り振っていき(被りなしで　０はプレイヤー)、
+		* 新しい敵を生成するたびに、whoの変数に1、２、3と数字を割り振っていき(被りなしで　０はプレイヤー)、
 		* 攻撃を生成するときにその値をattack_data.who_attackに格納し、
 		* ここで画面内の敵の種類分だけifを作り、１種類の敵の数だけforで繰り返す
 		* whoはBoxColliderで定義済み
@@ -119,6 +119,15 @@ AbstractScene* GameMain::Update()
 		*		}
 		*	}
 		*********************************************************************************************/
+
+		//for (int j = 0; j < (1); j++)
+		//	 {
+			if (attack[i]->GetAttackData().who_attack == zakuro->GetWho())
+			{
+				attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
+			}
+			
+		/*}*/
 	}
 	//床の数だけ繰り返す
 	for (int i = 0; i < FLOOR_NUM; i++)
@@ -194,19 +203,21 @@ void GameMain::HitCheck()
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるものなら
-		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER)
+		//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
 			//ザクロのダメージ処理
 
 		}
 		//同じようにひまわりとイルカも
 
-		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるものなら
-		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER)
+		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
+		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
+			attack[i]->DeleteAttack();
+			zakuro->Stop_Attack();
 		}
 	}
 }
