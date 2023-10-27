@@ -20,5 +20,17 @@ void Stage::Update()
 
 void Stage::Draw()const
 {
-	DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ff00, true);
+	DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffffff, true);
+}
+
+void Stage::MoveStage(ScrollData _scroll)
+{
+	if (_scroll.direction == true)
+	{
+		location.x += _scroll.move;
+	}
+	else
+	{
+		location.x -= _scroll.move;
+	}
 }

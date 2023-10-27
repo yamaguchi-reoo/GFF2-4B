@@ -1,6 +1,6 @@
 #pragma once
 #include "BoxCollider.h"
-
+#include "Scroll.h"
 class Stage:
 	public BoxCollider
 {
@@ -11,4 +11,7 @@ public:
 	~Stage();
 	void Update();
 	void Draw()const;
+
+	//ステージをずらす処理(使いやすい用にいじってもらってOK)
+	void MoveStage(ScrollData _scroll);
 };
