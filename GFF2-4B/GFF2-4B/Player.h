@@ -58,7 +58,8 @@ private:
 	int ca_interval_count;			//コンボ攻撃の間隔測定用
 	int combo_attack_interval;		//コンボ攻撃の間隔
 	int attack_step;				//攻撃の段階
-	int attack_time;				//攻撃している時間
+	int attack_time;			//攻撃している時間
+	int attack_time_count;			//攻撃している時間測定用
 	bool attack_motion_flg[ATTACK_NUM];		//攻撃モーション中か判断(0から3＝通常攻撃１から４段目　4=落下攻撃)
 	bool attack_anim_flg;			//いずれかの攻撃を行っている最中か判断
 	bool powerup_flg;				//強化状態か
@@ -157,6 +158,9 @@ public:
 
 	//いずれかの攻撃が行われている最中か判断する
 	bool PlayAnyAttack();
+
+	//指定した攻撃のフラグをtrueにし、それ以外のフラグをfalseにする
+	void SetAttackFlg(int num);
 
 	//プレイヤーの攻撃データを格納する
 	void SetPlayerAttackData();

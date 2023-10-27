@@ -25,6 +25,7 @@
 #define PLAYER_JUMP_ATTACK 12			//ジャンプ攻撃アニメーション開始地点
 #define PLAYER_JUMP_ATTACK_END 16		//ジャンプ攻撃（着地）アニメーション開始地点
 #define PLAYER_ANIM 10					//次の画像に切り替えるまでの時間（フレーム）
+
 Player::Player()
 {
 	frame = 0;
@@ -44,7 +45,8 @@ Player::Player()
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
 	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
 	attack_step = 0;
-	attack_time = 0;
+	attack_time = DEFAULT_ATTACK_INTERVAL;
+	attack_time_count = 0;
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack_motion_flg[i] = false;
@@ -103,8 +105,12 @@ void Player::Update(GameMain* main)
 		GiveGravity();
 	}
 
-	//攻撃
-	Attack(main);
+	//ダメージを受けている途中でないなら
+	if (damage_flg == false)
+	{
+		//攻撃
+		Attack(main);
+	}
 
 	//ダメージ演出中なら
 	if (inv_flg == true)
@@ -124,7 +130,7 @@ void Player::Update(GameMain* main)
 	}
 
 	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
-	if (PlayAnyAttack() == true || damage_flg == true)
+	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true)
 	{
 		//動けなくする
 		move_flg = false;
@@ -135,7 +141,6 @@ void Player::Update(GameMain* main)
 		//動けるようにする
 		move_flg = true;
 	}
-
 	//移動処理
 	Move();
 
@@ -182,10 +187,10 @@ void Player::Draw()const
 	}
 
 	//デバッグ用表示
-	for (int i = 0; i < 5; i++)
-	{
-		//DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
-	}
+	//for (int i = 0; i < 6; i++)
+	//{
+	//	DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
+	//}
 	//DrawFormatString(360, 360, 0xfffff0, "HP %d", hp);
 	//DrawFormatString(360, 380, 0xfffff0, "direction %d", direction);
 
@@ -268,7 +273,7 @@ void Player::GiveGravity()
 {
 	if (acs[DOWN] <= GRAVITY_POWER)
 	{
-		acs[DOWN] += 1.5f;
+		acs[DOWN] += (1.5f + (float)powerup_flg);
 	}
 }
 
@@ -408,20 +413,23 @@ AttackData Player::CreateAttactData(int i)
 
 void Player::SetPowerUp()
 {
-	powerup_flg = true;
-	acs_max = ACS_MAX * 2;
-	jump_power = DEFAULT_JUMP_POWER * 1.1;
-	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;
-	player_anim_speed = PLAYER_ANIM / 2;
+	powerup_flg = true;								
+	acs_max = ACS_MAX * 2;							//最大加速度を2倍
+	jump_power = DEFAULT_JUMP_POWER * 1.1;			//跳躍力を1.1倍
+	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//攻撃間隔を半分に
+	player_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
+	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//プレイヤーが動けない時間を半分に
 }
 
 void Player::StopPowerUp()
 {
 	powerup_flg = false;
+	//SetPowerUpで変更した値をすべて元通りに
 	acs_max = ACS_MAX;
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
 	player_anim_speed = PLAYER_ANIM;
+	attack_time = DEFAULT_ATTACK_INTERVAL;		
 }
 
 void Player::Attack(GameMain* main)
@@ -434,15 +442,10 @@ void Player::Attack(GameMain* main)
 		{
 			//攻撃間隔の測定を開始
 			attack_interval_count = attack_interval;
+
 			//プレイヤーが移動できない時間
-			if (powerup_flg == false)
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL;
-			}
-			else
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL/2;
-			}
+			attack_time_count = attack_time;
+
 			//一定間隔が過ぎる前に攻撃を行っていたなら
 			if (ca_interval_count > 0)
 			{
@@ -458,7 +461,7 @@ void Player::Attack(GameMain* main)
 				//攻撃の段階をリセットする
 				attack_step = 0;
 			}
-			//４段目を撃った後に必ず１段目に戻るようにする
+			//４段目を撃った後に必ず１段目に戻るように間隔を設定する
 			if (attack_step >= 3)
 			{
 				ca_interval_count = 0;
@@ -496,10 +499,10 @@ void Player::Attack(GameMain* main)
 	case 1:
 	case 2:
 	case 3:
-		if (--attack_time > 0)
+		if (--attack_time_count > 0)
 		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = true;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 		}
 		else
 		{
@@ -511,8 +514,8 @@ void Player::Attack(GameMain* main)
 		//空中にいる限り攻撃し続ける
 		if (OnAnyFloorFlg() == false)
 		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = true;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 			//攻撃を生成する
 			main->SpawnAttack(CreateAttactData(attack_step));
 
@@ -525,22 +528,17 @@ void Player::Attack(GameMain* main)
 			//着地攻撃の発生
 			attack_step = 5;
 			main->SpawnAttack(CreateAttactData(attack_step));
+			//攻撃間隔の測定を開始
+			attack_interval_count = attack_interval;
 			//プレイヤーが移動できない時間
-			if (powerup_flg == false)
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL;
-			}
-			else
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL / 2;
-			}
+			attack_time_count = attack_time;
 		}
 		break;
 	case 5:
-		if (--attack_time > 0)
+		if (--attack_time_count >= 0)
 		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = true;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 		}
 		else
 		{
@@ -797,6 +795,23 @@ bool Player::PlayAnyAttack()
 	return ret;
 }
 
+void Player::SetAttackFlg(int num)
+{
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		//指定した数字以外の攻撃フラグを下げる
+		if (i != num)
+		{
+			attack_motion_flg[i] = false;
+		}
+		//指定した数字の攻撃フラグを立てる
+		else
+		{
+			attack_motion_flg[i] = true;
+		}
+	}
+}
+
 void Player::SetPlayerAttackData()
 {
 	//一段階目　
@@ -904,7 +919,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].width = 250;
 	player_attack_data[11].height = 100;
 	player_attack_data[11].who_attack = 0;
-	player_attack_data[11].attack_time = 5;
+	player_attack_data[11].attack_time = 10;
 	player_attack_data[11].damage = 2;
 	player_attack_data[11].delay = 0;
 }

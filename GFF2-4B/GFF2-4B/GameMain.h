@@ -15,7 +15,7 @@
 //effect
 #include "Effect.h"
 
-#define ATTACK_NUM 10   //‰æ–Ê‚É‘¶İ‚Å‚«‚éÅ‘å‚ÌUŒ‚”
+#define ATTACK_NUM 100   //‰æ–Ê‚É‘¶İ‚Å‚«‚éÅ‘å‚ÌUŒ‚”
 
 class Player;
 
