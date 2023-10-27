@@ -83,7 +83,7 @@ Player::Player()
 
 Player::~Player() 
 {
-
+	
 }
 
 void Player::Update(GameMain* main)
@@ -506,6 +506,8 @@ void Player::Attack(GameMain* main)
 			attack_motion_flg[4] = false;
 			//’…’nUŒ‚‚Ì”­¶
 			attack_step = 5;
+			//Œ»İs‚Á‚Ä‚¢‚éUŒ‚‚Ì’iŠK‚É‰‚¶‚½ƒtƒ‰ƒO‚ğtrue‚É‚µA‚»‚êˆÈŠO‚ğfalse‚É‚·‚é
+			SetAttackFlg(attack_step);
 			main->SpawnAttack(CreateAttactData(attack_step));
 			//UŒ‚ŠÔŠu‚Ì‘ª’è‚ğŠJn
 			attack_interval_count = attack_interval;
