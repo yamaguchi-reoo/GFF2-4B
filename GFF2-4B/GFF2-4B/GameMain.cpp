@@ -219,7 +219,7 @@ void GameMain::HitCheck()
 		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
 			//ザクロのダメージ処理
-
+			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
 		}
 		//同じようにひまわりとイルカも
 
