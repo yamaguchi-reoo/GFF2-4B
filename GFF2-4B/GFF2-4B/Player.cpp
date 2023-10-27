@@ -129,24 +129,11 @@ void Player::Update(GameMain* main)
 		}
 	}
 
-	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
-	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true)
-	{
-		//動けなくする
-		move_flg = false;
-	}
-	//どちらでもないなら
-	else
-	{
-		//動けるようにする
-		move_flg = true;
-	}
 	//移動処理
 	Move();
 
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
-
 
 	//各移動用変数をリセット
 	Reset();
@@ -297,24 +284,6 @@ void Player::OnFloor(int num,Location _sub)
 	jump_flg = false;
 }
 
-void Player::TouchCeiling()
-{
-	acs[UP] = 0;
-	touch_ceil_flg = true;
-}
-
-void Player::TouchRightWall()
-{
-	acs[RIGHT] = 0;
-	rightwall_flg = true;
-}
-
-void Player::TouchLeftWall()
-{
-	acs[LEFT] = 0;
-	leftwall_flg = true;
-}
-
 void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 {
 	Location p_center = { 0 };
@@ -331,19 +300,28 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	else if (location.y +20> _sub_location.y + _sub_erea.height)
 	{
 		location.y = _sub_location.y + _sub_erea.height;
-		TouchCeiling();
+		//上加速度を0にする
+		acs[UP] = 0;
+		//天井に触れたフラグを立てる
+		touch_ceil_flg = true;
 	}
 	//右の壁に触れた時
 	else if (location.x +erea.width-10 < _sub_location.x)
 	{
 		location.x = _sub_location.x - erea.width;
-		TouchRightWall();
+		//右加速度を0にする
+		acs[RIGHT] = 0;
+		//右の壁に触れたフラグを立てる
+		rightwall_flg = true;
 	}
 	//左の壁に触れた時
 	else if (location.x+10 > _sub_location.x + _sub_erea.width)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
-		TouchLeftWall();
+		//左加速度を0にする
+		acs[LEFT] = 0;
+		//左の壁に触れたフラグを立てる
+		leftwall_flg = true;
 	}
 	//どっちの壁にも触れていないときの地面すり抜け防止
 	else
@@ -491,6 +469,7 @@ void Player::Attack(GameMain* main)
 	{
 		ca_interval_count--;
 	}
+
 	//攻撃演出用
 	//落下攻撃以外なら
 	switch (attack_step)
@@ -551,6 +530,19 @@ void Player::Attack(GameMain* main)
 
 void Player::Move()
 {
+	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
+	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true)
+	{
+		//動けなくする
+		move_flg = false;
+	}
+	//どちらでもないなら
+	else
+	{
+		//動けるようにする
+		move_flg = true;
+	}
+
 	//左移動
 	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5 && move_flg == true)
 	{
