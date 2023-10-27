@@ -102,15 +102,6 @@ public:
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
 	void OnFloor(int num,Location _sub);
 
-	//天井に触れた時の処理
-	void TouchCeiling();
-
-	//右の壁に触れた時の処理
-	void TouchRightWall();	
-
-	//左の壁に触れた時の処理
-	void TouchLeftWall();
-
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
 	void Push(int num,Location _sub_location, Erea _sub_erea);
 
@@ -132,7 +123,7 @@ public:
 	//強化状態に入る
 	void SetPowerUp();
 
-	// 強化状態を解除する
+	//強化状態を解除する
 	void StopPowerUp();
 
 	//攻撃関連の処理
