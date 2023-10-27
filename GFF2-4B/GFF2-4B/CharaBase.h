@@ -3,9 +3,16 @@
 //‰¼‘zƒNƒ‰ƒX
 class GameMain;
 
+struct ColorDate {
+	float magenta;
+	float syan;
+	float yellow;
+};
+
 class CharaBase : public BoxCollider
 {
 protected:
+	ColorDate Date;
 	int image = 0;
 	float speed = 0;
 	int hp = 0;

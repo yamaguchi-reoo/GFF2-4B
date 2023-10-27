@@ -220,6 +220,8 @@ void GameMain::HitCheck()
 		{
 			//ザクロのダメージ処理
 			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
+			powergauge->SetVolume(zakuro->GetColorDate());
+			attack[i]->DeleteAttack();
 		}
 		//同じようにひまわりとイルカも
 

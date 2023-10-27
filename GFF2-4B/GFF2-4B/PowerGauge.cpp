@@ -187,41 +187,25 @@ void PowerGauge::SetPowerFlg(int i)
 }
 
 //敵が落とした色、量をゲージに加算
-void PowerGauge::SetVolume(int color,int volume)
+void PowerGauge::SetVolume(ColorDate color)
 {
-	switch (color)
-	{
-		case 0:
 			//マゼンタ
-			if (magenta.maxFlg == 0)
-			{
-				magenta.volume += (float)volume;
-			}
-			
-			break;
+	if (magenta.maxFlg == 0)
+	{
+		magenta.volume += color.magenta;
 
-		case 1:
-			//シアン
-			if (cyan.maxFlg == 0)
-			{
-				cyan.volume += (float)volume;
-			}
-			
-			break;
-
-		case 2:
-			//イエロー
-			if (yellow.maxFlg == 0)
-			{
-				yellow.volume += (float)volume;
-			}
-
-			break;
-
-		default:
-			break;
 	}
+			//シアン
+	if (cyan.maxFlg == 0)
+	{
+		cyan.volume += color.syan;
+	}
+			//イエロー
+	if (yellow.maxFlg == 0)
+	{
+		yellow.volume += color.yellow;
 
+	}
 }
 
 //CMYKのゲージがMAXかチェックする

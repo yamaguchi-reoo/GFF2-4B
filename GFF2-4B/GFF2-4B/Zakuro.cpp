@@ -19,6 +19,11 @@ Zakuro::Zakuro()
 	spawn_flg = false;
 
 	hp = 1;
+
+
+	Date.magenta = 15.0f;
+	Date.syan = 5.0f;
+	Date.yellow = 5.0f;
 }
 Zakuro::~Zakuro()
 {
@@ -103,7 +108,6 @@ AttackData Zakuro::CreateAttactData()
 	return attack_data;
 }
 
-
 void Zakuro::Attack(GameMain* main)
 {
 	//UŒ‚‚ğ¶¬‚·‚é
@@ -114,6 +118,11 @@ void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
 	spawn_flg = true;
+}
+
+ColorDate Zakuro::GetColorDate()
+{
+	return Date;
 }
 
 

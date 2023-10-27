@@ -10,6 +10,7 @@ private:
 	bool direction;		//顔の向き(0=右向き 1=左向き)
 	int stop_count;		
 	bool spawn_flg;		//スポーンしているか
+
 public:
 	Zakuro();
 	~Zakuro();
@@ -24,5 +25,6 @@ public:
 	//ダメージ受ける処理
 	void ApplyDamage(int num);
 
+	ColorDate GetColorDate();
 };
 
