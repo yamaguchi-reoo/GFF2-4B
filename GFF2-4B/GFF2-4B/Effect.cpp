@@ -13,10 +13,6 @@ Effect::Effect()
 	gauge_x = 70;
 	gauge_y = 80;
 	
-	//ƒQ[ƒW‚Æ‚µ‚Ô‚«‚ÌÀ•W‚Ì·
-	lenge_x = 0;
-	lenge_y = 0;
-
 	//ˆÚ“®—Ê
 	vx = 0;
 	vy = 0;
@@ -36,17 +32,25 @@ void Effect::Update()
 		hit_flg = true;
 	}
 
-	if (hit_flg == TRUE)
+	if (hit_flg == true)
 	{
-		lenge_x = gauge_x - splash.x;
-		lenge_y = gauge_y - splash.y;
+		float a = gauge_x - splash.x;
+		float b = gauge_y - splash.y;
+		float c = sqrtf(a * a + b * b);
 
-		vx = fabs(lenge_x)/20;
-		vy = fabs(lenge_y)/20;
+		vx = c/100;
+		vy = c/100;
 
 		splash.x -= vx;
 		splash.y -= vy;
 
+	}
+
+	if (splash.y < gauge_y)
+	{
+		hit_flg = false;
+		splash.x = 800;
+		splash.y = 500;
 	}
 
 }

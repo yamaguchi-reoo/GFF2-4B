@@ -156,10 +156,10 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	scene_scroll->Draw();
-	effect->Draw();
 	powergauge->Draw();
 	playerhp->Draw();
-	
+	effect->Draw();
+
 
 	SetFontSize(42);
 	DrawString(400, 0, "GameMain", 0xffffff);
