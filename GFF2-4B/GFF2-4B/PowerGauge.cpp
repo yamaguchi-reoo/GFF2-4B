@@ -2,21 +2,21 @@
 
 PowerGauge::PowerGauge()
 {
-	magenta.x = 109;
+	magenta.x = 107;
 	magenta.y = 64;
 	magenta.h = 45;
 	magenta.volume = 0.0f;
 	magenta.ratio = 0.0f;
 	magenta.maxFlg = 0;
 
-	yellow.x = 80;
+	yellow.x = 78;
 	yellow.y = 110;
 	yellow.h = 45;
 	yellow.volume = 0.0f;
 	yellow.ratio = 0.0f;
 	yellow.maxFlg = 0;
 
-	cyan.x = 140;
+	cyan.x = 138;
 	cyan.y = 110;
 	cyan.h = 45;
 	cyan.volume = 0.0f;
@@ -35,10 +35,22 @@ PowerGauge::PowerGauge()
 	image[0] = LoadGraph("resource/images/強化ゲージ1.png");
 	image[1] = LoadGraph("resource/images/強化ゲージ2.png");
 	image[2] = LoadGraph("resource/images/強化ゲージ3.png");
+
+	//マスク画面を作成
+	//CreateMaskScreen();
+
+	//マスクデータ読み込み	
+	//MaskHandle = LoadMask("resource/images/強化ゲージ5.png");
+	MaskHandle = 0;
 }
 
 PowerGauge::~PowerGauge()
 {
+	// マスクデータを削除
+	//DeleteMask(MaskHandle);
+
+	// マスク画面を削除
+	//DeleteMaskScreen();
 }
 
 void PowerGauge::Update()
@@ -87,7 +99,7 @@ void PowerGauge::Draw() const
 #ifdef _DEBUG
 
 	//デバック表示
-	DrawFormatString(300, 10, 0xffffff, "%f", magenta.volume);
+	DrawFormatString(300, 10, 0xffffff, "%d", MaskHandle);
 
 #endif // _DEBUG
 
@@ -95,6 +107,11 @@ void PowerGauge::Draw() const
 
 	if (black.maxFlg == 0)
 	{
+		//マスククリア
+		//DrawMask(0, 0, MaskHandle, DX_MASKTRANS_NONE);
+
+		//DrawMask(5, 5, MaskHandle, DX_MASKTRANS_NONE);
+
 		//強化ゲージがMAXじゃないとき
 		if (magenta.volume != 0.0f) 
 		{
@@ -109,7 +126,8 @@ void PowerGauge::Draw() const
 			DrawBox(yellow.x - 50, yellow.y - (int)yellow.ratio, yellow.x, yellow.y, 0xffff00, TRUE);
 		}
 
-		DrawGraph(20, 12, image[1], TRUE);
+		DrawGraph(19, 12, image[1], TRUE);
+		
 	}
 	else if ((black.maxFlg == 1) && (powerFlg == 0))
 	{

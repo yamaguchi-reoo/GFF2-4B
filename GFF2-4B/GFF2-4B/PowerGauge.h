@@ -25,6 +25,8 @@ private:
 
 	int image[3];  //画像用変数
 
+	int MaskHandle; //マスク画像用変数
+
 public:
 	PowerGauge();  //コンストラクタ
 	~PowerGauge(); //デストラクタ
@@ -37,7 +39,7 @@ public:
 	void BlackGauge(); //時間経過で黒のゲージを減らす
 	int PowerGaugeState(); //強化状態かどうか渡す
 	void SetPowerFlg(int i); //強化状態かどうかを保存する変数の値を引数の値に変更
-	void SetVolume(ColorDate color); //敵が落とした色、量をゲージに加算(color(0:マゼンタ 1:シアン 2:イエロー)volume(増やす量))
+	void SetVolume(ColorDate color); //敵が落とした色、量をゲージに加算
 	void CheckVolumeMax(); //CMYKのゲージがMAXかチェックする
 	void InitGauge(); //強化状態が終わった後の初期化処理
 };
