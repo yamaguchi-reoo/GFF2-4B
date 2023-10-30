@@ -232,7 +232,7 @@ void GameMain::HitCheck()
 		// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
 		{
-			//ザクロのダメージ処理
+			//イルカのダメージ処理
 			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
 			powergauge->SetVolume(iruka->GetColorDate());
 			attack[i]->DeleteAttack();
