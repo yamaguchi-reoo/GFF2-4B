@@ -389,6 +389,7 @@ void Player::ApplyDamage(int num)
 		//のけぞる
 		acs[UP] += 10;
 		acs[!direction + 2] += 10; //今自分の顔が向いている方向と逆方向に
+		jump_flg = false;
 		//体力を減らす
 		hp -= num;
 		if (hp < 0)
@@ -859,10 +860,11 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].width = erea.width + 100;
 	player_attack_data[0].height = 200;
 	player_attack_data[0].who_attack = 0;
-	player_attack_data[0].attack_time = 10;
+	player_attack_data[0].attack_time = 100;
 	player_attack_data[0].damage = 1;
 	player_attack_data[0].delay = 10;
-	player_attack_data[0].attack_type = MELEE;
+	player_attack_data[0].attack_type = WAVES;
+	player_attack_data[0].move = 10;
 	//一段階目　強化中
 	player_attack_data[1].shift_x = -erea.width;
 	player_attack_data[1].shift_y = -50;
@@ -891,7 +893,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].height = 230;
 	player_attack_data[3].who_attack = 0;
 	player_attack_data[3].attack_time = 5;
-	player_attack_data[3].damage = 3;
+	player_attack_data[3].damage = 2;
 	player_attack_data[3].delay = 5;
 	player_attack_data[3].attack_type = WAVES;
 	player_attack_data[3].move = 20;
@@ -912,7 +914,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].height = 110;
 	player_attack_data[5].who_attack = 0;
 	player_attack_data[5].attack_time = 10;
-	player_attack_data[5].damage = 1;
+	player_attack_data[5].damage = 2;
 	player_attack_data[5].delay = 5;
 	player_attack_data[5].attack_type = WAVES;
 	player_attack_data[5].move = 15;
@@ -923,7 +925,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[6].height = 200;
 	player_attack_data[6].who_attack = 0;
 	player_attack_data[6].attack_time = 10;
-	player_attack_data[6].damage = 1;
+	player_attack_data[6].damage = 2;
 	player_attack_data[6].delay = 10;
 	player_attack_data[6].attack_type = MELEE;
 	//四段階目　強化中
@@ -933,7 +935,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[7].height = 200;
 	player_attack_data[7].who_attack = 0;
 	player_attack_data[7].attack_time = 10;
-	player_attack_data[7].damage = 1;
+	player_attack_data[7].damage = 3;
 	player_attack_data[7].delay = 10;
 	player_attack_data[7].attack_type = WAVES;
 	player_attack_data[7].move = 20;
