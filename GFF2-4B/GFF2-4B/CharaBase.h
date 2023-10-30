@@ -12,7 +12,7 @@ struct ColorDate {
 class CharaBase : public BoxCollider
 {
 protected:
-	ColorDate Date;
+	ColorDate Date{ 0 };
 	int image = 0;
 	float speed = 0;
 	int hp = 0;

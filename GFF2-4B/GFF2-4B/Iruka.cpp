@@ -8,11 +8,12 @@ Iruka::Iruka()
 	erea.width = 120;
 	erea.height = 50;
 	speed = 3;
+	who = 2;
 
 	fps_count = 0;
 
 	direction = 0;
-
+	attack_flg = true;
 	iruka_flg = false;
 	fall_flg = false;
 }
@@ -104,4 +105,33 @@ void Iruka::Draw() const
 		DrawBoxAA(location.x + 30, location.y + erea.height - 40, location.x, location.y + erea.height, 0x00ff00, true);
 	}
 	
+}
+
+AttackData Iruka::CreateAttactData()
+{
+	AttackData attack_data;
+	attack_data.shift_x = -erea.width;
+	attack_data.shift_y = erea.height;
+	attack_data.width = erea.width;
+	attack_data.height = erea.height;
+	attack_data.who_attack = who;
+	attack_data.attack_time = 3;
+	attack_data.direction = direction;
+	attack_data.delay = 0;
+	attack_data.damage = 1;
+
+	return attack_data;
+}
+
+void Iruka::Attack(GameMain* main)
+{
+}
+
+void Iruka::ApplyDamage(int num)
+{
+}
+
+ColorDate Iruka::GetColorDate()
+{
+	return ColorDate();
 }

@@ -25,6 +25,7 @@ public:
 	//ƒ_ƒ[ƒWó‚¯‚éˆ—
 	void ApplyDamage(int num);
 
+	int GetSpwanFlg() { return spawn_flg; }
 	ColorDate GetColorDate();
 };
 

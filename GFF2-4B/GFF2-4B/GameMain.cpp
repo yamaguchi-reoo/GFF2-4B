@@ -216,10 +216,11 @@ void GameMain::HitCheck()
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro->GetSpwanFlg() == false)
 		{
 			//ザクロのダメージ処理
 			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
+
 			powergauge->SetVolume(zakuro->GetColorDate());
 			attack[i]->DeleteAttack();
 		}
