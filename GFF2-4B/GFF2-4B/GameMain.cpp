@@ -146,10 +146,12 @@ AbstractScene* GameMain::Update()
 	//“–‚½‚è”»’èŠÖ˜A‚Ìˆ—‚ðs‚¤
 	HitCheck();
 
-	if (KeyInput::OnKey(KEY_INPUT_A)) {
+#if DEBUG
+	if (KeyInput::OnKey(KEY_INPUT_S)) {
 		flg = true;
 		player->ApplyDamage(1);
 	}
+#endif
 	return this;
 }
 

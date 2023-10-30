@@ -1,5 +1,7 @@
 #pragma once
 
+#define DEBUG true		//デバッグ用表示や操作を適用するか false=適用しない true=適用
+
 //画面サイズ
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720

@@ -144,43 +144,6 @@ void Player::Update(GameMain* main)
 
 void Player::Draw()const
 {
-	SetFontSize(24);
-	//強化状態でないなら
-	if (powerup_flg == false)
-	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, true);
-		//顔の向き
-		if (direction == false)
-		{
-			DrawBox(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
-		}
-		else
-		{
-			DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
-		}
-	}
-	else
-	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
-		//顔の向き
-		if (direction == false)
-		{
-			DrawBox(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0xff0000, true);
-		}
-		else
-		{
-			DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0xff0000, true);
-		}
-	}
-
-	//デバッグ用表示
-	//for (int i = 0; i < 6; i++)
-	//{
-	//	DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
-	//}
-	//DrawFormatString(360, 360, 0xfffff0, "HP %d", hp);
-	//DrawFormatString(360, 380, 0xfffff0, "direction %d", direction);
-
 	//プレイヤー画像表示
 	if (hidden_flg == true)
 	{
@@ -254,6 +217,64 @@ void Player::Draw()const
 			break;
 		}
 	}
+
+	//デバッグ用表示
+#if DEBUG
+	//当たり判定表示
+	//強化状態でないなら
+	if (powerup_flg == false)
+	{
+		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
+	}
+	//強化状態なら
+	else
+	{
+		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
+	}
+	int old_size = GetFontSize();	//元のサイズを保持
+	SetFontSize(14);
+	DrawBox(0, 200, 210, 400, 0x000000, true);
+	DrawBox(0, 200, 210, 400, 0xffffff, false);
+	for (int i = 0; i < 6; i++)
+	{
+		switch (i)
+		{
+		case 0:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "下加速度:%f", acs[i]);
+			break;
+		case 1:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "上加速度:%f", acs[i]);
+			break;
+		case 2:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "右加速度:%f", acs[i]);
+			break;
+		case 3:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "左加速度:%f", acs[i]);
+			break;
+		case 4:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "ジャンプ攻撃:%d", attack_motion_flg[i]);
+			break;
+		case 5:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "着地攻撃:%d", attack_motion_flg[i]);
+			break;
+		}
+	}
+	DrawFormatString(0, 290, 0xffffff, "HP %d", hp);
+	if (direction == false)
+	{
+		DrawFormatString(0, 305, 0xffffff, "顔の向き:右", direction);
+	}
+	else
+	{
+		DrawFormatString(0, 305, 0xffffff, "顔の向き:左", direction);
+	}
+	DrawFormatString(0, 380, 0xffffff, "状態:%s", player_state_char[player_state]);
+	SetFontSize(old_size);
+#endif // DEBUG
 }
 
 void Player::GiveGravity()
@@ -413,7 +434,13 @@ void Player::StopPowerUp()
 void Player::Attack(GameMain* main)
 {
 	//攻撃
-	if (PadInput::OnButton(XINPUT_BUTTON_B) == true && attack_interval_count <= 0)
+	if (
+#if DEBUG
+		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_B) == true
+#endif
+		&& attack_interval_count <= 0)
 	{
 		//空中に居ないなら
 		if (acs[DOWN] == 0)
@@ -546,7 +573,13 @@ void Player::Move()
 	}
 
 	//左移動
-	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5 && move_flg == true)
+	if (
+#if DEBUG
+	(KeyInput::OnPresed(KEY_INPUT_A) == true || PadInput::TipLeftLStick(STICKL_X) <= -0.5)
+#else
+		PadInput::TipLeftLStick(STICKL_X) <= -0.5
+#endif
+		&& move_flg == true)
 	{
 		if (acs[LEFT] <= acs_max && rightwall_flg == false)
 			{
@@ -559,7 +592,13 @@ void Player::Move()
 		}
 
 	//右移動
-	if (PadInput::TipLeftLStick(STICKL_X) >= 0.5 && move_flg == true)
+	if (
+#if DEBUG
+	(KeyInput::OnPresed(KEY_INPUT_D) == true || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
+#else
+		PadInput::TipLeftLStick(STICKL_X) >= 0.5
+#endif 
+		&& move_flg == true)
 		{
 			if (acs[RIGHT] <= acs_max && leftwall_flg == false)
 			{
@@ -571,7 +610,13 @@ void Player::Move()
 			DecAcs(RIGHT);
 		}
 	//ジャンプ
-	if (PadInput::OnButton(XINPUT_BUTTON_A) == true && jump_flg == false && move_flg == true)
+	if (
+#if DEBUG
+	(KeyInput::OnKey(KEY_INPUT_SPACE) == true || PadInput::OnButton(XINPUT_BUTTON_A) == true)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A) == true
+#endif
+		&& jump_flg == false && move_flg == true)
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;

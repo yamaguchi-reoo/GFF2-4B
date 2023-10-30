@@ -5,8 +5,10 @@
 
 #define ATTACK_NUM 6						//攻撃のレパートリー
 
+//循環参照防止
 class GameMain;
 
+//プレイヤーの状態
 enum PlayerState {
 	IDOL_RIGHT = 0,
 	IDOL_LEFT,
@@ -34,7 +36,35 @@ enum PlayerState {
 	DEATH_LEFT,
 };
 
-
+//プレイヤーの状態(文字列) デバッグ表示用
+#if DEBUG
+static char player_state_char[24][256]{
+	"IDOL_RIGHT",
+	"IDOL_LEFT",
+	"MOVE_RIGHT",
+	"MOVE_LEFT",
+	"JUMP_RIGHT",
+	"JUMP_LEFT",
+	"FALL_RIGHT",
+	"FALL_LEFT",
+	"ATTACK_RIGHT_ONE",
+	"ATTACK_RIGHT_TWO",
+	"ATTACK_RIGHT_THREE",
+	"ATTACK_RIGHT_FOUR",
+	"ATTACK_LEFT_ONE",
+	"ATTACK_LEFT_TWO",
+	"ATTACK_LEFT_THREE",
+	"ATTACK_LEFT_FOUR",
+	"JUMP_ATTACK_RIGHT",
+	"JUMP_ATTACK_RIGHT_END",
+	"JUMP_ATTACK_LEFT",
+	"JUMP_ATTACK_LEFT_END",
+	"DAMAGE_RIGHT",
+	"DAMAGE_LEFT",
+	"DEATH_RIGHT",
+	"DEATH_LEFT",
+};
+#endif
 class Player :
 	public CharaBase
 {
