@@ -1,15 +1,25 @@
 #pragma once
 #include "CharaBase.h"
+ 
+enum  class Direction {
+    RIGHT = 0,
+    LEFT,
+    RIGHT_FALL,
+    LEFT_FALL
+};
 class Iruka :
     public CharaBase
 {
 private:
+ 
+
+    Direction direction; //向いている方向
+
     float fps_count;//フレーム
 
     bool attack_flg;
-    bool iruka_flg; //左右移動（false = 左　true =　右）
     bool fall_flg;  //落下用フラグ
-    int direction;	//顔の向き(0 = 右向き 1 = 左向き 2 = 右向き落下 3 = 左向き落下)
+    bool spawn_flg;		//スポーンしているか
 
 public:
     //コンストラクタ
@@ -19,6 +29,9 @@ public:
 
     void Update(GameMain* main)override;
     void Draw()const override;
+    void Move();
+    void MoveFall();
+    void MoveReturn();
 
     void Get_Fall_Flg() {
         fall_flg = true;
@@ -30,8 +43,8 @@ public:
     //ダメージ受ける処理
     void ApplyDamage(int num);
 
-    ColorDate GetColorDate();
+    int GetSpwanFlg() { return spawn_flg; }
 
-  
+    ColorDate GetColorDate();
 };
 
