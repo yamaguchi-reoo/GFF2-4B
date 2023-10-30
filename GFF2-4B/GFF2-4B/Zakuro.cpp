@@ -104,6 +104,7 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.direction = direction;
 	attack_data.delay = 0;
 	attack_data.damage = 1;
+	attack_data.attack_type = MELEE;
 
 	return attack_data;
 }

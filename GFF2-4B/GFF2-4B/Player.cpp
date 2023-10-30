@@ -389,6 +389,7 @@ void Player::ApplyDamage(int num)
 		//のけぞる
 		acs[UP] += 10;
 		acs[!direction + 2] += 10; //今自分の顔が向いている方向と逆方向に
+		jump_flg = false;
 		//体力を減らす
 		hp -= num;
 		if (hp < 0)
@@ -859,9 +860,11 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].width = erea.width + 100;
 	player_attack_data[0].height = 200;
 	player_attack_data[0].who_attack = 0;
-	player_attack_data[0].attack_time = 10;
+	player_attack_data[0].attack_time = 100;
 	player_attack_data[0].damage = 1;
 	player_attack_data[0].delay = 10;
+	player_attack_data[0].attack_type = WAVES;
+	player_attack_data[0].move = 10;
 	//一段階目　強化中
 	player_attack_data[1].shift_x = -erea.width;
 	player_attack_data[1].shift_y = -50;
@@ -871,6 +874,8 @@ void Player::SetPlayerAttackData()
 	player_attack_data[1].attack_time = 5;
 	player_attack_data[1].damage = 3;
 	player_attack_data[1].delay = 5;
+	player_attack_data[1].attack_type = WAVES;
+	player_attack_data[1].move = 20;
 	//二段階目
 	player_attack_data[2].shift_x = -erea.width;
 	player_attack_data[2].shift_y = -70;
@@ -880,6 +885,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[2].attack_time = 10;
 	player_attack_data[2].damage = 1;
 	player_attack_data[2].delay = 10;
+	player_attack_data[2].attack_type = MELEE;
 	//二段階目　強化中
 	player_attack_data[3].shift_x = -erea.width;
 	player_attack_data[3].shift_y = -70;
@@ -887,8 +893,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].height = 230;
 	player_attack_data[3].who_attack = 0;
 	player_attack_data[3].attack_time = 5;
-	player_attack_data[3].damage = 3;
+	player_attack_data[3].damage = 2;
 	player_attack_data[3].delay = 5;
+	player_attack_data[3].attack_type = WAVES;
+	player_attack_data[3].move = 20;
 	//三段階目
 	player_attack_data[4].shift_x = -erea.width;
 	player_attack_data[4].shift_y = 50;
@@ -898,6 +906,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[4].attack_time = 10;
 	player_attack_data[4].damage = 1;
 	player_attack_data[4].delay = 5;
+	player_attack_data[4].attack_type = MELEE;
 	//三段階目　強化中
 	player_attack_data[5].shift_x = -erea.width;
 	player_attack_data[5].shift_y = 40;
@@ -905,8 +914,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].height = 110;
 	player_attack_data[5].who_attack = 0;
 	player_attack_data[5].attack_time = 10;
-	player_attack_data[5].damage = 1;
+	player_attack_data[5].damage = 2;
 	player_attack_data[5].delay = 5;
+	player_attack_data[5].attack_type = WAVES;
+	player_attack_data[5].move = 15;
 	//四段階目
 	player_attack_data[6].shift_x = -erea.width;
 	player_attack_data[6].shift_y = -90;
@@ -914,8 +925,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[6].height = 200;
 	player_attack_data[6].who_attack = 0;
 	player_attack_data[6].attack_time = 10;
-	player_attack_data[6].damage = 1;
+	player_attack_data[6].damage = 2;
 	player_attack_data[6].delay = 10;
+	player_attack_data[6].attack_type = MELEE;
 	//四段階目　強化中
 	player_attack_data[7].shift_x = -erea.width;
 	player_attack_data[7].shift_y = -90;
@@ -923,8 +935,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[7].height = 200;
 	player_attack_data[7].who_attack = 0;
 	player_attack_data[7].attack_time = 10;
-	player_attack_data[7].damage = 1;
+	player_attack_data[7].damage = 3;
 	player_attack_data[7].delay = 10;
+	player_attack_data[7].attack_type = WAVES;
+	player_attack_data[7].move = 20;
 	//ジャンプ攻撃
 	player_attack_data[8].shift_x = -erea.width;
 	player_attack_data[8].shift_y = 50;
@@ -934,6 +948,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].attack_time = 2;
 	player_attack_data[8].damage = 1;
 	player_attack_data[8].delay = 0;
+	player_attack_data[8].attack_type = MELEE;
 	//ジャンプ攻撃　強化中
 	player_attack_data[9].shift_x = 0;
 	player_attack_data[9].shift_y = 50;
@@ -943,15 +958,18 @@ void Player::SetPlayerAttackData()
 	player_attack_data[9].attack_time = 2;
 	player_attack_data[9].damage = 1;
 	player_attack_data[9].delay = 0;
+	player_attack_data[9].attack_type = MELEE;
 	//ジャンプ攻撃からの着地攻撃
 	player_attack_data[10].shift_x = 0;
 	player_attack_data[10].shift_y = 50;
-	player_attack_data[10].width = 200;
+	player_attack_data[10].width = 100;
 	player_attack_data[10].height = 100;
 	player_attack_data[10].who_attack = 0;
 	player_attack_data[10].attack_time = 10;
 	player_attack_data[10].damage = 2;
 	player_attack_data[10].delay = 0;
+	player_attack_data[10].attack_type = WAVES;
+	player_attack_data[10].move = 20;
 	//ジャンプ攻撃からの着地攻撃　強化用
 	player_attack_data[11].shift_x = 0;
 	player_attack_data[11].shift_y = 50;
@@ -961,4 +979,6 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].attack_time = 10;
 	player_attack_data[11].damage = 2;
 	player_attack_data[11].delay = 0;
+	player_attack_data[11].attack_type = WAVES;
+	player_attack_data[11].move = 20;
 }
