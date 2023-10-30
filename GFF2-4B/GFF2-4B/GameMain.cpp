@@ -135,6 +135,10 @@ AbstractScene* GameMain::Update()
 			{
 				attack[i]->Update(zakuro->GetCenterLocation(), zakuro->GetErea());
 			}
+			if (attack[i]->GetAttackData().who_attack == iruka->GetWho())
+			{
+				attack[i]->Update(iruka->GetCenterLocation(), iruka->GetErea());
+			}
 			
 		/*}*/
 	}
@@ -218,11 +222,19 @@ void GameMain::HitCheck()
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro->GetSpwanFlg() == false)
 		{
 			//ザクロのダメージ処理
 			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
 			powergauge->SetVolume(zakuro->GetColorDate());
+			attack[i]->DeleteAttack();
+		}
+		// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
+		{
+			//ザクロのダメージ処理
+			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
+			powergauge->SetVolume(iruka->GetColorDate());
 			attack[i]->DeleteAttack();
 		}
 		//同じようにひまわりとイルカも
