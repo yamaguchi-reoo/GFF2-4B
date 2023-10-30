@@ -35,22 +35,28 @@ PowerGauge::PowerGauge()
 	image[0] = LoadGraph("resource/images/強化ゲージ1.png");
 	image[1] = LoadGraph("resource/images/強化ゲージ2.png");
 	image[2] = LoadGraph("resource/images/強化ゲージ3.png");
+	image[3] = LoadGraph("resource/images/magatama_line.png");
+	
+
 
 	//マスク画面を作成
-	//CreateMaskScreen();
+	CreateMaskScreen();
+
+	// マスクスクリーンに使用するグラフィックハンドルとして MakeScreen で作成したグラフィックハンドルをセット
+	SetMaskScreenGraph(ScreenHandle);
 
 	//マスクデータ読み込み	
-	//MaskHandle = LoadMask("resource/images/強化ゲージ5.png");
-	MaskHandle = 0;
+	MaskHandle = LoadMask("resource/images/Magatama_mask.png");
+	//MaskHandle = 0;
 }
 
 PowerGauge::~PowerGauge()
 {
 	// マスクデータを削除
-	//DeleteMask(MaskHandle);
+	DeleteMask(MaskHandle);
 
 	// マスク画面を削除
-	//DeleteMaskScreen();
+	DeleteMaskScreen();
 }
 
 void PowerGauge::Update()
@@ -103,14 +109,16 @@ void PowerGauge::Draw() const
 
 #endif // _DEBUG
 
-	DrawGraph(5, 5, image[2], TRUE);
+	//DrawGraph(5, 5, image[2], TRUE);
 
 	if (black.maxFlg == 0)
 	{
 		//マスククリア
 		//DrawMask(0, 0, MaskHandle, DX_MASKTRANS_NONE);
 
-		//DrawMask(5, 5, MaskHandle, DX_MASKTRANS_NONE);
+		//DrawMask(5, 5, MaskHandle, DX_MASKTRANS_WHITE);
+
+		DrawBox(5, 5, 155, 155, 0xffffff, TRUE);
 
 		//強化ゲージがMAXじゃないとき
 		if (magenta.volume != 0.0f) 
@@ -126,7 +134,12 @@ void PowerGauge::Draw() const
 			DrawBox(yellow.x - 50, yellow.y - (int)yellow.ratio, yellow.x, yellow.y, 0xffff00, TRUE);
 		}
 
-		DrawGraph(19, 12, image[1], TRUE);
+		DrawGraph(5, 5, image[3], TRUE);
+
+		DrawMask(5, 5, MaskHandle, DX_MASKTRANS_WHITE);
+
+		//DrawGraph(19, 12, image[1], TRUE);
+
 		
 	}
 	else if ((black.maxFlg == 1) && (powerFlg == 0))
@@ -140,7 +153,7 @@ void PowerGauge::Draw() const
 		DrawBox(black.x - 121, black.y - (int)black.ratio, black.x, black.y, 0x000000, TRUE);
 	}
 	
-	DrawGraph(5, 5, image[0], TRUE);
+	//DrawGraph(5, 5, image[0], TRUE);
 }
 
 //ゲージの溜まり具合を計算
