@@ -65,11 +65,14 @@ static char player_state_char[24][256]{
 	"DEATH_LEFT",
 };
 #endif
+
 class Player :
 	public CharaBase
 {
 private:
+
 	int frame;						//フレーム測定
+
 	//移動関連
 	Location old_location;			//1フレーム前の座標
 	float move_speed;				//移動速度(左右)
@@ -83,16 +86,16 @@ private:
 
 	//攻撃関連
 	AttackData player_attack_data[ATTACK_NUM * 2];	//プレイヤーの攻撃段階と状態に応じたデータをまとめて格納しておく
-	int attack_interval_count;		//攻撃の間隔測定用
-	int attack_interval;			//攻撃の間隔
-	int ca_interval_count;			//コンボ攻撃の間隔測定用
-	int combo_attack_interval;		//コンボ攻撃の間隔
-	int attack_step;				//攻撃の段階
-	int attack_time;			//攻撃している時間
-	int attack_time_count;			//攻撃している時間測定用
-	bool attack_motion_flg[ATTACK_NUM];		//攻撃モーション中か判断(0から3＝通常攻撃１から４段目　4=落下攻撃)
-	bool attack_anim_flg;			//いずれかの攻撃を行っている最中か判断
-	bool powerup_flg;				//強化状態か
+	int attack_interval_count;						//攻撃の間隔測定用
+	int attack_interval;							//攻撃の間隔
+	int ca_interval_count;							//コンボ攻撃の間隔測定用
+	int combo_attack_interval;						//コンボ攻撃の間隔
+	int attack_step;								//攻撃の段階
+	int attack_time;								//攻撃している時間
+	int attack_time_count;							//攻撃している時間測定用
+	bool attack_motion_flg[ATTACK_NUM];				//攻撃モーション中か判断(0から3＝通常攻撃１から４段目　4=落下攻撃)
+	bool attack_anim_flg;							//いずれかの攻撃を行っている最中か判断
+	bool powerup_flg;								//強化状態か
 
 	//当たり判定関連
 	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
@@ -111,7 +114,7 @@ private:
 	int player_image[18];					//プレイヤー画像
 	PlayerState player_state;				//プレイヤーの状態格納
 	int walk_anim_num[4] = { 0,1,2,1 };		//歩くアニメーション画像の描画の順番
-	int attack_anim_num[4] = { 0 ,1,2,2 };	//攻撃アニメーション画像の描画の順番
+	int attack_anim_num[4] = { 0,1,2,2 };	//攻撃アニメーション画像の描画の順番
 	int player_anim;						//プレイヤー画像アニメーション用
 	int attack_anim;						//プレイヤー攻撃アニメーション用
 	int player_anim_speed;					//プレイヤーのアニメーション速度

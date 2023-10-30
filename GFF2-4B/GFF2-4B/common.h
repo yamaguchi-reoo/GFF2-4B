@@ -23,3 +23,8 @@
 #define PLAYER	0	//ƒvƒŒƒCƒ„[
 #define ENEMY	1	//“G
 
+//UŒ‚‚Ìí—Ş
+#define MELEE 0		//‹ßÚUŒ‚
+#define WAVES 1		//”ò‚ÔaŒ‚
+#define BULLET 2	//‰“‹——£
+
