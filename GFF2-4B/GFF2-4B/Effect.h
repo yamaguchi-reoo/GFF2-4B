@@ -1,7 +1,10 @@
 #pragma once
 #include "common.h"
 #include "PadInput.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
+
+
 
 //‚µ‚Ô‚«
 struct Splash
@@ -22,8 +25,15 @@ private:
 	
 	float lenge_x, lenge_y;
 
-	int vx, vy;
+	float v;
+	float t;
+	float g;
+	float angle;
+
 	float gauge_x, gauge_y;
+	float test_x, test_y;
+
+	float a, b, c;
 
 public:
 	Effect();

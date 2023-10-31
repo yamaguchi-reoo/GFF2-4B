@@ -1,5 +1,6 @@
 #include "Effect.h"
 
+
 Effect::Effect()
 {
 	//しぶきの発生位置(斬った敵の座標を持ってくる)
@@ -10,12 +11,15 @@ Effect::Effect()
 	splash.color_flg = 0x0000ff;
 
 	//ゲージの座標
-	gauge_x = 70;
+	gauge_x = 80;
 	gauge_y = 80;
 	
 	//移動量
-	vx = 0;
-	vy = 0;
+	v = 20;
+
+	test_x = 0;
+	test_y = 0;
+
 }
 
 Effect::~Effect()
@@ -26,6 +30,13 @@ Effect::~Effect()
 
 void Effect::Update()
 {
+
+	//a = gauge_x - splash.x;
+	//b = gauge_y - splash.y;
+	//c = sqrt(a * a + b * b);
+
+
+
 	//0を押したらしぶきが移動する
 	if (CheckHitKey(KEY_INPUT_0) == true)
 	{
@@ -34,19 +45,21 @@ void Effect::Update()
 
 	if (hit_flg == true)
 	{
-		float a = gauge_x - splash.x;
-		float b = gauge_y - splash.y;
-		float c = sqrtf(a * a + b * b);
+		//しぶきの座標とゲージの座標の差
+		test_x = gauge_x - splash.x;
+		test_y = gauge_y - splash.y;
 
-		vx = c/100;
-		vy = c/100;
+		splash.x -= fabs(test_x) / 50;
 
-		splash.x -= vx;
-		splash.y -= vy;
+		if (splash.y < (int)test_y / 2)
+		{
+			v = -100;
+		}
+		splash.y -= fabs(test_y) / v;
 
 	}
 
-	if (splash.y < gauge_y)
+	if (splash.x <= 100)
 	{
 		hit_flg = false;
 		splash.x = 800;
@@ -60,4 +73,9 @@ void Effect::Draw() const
 
 	DrawCircle(splash.x, splash.y, splash.r, splash.color_flg, TRUE);
 
+	DrawLine(splash.x, splash.y, a, b, 0xff0000);
+	DrawFormatString(600, 0, 0xffffff, "splash.x:%f", splash.x);
+	DrawFormatString(600, 20, 0xffffff, "splash.y:%f", splash.y);
+	DrawFormatString(600, 40, 0xffffff, "test x:%f", test_x);
+	DrawFormatString(600, 60, 0xffffff, "test y:%f", test_y);
 }
