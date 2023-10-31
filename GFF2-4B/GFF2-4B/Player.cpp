@@ -864,11 +864,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].width = erea.width + 100;
 	player_attack_data[0].height = 200;
 	player_attack_data[0].who_attack = 0;
-	player_attack_data[0].attack_time = 100;
+	player_attack_data[0].attack_time = 10;
 	player_attack_data[0].damage = 1;
 	player_attack_data[0].delay = 10;
-	player_attack_data[0].attack_type = WAVES;
-	player_attack_data[0].move = 10;
+	player_attack_data[0].attack_type = MELEE;
 	//ˆê’iŠK–Ú@‹­‰»’†
 	player_attack_data[1].shift_x = -erea.width;
 	player_attack_data[1].shift_y = -50;
