@@ -17,7 +17,7 @@ struct AttackData {
 	// 
 	//攻撃の種類がBULLETの場合この情報も書き込む必要がある
 	float speed;			//１フレームにどれだけ前に進むか
-	float angle;		//弾の角度
+	float angle;		//弾の角度(顔の向きに応じて方向が変わるため、0～0.25、0.75～1.0の範囲で指定すると顔の前側へ飛ぶ)
 };
 //中心座標
 struct Location

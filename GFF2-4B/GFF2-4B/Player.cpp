@@ -407,7 +407,18 @@ AttackData Player::CreateAttactData(int i)
 	attack_data = player_attack_data[i * 2 + powerup_flg];
 	//¶¬‚ÌuŠÔ‚É‰‚¶‚Ä•Ï‚í‚éî•ñ‚Í‚±‚±‚ÅŠi”[‚·‚é
 	attack_data.direction = direction;
-	attack_data.angle = player_attack_data[i * 2 + powerup_flg].angle - (direction - 0.5f);hd
+	//UŒ‚‚ÌŠp“x‚ğŠç‚ÌŒü‚«‚É‰‚¶‚Ä•Ï‚¦‚é
+	if (attack_data.attack_type == BULLET)
+	{
+		if (direction == false)
+		{
+			attack_data.angle = player_attack_data[i * 2 + powerup_flg].angle;
+		}
+		else
+		{
+			attack_data.angle = 0.5f - player_attack_data[i * 2 + powerup_flg].angle;
+		}
+	}
 	return attack_data;
 }
 
@@ -868,9 +879,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].attack_time = 10;
 	player_attack_data[0].damage = 1;
 	player_attack_data[0].delay = 10;
-	player_attack_data[0].attack_type = BULLET;
-	player_attack_data[0].angle = 0.0f;
-	player_attack_data[0].speed = 10;
+	player_attack_data[0].attack_type = MELEE;
 	//ˆê’iŠK–Ú@‹­‰»’†
 	player_attack_data[1].shift_x = -erea.width;
 	player_attack_data[1].shift_y = -50;

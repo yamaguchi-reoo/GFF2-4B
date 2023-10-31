@@ -45,12 +45,24 @@ void Attack::Update(Location _location, Erea _erea)
 			//ˆê‰ñ‚¾‚¯À•W‚ğ“Ç‚İ‚Ş
 			if (once == false)
 			{
-				location.x = _location.x + (_erea.width / 2) + attack_data.shift_x;
-				location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
+				//‰E•ûŒü‚ÉUŒ‚‚·‚é
+				if (attack_data.direction == false)
+				{
+					location.x = _location.x + (_erea.width / 2) + attack_data.shift_x;
+					location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
+
+				}
+				//¶•ûŒü‚ÉUŒ‚‚·‚é
+				else
+				{
+					location.x = _location.x - erea.width - (_erea.width / 2) - attack_data.shift_x;
+					location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
+
+				}
 				once = true;
 			}
 			//’e‚ÌŠp“x‚É‰‚¶‚½ˆÚ“®—Ê‚ğİ’è
-			int rad = attack_data.angle * (float)M_PI * 2;
+			float rad = attack_data.angle * (float)M_PI * 2;
 
 			location.x += attack_data.speed * cosf(rad);
 			location.y += attack_data.speed * sinf(rad);
