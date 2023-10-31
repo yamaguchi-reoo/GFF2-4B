@@ -163,10 +163,7 @@ void GameMain::Draw() const
 {
 	scene_scroll->Draw();
 	effect->Draw();
-	powergauge->Draw();
-	playerhp->Draw();
 	
-
 	SetFontSize(42);
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//•`‰æ
@@ -191,6 +188,9 @@ void GameMain::Draw() const
 	for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
 	}
+
+	powergauge->Draw();
+	playerhp->Draw();
 	
 }
 
