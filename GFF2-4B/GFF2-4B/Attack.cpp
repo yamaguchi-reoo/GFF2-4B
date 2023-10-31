@@ -1,11 +1,13 @@
 #include"Attack.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 Attack::Attack()
 {
 	attack_flg = false;
 	attack_data = { 0 };
 	can_apply_damage = false;
-	move_front = 0;
+	once = false;
 }
 
 Attack::~Attack()
@@ -39,25 +41,19 @@ void Attack::Update(Location _location, Erea _erea)
 
 			}
 			break;
-		case WAVES:
-			//右方向に攻撃する
-			if (attack_data.direction == false)
-			{
-				location.x = _location.x + (_erea.width / 2) + attack_data.shift_x + move_front;
-				location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
-
-			}
-			//左方向に攻撃する
-			else
-			{
-				location.x = _location.x - erea.width - (_erea.width / 2) - attack_data.shift_x - move_front;
-				location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
-
-			}
-			move_front += attack_data.move;
-			break;
 		case BULLET:
+			//一回だけ座標を読み込む
+			if (once == false)
+			{
+				location.x = _location.x + (_erea.width / 2) + attack_data.shift_x;
+				location.y = _location.y + ATTACK_EREA_SHIFT_Y + attack_data.shift_y;
+				once = true;
+			}
+			//弾の角度に応じた移動量を設定
+			int rad = attack_data.angle * (float)M_PI * 2;
 
+			location.x += attack_data.speed * cosf(rad);
+			location.y += attack_data.speed * sinf(rad);
 			break;
 		}
 		//決められた時間が経ったら攻撃を消す
@@ -66,13 +62,14 @@ void Attack::Update(Location _location, Erea _erea)
 			attack_flg = false;
 			//攻撃不能
 			can_apply_damage = false;
+			//リセット
+			once = false;
 		}
 	}
 	else
 	{
 		//攻撃不能
 		can_apply_damage = false;
-		move_front = 0;
 	}
 }
 
