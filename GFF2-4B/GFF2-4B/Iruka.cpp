@@ -92,7 +92,6 @@ void Iruka::Move()
 		if (location.x > SCREEN_WIDTH - 80) {
 			direction = Direction::LEFT;
 		}
-		
 	}
 	//ç∂à⁄ìÆ
 	if (direction == Direction::LEFT) {

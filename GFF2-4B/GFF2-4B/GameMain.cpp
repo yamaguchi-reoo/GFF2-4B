@@ -245,7 +245,7 @@ void GameMain::HitCheck()
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
 			attack[i]->DeleteAttack();
-			zakuro->Stop_Attack();
+			//zakuro->Stop_Attack();
 		}
 	}
 }
