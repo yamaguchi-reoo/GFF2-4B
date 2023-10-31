@@ -12,7 +12,7 @@ Iruka::Iruka()
 {
 	direction = Direction::LEFT;
 
-	location.x = 900;
+	location.x = 1400;
 	location.y = 100;
 	erea.width = 120;
 	erea.height = 50;
@@ -57,7 +57,7 @@ void Iruka::Update(GameMain* main)
 		}
 	}
 	if (KeyInput::OnKey(KEY_INPUT_I)) {
-		spawn_flg = true;
+		spawn_flg = false;
 	}
 }
 
