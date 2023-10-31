@@ -58,6 +58,7 @@ void Iruka::Update(GameMain* main)
 	}
 	if (KeyInput::OnKey(KEY_INPUT_I)) {
 		spawn_flg = false;
+		hp = 2;
 	}
 }
 
@@ -82,6 +83,7 @@ void Iruka::Draw() const
 			DrawBoxAA(location.x + 30, location.y + erea.height - 40, location.x, location.y + erea.height, 0x00ff00, true);
 		}
 	}
+	DrawFormatString(600, 0, 0xffffff, "%d", hp);
 }
 
 void Iruka::Move()
@@ -92,7 +94,6 @@ void Iruka::Move()
 		if (location.x > SCREEN_WIDTH - 80) {
 			direction = Direction::LEFT;
 		}
-		
 	}
 	//ç∂à⁄ìÆ
 	if (direction == Direction::LEFT) {
@@ -147,7 +148,7 @@ AttackData Iruka::CreateAttactData()
 	attack_data.attack_time = 3;
 	attack_data.delay = 0;
 	attack_data.damage = 1;
-
+	attack_data.attack_type = MELEE;
 	if (direction == Direction::RIGHT) {
 		attack_data.direction = 0;
 	}
@@ -167,7 +168,9 @@ void Iruka::Attack(GameMain* main)
 void Iruka::ApplyDamage(int num)
 {
 	hp -= num;
-	spawn_flg = true;
+	if (hp <= 0) {
+		spawn_flg = true;
+	}
 }
 
 ColorDate Iruka::GetColorDate()

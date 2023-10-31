@@ -1,12 +1,7 @@
 #pragma once
 #include "CharaBase.h"
  
-enum  class Direction {
-    RIGHT = 0,
-    LEFT,
-    RIGHT_FALL,
-    LEFT_FALL
-};
+
 class Iruka :
     public CharaBase
 {

@@ -57,6 +57,7 @@ void Attack::Update(Location _location, Erea _erea)
 			move_front += attack_data.move;
 			break;
 		case BULLET:
+
 			break;
 		}
 		//Œˆ‚ß‚ç‚ê‚½ŠÔ‚ªŒo‚Á‚½‚çUŒ‚‚ğÁ‚·
