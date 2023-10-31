@@ -54,9 +54,9 @@ void Zakuro::Update(GameMain* main)
 void Zakuro::Draw() const
 {
 	SetFontSize(20);
-	//DrawFormatString(200, 0, 0xffffff, "%f", location.x);
+	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
 	if (spawn_flg == false) {
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
+		//DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
 		if (direction == Direction::RIGHT){
 			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
 		}
@@ -105,11 +105,11 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = erea.height;
+	attack_data.shift_y = erea.height / 2;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
-	attack_data.attack_time = 3;
+	attack_data.attack_time = 2;
 	attack_data.delay = 0;
 	attack_data.damage = 1;
 	attack_data.attack_type = MELEE;

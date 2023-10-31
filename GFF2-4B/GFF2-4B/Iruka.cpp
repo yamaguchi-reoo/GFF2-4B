@@ -65,7 +65,7 @@ void Iruka::Update(GameMain* main)
 void Iruka::Draw() const
 {
 	if (spawn_flg == false) {
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ffff, TRUE);
+		//DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ffff, TRUE);
 		//ç∂å¸Ç´	
 		if (direction == Direction::LEFT) {
 			DrawBoxAA(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
@@ -91,14 +91,14 @@ void Iruka::Move()
 	//âEà⁄ìÆ
 	if (direction == Direction::RIGHT) {
 		location.x += MOVE_SPEED;
-		if (location.x > SCREEN_WIDTH - 80) {
+		if (location.x > SCREEN_WIDTH + 100) {
 			direction = Direction::LEFT;
 		}
 	}
 	//ç∂à⁄ìÆ
 	if (direction == Direction::LEFT) {
 		location.x -= MOVE_SPEED;
-		if (location.x < 0){
+		if (location.x < -100){
 			direction = Direction::RIGHT;
 		}
 	}
@@ -143,9 +143,9 @@ AttackData Iruka::CreateAttactData()
 	attack_data.shift_x = -erea.width;
 	attack_data.shift_y = erea.height / 2;
 	attack_data.width = erea.width;
-	attack_data.height = erea.height / 2 -10;
+	attack_data.height = erea.height;
 	attack_data.who_attack = who;
-	attack_data.attack_time = 3;
+	attack_data.attack_time = 2;
 	attack_data.delay = 0;
 	attack_data.damage = 1;
 	attack_data.attack_type = MELEE;
@@ -156,6 +156,10 @@ AttackData Iruka::CreateAttactData()
 		attack_data.direction = 1;
 	}
 	
+	if (fall_flg == true) {
+		attack_data.shift_y = -12;
+	}
+
 	return attack_data;
 }
 
