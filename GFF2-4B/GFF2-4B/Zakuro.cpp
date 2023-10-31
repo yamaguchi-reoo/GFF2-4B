@@ -6,13 +6,13 @@
 
 Zakuro::Zakuro()
 {
-	location.x = 290;
+	location.x = 900;
 	location.y = 570;
 	erea.height = 50;
 	erea.width = 50;
 	speed = 2;
 	who = 1;
-	direction = false;
+	direction = true;
 	attack_flg = true;
 	stop_count = 120;
 
@@ -104,6 +104,7 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.direction = direction;
 	attack_data.delay = 0;
 	attack_data.damage = 1;
+	attack_data.attack_type = MELEE;
 
 	return attack_data;
 }

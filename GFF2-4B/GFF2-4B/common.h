@@ -1,5 +1,7 @@
 #pragma once
 
+#define DEBUG true		//デバッグ用表示や操作を適用するか false=適用しない true=適用
+
 //画面サイズ
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
@@ -20,4 +22,9 @@
 //攻撃時に誰が攻撃したのか判断する用
 #define PLAYER	0	//プレイヤー
 #define ENEMY	1	//敵
+
+//攻撃の種類
+#define MELEE 0		//近接攻撃
+#define WAVES 1		//飛ぶ斬撃
+#define BULLET 2	//遠距離
 
