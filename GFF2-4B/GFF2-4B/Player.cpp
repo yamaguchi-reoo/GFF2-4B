@@ -389,7 +389,6 @@ void Player::ApplyDamage(int num)
 		//のけぞる
 		acs[UP] += 10;
 		acs[!direction + 2] += 10; //今自分の顔が向いている方向と逆方向に
-		jump_flg = false;
 		//体力を減らす
 		hp -= num;
 		if (hp < 0)
@@ -637,6 +636,11 @@ void Player::Move()
 		direction = true;
 	}
 	
+	//ジャンプ中にダメージを受けた時、急速落下する
+	if (jump_flg == true && damage_flg == true)
+	{
+		acs[DOWN]++;
+	}
 	//1フレーム前の座標を保存
 	old_location = location;
 	//移動処理

@@ -147,7 +147,7 @@ AttackData Iruka::CreateAttactData()
 	attack_data.attack_time = 3;
 	attack_data.delay = 0;
 	attack_data.damage = 1;
-
+	attack_data.attack_type = MELEE;
 	if (direction == Direction::RIGHT) {
 		attack_data.direction = 0;
 	}
