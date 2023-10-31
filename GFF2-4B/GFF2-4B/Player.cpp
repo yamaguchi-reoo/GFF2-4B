@@ -25,6 +25,7 @@
 #define PLAYER_JUMP_ATTACK 12			//ジャンプ攻撃アニメーション開始地点
 #define PLAYER_JUMP_ATTACK_END 16		//ジャンプ攻撃（着地）アニメーション開始地点
 #define PLAYER_ANIM 10					//次の画像に切り替えるまでの時間（フレーム）
+
 Player::Player()
 {
 	frame = 0;
@@ -44,7 +45,8 @@ Player::Player()
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
 	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
 	attack_step = 0;
-	attack_time = 0;
+	attack_time = DEFAULT_ATTACK_INTERVAL;
+	attack_time_count = 0;
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack_motion_flg[i] = false;
@@ -81,7 +83,7 @@ Player::Player()
 
 Player::~Player() 
 {
-
+	
 }
 
 void Player::Update(GameMain* main)
@@ -103,8 +105,12 @@ void Player::Update(GameMain* main)
 		GiveGravity();
 	}
 
-	//攻撃
-	Attack(main);
+	//ダメージを受けている途中でないなら
+	if (damage_flg == false)
+	{
+		//攻撃
+		Attack(main);
+	}
 
 	//ダメージ演出中なら
 	if (inv_flg == true)
@@ -123,25 +129,11 @@ void Player::Update(GameMain* main)
 		}
 	}
 
-	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
-	if (PlayAnyAttack() == true || damage_flg == true)
-	{
-		//動けなくする
-		move_flg = false;
-	}
-	//どちらでもないなら
-	else
-	{
-		//動けるようにする
-		move_flg = true;
-	}
-
 	//移動処理
 	Move();
 
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
-
 
 	//各移動用変数をリセット
 	Reset();
@@ -152,43 +144,6 @@ void Player::Update(GameMain* main)
 
 void Player::Draw()const
 {
-	SetFontSize(24);
-	//強化状態でないなら
-	if (powerup_flg == false)
-	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, true);
-		//顔の向き
-		if (direction == false)
-		{
-			DrawBox(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
-		}
-		else
-		{
-			DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
-		}
-	}
-	else
-	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
-		//顔の向き
-		if (direction == false)
-		{
-			DrawBox(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0xff0000, true);
-		}
-		else
-		{
-			DrawBox(location.x + 40, location.y + 10, location.x, location.y + 40, 0xff0000, true);
-		}
-	}
-
-	//デバッグ用表示
-	for (int i = 0; i < 5; i++)
-	{
-		DrawFormatString(0, 100+i*30, 0x00ff00, "%d", attack_motion_flg[i]);
-	}
-	DrawFormatString(360, 360, 0xfffff0, "HP %d", hp);
-	DrawFormatString(360, 380, 0xfffff0, "direction %d", direction);
-
 	//プレイヤー画像表示
 	if (hidden_flg == true)
 	{
@@ -262,13 +217,71 @@ void Player::Draw()const
 			break;
 		}
 	}
+
+	//デバッグ用表示
+#if DEBUG
+	//当たり判定表示
+	//強化状態でないなら
+	if (powerup_flg == false)
+	{
+		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
+	}
+	//強化状態なら
+	else
+	{
+		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
+	}
+	int old_size = GetFontSize();	//元のサイズを保持
+	SetFontSize(14);
+	DrawBox(0, 200, 210, 400, 0x000000, true);
+	DrawBox(0, 200, 210, 400, 0xffffff, false);
+	for (int i = 0; i < 6; i++)
+	{
+		switch (i)
+		{
+		case 0:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "下加速度:%f", acs[i]);
+			break;
+		case 1:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "上加速度:%f", acs[i]);
+			break;
+		case 2:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "右加速度:%f", acs[i]);
+			break;
+		case 3:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "左加速度:%f", acs[i]);
+			break;
+		case 4:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "ジャンプ攻撃:%d", attack_motion_flg[i]);
+			break;
+		case 5:
+			DrawFormatString(0, 200 + i * 15, 0xffffff, "着地攻撃:%d", attack_motion_flg[i]);
+			break;
+		}
+	}
+	DrawFormatString(0, 290, 0xffffff, "HP %d", hp);
+	if (direction == false)
+	{
+		DrawFormatString(0, 305, 0xffffff, "顔の向き:右", direction);
+	}
+	else
+	{
+		DrawFormatString(0, 305, 0xffffff, "顔の向き:左", direction);
+	}
+	DrawFormatString(0, 380, 0xffffff, "状態:%s", player_state_char[player_state]);
+	SetFontSize(old_size);
+#endif // DEBUG
 }
 
 void Player::GiveGravity()
 {
 	if (acs[DOWN] <= GRAVITY_POWER)
 	{
-		acs[DOWN] += 1.5f;
+		acs[DOWN] += (1.5f + (float)powerup_flg);
 	}
 }
 
@@ -292,24 +305,6 @@ void Player::OnFloor(int num,Location _sub)
 	jump_flg = false;
 }
 
-void Player::TouchCeiling()
-{
-	acs[UP] = 0;
-	touch_ceil_flg = true;
-}
-
-void Player::TouchRightWall()
-{
-	acs[RIGHT] = 0;
-	rightwall_flg = true;
-}
-
-void Player::TouchLeftWall()
-{
-	acs[LEFT] = 0;
-	leftwall_flg = true;
-}
-
 void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 {
 	Location p_center = { 0 };
@@ -326,19 +321,28 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	else if (location.y +20> _sub_location.y + _sub_erea.height)
 	{
 		location.y = _sub_location.y + _sub_erea.height;
-		TouchCeiling();
+		//上加速度を0にする
+		acs[UP] = 0;
+		//天井に触れたフラグを立てる
+		touch_ceil_flg = true;
 	}
 	//右の壁に触れた時
 	else if (location.x +erea.width-10 < _sub_location.x)
 	{
 		location.x = _sub_location.x - erea.width;
-		TouchRightWall();
+		//右加速度を0にする
+		acs[RIGHT] = 0;
+		//右の壁に触れたフラグを立てる
+		rightwall_flg = true;
 	}
 	//左の壁に触れた時
 	else if (location.x+10 > _sub_location.x + _sub_erea.width)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
-		TouchLeftWall();
+		//左加速度を0にする
+		acs[LEFT] = 0;
+		//左の壁に触れたフラグを立てる
+		leftwall_flg = true;
 	}
 	//どっちの壁にも触れていないときの地面すり抜け防止
 	else
@@ -408,41 +412,45 @@ AttackData Player::CreateAttactData(int i)
 
 void Player::SetPowerUp()
 {
-	powerup_flg = true;
-	acs_max = ACS_MAX * 2;
-	jump_power = DEFAULT_JUMP_POWER * 1.1;
-	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;
-	player_anim_speed = PLAYER_ANIM / 2;
+	powerup_flg = true;								
+	acs_max = ACS_MAX * 2;							//最大加速度を2倍
+	jump_power = DEFAULT_JUMP_POWER * 1.1;			//跳躍力を1.1倍
+	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//攻撃間隔を半分に
+	player_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
+	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//プレイヤーが動けない時間を半分に
 }
 
 void Player::StopPowerUp()
 {
 	powerup_flg = false;
+	//SetPowerUpで変更した値をすべて元通りに
 	acs_max = ACS_MAX;
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
 	player_anim_speed = PLAYER_ANIM;
+	attack_time = DEFAULT_ATTACK_INTERVAL;		
 }
 
 void Player::Attack(GameMain* main)
 {
 	//攻撃
-	if (PadInput::OnButton(XINPUT_BUTTON_B) == true && attack_interval_count <= 0)
+	if (
+#if DEBUG
+		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_B) == true
+#endif
+		&& attack_interval_count <= 0)
 	{
 		//空中に居ないなら
 		if (acs[DOWN] == 0)
 		{
 			//攻撃間隔の測定を開始
 			attack_interval_count = attack_interval;
+
 			//プレイヤーが移動できない時間
-			if (powerup_flg == false)
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL;
-			}
-			else
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL/2;
-			}
+			attack_time_count = attack_time;
+
 			//一定間隔が過ぎる前に攻撃を行っていたなら
 			if (ca_interval_count > 0)
 			{
@@ -458,7 +466,7 @@ void Player::Attack(GameMain* main)
 				//攻撃の段階をリセットする
 				attack_step = 0;
 			}
-			//４段目を撃った後に必ず１段目に戻るようにする
+			//４段目を撃った後に必ず１段目に戻るように間隔を設定する
 			if (attack_step >= 3)
 			{
 				ca_interval_count = 0;
@@ -488,6 +496,7 @@ void Player::Attack(GameMain* main)
 	{
 		ca_interval_count--;
 	}
+
 	//攻撃演出用
 	//落下攻撃以外なら
 	switch (attack_step)
@@ -496,10 +505,10 @@ void Player::Attack(GameMain* main)
 	case 1:
 	case 2:
 	case 3:
-		if (--attack_time > 0)
+		if (--attack_time_count > 0)
 		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = true;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 		}
 		else
 		{
@@ -511,8 +520,8 @@ void Player::Attack(GameMain* main)
 		//空中にいる限り攻撃し続ける
 		if (OnAnyFloorFlg() == false)
 		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = true;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 			//攻撃を生成する
 			main->SpawnAttack(CreateAttactData(attack_step));
 
@@ -524,23 +533,20 @@ void Player::Attack(GameMain* main)
 			attack_motion_flg[4] = false;
 			//着地攻撃の発生
 			attack_step = 5;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 			main->SpawnAttack(CreateAttactData(attack_step));
+			//攻撃間隔の測定を開始
+			attack_interval_count = attack_interval;
 			//プレイヤーが移動できない時間
-			if (powerup_flg == false)
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL;
-			}
-			else
-			{
-				attack_time = DEFAULT_ATTACK_INTERVAL / 2;
-			}
+			attack_time_count = attack_time;
 		}
 		break;
 	case 5:
-		if (--attack_time > 0)
+		if (--attack_time_count >= 0)
 		{
-			//現在行っている攻撃の段階に応じたフラグをtrueにする
-			attack_motion_flg[attack_step] = true;
+			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
+			SetAttackFlg(attack_step);
 		}
 		else
 		{
@@ -553,8 +559,27 @@ void Player::Attack(GameMain* main)
 
 void Player::Move()
 {
+	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
+	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true)
+	{
+		//動けなくする
+		move_flg = false;
+	}
+	//どちらでもないなら
+	else
+	{
+		//動けるようにする
+		move_flg = true;
+	}
+
 	//左移動
-	if (PadInput::TipLeftLStick(STICKL_X) <= -0.5 && move_flg == true)
+	if (
+#if DEBUG
+	(KeyInput::OnPresed(KEY_INPUT_A) == true || PadInput::TipLeftLStick(STICKL_X) <= -0.5)
+#else
+		PadInput::TipLeftLStick(STICKL_X) <= -0.5
+#endif
+		&& move_flg == true)
 	{
 		if (acs[LEFT] <= acs_max && rightwall_flg == false)
 			{
@@ -567,7 +592,13 @@ void Player::Move()
 		}
 
 	//右移動
-	if (PadInput::TipLeftLStick(STICKL_X) >= 0.5 && move_flg == true)
+	if (
+#if DEBUG
+	(KeyInput::OnPresed(KEY_INPUT_D) == true || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
+#else
+		PadInput::TipLeftLStick(STICKL_X) >= 0.5
+#endif 
+		&& move_flg == true)
 		{
 			if (acs[RIGHT] <= acs_max && leftwall_flg == false)
 			{
@@ -579,7 +610,13 @@ void Player::Move()
 			DecAcs(RIGHT);
 		}
 	//ジャンプ
-	if (PadInput::OnButton(XINPUT_BUTTON_A) == true && jump_flg == false && move_flg == true)
+	if (
+#if DEBUG
+	(KeyInput::OnKey(KEY_INPUT_SPACE) == true || PadInput::OnButton(XINPUT_BUTTON_A) == true)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A) == true
+#endif
+		&& jump_flg == false && move_flg == true)
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;
@@ -599,6 +636,11 @@ void Player::Move()
 		direction = true;
 	}
 	
+	//ジャンプ中にダメージを受けた時、急速落下する
+	if (jump_flg == true && damage_flg == true)
+	{
+		acs[DOWN]++;
+	}
 	//1フレーム前の座標を保存
 	old_location = location;
 	//移動処理
@@ -797,6 +839,23 @@ bool Player::PlayAnyAttack()
 	return ret;
 }
 
+void Player::SetAttackFlg(int num)
+{
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		//指定した数字以外の攻撃フラグを下げる
+		if (i != num)
+		{
+			attack_motion_flg[i] = false;
+		}
+		//指定した数字の攻撃フラグを立てる
+		else
+		{
+			attack_motion_flg[i] = true;
+		}
+	}
+}
+
 void Player::SetPlayerAttackData()
 {
 	//一段階目　
@@ -808,6 +867,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].attack_time = 10;
 	player_attack_data[0].damage = 1;
 	player_attack_data[0].delay = 10;
+	player_attack_data[0].attack_type = MELEE;
 	//一段階目　強化中
 	player_attack_data[1].shift_x = -erea.width;
 	player_attack_data[1].shift_y = -50;
@@ -817,6 +877,8 @@ void Player::SetPlayerAttackData()
 	player_attack_data[1].attack_time = 5;
 	player_attack_data[1].damage = 3;
 	player_attack_data[1].delay = 5;
+	player_attack_data[1].attack_type = WAVES;
+	player_attack_data[1].move = 20;
 	//二段階目
 	player_attack_data[2].shift_x = -erea.width;
 	player_attack_data[2].shift_y = -70;
@@ -826,6 +888,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[2].attack_time = 10;
 	player_attack_data[2].damage = 1;
 	player_attack_data[2].delay = 10;
+	player_attack_data[2].attack_type = MELEE;
 	//二段階目　強化中
 	player_attack_data[3].shift_x = -erea.width;
 	player_attack_data[3].shift_y = -70;
@@ -833,8 +896,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].height = 230;
 	player_attack_data[3].who_attack = 0;
 	player_attack_data[3].attack_time = 5;
-	player_attack_data[3].damage = 3;
+	player_attack_data[3].damage = 2;
 	player_attack_data[3].delay = 5;
+	player_attack_data[3].attack_type = WAVES;
+	player_attack_data[3].move = 20;
 	//三段階目
 	player_attack_data[4].shift_x = -erea.width;
 	player_attack_data[4].shift_y = 50;
@@ -844,6 +909,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[4].attack_time = 10;
 	player_attack_data[4].damage = 1;
 	player_attack_data[4].delay = 5;
+	player_attack_data[4].attack_type = MELEE;
 	//三段階目　強化中
 	player_attack_data[5].shift_x = -erea.width;
 	player_attack_data[5].shift_y = 40;
@@ -851,8 +917,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].height = 110;
 	player_attack_data[5].who_attack = 0;
 	player_attack_data[5].attack_time = 10;
-	player_attack_data[5].damage = 1;
+	player_attack_data[5].damage = 2;
 	player_attack_data[5].delay = 5;
+	player_attack_data[5].attack_type = WAVES;
+	player_attack_data[5].move = 15;
 	//四段階目
 	player_attack_data[6].shift_x = -erea.width;
 	player_attack_data[6].shift_y = -90;
@@ -860,8 +928,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[6].height = 200;
 	player_attack_data[6].who_attack = 0;
 	player_attack_data[6].attack_time = 10;
-	player_attack_data[6].damage = 1;
+	player_attack_data[6].damage = 2;
 	player_attack_data[6].delay = 10;
+	player_attack_data[6].attack_type = MELEE;
 	//四段階目　強化中
 	player_attack_data[7].shift_x = -erea.width;
 	player_attack_data[7].shift_y = -90;
@@ -869,8 +938,10 @@ void Player::SetPlayerAttackData()
 	player_attack_data[7].height = 200;
 	player_attack_data[7].who_attack = 0;
 	player_attack_data[7].attack_time = 10;
-	player_attack_data[7].damage = 1;
+	player_attack_data[7].damage = 3;
 	player_attack_data[7].delay = 10;
+	player_attack_data[7].attack_type = WAVES;
+	player_attack_data[7].move = 20;
 	//ジャンプ攻撃
 	player_attack_data[8].shift_x = -erea.width;
 	player_attack_data[8].shift_y = 50;
@@ -880,6 +951,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].attack_time = 2;
 	player_attack_data[8].damage = 1;
 	player_attack_data[8].delay = 0;
+	player_attack_data[8].attack_type = MELEE;
 	//ジャンプ攻撃　強化中
 	player_attack_data[9].shift_x = 0;
 	player_attack_data[9].shift_y = 50;
@@ -889,22 +961,27 @@ void Player::SetPlayerAttackData()
 	player_attack_data[9].attack_time = 2;
 	player_attack_data[9].damage = 1;
 	player_attack_data[9].delay = 0;
+	player_attack_data[9].attack_type = MELEE;
 	//ジャンプ攻撃からの着地攻撃
 	player_attack_data[10].shift_x = 0;
 	player_attack_data[10].shift_y = 50;
-	player_attack_data[10].width = 200;
+	player_attack_data[10].width = 100;
 	player_attack_data[10].height = 100;
 	player_attack_data[10].who_attack = 0;
 	player_attack_data[10].attack_time = 10;
 	player_attack_data[10].damage = 2;
 	player_attack_data[10].delay = 0;
+	player_attack_data[10].attack_type = WAVES;
+	player_attack_data[10].move = 20;
 	//ジャンプ攻撃からの着地攻撃　強化用
 	player_attack_data[11].shift_x = 0;
 	player_attack_data[11].shift_y = 50;
 	player_attack_data[11].width = 250;
 	player_attack_data[11].height = 100;
 	player_attack_data[11].who_attack = 0;
-	player_attack_data[11].attack_time = 5;
+	player_attack_data[11].attack_time = 10;
 	player_attack_data[11].damage = 2;
 	player_attack_data[11].delay = 0;
+	player_attack_data[11].attack_type = WAVES;
+	player_attack_data[11].move = 20;
 }

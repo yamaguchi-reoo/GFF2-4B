@@ -12,6 +12,10 @@ struct AttackData {
 	bool direction;		//X座標を基準にしてどの方向に攻撃を発生させるかの判断(0=右 1=左)
 	int damage;			//与えるダメージ量
 	int delay;			//何フレーム待ってから攻撃するか
+	int attack_type;	//攻撃の種類(近接、波状、弾)
+	//int effect_type;	//攻撃のアニメーションの種類
+	//攻撃の種類がWAVESの場合この情報も書き込む必要がある
+	int move;			//１フレームにどれだけ前に進むか
 };
 //中心座標
 struct Location

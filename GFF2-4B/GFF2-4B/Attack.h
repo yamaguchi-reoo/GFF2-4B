@@ -7,9 +7,9 @@ class Attack :
 {
 private:
 	AttackData attack_data;		//攻撃に必要な情報格納
-	bool attack_flg;	//攻撃が発生しているかのフラグ
+	bool attack_flg;			//攻撃が発生しているかのフラグ
 	bool can_apply_damage;		//ダメージを与えられるか判断
-
+	int move_front;			//前に移動する攻撃
 
 public:
 	Attack();
