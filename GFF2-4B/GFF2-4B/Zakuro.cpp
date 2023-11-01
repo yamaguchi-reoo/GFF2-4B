@@ -20,7 +20,7 @@ Zakuro::Zakuro()
 	stop_count = 120;
 
 
-	zakuro_direction = false;
+	zakuro_direction = true;
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		onfloor_flg[i] = false;
@@ -40,7 +40,6 @@ Zakuro::Zakuro()
 }
 Zakuro::~Zakuro()
 {
-	
 }
 void Zakuro::Update(GameMain* main)
 {
@@ -48,6 +47,7 @@ void Zakuro::Update(GameMain* main)
 	{
 		if (attack_flg == true) 
 		{
+			//çUåÇ
 			Attack(main);
 			//ç∂âEà⁄ìÆ
 			Move();
@@ -64,7 +64,7 @@ void Zakuro::Update(GameMain* main)
 		if (onfloor_flg[i] == true)
 		{
 			apply_gravity = false;
-			if (zakuro_direction == false)
+			if (zakuro_direction == true)
 			{
 				zakuro_state = ZakuroState::LEFT;
 			}
@@ -80,7 +80,16 @@ void Zakuro::Update(GameMain* main)
 		//èdóÕÇó^Ç¶ÇÈ
 		ZakuroGiveGravity();
 	}
-
+	if (leftwall_flg == true) {
+		zakuro_state = ZakuroState::RIGHT;
+		zakuro_direction = false;
+		leftwall_flg = false;
+	}
+	if (rightwall_flg == true) {
+		zakuro_state = ZakuroState::LEFT;
+		zakuro_direction = true;
+		rightwall_flg = false;
+	}
 	if (KeyInput::OnKey(KEY_INPUT_Z)) 
 	{
 		spawn_flg = false;
@@ -112,21 +121,23 @@ void Zakuro::Move()
 	//ç∂à⁄ìÆ
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		zakuro_direction = false;
 		location.x -= MOVE_SPEED;
+		zakuro_direction = true;
 		if (location.x < 0) 
 		{
 			zakuro_state = ZakuroState::RIGHT;
+			zakuro_direction = false;
 		}
 	}
 	//âEà⁄ìÆ
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		zakuro_direction = true;
 		location.x += MOVE_SPEED;
-		if (location.x > SCREEN_WIDTH) 
+		zakuro_direction = false;
+		if (location.x > SCREEN_WIDTH - 50) 
 		{
 			zakuro_state = ZakuroState::LEFT;
+			zakuro_direction = true;
 		}
 	}
 }
@@ -168,15 +179,17 @@ void Zakuro::ZakuroGiveGravity()
 	zakuro_state = ZakuroState::IDLE;
 	location.y += MOVE_SPEED;
 }
+
 void Zakuro::ZakuroOnFloor(int num, Location _sub)
 {
 	onfloor_flg[num] = true;
 }
+
 void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
 {
-	Location p_center = { 0 };
-	p_center.x = location.x + (erea.width / 2);
-	p_center.y = location.y + (erea.height / 2);
+	Location z_center = { 0 };
+	z_center.x = location.x + (erea.width / 2);
+	z_center.y = location.y + (erea.height / 2);
 
 	//è∞Ç…êGÇÍÇΩéû
 	if (location.y + erea.height - 12 < _sub_location.y)
