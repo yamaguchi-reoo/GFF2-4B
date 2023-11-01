@@ -9,7 +9,7 @@ GameMain::GameMain()
 	scene_scroll = new SceneScroll();
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
 	stage[1] = new Stage(200, 450, 200, 50);
-	stage[2] = new Stage(300, 450, 200, 50);
+	stage[2] = new Stage(600, 450, 200, 50);
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
