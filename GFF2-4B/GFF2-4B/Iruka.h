@@ -1,14 +1,20 @@
 #pragma once
 #include "CharaBase.h"
  
-
+enum  class IrukaState {
+    IDLE = 0,
+    RIGHT,
+    LEFT,
+    RIGHT_FALL,
+    LEFT_FALL,
+};
 class Iruka :
     public CharaBase
 {
 private:
  
 
-    Direction direction; //Œü‚¢‚Ä‚¢‚é•ûŒü
+    IrukaState iruka_state; //Œü‚¢‚Ä‚¢‚é•ûŒü
 
     float fps_count;//ƒtƒŒ[ƒ€
 

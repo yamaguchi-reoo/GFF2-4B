@@ -19,12 +19,13 @@
 
 #define BAMBOO_NUM 3 //竹の積まれている数
 
+#define ATTACK_NUM 100   //画面に存在できる最大の攻撃数
+
 //攻撃時に誰が攻撃したのか判断する用
 #define PLAYER	0	//プレイヤー
 #define ENEMY	1	//敵
 
 //攻撃の種類
 #define MELEE 0		//近接攻撃
-#define WAVES 1		//飛ぶ斬撃
-#define BULLET 2	//遠距離
+#define BULLET 1	//遠距離攻撃（波動も含む）
 
