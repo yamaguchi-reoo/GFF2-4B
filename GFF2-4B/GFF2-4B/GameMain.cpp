@@ -87,10 +87,10 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
-	//イルカ落下判定
-	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
-		iruka->Get_Fall_Flg();
-	}
+	////イルカ落下判定
+	//if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
+	//	iruka->SetFallFlg();
+	//}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		//誰が攻撃したかによって攻撃の判定がついていく対象を変える
@@ -185,9 +185,9 @@ void GameMain::Draw() const
 	himawari->Draw();// ひまわり
 	iruka->Draw();// イルカ
 
-	for (int i = 0; i < BAMBOO_NUM; i++) {
+	/*for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
-	}
+	}*/
 
 	powergauge->Draw();
 	playerhp->Draw();
@@ -221,6 +221,9 @@ void GameMain::HitCheck()
 			//触れた面に応じて押し出す
 			zakuro->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
 		}
+		if (iruka->HitBox(stage[i]) == true) {
+			iruka->IrukaPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
+		}		
 	}
 
 	//攻撃の数だけ繰り返す
