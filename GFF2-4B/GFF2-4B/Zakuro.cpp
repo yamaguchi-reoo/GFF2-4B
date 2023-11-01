@@ -20,7 +20,6 @@ Zakuro::Zakuro()
 
 	stop_count = 120;
 
-
 	zakuro_direction = true;
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
@@ -28,7 +27,6 @@ Zakuro::Zakuro()
 	}
 	attack_flg = true;
 	spawn_flg = false;
-	touch_ceil_flg = false;
 	rightwall_flg = false;
 	leftwall_flg = false;
 	apply_gravity = true;
@@ -108,7 +106,7 @@ void Zakuro::Draw() const
 	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
 	if (spawn_flg == false) 
 	{
-		//DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
 		if (zakuro_state == ZakuroState::RIGHT)
 		{
 			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
@@ -169,7 +167,6 @@ void Zakuro::ZakuroReset()
 {
 	//重力が働くかの判定をリセット
 	apply_gravity = true;
-	touch_ceil_flg = false;
 	rightwall_flg = false;
 	leftwall_flg = false;
 	for (int i = 0; i < FLOOR_NUM; i++)
@@ -237,15 +234,8 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.delay = 0;
 	attack_data.damage = 1;
 	attack_data.attack_type = MELEE;
+	attack_data.direction = zakuro_direction;
 
-	if (zakuro_state == ZakuroState::RIGHT) 
-	{
-		attack_data.direction = 0;
-	}
-	else if (zakuro_state == ZakuroState::LEFT) 
-	{
-		attack_data.direction = 1;
-	}
 
 	return attack_data;
 }

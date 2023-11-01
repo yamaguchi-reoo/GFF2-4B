@@ -22,7 +22,6 @@ private:
 
 	//当たり判定関連
 	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
-	bool touch_ceil_flg;			//いずれかの天井に触れているかどうか
 	bool rightwall_flg;				//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;				//いずれかの左壁に触れているかどうか
 	bool apply_gravity;				//重力を適用するかどうか
