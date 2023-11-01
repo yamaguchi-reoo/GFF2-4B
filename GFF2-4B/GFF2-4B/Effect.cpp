@@ -52,7 +52,7 @@ void Effect::Update()
 
 
 
-	if (splash.x <= 100 && splash.y <= 100)
+	if (gauge_x == (int)splash.x && gauge_y == (int)splash.y)
 	{
 		hit_flg = false;
 		splash.x = 0;

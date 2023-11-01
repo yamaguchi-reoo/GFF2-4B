@@ -44,5 +44,11 @@ public:
 
 	float SetLocation(Location location);
 	int InitSplash();
+
+	int EndFlg(int end)
+	{
+		end_flg = end;
+		return end_flg;
+	};
 };
 

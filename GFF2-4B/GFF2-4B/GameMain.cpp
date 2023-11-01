@@ -87,6 +87,8 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
+
+
 	//イルカ落下判定
 	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
 		iruka->Get_Fall_Flg();
@@ -216,6 +218,12 @@ void GameMain::HitCheck()
 			//触れた面に応じて押し出す
 			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
 		}
+
+		if (zakuro->HitBox(stage[i]) == true)
+		{
+			//触れた面に応じて押し出す
+			zakuro->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
+		}
 	}
 
 	//攻撃の数だけ繰り返す
@@ -230,10 +238,12 @@ void GameMain::HitCheck()
 
 			effect->HitFlg(true);
 			effect->SetLocation(zakuro->GetCenterLocation());
-
+			
+			//しぶきがゲージにたどりついたときに増える
 			if (effect->InitSplash() == 2)
 			{
 				powergauge->SetVolume(zakuro->GetColorDate());
+				effect->EndFlg(0);
 			}
 		}
 		// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
