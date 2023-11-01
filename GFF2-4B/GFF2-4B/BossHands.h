@@ -12,13 +12,19 @@ public:
 
     int handsimg[3];
 
-
+    struct{
+        float x;
+        float y;
+    }hands;
 
     int bhandx;
     int bhandy;
 
+    bool hitflg=false;
+
     BossHands();
     ~BossHands();
+
 
     void Update(GameMain* main)override;
     void Draw()const override;

@@ -12,6 +12,7 @@
 #include "PowerGauge.h"
 #include "PlayerHP.h"
 #include "Boss.h"
+#include "BossHands.h"
 
 //effect
 #include "Effect.h"
@@ -34,6 +35,7 @@ private:
     Iruka* iruka;      //イルカ
 
     Boss* boss; //ボス
+    BossHands* hands;//ボスの腕
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト

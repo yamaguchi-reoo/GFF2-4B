@@ -29,6 +29,7 @@ GameMain::GameMain()
 		onfloor_flg = false;
 
 		boss = new Boss();
+		hands = new BossHands();
 
 		break;
 	case 1:
@@ -119,6 +120,9 @@ AbstractScene* GameMain::Update()
 		{
 			stage[i]->Update();
 		}
+
+		hands->Update(this);
+
 		//“–‚½‚è”»’èŠÖ˜A‚Ìˆ—‚ğs‚¤
 		HitCheck();
 
@@ -247,6 +251,7 @@ void GameMain::Draw() const
 	case 0:
 
 		boss->Draw();
+		hands->Draw();
 
 		effect->Draw();
 		powergauge->Draw();
@@ -325,6 +330,12 @@ void GameMain::HitCheck()
 			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
 			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
 		}
+
+		if (hands->HitBox(stage[i]) == true)
+		{
+			hands->hitflg=true;
+		}
+
 	}
 
 	////UŒ‚‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
