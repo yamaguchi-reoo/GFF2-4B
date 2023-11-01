@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 #include "PadInput.h"
+#include "CharaBase.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 
 //しぶき
@@ -19,11 +21,13 @@ private:
 	Splash splash;	//オブジェクト化
 
 	bool hit_flg; //テスト用(true->敵に攻撃が当たったとき)
-	
-	float lenge_x, lenge_y;
 
-	int vx, vy;
+	float v;
+
 	float gauge_x, gauge_y;
+	float test_x, test_y;
+
+	int end_flg;
 
 public:
 	Effect();
@@ -32,6 +36,19 @@ public:
 	void Update();
 	void Draw()const;
 
+	bool HitFlg(bool hit)
+	{
+		hit_flg = hit;
+		return hit_flg; 
+	};
 
+	float SetLocation(Location location);
+	int InitSplash();
+
+	int EndFlg(int end)
+	{
+		end_flg = end;
+		return end_flg;
+	};
 };
 

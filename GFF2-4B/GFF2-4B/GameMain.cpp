@@ -87,6 +87,13 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
+	if (effect->InitSplash() == 2)
+	{
+		powergauge->SetVolume(zakuro->GetColorDate());
+		effect->EndFlg(0);
+
+	}
+
 	//イルカ落下判定
 	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
 		iruka->SetFallFlg();
@@ -234,12 +241,19 @@ void GameMain::HitCheck()
 		{
 			//ザクロのダメージ処理
 			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
-			powergauge->SetVolume(zakuro->GetColorDate());
 			attack[i]->DeleteAttack();
+
+			//しぶき用
+			effect->HitFlg(true);
+			effect->SetLocation(zakuro->GetCenterLocation());
 		}
 		// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
 		{
+			//しぶき用
+			effect->HitFlg(true);
+			effect->SetLocation(zakuro->GetCenterLocation());
+
 			//イルカのダメージ処理
 			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
 			if (iruka->GetHp() < 1) {
