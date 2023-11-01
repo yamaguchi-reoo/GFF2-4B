@@ -71,6 +71,9 @@ class Player :
 {
 private:
 
+#if DEBUG
+	bool d_inv_flg;					//無敵かどうか（デバッグ用）
+#endif
 	int frame;						//フレーム測定
 
 	//移動関連
@@ -109,7 +112,8 @@ private:
 	bool damage_flg;				//攻撃を喰らったか
 	int inv_time;					//無敵時間
 	int damage_time;				//モーション再生時間
-
+	bool death_flg;					//死亡したかどうか
+	int death_time;					//死亡演出中時間
 	//描画関連
 	int player_image[18];					//プレイヤー画像
 	PlayerState player_state;				//プレイヤーの状態格納
@@ -188,5 +192,8 @@ public:
 
 	//プレイヤーの攻撃データを格納する
 	void SetPlayerAttackData();
+
+	//プレイヤーをリスポーンさせる(_location=スポーンさせる場所)
+	void Respawn(Location _location);
 };
 
