@@ -216,6 +216,11 @@ void GameMain::HitCheck()
 			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
 			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
 		}
+		if (zakuro->HitBox(stage[i]) == true)
+		{
+			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
+			zakuro->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
+		}
 	}
 
 	//UŒ‚‚Ì”‚¾‚¯ŒJ‚è•Ô‚·

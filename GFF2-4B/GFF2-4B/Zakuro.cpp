@@ -7,21 +7,31 @@
 
 Zakuro::Zakuro()
 {
-	direction = Direction::LEFT;
+	zakuro_state = ZakuroState::LEFT;
 
-	location.x = 900;
-	location.y = 570;
+	location.x = 400;
+	location.y = 200;
 	erea.height = 50;
 	erea.width = 50;
-	speed = 2;
+	speed = MOVE_SPEED;
 	who = 1;
-	//direction = true;
-	attack_flg = true;
+	hp = 1;
+
 	stop_count = 120;
 
-	spawn_flg = false;
 
-	hp = 1;
+	zakuro_direction = false;
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
+	attack_flg = true;
+	spawn_flg = false;
+	touch_ceil_flg = false;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	apply_gravity = true;
+
 
 
 	Date.magenta = 15.0f;
@@ -34,33 +44,64 @@ Zakuro::~Zakuro()
 }
 void Zakuro::Update(GameMain* main)
 {
-	if (spawn_flg == false) {
-
-		if (attack_flg == true) {
+	if (spawn_flg == false) 
+	{
+		if (attack_flg == true) 
+		{
 			Attack(main);
 			//左右移動
 			Move();
 		}
-		else {
+		else 
+		{
 			//ノックバック
 			MoveNockBack();
 		}
 	}
-	if (KeyInput::OnKey(KEY_INPUT_Z)) {
+	//重力を加えるかの処理
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		if (onfloor_flg[i] == true)
+		{
+			apply_gravity = false;
+			if (zakuro_direction == false)
+			{
+				zakuro_state = ZakuroState::LEFT;
+			}
+			else
+			{
+				zakuro_state = ZakuroState::RIGHT;
+			}
+		}
+	}
+	//床に触れていないなら
+	if (apply_gravity == true)
+	{
+		//重力を与える
+		ZakuroGiveGravity();
+	}
+
+	if (KeyInput::OnKey(KEY_INPUT_Z)) 
+	{
 		spawn_flg = false;
 	}
+
+	ZakuroReset();
 }
 
 void Zakuro::Draw() const
 {
 	SetFontSize(20);
 	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
-	if (spawn_flg == false) {
+	if (spawn_flg == false) 
+	{
 		//DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
-		if (direction == Direction::RIGHT){
+		if (zakuro_state == ZakuroState::RIGHT)
+		{
 			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
 		}
-		else{
+		else
+		{
 			DrawBoxAA(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
 		}
 	}
@@ -69,35 +110,101 @@ void Zakuro::Draw() const
 void Zakuro::Move()
 {
 	//左移動
-	if (direction == Direction::LEFT) {
+	if (zakuro_state == ZakuroState::LEFT) 
+	{
+		zakuro_direction = false;
 		location.x -= MOVE_SPEED;
-		if (location.x < 0) {
-			direction = Direction::RIGHT;
+		if (location.x < 0) 
+		{
+			zakuro_state = ZakuroState::RIGHT;
 		}
 	}
 	//右移動
-	if (direction == Direction::RIGHT) {
+	if (zakuro_state == ZakuroState::RIGHT) 
+	{
+		zakuro_direction = true;
 		location.x += MOVE_SPEED;
-		if (location.x > SCREEN_WIDTH - 80) {
-			direction = Direction::LEFT;
+		if (location.x > SCREEN_WIDTH) 
+		{
+			zakuro_state = ZakuroState::LEFT;
 		}
 	}
 }
-
 void Zakuro::MoveNockBack()
 {
 	//左移動
-	if (direction == Direction::LEFT) {
+	if (zakuro_state == ZakuroState::LEFT) 
+	{
 		location.x += speed * 0.3;
 	}
 	//右移動
-	if (direction == Direction::RIGHT) {
+	if (zakuro_state == ZakuroState::RIGHT) 
+	{
 		location.x -= speed * 0.3;
 	}
 
-	if (--stop_count <= 0) {
+	if (--stop_count <= 0) 
+	{
 		attack_flg = true;
 		stop_count = 120;
+	}
+}
+
+void Zakuro::ZakuroReset()
+{
+	//重力が働くかの判定をリセット
+	apply_gravity = true;
+	touch_ceil_flg = false;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
+}
+
+void Zakuro::ZakuroGiveGravity()
+{
+	zakuro_state = ZakuroState::IDLE;
+	location.y += MOVE_SPEED;
+}
+void Zakuro::ZakuroOnFloor(int num, Location _sub)
+{
+	onfloor_flg[num] = true;
+}
+void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
+{
+	Location p_center = { 0 };
+	p_center.x = location.x + (erea.width / 2);
+	p_center.y = location.y + (erea.height / 2);
+
+	//床に触れた時
+	if (location.y + erea.height - 12 < _sub_location.y)
+	{
+		location.y = _sub_location.y - erea.height + 0.1f;
+		ZakuroOnFloor(num, _sub_location);
+	}
+	//右の壁に触れた時
+	else if (location.x + erea.width - 10 < _sub_location.x)
+	{
+		location.x = _sub_location.x - erea.width;
+
+		//右の壁に触れたフラグを立てる
+		rightwall_flg = true;
+	}
+	//左の壁に触れた時
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width)
+	{
+		location.x = _sub_location.x + _sub_erea.width;
+
+		//左の壁に触れたフラグを立てる
+		leftwall_flg = true;
+	}
+	//どっちの壁にも触れていないときの地面すり抜け防止
+	else
+	{
+		location.y = _sub_location.y - erea.height;
+		ZakuroOnFloor(num, _sub_location);
 	}
 }
 
@@ -114,10 +221,12 @@ AttackData Zakuro::CreateAttactData()
 	attack_data.damage = 1;
 	attack_data.attack_type = MELEE;
 
-	if (direction == Direction::RIGHT) {
+	if (zakuro_state == ZakuroState::RIGHT) 
+	{
 		attack_data.direction = 0;
 	}
-	else if (direction == Direction::LEFT) {
+	else if (zakuro_state == ZakuroState::LEFT) 
+	{
 		attack_data.direction = 1;
 	}
 

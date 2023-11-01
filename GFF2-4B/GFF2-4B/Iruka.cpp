@@ -10,7 +10,7 @@
 
 Iruka::Iruka()
 {
-	direction = Direction::LEFT;
+	iruka_state = IrukaState::LEFT;
 
 	location.x = 1400;
 	location.y = 100;
@@ -67,19 +67,19 @@ void Iruka::Draw() const
 	if (spawn_flg == false) {
 		//DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ffff, TRUE);
 		//ç∂å¸Ç´	
-		if (direction == Direction::LEFT) {
+		if (iruka_state == IrukaState::LEFT) {
 			DrawBoxAA(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
 		}
 		//âEå¸Ç´
-		else if (direction == Direction::RIGHT) {
+		else if (iruka_state == IrukaState::RIGHT) {
 			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
 		}
 		//âEå¸Ç´óéâ∫
-		else if (direction == Direction::RIGHT_FALL) {
+		else if (iruka_state == IrukaState::RIGHT_FALL) {
 			DrawBoxAA(location.x + erea.width, location.y + erea.height - 40, location.x + 30, location.y + erea.height, 0x00ff00, true);
 		}
 		//ç∂å¸Ç´óéâ∫
-		else if (direction == Direction::LEFT_FALL) {
+		else if (iruka_state == IrukaState::LEFT_FALL) {
 			DrawBoxAA(location.x + 30, location.y + erea.height - 40, location.x, location.y + erea.height, 0x00ff00, true);
 		}
 	}
@@ -89,17 +89,17 @@ void Iruka::Draw() const
 void Iruka::Move()
 {
 	//âEà⁄ìÆ
-	if (direction == Direction::RIGHT) {
+	if (iruka_state == IrukaState::RIGHT) {
 		location.x += MOVE_SPEED;
 		if (location.x > SCREEN_WIDTH + 100) {
-			direction = Direction::LEFT;
+			iruka_state = IrukaState::LEFT;
 		}
 	}
 	//ç∂à⁄ìÆ
-	if (direction == Direction::LEFT) {
+	if (iruka_state == IrukaState::LEFT) {
 		location.x -= MOVE_SPEED;
 		if (location.x < -100){
-			direction = Direction::RIGHT;
+			iruka_state = IrukaState::RIGHT;
 		}
 	}
 }
@@ -109,11 +109,11 @@ void Iruka::MoveFall()
 	erea.width = 50;
 	erea.height = 120;
 	location.y += MOVE_FALL_SPEED;
-	if (direction == Direction::RIGHT) {
-		direction = Direction::RIGHT_FALL;
+	if (iruka_state == IrukaState::RIGHT) {
+		iruka_state = IrukaState::RIGHT_FALL;
 	}
-	if (direction == Direction::LEFT) {
-		direction = Direction::LEFT_FALL;
+	if (iruka_state == IrukaState::LEFT) {
+		iruka_state = IrukaState::LEFT_FALL;
 	}
 	if (location.y >= 570) {
 		location.y = 570;
@@ -128,11 +128,11 @@ void Iruka::MoveReturn()
 		erea.width = 120;
 		erea.height = 50;
 		fps_count = 0;
-		if (direction == Direction::RIGHT_FALL) {
-			direction = Direction::RIGHT;
+		if (iruka_state == IrukaState::RIGHT_FALL) {
+			iruka_state = IrukaState::RIGHT;
 		}
-		if (direction == Direction::LEFT_FALL) {
-			direction = Direction::LEFT;
+		if (iruka_state == IrukaState::LEFT_FALL) {
+			iruka_state = IrukaState::LEFT;
 		}
 	}
 }
@@ -149,10 +149,10 @@ AttackData Iruka::CreateAttactData()
 	attack_data.delay = 0;
 	attack_data.damage = 1;
 	attack_data.attack_type = MELEE;
-	if (direction == Direction::RIGHT) {
+	if (iruka_state == IrukaState::RIGHT) {
 		attack_data.direction = 0;
 	}
-	else if (direction == Direction::LEFT) {
+	else if (iruka_state == IrukaState::LEFT) {
 		attack_data.direction = 1;
 	}
 	
