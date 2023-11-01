@@ -11,6 +11,7 @@
 #include "Scroll.h"
 #include "PowerGauge.h"
 #include "PlayerHP.h"
+#include "Boss.h"
 
 //effect
 #include "Effect.h"
@@ -31,6 +32,8 @@ private:
     Zakuro* zakuro;    //ザクロ
     Himawari* himawari;//ひまわり
     Iruka* iruka;      //イルカ
+
+    Boss* boss; //ボス
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト

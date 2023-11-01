@@ -11,8 +11,8 @@ GameMain::GameMain()
 	case 0:
 		player = new Player();
 		stage[0] = new Stage(0, SCREEN_HEIGHT - 100, SCREEN_WIDTH, 100);
-		stage[1] = new Stage(200, 450, 200, 50);
-		stage[2] = new Stage(300, 450, 200, 50);
+		stage[1] = new Stage(0, 0, 0, 0);
+		stage[2] = new Stage(0, 0, 0, 0);
 		for (int i = 0; i < ATTACK_NUM; i++)
 		{
 			attack[i] = new Attack();
@@ -27,6 +27,8 @@ GameMain::GameMain()
 
 		effect = new Effect();
 		onfloor_flg = false;
+
+		boss = new Boss();
 
 		break;
 	case 1:
@@ -243,6 +245,9 @@ void GameMain::Draw() const
 {
 	switch (snum) {
 	case 0:
+
+		boss->Draw();
+
 		effect->Draw();
 		powergauge->Draw();
 		playerhp->Draw();
