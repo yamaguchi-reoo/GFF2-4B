@@ -2,11 +2,13 @@
 #include "PadInput.h"
 #include "CharaBase.h"
 
+#define PI    3.1415926535897932384626433832795f
+
 //ゲージ
 struct GuegeBase
 {
-	int x;	  //色つける四角の右下座標(x)
-	int y;	  //色つける四角の右下座標(y)
+	float x;	  //色つける四角の右下座標(x)
+	float y;	  //色つける四角の右下座標(y)
 	float h;  //色つける四角の高さ
 	float volume; //色の溜まり具合
 	float ratio;  //ゲージの溜まり具合
@@ -23,9 +25,14 @@ private:
 
 	int powerFlg; //(0:それ以外 1:強化中 2:強化解除)
 
-	int image[2];  //画像用変数
+	int image[3];  //画像用変数
 
 	int MaskHandle[2]; //マスク画像用変数
+
+	float num; //画像回転用
+	int i,j; //画像回転用
+
+	int rotaFlg; //画像回転アニメーション用フラグ(0:それ以外 1:アニメーション中)
 
 public:
 	PowerGauge();  //コンストラクタ
@@ -41,5 +48,6 @@ public:
 	void SetPowerFlg(int i); //強化状態かどうかを保存する変数の値を引数の値に変更
 	void SetVolume(ColorDate color); //敵が落とした色、量をゲージに加算
 	void CheckVolumeMax(); //CMYKのゲージがMAXかチェックする
+	void RotaGauge(); //強化ゲージの回転処理
 	void InitGauge(); //強化状態が終わった後の初期化処理
 };

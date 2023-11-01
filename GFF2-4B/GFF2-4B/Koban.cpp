@@ -4,8 +4,8 @@ Koban::Koban(float pos_x, float pos_y)
 {
 	location.x = pos_x;
 	location.y = pos_y;
-	erea.height = 0;
-	erea.width = 0;
+	erea.height = 40;
+	erea.width = 40;
 
 	KobanImg = 0;
 }
@@ -20,5 +20,5 @@ void Koban::Update()
 
 void Koban::Draw() const
 {
-
+	DrawBoxAA(190.0f, 580.0f, 230.0f, 620.0f, 0xffff00, TRUE);
 }
