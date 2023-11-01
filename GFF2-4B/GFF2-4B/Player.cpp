@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "PadInput.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #define ACS_MAX 6	//最大加速度
 #define DOWN 0	//下加速度用
@@ -28,6 +30,9 @@
 
 Player::Player()
 {
+#if DEBUG
+	d_inv_flg = false;
+#endif
 	frame = 0;
 	player_state = IDOL_RIGHT;
 	old_location = { 0 };
@@ -36,7 +41,7 @@ Player::Player()
 	erea.height = PLAYER_HEIGHT;
 	erea.width = PLAYER_WIDTH;
 	who = 0;
-	hp = 10;
+	hp = 5;
 	move_speed = DEFAULT_MOVE_SPEED;
 	jump_power = DEFAULT_JUMP_POWER;
 	direction = false;
@@ -47,7 +52,7 @@ Player::Player()
 	attack_step = 0;
 	attack_time = DEFAULT_ATTACK_INTERVAL;
 	attack_time_count = 0;
-	for (int i = 0; i < ATTACK_NUM; i++)
+	for (int i = 0; i < ATTACK_PATTERN; i++)
 	{
 		attack_motion_flg[i] = false;
 	}
@@ -78,7 +83,9 @@ Player::Player()
 	damage_flg = false;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
 	damage_time = DEFAULT_INVINCIBLE_TIME / 2;
-	hidden_flg = true;
+	hidden_flg = false;
+	death_flg = false;
+	death_time = 120;
 }
 
 Player::~Player() 
@@ -88,44 +95,50 @@ Player::~Player()
 
 void Player::Update(GameMain* main)
 {
-
+	//無敵状態の切り替え（デバッグ用）
+#if DEBUG
+	if (KeyInput::OnKey(KEY_INPUT_Q) == true)
+	{
+		d_inv_flg = !d_inv_flg;
+	}
+#endif
 	frame++;
-	//重力を加えるかの処理
-	for (int i = 0; i < FLOOR_NUM; i++)
+	//生きているなら重力、ダメージ、攻撃関連の処理を行う
+	if (death_flg == false)
 	{
-		if (onfloor_flg[i] == true)
+
+		//ダメージを受けている途中でないなら
+		if (damage_flg == false)
 		{
-			apply_gravity = false;
+			//攻撃
+			Attack(main);
+		}
+
+		//ダメージ演出中なら
+		if (inv_flg == true)
+		{
+			damage_flg = true;
+			if (--damage_time < 0)
+			{
+				damage_flg = false;
+			}
+			//無敵時間が終わったら
+			if (--inv_time < 0)
+			{
+				inv_flg = false;
+				inv_time = DEFAULT_INVINCIBLE_TIME;
+				damage_time = DEFAULT_INVINCIBLE_TIME / 2;
+			}
 		}
 	}
-	//床に触れていないなら
-	if (apply_gravity == true)
+	//死んでいるなら死亡時間の測定
+	else
 	{
-		//重力を与える
-		GiveGravity();
-	}
-
-	//ダメージを受けている途中でないなら
-	if (damage_flg == false)
-	{
-		//攻撃
-		Attack(main);
-	}
-
-	//ダメージ演出中なら
-	if (inv_flg == true)
-	{
-		damage_flg = true;
-		if (--damage_time < 0)
+		if (--death_time <= 0)
 		{
-			damage_flg = false;
-		}
-		//無敵時間が終わったら
-		if (--inv_time < 0)
-		{
-			inv_flg = false;
-			inv_time = DEFAULT_INVINCIBLE_TIME;
-			damage_time = DEFAULT_INVINCIBLE_TIME / 2;
+			//仮に演出が終わったらすぐにリスポーンするようにする
+			Location res_location = { 100,100 };
+			Respawn(res_location);
 		}
 	}
 
@@ -145,75 +158,81 @@ void Player::Update(GameMain* main)
 void Player::Draw()const
 {
 	//プレイヤー画像表示
-	if (hidden_flg == true)
+	if (hidden_flg == false)
 	{
 		switch (player_state)
 		{
 		case IDOL_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case IDOL_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case MOVE_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
 			break;
 		case MOVE_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
 			break;
 		case JUMP_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case JUMP_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case FALL_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case FALL_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case ATTACK_RIGHT_ONE:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_TWO:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_THREE:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_FOUR:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_ONE:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_TWO:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_THREE:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_FOUR:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case JUMP_ATTACK_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
 			break;
 		case JUMP_ATTACK_RIGHT_END:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case JUMP_ATTACK_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
 			break;
 		case JUMP_ATTACK_LEFT_END:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case DAMAGE_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
 			break;
 		case DAMAGE_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			break;
+		case DEATH_RIGHT:
+			DrawRotaGraphF(location.x + PLAYER_IMAGE_SHIFT_X, location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			break;
+		case DEATH_LEFT:
+			DrawRotaGraphF(location.x + PLAYER_IMAGE_SHIFT_X, location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
 			break;
 		}
 	}
@@ -224,42 +243,56 @@ void Player::Draw()const
 	//強化状態でないなら
 	if (powerup_flg == false)
 	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
 	}
 	//強化状態なら
 	else
 	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
 	}
 	int old_size = GetFontSize();	//元のサイズを保持
 	SetFontSize(14);
-	DrawBox(0, 200, 210, 400, 0x000000, true);
-	DrawBox(0, 200, 210, 400, 0xffffff, false);
+	DrawBox(0, 200, 260, 400, 0x000000, true);
+	DrawBox(0, 200, 260, 400, 0xffffff, false);
 	for (int i = 0; i < 6; i++)
 	{
 		switch (i)
 		{
 		case 0:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "下加速度:%f", acs[i]);
 			break;
 		case 1:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "上加速度:%f", acs[i]);
 			break;
 		case 2:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "右加速度:%f", acs[i]);
 			break;
 		case 3:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "左加速度:%f", acs[i]);
 			break;
 		case 4:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "ジャンプ攻撃:%d", attack_motion_flg[i]);
 			break;
 		case 5:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "着地攻撃:%d", attack_motion_flg[i]);
+			break;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		switch (i)
+		{
+		case 0:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "下加速度:%f", acs[i]);
+			break;
+		case 1:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "上加速度:%f", acs[i]);
+			break;
+		case 2:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "右加速度:%f", acs[i]);
+			break;
+		case 3:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "左加速度:%f", acs[i]);
 			break;
 		}
 	}
@@ -273,6 +306,8 @@ void Player::Draw()const
 		DrawFormatString(0, 305, 0xffffff, "顔の向き:左", direction);
 	}
 	DrawFormatString(0, 380, 0xffffff, "状態:%s", player_state_char[player_state]);
+	DrawFormatString(110, 200, 0xffffff, "Q=デバッグ用無敵:%d", d_inv_flg);
+
 	SetFontSize(old_size);
 #endif // DEBUG
 }
@@ -383,9 +418,12 @@ void Player::ForciblyMovePlayer(ScrollData _scroll)
 
 void Player::ApplyDamage(int num)
 {
-	//無敵状態でないなら
-	if (inv_flg == false)
-	{
+	//無敵状態でない＆死んでいる状態でない、デバッグ用の無敵状態でないなら
+	if (inv_flg == false && death_flg == false 
+#if DEBUG
+		&& d_inv_flg == false
+#endif
+		){
 		//のけぞる
 		acs[UP] += 10;
 		acs[!direction + 2] += 10; //今自分の顔が向いている方向と逆方向に
@@ -394,7 +432,10 @@ void Player::ApplyDamage(int num)
 		if (hp < 0)
 		{
 			//仮にHPをリセットする
-			hp = 5;
+			/*hp = 5;*/
+			//死
+			death_flg = true;
+			move_flg = false;
 		}
 		//ダメージ後の無敵状態に入る
 		inv_flg = true;
@@ -426,8 +467,9 @@ void Player::SetPowerUp()
 {
 	powerup_flg = true;								
 	acs_max = ACS_MAX * 2;							//最大加速度を2倍
-	jump_power = DEFAULT_JUMP_POWER * 1.1;			//跳躍力を1.1倍
+	jump_power = DEFAULT_JUMP_POWER * 1.2f;			//跳躍力を1.2倍
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//攻撃間隔を半分に
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f / 2;	//連続攻撃受付時間を半分に
 	player_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
 	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//プレイヤーが動けない時間を半分に
 }
@@ -439,6 +481,7 @@ void Player::StopPowerUp()
 	acs_max = ACS_MAX;
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
 	player_anim_speed = PLAYER_ANIM;
 	attack_time = DEFAULT_ATTACK_INTERVAL;		
 }
@@ -571,8 +614,23 @@ void Player::Attack(GameMain* main)
 
 void Player::Move()
 {
-	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
-	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true)
+	//重力を加えるかの処理
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		if (onfloor_flg[i] == true)
+		{
+			apply_gravity = false;
+		}
+	}
+	//床に触れていないなら
+	if (apply_gravity == true)
+	{
+		//重力を与える
+		GiveGravity();
+	}
+
+	//いずれかの攻撃が発生しているか、ダメージを受けている途中か、死んでいる途中なら
+	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true || death_flg == true)
 	{
 		//動けなくする
 		move_flg = false;
@@ -697,7 +755,7 @@ void Player::Anim()
 	else
 	{
 		//常に画像表示状態に
-		hidden_flg = true;
+		hidden_flg = false;
 	}
 }
 
@@ -761,6 +819,11 @@ void Player::UpdatePlayerState()
 		{
 			player_state = DAMAGE_RIGHT;
 		}
+		//死んでいるなら
+		if (death_flg == true)
+		{
+			player_state = DEATH_RIGHT;
+		}
 	}
 	//左向き
 	else
@@ -820,6 +883,11 @@ void Player::UpdatePlayerState()
 		{
 			player_state = DAMAGE_LEFT;
 		}
+		//死んでいるなら
+		if (death_flg == true)
+		{
+			player_state = DEATH_LEFT;
+		}
 	}
 }
 
@@ -840,7 +908,7 @@ bool Player::OnAnyFloorFlg()
 bool Player::PlayAnyAttack()
 {
 	bool ret = false;
-	for (int i = 0; i < ATTACK_NUM; i++)
+	for (int i = 0; i < ATTACK_PATTERN; i++)
 	{
 		//いずれかの攻撃を行っている最中ならフラグをtrueにする
 		if (attack_motion_flg[i] == true)
@@ -853,7 +921,7 @@ bool Player::PlayAnyAttack()
 
 void Player::SetAttackFlg(int num)
 {
-	for (int i = 0; i < ATTACK_NUM; i++)
+	for (int i = 0; i < ATTACK_PATTERN; i++)
 	{
 		//指定した数字以外の攻撃フラグを下げる
 		if (i != num)
@@ -1002,4 +1070,44 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].attack_type = BULLET;
 	player_attack_data[11].angle = 0.0f;
 	player_attack_data[11].speed = 20;
+}
+
+void Player::Respawn(Location _location)
+{
+	location = _location;
+	player_state = IDOL_RIGHT;
+	StopPowerUp();
+	hp = 5;
+	direction = false;
+	attack_interval_count = 0;
+	ca_interval_count = 0;
+	attack_step = 0;
+	attack_time_count = 0;
+	for (int i = 0; i < ATTACK_PATTERN; i++)
+	{
+		attack_motion_flg[i] = false;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		acs[i] = 0;
+		external_move[i] = 0;
+	}
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
+	touch_ceil_flg = false;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	apply_gravity = true;
+	jump_flg = false;
+	move_flg = true;
+	attack_anim_flg = false;
+	player_anim = 0;
+	attack_anim = 0;
+	inv_flg = false;
+	damage_flg = false;
+	hidden_flg = false;
+	death_flg = false;
+	death_time = 120;
 }
