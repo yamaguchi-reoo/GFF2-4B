@@ -154,6 +154,7 @@
     <ClCompile Include="Attack.cpp" />
     <ClCompile Include="bamboo.cpp" />
     <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossHands.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="AttackData.h" />
     <ClInclude Include="bamboo.h" />
     <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossHands.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="CharaBase.h" />
     <ClInclude Include="common.h" />
