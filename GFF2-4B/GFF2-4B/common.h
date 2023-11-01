@@ -25,6 +25,5 @@
 
 //UŒ‚‚Ìí—Ş
 #define MELEE 0		//‹ßÚUŒ‚
-#define WAVES 1		//”ò‚ÔaŒ‚
-#define BULLET 2	//‰“‹——£
+#define BULLET 1	//‰“‹——£UŒ‚i”g“®‚àŠÜ‚Şj
 

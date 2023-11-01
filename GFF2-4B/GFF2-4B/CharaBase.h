@@ -3,6 +3,13 @@
 //‰¼‘zƒNƒ‰ƒX
 class GameMain;
 
+enum  class Direction {
+	RIGHT = 0,
+	LEFT,
+	RIGHT_FALL,
+	LEFT_FALL
+};
+
 struct ColorDate {
 	float magenta;
 	float syan;
