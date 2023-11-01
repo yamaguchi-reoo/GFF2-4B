@@ -2,6 +2,7 @@
 #include "common.h"
 #include "PadInput.h"
 #include "CharaBase.h"
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -10,8 +11,14 @@ struct Splash
 {
 	float x, y;	//中心座標
 	int r;	//半径
-	int color_flg;	//色のFlg
 
+};
+
+struct SplashColor
+{
+	float magenta;
+	float syan;
+	float yellow;
 };
 
 class Effect
@@ -19,6 +26,7 @@ class Effect
 private:
 
 	Splash splash;	//オブジェクト化
+	SplashColor s_color;
 
 	bool hit_flg; //テスト用(true->敵に攻撃が当たったとき)
 
@@ -27,7 +35,8 @@ private:
 	float gauge_x, gauge_y;
 	float test_x, test_y;
 
-	int end_flg;
+	float color_date;
+	int Flg;
 
 public:
 	Effect();
@@ -36,19 +45,16 @@ public:
 	void Update();
 	void Draw()const;
 
-	bool HitFlg(bool hit)
-	{
-		hit_flg = hit;
-		return hit_flg; 
-	};
-
 	float SetLocation(Location location);
-	int InitSplash();
 
-	int EndFlg(int end)
+	int SetFlg(int flg)
 	{
-		end_flg = end;
-		return end_flg;
-	};
+		Flg = flg;
+		return Flg;
+	}
+
+	int GetFlg() { return Flg; }
+
+
 };
 

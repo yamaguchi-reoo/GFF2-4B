@@ -8,7 +8,7 @@ Effect::Effect()
 	splash.y = 0;
 	splash.r = 15;
 
-	splash.color_flg = 0x000000;
+	color_date = 0xffffff;
 
 	//ゲージの座標
 	gauge_x = 80;
@@ -20,7 +20,7 @@ Effect::Effect()
 	test_x = 0;
 	test_y = 0;
 
-	end_flg = 0;
+	Flg = 0;
 
 }
 
@@ -33,7 +33,7 @@ Effect::~Effect()
 void Effect::Update()
 {
 
-	if (hit_flg == true)
+	if (Flg == 1)
 	{
 		//しぶきの座標とゲージの座標の差
 		test_x = gauge_x - splash.x;
@@ -41,8 +41,6 @@ void Effect::Update()
 
 		splash.x -= fabsf(test_x) / 20;
 		splash.y -= fabsf(test_y) / v;
-		
-		end_flg = 1;
 
 		if (splash.y < (int)test_y / 2)
 		{
@@ -52,26 +50,26 @@ void Effect::Update()
 
 
 
-	if (gauge_x == (int)splash.x && gauge_y == (int)splash.y)
+	if (Flg == 1 && gauge_x == (int)splash.x && gauge_y == (int)splash.y)
 	{
-		hit_flg = false;
+		Flg = 2;
 		splash.x = 0;
 		splash.y = 0;
-
-		end_flg = 2;
 	}
+
+
 }
 
 
 
 void Effect::Draw() const
 {
-	if (hit_flg == true)
+	if (Flg == 1)
 	{
-		DrawCircle(splash.x, splash.y, splash.r, splash.color_flg, TRUE);
+		DrawCircle(splash.x, splash.y, splash.r, color_date, TRUE);
 	}
 
-	DrawFormatString(500, 0, 0xff00ff, "end:%d", end_flg);
+	DrawFormatString(500, 0, 0xff00ff, "flg:%d", Flg);
 }
 
 
@@ -84,8 +82,6 @@ float Effect::SetLocation(Location location)
 	return splash.x,splash.y;
 }
 
-int Effect::InitSplash()
-{
-	return end_flg;
-}
+
+
 

@@ -29,7 +29,11 @@ GameMain::GameMain()
 
 	playerhp = new PlayerHP();
 
-	effect = new Effect();
+	//エフェクト
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		effect[i] = new Effect();
+	}
 
 	flg = false;
 	onfloor_flg = false;
@@ -52,7 +56,11 @@ GameMain::~GameMain()
 	delete iruka;
 	delete powergauge;
 	delete playerhp;
-	delete effect;
+
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		delete effect[i];
+	}
 }
 
 AbstractScene* GameMain::Update()
@@ -73,7 +81,11 @@ AbstractScene* GameMain::Update()
 	powergauge->Update();
 	playerhp->Update(player->GetPlayerHP());
 
-	effect->Update();
+	//エフェクト
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		effect[i]->Update();
+	}
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -85,13 +97,6 @@ AbstractScene* GameMain::Update()
 		//強化状態解除
 		player->StopPowerUp();
 		powergauge->SetPowerFlg(0);
-	}
-
-	if (effect->InitSplash() == 2)
-	{
-		powergauge->SetVolume(zakuro->GetColorDate());
-		effect->EndFlg(0);
-
 	}
 
 	//イルカ落下判定
@@ -169,7 +174,6 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	scene_scroll->Draw();
-	effect->Draw();
 	
 	SetFontSize(42);
 //	DrawString(400, 0, "GameMain", 0xffffff);
@@ -184,6 +188,13 @@ void GameMain::Draw() const
 		//DrawFormatString(0, 100+(i*20), 0x00ff00, "%d", count[i]);
 		stage[i]->Draw();
 	}
+	
+	//しぶき
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		effect[i]->Draw();
+	}
+
 	if (flg == true) {
 		//DrawString(300, 300,"flg", 0xffffff);
 	}
@@ -233,35 +244,54 @@ void GameMain::HitCheck()
 		}		
 	}
 
+
+
+	//if (effect->GetFlg() == 2)
+	//{
+	//	powergauge->SetVolume(effect->GetSplashColor());
+	//	effect->SetFlg(0);
+	//}
+	
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-		if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro->GetSpwanFlg() == false)
+		//しぶきの数だけ
+		for (int j = 0; j < SPLASH_MAX; j++)
 		{
-			//ザクロのダメージ処理
-			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
-			attack[i]->DeleteAttack();
+			//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+			if (attack[i]->HitBox(zakuro) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro->GetSpwanFlg() == false)
+			{
+				//ザクロのダメージ処理
+				zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
+				attack[i]->DeleteAttack();
 
-			//しぶき用
-			effect->HitFlg(true);
-			effect->SetLocation(zakuro->GetCenterLocation());
-		}
-		// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
-		{
-			//しぶき用
-			effect->HitFlg(true);
-			effect->SetLocation(zakuro->GetCenterLocation());
+				//しぶき用
+				effect[j]->SetFlg(1);
+				effect[j]->SetLocation(zakuro->GetCenterLocation());
 
-			//イルカのダメージ処理
-			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
-			if (iruka->GetHp() < 1) {
-				powergauge->SetVolume(iruka->GetColorDate());
 			}
-			attack[i]->DeleteAttack();
+			// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+			if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
+			{
+				////しぶき用
+				//effect->SetFlg(1);
+				//effect->SetLocation(zakuro->GetCenterLocation());
+
+				//if (effect->GetFlg() == 2)
+				//{
+				//	powergauge->SetVolume(iruka->GetColorDate());
+				//}
+
+				//イルカのダメージ処理
+				iruka->ApplyDamage(attack[i]->GetAttackData().damage);
+				//if (iruka->GetHp() < 1) {
+				//	powergauge->SetVolume(iruka->GetColorDate());
+				//}
+				attack[i]->DeleteAttack();
+			}
+			//同じようにひまわりとイルカも
 		}
-		//同じようにひまわりとイルカも
+
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
