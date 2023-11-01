@@ -53,7 +53,7 @@ void PowerGauge::Update()
 {
 	if (black.maxFlg == 0)
 	{
-		//デバック用(LBをおしたら強化ゲージがMAXになる)
+		//デバック用(LBをおしたら強化ゲージが溜まる)
 		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) == true))
 		{
 			if (magenta.maxFlg == 0)
@@ -120,6 +120,7 @@ void PowerGauge::Draw() const
 	//DrawFormatString(300, 10, 0xffffff, "%d", MaskHandle[1]);
 
 #endif // _DEBUG
+	DrawBox(200, 10, 230, 40, 0xffff00, TRUE);
 
 	//マスク画面を作成
 	CreateMaskScreen();
