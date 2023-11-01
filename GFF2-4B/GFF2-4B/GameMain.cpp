@@ -87,10 +87,10 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
-	////イルカ落下判定
-	//if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
-	//	iruka->SetFallFlg();
-	//}
+	//イルカ落下判定
+	if (iruka->GetLocation().x <= player->GetLocation().x+30 && iruka->GetLocation().x + 30 >= player->GetLocation().x) {
+		iruka->SetFallFlg();
+	}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		//誰が攻撃したかによって攻撃の判定がついていく対象を変える
