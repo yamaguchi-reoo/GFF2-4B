@@ -3,7 +3,8 @@
 #include "Player.h"
 #include"GameMain.h"
 
-#define MOVE_SPEED  5
+#define MOVE_SPEED  4
+#define ZAKURO_GRAVITY  10
 
 Zakuro::Zakuro()
 {
@@ -61,6 +62,7 @@ void Zakuro::Update(GameMain* main)
 	//重力を加えるかの処理
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
+		//床に乗っていたら重力OFF
 		if (onfloor_flg[i] == true)
 		{
 			apply_gravity = false;
@@ -80,11 +82,13 @@ void Zakuro::Update(GameMain* main)
 		//重力を与える
 		ZakuroGiveGravity();
 	}
+	//左の壁にぶつかったら右に移動
 	if (leftwall_flg == true) {
 		zakuro_state = ZakuroState::RIGHT;
 		zakuro_direction = false;
 		leftwall_flg = false;
 	}
+	//右の壁にぶつかったら左に移動
 	if (rightwall_flg == true) {
 		zakuro_state = ZakuroState::LEFT;
 		zakuro_direction = true;
@@ -94,7 +98,7 @@ void Zakuro::Update(GameMain* main)
 	{
 		spawn_flg = false;
 	}
-
+	//各移動用変数をリセット
 	ZakuroReset();
 }
 
@@ -177,7 +181,7 @@ void Zakuro::ZakuroReset()
 void Zakuro::ZakuroGiveGravity()
 {
 	zakuro_state = ZakuroState::IDLE;
-	location.y += MOVE_SPEED;
+	location.y += ZAKURO_GRAVITY;
 }
 
 void Zakuro::ZakuroOnFloor(int num, Location _sub)

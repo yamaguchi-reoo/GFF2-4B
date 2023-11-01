@@ -15,10 +15,10 @@ private:
 
 	ZakuroState zakuro_state;
 
-	bool attack_flg;		
+	bool attack_flg;	// 攻撃しているか	
 	int stop_count;		
 	bool spawn_flg;		//スポーンしているか
-	bool zakuro_direction;
+	bool zakuro_direction;//向き(0 = 右 1 = 左)
 
 	//当たり判定関連
 	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
@@ -35,7 +35,7 @@ public:
 	void Draw()const override;
 	void Move(); //左右移動
 	void MoveNockBack();//ノックバック
-	void ZakuroReset();
+	void ZakuroReset();// 当たり判定のリセット
 	//重力が働く
 	void ZakuroGiveGravity();
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
@@ -50,6 +50,7 @@ public:
 	//ダメージ受ける処理
 	void ApplyDamage(int num);
 
+	//スポーンフラグの取得
 	int GetSpwanFlg() { return spawn_flg; }
 	ColorDate GetColorDate();
 };
