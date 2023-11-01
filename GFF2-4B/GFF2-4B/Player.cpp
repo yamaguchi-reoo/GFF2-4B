@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "PadInput.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #define ACS_MAX 6	//最大加速度
 #define DOWN 0	//下加速度用
@@ -28,6 +30,9 @@
 
 Player::Player()
 {
+#if DEBUG
+	d_inv_flg = false;
+#endif
 	frame = 0;
 	player_state = IDOL_RIGHT;
 	old_location = { 0 };
@@ -36,7 +41,7 @@ Player::Player()
 	erea.height = PLAYER_HEIGHT;
 	erea.width = PLAYER_WIDTH;
 	who = 0;
-	hp = 10;
+	hp = 5;
 	move_speed = DEFAULT_MOVE_SPEED;
 	jump_power = DEFAULT_JUMP_POWER;
 	direction = false;
@@ -78,7 +83,9 @@ Player::Player()
 	damage_flg = false;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
 	damage_time = DEFAULT_INVINCIBLE_TIME / 2;
-	hidden_flg = true;
+	hidden_flg = false;
+	death_flg = false;
+	death_time = 120;
 }
 
 Player::~Player() 
@@ -88,44 +95,50 @@ Player::~Player()
 
 void Player::Update(GameMain* main)
 {
-
+	//無敵状態の切り替え（デバッグ用）
+#if DEBUG
+	if (KeyInput::OnKey(KEY_INPUT_Q) == true)
+	{
+		d_inv_flg = !d_inv_flg;
+	}
+#endif
 	frame++;
-	//重力を加えるかの処理
-	for (int i = 0; i < FLOOR_NUM; i++)
+	//生きているなら重力、ダメージ、攻撃関連の処理を行う
+	if (death_flg == false)
 	{
-		if (onfloor_flg[i] == true)
+
+		//ダメージを受けている途中でないなら
+		if (damage_flg == false)
 		{
-			apply_gravity = false;
+			//攻撃
+			Attack(main);
+		}
+
+		//ダメージ演出中なら
+		if (inv_flg == true)
+		{
+			damage_flg = true;
+			if (--damage_time < 0)
+			{
+				damage_flg = false;
+			}
+			//無敵時間が終わったら
+			if (--inv_time < 0)
+			{
+				inv_flg = false;
+				inv_time = DEFAULT_INVINCIBLE_TIME;
+				damage_time = DEFAULT_INVINCIBLE_TIME / 2;
+			}
 		}
 	}
-	//床に触れていないなら
-	if (apply_gravity == true)
+	//死んでいるなら死亡時間の測定
+	else
 	{
-		//重力を与える
-		GiveGravity();
-	}
-
-	//ダメージを受けている途中でないなら
-	if (damage_flg == false)
-	{
-		//攻撃
-		Attack(main);
-	}
-
-	//ダメージ演出中なら
-	if (inv_flg == true)
-	{
-		damage_flg = true;
-		if (--damage_time < 0)
+		if (--death_time <= 0)
 		{
-			damage_flg = false;
-		}
-		//無敵時間が終わったら
-		if (--inv_time < 0)
-		{
-			inv_flg = false;
-			inv_time = DEFAULT_INVINCIBLE_TIME;
-			damage_time = DEFAULT_INVINCIBLE_TIME / 2;
+			//仮に演出が終わったらすぐにリスポーンするようにする
+			Location res_location = { 100,100 };
+			Respawn(res_location);
 		}
 	}
 
@@ -145,7 +158,7 @@ void Player::Update(GameMain* main)
 void Player::Draw()const
 {
 	//プレイヤー画像表示
-	if (hidden_flg == true)
+	if (hidden_flg == false)
 	{
 		switch (player_state)
 		{
@@ -215,6 +228,12 @@ void Player::Draw()const
 		case DAMAGE_LEFT:
 			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
 			break;
+		case DEATH_RIGHT:
+			DrawRotaGraphF(location.x + PLAYER_IMAGE_SHIFT_X, location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			break;
+		case DEATH_LEFT:
+			DrawRotaGraphF(location.x + PLAYER_IMAGE_SHIFT_X, location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			break;
 		}
 	}
 
@@ -233,8 +252,8 @@ void Player::Draw()const
 	}
 	int old_size = GetFontSize();	//元のサイズを保持
 	SetFontSize(14);
-	DrawBox(0, 200, 210, 400, 0x000000, true);
-	DrawBox(0, 200, 210, 400, 0xffffff, false);
+	DrawBox(0, 200, 260, 400, 0x000000, true);
+	DrawBox(0, 200, 260, 400, 0xffffff, false);
 	for (int i = 0; i < 6; i++)
 	{
 		switch (i)
@@ -250,6 +269,7 @@ void Player::Draw()const
 			break;
 		case 3:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "攻撃%d段階目:%d", i + 1, attack_motion_flg[i]);
+			break;
 		case 4:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "ジャンプ攻撃:%d", attack_motion_flg[i]);
 			break;
@@ -286,6 +306,8 @@ void Player::Draw()const
 		DrawFormatString(0, 305, 0xffffff, "顔の向き:左", direction);
 	}
 	DrawFormatString(0, 380, 0xffffff, "状態:%s", player_state_char[player_state]);
+	DrawFormatString(110, 200, 0xffffff, "Q=デバッグ用無敵:%d", d_inv_flg);
+
 	SetFontSize(old_size);
 #endif // DEBUG
 }
@@ -396,9 +418,12 @@ void Player::ForciblyMovePlayer(ScrollData _scroll)
 
 void Player::ApplyDamage(int num)
 {
-	//無敵状態でないなら
-	if (inv_flg == false)
-	{
+	//無敵状態でない＆死んでいる状態でない、デバッグ用の無敵状態でないなら
+	if (inv_flg == false && death_flg == false 
+#if DEBUG
+		&& d_inv_flg == false
+#endif
+		){
 		//のけぞる
 		acs[UP] += 10;
 		acs[!direction + 2] += 10; //今自分の顔が向いている方向と逆方向に
@@ -407,7 +432,10 @@ void Player::ApplyDamage(int num)
 		if (hp < 0)
 		{
 			//仮にHPをリセットする
-			hp = 5;
+			/*hp = 5;*/
+			//死
+			death_flg = true;
+			move_flg = false;
 		}
 		//ダメージ後の無敵状態に入る
 		inv_flg = true;
@@ -441,6 +469,7 @@ void Player::SetPowerUp()
 	acs_max = ACS_MAX * 2;							//最大加速度を2倍
 	jump_power = DEFAULT_JUMP_POWER * 1.2f;			//跳躍力を1.2倍
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//攻撃間隔を半分に
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f / 2;	//連続攻撃受付時間を半分に
 	player_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
 	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//プレイヤーが動けない時間を半分に
 }
@@ -452,6 +481,7 @@ void Player::StopPowerUp()
 	acs_max = ACS_MAX;
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
 	player_anim_speed = PLAYER_ANIM;
 	attack_time = DEFAULT_ATTACK_INTERVAL;		
 }
@@ -584,8 +614,23 @@ void Player::Attack(GameMain* main)
 
 void Player::Move()
 {
-	//いずれかの攻撃が発生しているか、ダメージを受けている途中なら
-	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true)
+	//重力を加えるかの処理
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		if (onfloor_flg[i] == true)
+		{
+			apply_gravity = false;
+		}
+	}
+	//床に触れていないなら
+	if (apply_gravity == true)
+	{
+		//重力を与える
+		GiveGravity();
+	}
+
+	//いずれかの攻撃が発生しているか、ダメージを受けている途中か、死んでいる途中なら
+	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true || death_flg == true)
 	{
 		//動けなくする
 		move_flg = false;
@@ -710,7 +755,7 @@ void Player::Anim()
 	else
 	{
 		//常に画像表示状態に
-		hidden_flg = true;
+		hidden_flg = false;
 	}
 }
 
@@ -774,6 +819,11 @@ void Player::UpdatePlayerState()
 		{
 			player_state = DAMAGE_RIGHT;
 		}
+		//死んでいるなら
+		if (death_flg == true)
+		{
+			player_state = DEATH_RIGHT;
+		}
 	}
 	//左向き
 	else
@@ -832,6 +882,11 @@ void Player::UpdatePlayerState()
 		if (damage_flg == true)
 		{
 			player_state = DAMAGE_LEFT;
+		}
+		//死んでいるなら
+		if (death_flg == true)
+		{
+			player_state = DEATH_LEFT;
 		}
 	}
 }
@@ -1015,4 +1070,44 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].attack_type = BULLET;
 	player_attack_data[11].angle = 0.0f;
 	player_attack_data[11].speed = 20;
+}
+
+void Player::Respawn(Location _location)
+{
+	location = _location;
+	player_state = IDOL_RIGHT;
+	StopPowerUp();
+	hp = 5;
+	direction = false;
+	attack_interval_count = 0;
+	ca_interval_count = 0;
+	attack_step = 0;
+	attack_time_count = 0;
+	for (int i = 0; i < ATTACK_PATTERN; i++)
+	{
+		attack_motion_flg[i] = false;
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		acs[i] = 0;
+		external_move[i] = 0;
+	}
+	for (int i = 0; i < FLOOR_NUM; i++)
+	{
+		onfloor_flg[i] = false;
+	}
+	touch_ceil_flg = false;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	apply_gravity = true;
+	jump_flg = false;
+	move_flg = true;
+	attack_anim_flg = false;
+	player_anim = 0;
+	attack_anim = 0;
+	inv_flg = false;
+	damage_flg = false;
+	hidden_flg = false;
+	death_flg = false;
+	death_time = 120;
 }
