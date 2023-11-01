@@ -242,7 +242,9 @@ void GameMain::HitCheck()
 		{
 			//イルカのダメージ処理
 			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
-			powergauge->SetVolume(iruka->GetColorDate());
+			if (iruka->GetHp() < 1) {
+				powergauge->SetVolume(iruka->GetColorDate());
+			}
 			attack[i]->DeleteAttack();
 		}
 		//同じようにひまわりとイルカも
