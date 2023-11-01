@@ -226,8 +226,15 @@ void GameMain::HitCheck()
 		{
 			//ザクロのダメージ処理
 			zakuro->ApplyDamage(attack[i]->GetAttackData().damage);
-			powergauge->SetVolume(zakuro->GetColorDate());
 			attack[i]->DeleteAttack();
+
+			effect->HitFlg(true);
+			effect->SetLocation(zakuro->GetCenterLocation());
+
+			if (effect->InitSplash() == 2)
+			{
+				powergauge->SetVolume(zakuro->GetColorDate());
+			}
 		}
 		// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
@@ -236,6 +243,10 @@ void GameMain::HitCheck()
 			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
 			powergauge->SetVolume(iruka->GetColorDate());
 			attack[i]->DeleteAttack();
+
+			effect->HitFlg(true);
+			effect->SetLocation(iruka->GetCenterLocation());
+
 		}
 		//同じようにひまわりとイルカも
 
@@ -249,4 +260,3 @@ void GameMain::HitCheck()
 		}
 	}
 }
-////
