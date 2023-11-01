@@ -407,6 +407,18 @@ AttackData Player::CreateAttactData(int i)
 	attack_data = player_attack_data[i * 2 + powerup_flg];
 	//¶¬‚ÌuŠÔ‚É‰‚¶‚Ä•Ï‚í‚éî•ñ‚Í‚±‚±‚ÅŠi”[‚·‚é
 	attack_data.direction = direction;
+	//UŒ‚‚ÌŠp“x‚ğŠç‚ÌŒü‚«‚É‰‚¶‚Ä•Ï‚¦‚é
+	if (attack_data.attack_type == BULLET)
+	{
+		if (direction == false)
+		{
+			attack_data.angle = player_attack_data[i * 2 + powerup_flg].angle;
+		}
+		else
+		{
+			attack_data.angle = 0.5f - player_attack_data[i * 2 + powerup_flg].angle;
+		}
+	}
 	return attack_data;
 }
 
@@ -877,8 +889,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[1].attack_time = 5;
 	player_attack_data[1].damage = 3;
 	player_attack_data[1].delay = 5;
-	player_attack_data[1].attack_type = WAVES;
-	player_attack_data[1].move = 20;
+	player_attack_data[1].attack_type = BULLET;
+	player_attack_data[1].angle = 0.0f;
+	player_attack_data[1].speed = 20;
 	//“ñ’iŠK–Ú
 	player_attack_data[2].shift_x = -erea.width;
 	player_attack_data[2].shift_y = -70;
@@ -898,8 +911,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].attack_time = 5;
 	player_attack_data[3].damage = 2;
 	player_attack_data[3].delay = 5;
-	player_attack_data[3].attack_type = WAVES;
-	player_attack_data[3].move = 20;
+	player_attack_data[3].attack_type = BULLET;
+	player_attack_data[3].angle = 0.0f;
+	player_attack_data[3].speed = 20;
 	//O’iŠK–Ú
 	player_attack_data[4].shift_x = -erea.width;
 	player_attack_data[4].shift_y = 50;
@@ -919,8 +933,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].attack_time = 10;
 	player_attack_data[5].damage = 2;
 	player_attack_data[5].delay = 5;
-	player_attack_data[5].attack_type = WAVES;
-	player_attack_data[5].move = 15;
+	player_attack_data[5].attack_type = BULLET;
+	player_attack_data[5].angle = 0.0f;
+	player_attack_data[5].speed = 15;
 	//l’iŠK–Ú
 	player_attack_data[6].shift_x = -erea.width;
 	player_attack_data[6].shift_y = -90;
@@ -940,8 +955,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[7].attack_time = 10;
 	player_attack_data[7].damage = 3;
 	player_attack_data[7].delay = 10;
-	player_attack_data[7].attack_type = WAVES;
-	player_attack_data[7].move = 20;
+	player_attack_data[7].attack_type = BULLET;
+	player_attack_data[7].angle = 0.0f;
+	player_attack_data[7].speed = 20;
 	//ƒWƒƒƒ“ƒvUŒ‚
 	player_attack_data[8].shift_x = -erea.width;
 	player_attack_data[8].shift_y = 50;
@@ -971,8 +987,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[10].attack_time = 10;
 	player_attack_data[10].damage = 2;
 	player_attack_data[10].delay = 0;
-	player_attack_data[10].attack_type = WAVES;
-	player_attack_data[10].move = 20;
+	player_attack_data[10].attack_type = BULLET;
+	player_attack_data[10].angle = 0.0f;
+	player_attack_data[10].speed = 20;
 	//ƒWƒƒƒ“ƒvUŒ‚‚©‚ç‚Ì’…’nUŒ‚@‹­‰»—p
 	player_attack_data[11].shift_x = 0;
 	player_attack_data[11].shift_y = 50;
@@ -982,6 +999,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].attack_time = 10;
 	player_attack_data[11].damage = 2;
 	player_attack_data[11].delay = 0;
-	player_attack_data[11].attack_type = WAVES;
-	player_attack_data[11].move = 20;
+	player_attack_data[11].attack_type = BULLET;
+	player_attack_data[11].angle = 0.0f;
+	player_attack_data[11].speed = 20;
 }

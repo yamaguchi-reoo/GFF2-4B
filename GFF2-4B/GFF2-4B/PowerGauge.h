@@ -23,9 +23,9 @@ private:
 
 	int powerFlg; //(0:それ以外 1:強化中 2:強化解除)
 
-	int image[3];  //画像用変数
+	int image[2];  //画像用変数
 
-	int MaskHandle; //マスク画像用変数
+	int MaskHandle[2]; //マスク画像用変数
 
 public:
 	PowerGauge();  //コンストラクタ
