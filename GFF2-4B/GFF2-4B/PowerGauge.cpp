@@ -291,18 +291,21 @@ void PowerGauge::CheckVolumeMax()
 	if (magenta.volume >= 100.0f)
 	{
 		magenta.maxFlg = 1;
+		magenta.volume = 100.0f;
 	}
 
 	//イエローを集めた量が100%以上だったらイエローのMAXフラグを1に
 	if (yellow.volume >= 100.0f)
 	{
 		yellow.maxFlg = 1;
+		yellow.volume = 100.0f;
 	}
 
 	//シアンを集めた量が100%以上だったらシアンのMAXフラグを1に
 	if (cyan.volume >= 100.0f)
 	{
 		cyan.maxFlg = 1;
+		cyan.volume = 100.0f;
 	}
 
 	//CMYが全て100%以上だったら黒のMAXフラグを1に
