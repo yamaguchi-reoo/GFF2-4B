@@ -158,22 +158,7 @@ AbstractScene* GameMain::Update()
 
 	//ステージ移動したい
 	if (CheckHitKey(KEY_INPUT_B)==1) {
-		delete player;
-		delete scene_scroll;
-		for (int i = 0; i < FLOOR_NUM; i++)
-		{
-			delete stage[i];
-		}
-		for (int i = 0; i < ATTACK_NUM; i++)
-		{
-			delete attack[i];
-		}
-		delete zakuro;
-		delete himawari;
-		delete iruka;
-		delete powergauge;
-		delete playerhp;
-		delete effect;
+
 	}
 
 #endif
@@ -184,7 +169,10 @@ void GameMain::Draw() const
 {
 	scene_scroll->Draw();
 	effect->Draw();
+	powergauge->Draw();
+	playerhp->Draw();
 	
+
 	SetFontSize(42);
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
@@ -209,9 +197,6 @@ void GameMain::Draw() const
 	for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
 	}
-
-	powergauge->Draw();
-	playerhp->Draw();
 	
 }
 
