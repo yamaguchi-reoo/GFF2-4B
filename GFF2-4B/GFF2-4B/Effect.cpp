@@ -39,7 +39,7 @@ void Effect::Update()
 		test_x = gauge_x - splash.x;
 		test_y = gauge_y - splash.y;
 
-		splash.x -= fabsf(test_x) / 50;
+		splash.x -= fabsf(test_x) / 20;
 		splash.y -= fabsf(test_y) / v;
 		
 		end_flg = 1;
