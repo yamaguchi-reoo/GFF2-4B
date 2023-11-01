@@ -43,6 +43,7 @@ private:
     int flg;        //
     int count[2];      //実験用
     bool onfloor_flg;      //実験用
+
 public:
     //コンストラクタ
     GameMain();
