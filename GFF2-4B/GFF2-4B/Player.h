@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "Scroll.h"
 
-#define ATTACK_NUM 6						//攻撃のレパートリー
+#define ATTACK_PATTERN 6  //プレイヤーの攻撃のレパートリー
 
 //循環参照防止
 class GameMain;
@@ -169,7 +169,7 @@ public:
 	void Anim();
 
 	//プレイヤーの状態の取得
-	int GetPlayerState() { return (int)player_state; }
+	//int GetPlayerState() { return (int)player_state; }
 
 	//プレイヤーの状態の更新
 	void UpdatePlayerState();

@@ -47,7 +47,7 @@ Player::Player()
 	attack_step = 0;
 	attack_time = DEFAULT_ATTACK_INTERVAL;
 	attack_time_count = 0;
-	for (int i = 0; i < ATTACK_NUM; i++)
+	for (int i = 0; i < ATTACK_PATTERN; i++)
 	{
 		attack_motion_flg[i] = false;
 	}
@@ -150,70 +150,70 @@ void Player::Draw()const
 		switch (player_state)
 		{
 		case IDOL_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case IDOL_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case MOVE_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
 			break;
 		case MOVE_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
 			break;
 		case JUMP_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case JUMP_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case FALL_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case FALL_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case ATTACK_RIGHT_ONE:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_TWO:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_THREE:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_FOUR:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_ONE:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_TWO:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_THREE:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_FOUR:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case JUMP_ATTACK_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
 			break;
 		case JUMP_ATTACK_RIGHT_END:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case JUMP_ATTACK_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
 			break;
 		case JUMP_ATTACK_LEFT_END:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case DAMAGE_RIGHT:
-			DrawGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
 			break;
 		case DAMAGE_LEFT:
-			DrawTurnGraph(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
 			break;
 		}
 	}
@@ -224,12 +224,12 @@ void Player::Draw()const
 	//‹­‰»ó‘Ô‚Å‚È‚¢‚È‚ç
 	if (powerup_flg == false)
 	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
 	}
 	//‹­‰»ó‘Ô‚È‚ç
 	else
 	{
-		DrawBox(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
 	}
 	int old_size = GetFontSize();	//Œ³‚ÌƒTƒCƒY‚ð•ÛŽ
 	SetFontSize(14);
@@ -241,25 +241,38 @@ void Player::Draw()const
 		{
 		case 0:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "UŒ‚%d’iŠK–Ú:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "‰º‰Á‘¬“x:%f", acs[i]);
 			break;
 		case 1:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "UŒ‚%d’iŠK–Ú:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "ã‰Á‘¬“x:%f", acs[i]);
 			break;
 		case 2:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "UŒ‚%d’iŠK–Ú:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "‰E‰Á‘¬“x:%f", acs[i]);
 			break;
 		case 3:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "UŒ‚%d’iŠK–Ú:%d", i + 1, attack_motion_flg[i]);
-			DrawFormatString(0, 320 + i * 15, 0xffffff, "¶‰Á‘¬“x:%f", acs[i]);
-			break;
 		case 4:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "ƒWƒƒƒ“ƒvUŒ‚:%d", attack_motion_flg[i]);
 			break;
 		case 5:
 			DrawFormatString(0, 200 + i * 15, 0xffffff, "’…’nUŒ‚:%d", attack_motion_flg[i]);
+			break;
+		}
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		switch (i)
+		{
+		case 0:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "‰º‰Á‘¬“x:%f", acs[i]);
+			break;
+		case 1:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "ã‰Á‘¬“x:%f", acs[i]);
+			break;
+		case 2:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "‰E‰Á‘¬“x:%f", acs[i]);
+			break;
+		case 3:
+			DrawFormatString(0, 320 + i * 15, 0xffffff, "¶‰Á‘¬“x:%f", acs[i]);
 			break;
 		}
 	}
@@ -426,7 +439,7 @@ void Player::SetPowerUp()
 {
 	powerup_flg = true;								
 	acs_max = ACS_MAX * 2;							//Å‘å‰Á‘¬“x‚ð2”{
-	jump_power = DEFAULT_JUMP_POWER * 1.1;			//’µ–ô—Í‚ð1.1”{
+	jump_power = DEFAULT_JUMP_POWER * 1.2f;			//’µ–ô—Í‚ð1.2”{
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//UŒ‚ŠÔŠu‚ð”¼•ª‚É
 	player_anim_speed = PLAYER_ANIM / 2;			//ƒAƒjƒ[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦ŠÔŠu‚ð“ñ”{
 	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//ƒvƒŒƒCƒ„[‚ª“®‚¯‚È‚¢ŽžŠÔ‚ð”¼•ª‚É
@@ -840,7 +853,7 @@ bool Player::OnAnyFloorFlg()
 bool Player::PlayAnyAttack()
 {
 	bool ret = false;
-	for (int i = 0; i < ATTACK_NUM; i++)
+	for (int i = 0; i < ATTACK_PATTERN; i++)
 	{
 		//‚¢‚¸‚ê‚©‚ÌUŒ‚‚ðs‚Á‚Ä‚¢‚éÅ’†‚È‚çƒtƒ‰ƒO‚ðtrue‚É‚·‚é
 		if (attack_motion_flg[i] == true)
@@ -853,7 +866,7 @@ bool Player::PlayAnyAttack()
 
 void Player::SetAttackFlg(int num)
 {
-	for (int i = 0; i < ATTACK_NUM; i++)
+	for (int i = 0; i < ATTACK_PATTERN; i++)
 	{
 		//Žw’è‚µ‚½”ŽšˆÈŠO‚ÌUŒ‚ƒtƒ‰ƒO‚ð‰º‚°‚é
 		if (i != num)
