@@ -6,7 +6,7 @@
 #define MOVE_SPEED  4
 #define ZAKURO_GRAVITY  10
 
-Zakuro::Zakuro(float pos_x, float pos_y, bool direction)
+Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 {
 	zakuro_state = ZakuroState::IDLE;
 
@@ -15,7 +15,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction)
 	erea.height = 50;
 	erea.width = 50;
 	speed = MOVE_SPEED;
-	who = 1;
+	who = _who;
 	hp = 1;
 
 	stop_count = 120;

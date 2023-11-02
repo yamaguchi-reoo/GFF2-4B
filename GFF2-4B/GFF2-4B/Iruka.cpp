@@ -8,7 +8,7 @@
 #define MAX_FALL_TIME 60
 
 
-Iruka::Iruka(float pos_x, float pos_y, bool direction)
+Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 {
 	iruka_state = IrukaState::LEFT;
 
@@ -17,7 +17,7 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction)
 	erea.width = 120;
 	erea.height = 50;
 	speed = 5;
-	who = 2;
+	who = _who;
 	hp = 2;
 
 	fps_count = 0;

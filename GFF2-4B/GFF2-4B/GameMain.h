@@ -46,6 +46,7 @@ private:
     int flg;               //
     int count[2];          //実験用
     bool onfloor_flg;      //実験用
+    int who;                //誰が攻撃したか判断する用
 public:
     //コンストラクタ
     GameMain();

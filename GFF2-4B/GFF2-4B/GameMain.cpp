@@ -10,20 +10,21 @@
 
 GameMain::GameMain()
 {
+	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
 	}
-	zakuro[0] = new Zakuro(200, 200, true);
-	zakuro[1] = new Zakuro(400, 400, false);
-	zakuro[2] = new Zakuro(900, 570, false);
+	zakuro[0] = new Zakuro(200, 200, true, who++);
+	zakuro[1] = new Zakuro(400, 400, false, who++);
+	zakuro[2] = new Zakuro(900, 570, false, who++);
 	for (int i = 0; i < IRUKA_MAX; i++) {
 		iruka[i] = nullptr;
 	}
-	iruka[0] = new Iruka(1400,100,true);
-	iruka[1] = new Iruka(500,0,false);
-	iruka[2] = new Iruka(900,400,true);
+	iruka[0] = new Iruka(1400,100,true, who++);
+	iruka[1] = new Iruka(500,0,false, who++);
+	iruka[2] = new Iruka(900,400,true, who++);
 
 	CreateStage();
 	for (int i = 0; i < STAGE_HEIGHT; i++)
@@ -76,10 +77,11 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-	for (int i = 0; i < IRUKA_MAX; i++)
-	{
-		delete iruka[i];
-	}
+	//エディットモードに移行する時にイルカが地面に刺さっていると、deleteで例外が発生するバグが起こっているので、コメントアウト
+	//for (int i = 0; i < IRUKA_MAX; i++)
+	//{
+	//	delete iruka[i];
+	//}
 	delete himawari;
 	delete powergauge;
 	delete playerhp;
@@ -147,7 +149,7 @@ AbstractScene* GameMain::Update()
 		{
 			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x) 
 			{
-			iruka[i]->SetFallFlg();
+				iruka[i]->SetFallFlg();
 			}			
 		}
 	}
@@ -245,10 +247,6 @@ void GameMain::Draw() const
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
 	player->Draw();
-	for (int i = 0; i < ATTACK_NUM; i++)
-	{
-		attack[i]->Draw();
-	}
 	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
 		for (int j = 0; j < STAGE_WIDTH; j++)
@@ -281,7 +279,10 @@ void GameMain::Draw() const
 
 	powergauge->Draw();
 	playerhp->Draw();
-	
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		attack[i]->Draw();
+	}
 }
 
 void GameMain::SpawnAttack(AttackData _attackdata)

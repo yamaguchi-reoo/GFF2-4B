@@ -28,7 +28,7 @@ private:
 
 public:
     //コンストラクタ
-    Iruka(float pos_x,float pos_y,bool direction);
+    Iruka(float pos_x,float pos_y,bool direction, int _who);
     //デストラクタ
     ~Iruka();
 
