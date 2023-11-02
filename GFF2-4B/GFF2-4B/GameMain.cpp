@@ -10,9 +10,12 @@ GameMain::GameMain()
 	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
 	stage[1] = new Stage(200, 450, 200, 50);
 	stage[2] = new Stage(600, 450, 200, 50);
-	for (int i = 0; i < 5; i++) {
-		zakuro[i] = new Zakuro(i * 100);
+	for (int i = 0; i < ZAKURO_MAX; i++) {
+		zakuro[i] = nullptr;
 	}
+	zakuro[0] = new Zakuro(200, 200, true);
+	zakuro[1] = new Zakuro(400, 400, false);
+	zakuro[2] = new Zakuro(900, 570, false);
 	himawari = new Himawari();
 	iruka = new Iruka();
 	for (int i = 0; i < ATTACK_NUM; i++)
@@ -69,10 +72,11 @@ AbstractScene* GameMain::Update()
 	{
 		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
 	}
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
-		zakuro[i]->Update(this);
-
+		if (zakuro[i] != nullptr) {
+			zakuro[i]->Update(this);
+		}
 	}
 	
 	iruka->Update(this);
@@ -96,9 +100,13 @@ AbstractScene* GameMain::Update()
 
 	if (effect->InitSplash() == 2)
 	{
-		//powergauge->SetVolume(zakuro->GetColorDate());
-		effect->EndFlg(0);
+		for (int i = 0; i < ZAKURO_MAX; i++) {
+			if (zakuro[i] != nullptr) {
 
+				powergauge->SetVolume(zakuro[i]->GetColorDate());
+			}
+		}
+		effect->EndFlg(0);
 	}
 
 	//イルカ落下判定
@@ -143,12 +151,14 @@ AbstractScene* GameMain::Update()
 		*	}
 		*********************************************************************************************/
 
-		for (int j = 0; j < (1); j++)
+		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
-			if (attack[i]->GetAttackData().who_attack == zakuro[j]->GetWho())
-			{
-				attack[i]->Update(zakuro[i]->GetCenterLocation(), zakuro[j]->GetErea());
-			}
+			if (zakuro[j] != nullptr) {
+				if (attack[i]->GetAttackData().who_attack == zakuro[j]->GetWho())
+				{
+					attack[i]->Update(zakuro[i]->GetCenterLocation(), zakuro[j]->GetErea());
+				}
+			}		
 			if (attack[i]->GetAttackData().who_attack == iruka->GetWho())
 			{
 				attack[i]->Update(iruka->GetCenterLocation(), iruka->GetErea());
@@ -195,8 +205,11 @@ void GameMain::Draw() const
 		//DrawString(300, 300,"flg", 0xffffff);
 	}
 	//エネミーの描画
-	for (int i = 0; i < 5; i++) {
-		zakuro[i]->Draw(); // ザクロ
+	for (int i = 0; i < ZAKURO_MAX; i++) {
+		if (zakuro[i] != nullptr) 
+		{
+			zakuro[i]->Draw(); // ザクロ
+		}
 	}
 	himawari->Draw();// ひまわり
 	iruka->Draw();// イルカ
@@ -232,12 +245,15 @@ void GameMain::HitCheck()
 			//触れた面に応じて押し出す
 			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
 		}
-		for (int j = 0; j < 5; j++) {
-			if (zakuro[j]->HitBox(stage[i]) == true)
-			{
-				//触れた面に応じて押し出す
-				zakuro[j]->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
-			}
+		for (int j = 0; j < ZAKURO_MAX; j++) 
+		{
+			if (zakuro[j] != nullptr) {
+				if (zakuro[j]->HitBox(stage[i]) == true)
+				{
+					//触れた面に応じて押し出す
+					zakuro[j]->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
+				}
+			}		
 		}	
 		if (iruka->HitBox(stage[i]) == true) {
 			iruka->IrukaPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
@@ -247,20 +263,21 @@ void GameMain::HitCheck()
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		for (int j = 0; j < 5; j++) 
+		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
-			//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-			if (attack[i]->HitBox(zakuro[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro[j]->GetSpwanFlg() == false)
-			{
-				//ザクロのダメージ処理
-				zakuro[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-				attack[i]->DeleteAttack();
+			if (zakuro[j] != nullptr) {
+				//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				if (attack[i]->HitBox(zakuro[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro[j]->GetSpwanFlg() == false)
+				{
+					//ザクロのダメージ処理
+					zakuro[j]->ApplyDamage(attack[i]->GetAttackData().damage);
+					attack[i]->DeleteAttack();
 
-				//しぶき用
-				effect->HitFlg(true);
-				effect->SetLocation(zakuro[j]->GetCenterLocation());
+					//しぶき用
+					effect->HitFlg(true);
+					effect->SetLocation(zakuro[j]->GetCenterLocation());
+				}
 			}
-
 		 }
 		// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
