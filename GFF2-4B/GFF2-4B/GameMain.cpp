@@ -12,9 +12,6 @@ GameMain::GameMain()
 {
 	player = new Player();
 	scene_scroll = new SceneScroll();
-	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
-	stage[1] = new Stage(200, 450, 200, 50);
-	stage[2] = new Stage(600, 450, 200, 50);
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
 	}
@@ -36,7 +33,6 @@ GameMain::GameMain()
 			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
 		}
 	}
-	zakuro = new Zakuro();
 	himawari = new Himawari();
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
@@ -297,21 +293,34 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 void GameMain::HitCheck()
 {
 	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
-	for (int i = 0; i < FLOOR_NUM; i++)
+	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
-		if (player->HitBox(stage[i]) == true)
+		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
-			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
+			if (player->HitBox(stage[i][j]) == true)
+			{
+				//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+			}
+			for (int k = 0; k < ZAKURO_MAX; k++)
+			{
+				if (zakuro[k] != nullptr) {
+					if (zakuro[k]->HitBox(stage[i][j]) == true)
+					{
+						//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
+						zakuro[k]->ZakuroPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+					}
+				}
+			}
+			for (int k = 0; k < IRUKA_MAX; k++)
+			{
+				if (iruka[k] != nullptr) {
+					if (iruka[k]->HitBox(stage[i][j]) == true) {
+						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+					}
+				}
+			}
 		}
-		if (zakuro->HitBox(stage[i]) == true)
-		{
-			//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-			zakuro->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
-		}
-		if (iruka->HitBox(stage[i]) == true) {
-			iruka->IrukaPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
-		}		
 	}
 
 	//UŒ‚‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
