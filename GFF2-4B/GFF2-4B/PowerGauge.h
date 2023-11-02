@@ -11,8 +11,9 @@ struct GuegeBase
 	float y;	  //色つける四角の右下座標(y)
 	float h;  //色つける四角の高さ
 	float volume; //色の溜まり具合
+	int remainder; //ゲージから溢れた分
 	float ratio;  //ゲージの溜まり具合
-	int maxFlg;   //CMYの場合(0:ゲージMAX未満 1:ゲージMAX),黒の場合(0:それ以外 1:ゲージが黒の状態)
+	int maxFlg;   //CMYの場合(0:ゲージMAX未満 1:ゲージMAX),黒の場合(0:それ以外 1:ゲージが黒の状態
 };
 
 class PowerGauge
@@ -41,7 +42,7 @@ public:
 	void Update(); //更新処理
 	void Draw()const; //描画処理
 
-	float VolumeCalculate(float volume, float h); //ゲージの溜まり具合を計算
+	float CalculateVolume(float volume, float h); //ゲージの溜まり具合を計算
 	void VolumeSet();  //ゲージの溜まり具合を計算した値を代入
 	void BlackGauge(); //時間経過で黒のゲージを減らす
 	int PowerGaugeState(); //強化状態かどうか渡す

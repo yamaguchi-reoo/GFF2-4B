@@ -31,9 +31,9 @@ private:
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
 
     //エネミー
-    Zakuro* zakuro;    //ザクロ
+    Zakuro* zakuro[ZAKURO_MAX];    //ザクロ
     Himawari* himawari;//ひまわり
-    Iruka* iruka;      //イルカ
+    Iruka* iruka[IRUKA_MAX];      //イルカ
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
