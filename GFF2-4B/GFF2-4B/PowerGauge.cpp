@@ -115,12 +115,12 @@ void PowerGauge::Draw() const
 #ifdef _DEBUG
 
 	//デバック表示
-	DrawFormatString(300, 10, 0xffffff, "%d", magenta.remainder);
+	/*DrawFormatString(300, 10, 0xffffff, "%d", magenta.remainder);
 	DrawFormatString(300, 30, 0xffffff, "%f", magenta.volume);
 	DrawFormatString(300, 50, 0xffffff, "%d", cyan.remainder);
 	DrawFormatString(300, 70, 0xffffff, "%f", cyan.volume);
 	DrawFormatString(300, 90, 0xffffff, "%d", yellow.remainder);
-	DrawFormatString(300, 100, 0xffffff, "%f", yellow.volume);
+	DrawFormatString(300, 100, 0xffffff, "%f", yellow.volume);*/
 
 
 #endif // _DEBUG
