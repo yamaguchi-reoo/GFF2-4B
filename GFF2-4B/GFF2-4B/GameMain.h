@@ -15,6 +15,8 @@
 //effect
 #include "Effect.h"
 
+#define ZAKURO_MAX 5;
+
 class Player;
 
 class GameMain :
@@ -26,7 +28,7 @@ private:
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
 
     //エネミー
-    Zakuro* zakuro;    //ザクロ
+    Zakuro* zakuro[5] = { 0 };    //ザクロ
     Himawari* himawari;//ひまわり
     Iruka* iruka;      //イルカ
 
