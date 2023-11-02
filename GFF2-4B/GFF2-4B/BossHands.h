@@ -11,14 +11,12 @@ public:
     //バルーンファイトと同じような感じで画像読込する
 
     int handsimg[3];
-
-    struct{
-        float x;
-        float y;
-    }hands;
+    int Magentax[10] = { 1000,100,500 };
+    int switching;
 
     int bhandx;
     int bhandy;
+    int down_hand;
 
     bool hitflg=false;
 
@@ -29,6 +27,6 @@ public:
     void Update(GameMain* main)override;
     void Draw()const override;
 
-
+    void HandsMagenta();
 };
 
