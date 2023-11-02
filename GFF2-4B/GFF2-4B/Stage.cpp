@@ -41,7 +41,6 @@ void Stage::Draw()const
 	default:
 		break;
 	}
-	DrawFormatString(location.x, location.y, 0x00ff00, "%d", type);
 }
 
 void Stage::MoveStage(float _x)

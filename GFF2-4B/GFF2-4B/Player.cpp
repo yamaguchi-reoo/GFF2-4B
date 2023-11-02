@@ -304,7 +304,6 @@ void Player::Draw()const
 	}
 	DrawFormatString(0, 380, 0xffffff, "状態:%s", player_state_char[player_state]);
 	DrawFormatString(110, 200, 0xffffff, "Q=デバッグ用無敵:%d", d_inv_flg);
-
 	SetFontSize(old_size);
 #endif // DEBUG
 }

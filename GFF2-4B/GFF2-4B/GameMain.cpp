@@ -72,9 +72,15 @@ GameMain::~GameMain()
 	{
 		delete attack[i];
 	}
-	delete zakuro;
+	for (int i = 0; i < ZAKURO_MAX; i++)
+	{
+		delete zakuro[i];
+	}
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
+		delete iruka[i];
+	}
 	delete himawari;
-	delete iruka;
 	delete powergauge;
 	delete playerhp;
 	delete effect;
@@ -297,7 +303,7 @@ void GameMain::HitCheck()
 	{
 		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
-			if (player->HitBox(stage[i][j]) == true)
+			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
 				//G‚ê‚½–Ê‚É‰ž‚¶‚Ä‰Ÿ‚µo‚·
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
@@ -305,7 +311,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
-					if (zakuro[k]->HitBox(stage[i][j]) == true)
+					if (zakuro[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 					{
 						//G‚ê‚½–Ê‚É‰ž‚¶‚Ä‰Ÿ‚µo‚·
 						zakuro[k]->ZakuroPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
@@ -315,7 +321,8 @@ void GameMain::HitCheck()
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
-					if (iruka[k]->HitBox(stage[i][j]) == true) {
+					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) 
+					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
@@ -361,7 +368,6 @@ void GameMain::HitCheck()
 				}
 			}
 		}
-		//“¯‚¶‚æ‚¤‚É‚Ð‚Ü‚í‚è‚ÆƒCƒ‹ƒJ‚à
 
 		//UŒ‚‚Ì”»’è‚ªƒvƒŒƒCƒ„[‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ª“G‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ð—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
