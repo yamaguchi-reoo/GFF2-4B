@@ -28,7 +28,7 @@ private:
     //エネミー
     Zakuro* zakuro[ZAKURO_MAX];    //ザクロ
     Himawari* himawari;//ひまわり
-    Iruka* iruka;      //イルカ
+    Iruka* iruka[IRUKA_MAX];      //イルカ
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト

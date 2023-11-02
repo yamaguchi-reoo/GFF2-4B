@@ -31,3 +31,4 @@
 
 //エネミーの数
 #define ZAKURO_MAX 5 //ザクロの最大数
+#define IRUKA_MAX 5 //ザクロの最大数
