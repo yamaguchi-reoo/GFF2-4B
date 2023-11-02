@@ -469,7 +469,7 @@ void Player::SetPowerUp()
 	acs_max = ACS_MAX * 2;							//Å‘å‰Á‘¬“x‚ğ2”{
 	jump_power = DEFAULT_JUMP_POWER * 1.2f;			//’µ–ô—Í‚ğ1.2”{
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//UŒ‚ŠÔŠu‚ğ”¼•ª‚É
-	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f / 2;	//˜A‘±UŒ‚ó•tŠÔ‚ğ”¼•ª‚É
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL;	//˜A‘±UŒ‚ó•tŠÔ‚ğ”¼•ª‚É
 	player_anim_speed = PLAYER_ANIM / 2;			//ƒAƒjƒ[ƒVƒ‡ƒ“Ø‚è‘Ö‚¦ŠÔŠu‚ğ“ñ”{
 	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//ƒvƒŒƒCƒ„[‚ª“®‚¯‚È‚¢ŠÔ‚ğ”¼•ª‚É
 }
@@ -1052,7 +1052,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[10].width = 100;
 	player_attack_data[10].height = 100;
 	player_attack_data[10].who_attack = 0;
-	player_attack_data[10].attack_time = 10;
+	player_attack_data[10].attack_time = 5;
 	player_attack_data[10].damage = 2;
 	player_attack_data[10].delay = 0;
 	player_attack_data[10].attack_type = BULLET;
@@ -1064,12 +1064,12 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].width = 250;
 	player_attack_data[11].height = 100;
 	player_attack_data[11].who_attack = 0;
-	player_attack_data[11].attack_time = 10;
+	player_attack_data[11].attack_time = 5;
 	player_attack_data[11].damage = 2;
 	player_attack_data[11].delay = 0;
 	player_attack_data[11].attack_type = BULLET;
 	player_attack_data[11].angle = 0.0f;
-	player_attack_data[11].speed = 20;
+	player_attack_data[11].speed = 25;
 }
 
 void Player::Respawn(Location _location)
