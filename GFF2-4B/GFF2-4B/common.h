@@ -29,3 +29,5 @@
 #define MELEE 0		//近接攻撃
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
+//エネミーの数
+#define ZAKURO_MAX 5 //ザクロの最大数

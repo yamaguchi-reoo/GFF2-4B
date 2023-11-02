@@ -28,7 +28,7 @@ private:
 	bool apply_gravity;				//d—Í‚ğ“K—p‚·‚é‚©‚Ç‚¤‚©
 
 public:
-	Zakuro(int _posx);
+	Zakuro(float pos_x,float pos_y,bool direction);
 	~Zakuro();
 
 	void Update(GameMain* main)override;

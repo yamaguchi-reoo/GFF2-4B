@@ -6,12 +6,12 @@
 #define MOVE_SPEED  4
 #define ZAKURO_GRAVITY  10
 
-Zakuro::Zakuro(int _posx)
+Zakuro::Zakuro(float pos_x, float pos_y, bool direction)
 {
-	zakuro_state = ZakuroState::LEFT;
+	zakuro_state = ZakuroState::IDLE;
 
-	location.x = 400;
-	location.y = _posx;//200;
+	location.x = pos_x;
+	location.y = pos_y;
 	erea.height = 50;
 	erea.width = 50;
 	speed = MOVE_SPEED;
@@ -20,7 +20,7 @@ Zakuro::Zakuro(int _posx)
 
 	stop_count = 120;
 
-	zakuro_direction = true;
+	zakuro_direction = direction;
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		onfloor_flg[i] = false;
