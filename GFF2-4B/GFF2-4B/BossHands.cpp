@@ -1,14 +1,17 @@
 #include "BossHands.h"
+#include"GameMain.h"
+
 
 BossHands::BossHands() {
 	handsimg[0] = LoadGraph("resource/images/Boss/BhandM.png");
 	handsimg[1] = LoadGraph("resource/images/Boss/bhandC.png");
 	location.x = 1000;
 	location.y = 0;
-	erea.height = 200;
-	erea.width = 200;
+	erea.height = 190;
+	erea.width = 190;
 	switching = 0;
 	down_hand = false;
+	who = 1;
 }
 
 BossHands::~BossHands() {
@@ -18,8 +21,9 @@ BossHands::~BossHands() {
 void BossHands::Update(GameMain* main) {
 	if (down_hand ==false) {
 		HandsMagenta();
-	}
+		BossAttack(main);
 
+	}
 }
 
 void BossHands::Draw() const {
@@ -37,39 +41,60 @@ void BossHands::Draw() const {
 
 void BossHands::HandsMagenta() {
 
-	if (switching > 2) {
+	/*if (switching > 2) {
 		down_hand = true;
-	}
+	}*/
 
 		if (hitflg != true) {
-			//hands.y += 1.0f;
 			location.y += 5;
 		}
 		else {
-			switching++;
-
-			if (down_hand != true) {
-				location.y = 0;
-			}
 
 			hitflg = false;
 		}
-	
-
-		switch (switching) {
-		case 0:
-			location.x = Magentax[switching];
-			break;
-		case 1:
-			location.x = Magentax[switching];
-			break;
-		case 2:
-			location.x = Magentax[switching];
-			break;
-		default:
-			break;
-		}
 
 
-		
+		//switch (switching) {
+		//case 0:
+		//	location.x = Magentax[switching];
+		//	break;
+		//case 1:
+		//	location.x = Magentax[switching];
+		//	break;
+		//case 2:
+		//	location.x = Magentax[switching];
+		//	break;
+		//default:
+		//	break;
+		//}
+}
+
+AttackData BossHands::BossAttactData()
+{
+	AttackData attack_data;
+	attack_data.shift_x = -erea.width;
+	attack_data.shift_y = erea.height;
+	attack_data.width = erea.width;
+	attack_data.height = erea.height;
+	attack_data.who_attack = who;
+	attack_data.attack_time = 3;
+	attack_data.delay = 0;
+	attack_data.damage = 1;
+	attack_data.attack_type = MELEE;
+
+
+	if (direction == Direction::RIGHT) {
+		attack_data.direction = 0;
+	}
+	else if (direction == Direction::LEFT) {
+		attack_data.direction = 1;
+	}
+
+	return attack_data;
+}
+
+void BossHands::BossAttack(GameMain* main)
+{
+	//UŒ‚‚ð¶¬‚·‚é
+	main->SpawnAttack(BossAttactData());
 }

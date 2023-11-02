@@ -33,4 +33,3 @@ public:
 	int GetSpwanFlg() { return spawn_flg; }
 	ColorDate GetColorDate();
 };
-
