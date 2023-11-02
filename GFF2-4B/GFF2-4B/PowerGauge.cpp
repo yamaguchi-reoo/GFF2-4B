@@ -92,7 +92,7 @@ void PowerGauge::Update()
 	else if(black.maxFlg == 1)
 	{
 		//強化ゲージがMAXかつ、Xボタンが押されたら強化状態フラグを1に
-		if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_X) == true))
+		if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_Y) == true))
 		{
 			powerFlg = 1;
 		}
@@ -313,12 +313,12 @@ void PowerGauge::CheckVolumeMax()
 //強化ゲージの回転処理
 void PowerGauge::RotaGauge()
 {
-	num += 7.0f * i++;
+	num += 2.5f * i++;
 
 	if (num >= 360.0f)
 	{
 		//3回回転したら強化ゲージを黒(MAX)に
-		if (j >= 4)
+		if (j >= 6)
 		{
 			black.volume = 100.0f;
 			black.maxFlg = 1;
