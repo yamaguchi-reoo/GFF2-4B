@@ -6,6 +6,7 @@ class Stage:
 {
 private:
 	int type;		//” ‚Ìí—Ş(0=–³ 1=’n–Ê 2=–Ø 3=Šâ 4=‰_)
+	bool debug_flg;		//” ‚Ìí—Ş‚ğ•\¦‚·‚é‚©
 public:
 	Stage(float _x, float _y, float _width, float _height,int _type);
 	~Stage();
@@ -18,4 +19,6 @@ public:
 	int GetStageType() { return type; }
 	//í—Ş‚ğİ’è
 	void SetStageType(int _type) { type = _type; }
+	//” ‚Ìí—Ş‚ğ•\¦‚·‚é
+	void SetDebugFlg() { debug_flg = true; }
 };

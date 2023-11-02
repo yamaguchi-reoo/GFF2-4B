@@ -89,7 +89,7 @@ void Attack::Draw()const
 {
 	if (can_apply_damage == true)
 	{
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, true);
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ff00, false);
 	}
 }
 

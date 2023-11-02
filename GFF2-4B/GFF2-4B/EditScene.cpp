@@ -13,6 +13,7 @@ EditScene::EditScene()
 		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
 			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+			stage[i][j]->SetDebugFlg();
 			select_data[i][j] = false;
 		}
 	}
