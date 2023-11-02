@@ -6,12 +6,12 @@
 #define MOVE_SPEED  4
 #define ZAKURO_GRAVITY  10
 
-Zakuro::Zakuro()
+Zakuro::Zakuro(int _posx)
 {
 	zakuro_state = ZakuroState::LEFT;
 
 	location.x = 400;
-	location.y = 200;
+	location.y = _posx;//200;
 	erea.height = 50;
 	erea.width = 50;
 	speed = MOVE_SPEED;

@@ -2,6 +2,7 @@
 #include "CharaBase.h"
 #include "Attack.h"
 
+
 enum  class ZakuroState {
 	IDLE = 0,
 	RIGHT,
@@ -27,7 +28,7 @@ private:
 	bool apply_gravity;				//d—Í‚ğ“K—p‚·‚é‚©‚Ç‚¤‚©
 
 public:
-	Zakuro();
+	Zakuro(int _posx);
 	~Zakuro();
 
 	void Update(GameMain* main)override;
