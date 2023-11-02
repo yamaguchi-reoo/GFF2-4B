@@ -21,7 +21,7 @@ private:
 	bool zakuro_direction;//向き(0 = 右 1 = 左)
 
 	//当たり判定関連
-	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
+	bool onfloor_flg;	//いずれかの地面に触れているかどうか
 	bool rightwall_flg;				//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;				//いずれかの左壁に触れているかどうか
 	bool apply_gravity;				//重力を適用するかどうか
@@ -39,8 +39,6 @@ public:
 	void ZakuroGiveGravity();
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
 	void ZakuroPush(int num, Location _sub_location, Erea _sub_erea);
-	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
-	void ZakuroOnFloor(int num, Location _sub);
 
 	//攻撃をスポーンさせるのに必要な情報をまとめる
 	AttackData CreateAttactData();

@@ -101,7 +101,7 @@ private:
 	bool powerup_flg;								//強化状態か
 
 	//当たり判定関連
-	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
+	bool onfloor_flg;	//いずれかの地面に触れているかどうか
 	bool touch_ceil_flg;			//いずれかの天井に触れているかどうか
 	bool rightwall_flg;				//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;				//いずれかの左壁に触れているかどうか
@@ -137,7 +137,7 @@ public:
 	void DecAcs(int num);
 
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
-	void OnFloor(int num,Location _sub);
+	void OnFloor();
 
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
 	void Push(int num,Location _sub_location, Erea _sub_erea);
@@ -180,9 +180,6 @@ public:
 
 	//プレイヤーのHPの取得
 	int GetPlayerHP() { return hp; }
-
-	//いずれかの床に触れているか判断する
-	bool OnAnyFloorFlg();
 
 	//いずれかの攻撃が行われている最中か判断する
 	bool PlayAnyAttack();

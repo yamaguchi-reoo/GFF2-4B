@@ -2,14 +2,24 @@
 #include "Dxlib.h"
 #include "PadInput.h"
 #include "common.h"
+#include "StageData.h"
+#include <fstream>
+#include <iostream>
+#include <string>
+#include "EditScene.h"
 
 GameMain::GameMain()
 {
 	player = new Player();
 	scene_scroll = new SceneScroll();
-	stage[0] = new Stage(0, SCREEN_HEIGHT-100, SCREEN_WIDTH,100);
-	stage[1] = new Stage(200, 450, 200, 50);
-	stage[2] = new Stage(600, 450, 200, 50);
+	CreateStage();
+	for (int i = 0; i < STAGE_HEIGHT; i++)
+	{
+		for (int j = 0; j < STAGE_WIDTH; j++)
+		{
+			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+		}
+	}
 	zakuro = new Zakuro();
 	himawari = new Himawari();
 	iruka = new Iruka();
@@ -33,15 +43,19 @@ GameMain::GameMain()
 
 	flg = false;
 	onfloor_flg = false;
+
 }
 
 GameMain::~GameMain()
 {
 	delete player;
 	delete scene_scroll;
-	for (int i = 0; i < FLOOR_NUM; i++)
+	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
-		delete stage[i];
+		for (int j = 0; j < STAGE_WIDTH; j++)
+		{
+			delete stage[i][j];
+		}
 	}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
@@ -150,17 +164,26 @@ AbstractScene* GameMain::Update()
 		/*}*/
 	}
 	//床の数だけ繰り返す
-	for (int i = 0; i < FLOOR_NUM; i++)
+	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
-		stage[i]->Update();
+		for (int j = 0; j < STAGE_WIDTH; j++)
+		{
+			stage[i][j]->Update();
+		}
 	}
 	//当たり判定関連の処理を行う
 	HitCheck();
 
 #if DEBUG
-	if (KeyInput::OnKey(KEY_INPUT_S)) {
+	if (KeyInput::OnKey(KEY_INPUT_S)) 
+	{
 		flg = true;
 		player->ApplyDamage(1);
+	}
+	//ステージをいじるシーンへ遷移
+	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
+	{
+		return new EditScene();
 	}
 #endif
 	return this;
@@ -179,10 +202,12 @@ void GameMain::Draw() const
 	{
 		attack[i]->Draw();
 	}
-	for (int i = 0; i < FLOOR_NUM; i++)
+	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
-		//DrawFormatString(0, 100+(i*20), 0x00ff00, "%d", count[i]);
-		stage[i]->Draw();
+		for (int j = 0; j < STAGE_WIDTH; j++)
+		{
+			stage[i][j]->Draw();
+		}
 	}
 	if (flg == true) {
 		//DrawString(300, 300,"flg", 0xffffff);
@@ -216,21 +241,27 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 void GameMain::HitCheck()
 {
 	//床の数だけ繰り返す
-	for (int i = 0; i < FLOOR_NUM; i++)
+	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
-		if (player->HitBox(stage[i]) == true)
+		for (int j = 0; j < STAGE_WIDTH; j++)
 		{
-			//触れた面に応じて押し出す
-			player->Push(i, stage[i]->GetLocation(), stage[i]->GetErea());
+			//プレイヤーが無以外に触れた場合
+			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+			{
+				//触れた面に応じて押し出す
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+			}
+			//ザクロが無以外に触れた場合
+			if (zakuro->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+			{
+				//触れた面に応じて押し出す
+				zakuro->ZakuroPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+			}
+			//いるかが無以外に触れた場合
+			if (iruka->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) {
+				iruka->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+			}
 		}
-		if (zakuro->HitBox(stage[i]) == true)
-		{
-			//触れた面に応じて押し出す
-			zakuro->ZakuroPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
-		}
-		if (iruka->HitBox(stage[i]) == true) {
-			iruka->IrukaPush(i, stage[i]->GetLocation(), stage[i]->GetErea());
-		}		
 	}
 
 	//攻撃の数だけ繰り返す
@@ -270,6 +301,23 @@ void GameMain::HitCheck()
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
+		}
+	}
+}
+
+void GameMain::CreateStage()
+{
+	std::ifstream file("resource/dat/StageData.txt");
+	//ファイルが読み込めていたなら
+	if (file)
+	{
+		//ランキングデータ配分列データを読み込む
+		for (int i = 0; i < STAGE_HEIGHT; i++)
+		{
+			for (int j = 0; j < STAGE_WIDTH; j++)
+			{
+				file >> STAGE_DATA[i][j];
+			}
 		}
 	}
 }

@@ -21,10 +21,7 @@ Zakuro::Zakuro()
 	stop_count = 120;
 
 	zakuro_direction = true;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	onfloor_flg = false;
 	attack_flg = true;
 	spawn_flg = false;
 	rightwall_flg = false;
@@ -57,21 +54,17 @@ void Zakuro::Update(GameMain* main)
 			MoveNockBack();
 		}
 	}
-	//d—Í‚ð‰Á‚¦‚é‚©‚Ìˆ—
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
 		//°‚Éæ‚Á‚Ä‚¢‚½‚çd—ÍOFF
-		if (onfloor_flg[i] == true)
+	if (onfloor_flg == true)
+	{
+		apply_gravity = false;
+		if (zakuro_direction == true)
 		{
-			apply_gravity = false;
-			if (zakuro_direction == true)
-			{
-				zakuro_state = ZakuroState::LEFT;
-			}
-			else
-			{
-				zakuro_state = ZakuroState::RIGHT;
-			}
+			zakuro_state = ZakuroState::LEFT;
+		}
+		else
+		{
+			zakuro_state = ZakuroState::RIGHT;
 		}
 	}
 	//°‚ÉG‚ê‚Ä‚¢‚È‚¢‚È‚ç
@@ -169,21 +162,13 @@ void Zakuro::ZakuroReset()
 	apply_gravity = true;
 	rightwall_flg = false;
 	leftwall_flg = false;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	onfloor_flg = false;
 }
 
 void Zakuro::ZakuroGiveGravity()
 {
 	zakuro_state = ZakuroState::IDLE;
 	location.y += ZAKURO_GRAVITY;
-}
-
-void Zakuro::ZakuroOnFloor(int num, Location _sub)
-{
-	onfloor_flg[num] = true;
 }
 
 void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
@@ -196,7 +181,7 @@ void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
 	if (location.y + erea.height - 12 < _sub_location.y)
 	{
 		location.y = _sub_location.y - erea.height + 0.1f;
-		ZakuroOnFloor(num, _sub_location);
+		onfloor_flg = true;
 	}
 	//‰E‚Ì•Ç‚ÉG‚ê‚½Žž
 	else if (location.x + erea.width - 10 < _sub_location.x)
@@ -218,7 +203,7 @@ void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
 	else
 	{
 		location.y = _sub_location.y - erea.height;
-		ZakuroOnFloor(num, _sub_location);
+		onfloor_flg = true;
 	}
 }
 

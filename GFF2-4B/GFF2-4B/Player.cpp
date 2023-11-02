@@ -10,7 +10,7 @@
 #define LEFT 3	//左加速度用
 
 #define DEFAULT_MOVE_SPEED 0.3f			//基本移動速度(左右)
-#define DEFAULT_JUMP_POWER 26			//基本最大跳躍力
+#define DEFAULT_JUMP_POWER 28			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
 #define DEFAULT_ATTACK_INTERVAL	30		//基本攻撃間隔(フレーム)
 #define DEFAULT_INVINCIBLE_TIME	80		//基本無敵時間(攻撃を喰らった後)
@@ -62,10 +62,7 @@ Player::Player()
 		external_move[i] = 0;
 	}
 	acs_max = ACS_MAX;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	onfloor_flg = false;
 	touch_ceil_flg = false;
 	rightwall_flg = false;
 	leftwall_flg = false;
@@ -332,11 +329,11 @@ void Player::DecAcs(int num)
 	}
 }
 
-void Player::OnFloor(int num,Location _sub)
+void Player::OnFloor()
 {
 	acs[DOWN] = 0;
 	acs[UP] = 0.05f;
-	onfloor_flg[num] = true;
+	onfloor_flg = true;
 	jump_flg = false;
 }
 
@@ -350,7 +347,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	if (location.y +erea.height-12 < _sub_location.y)
 	{
 		location.y = _sub_location.y- erea.height+0.1f;
-		OnFloor(num, _sub_location);
+		OnFloor();
 	}
 	//天井に触れた時
 	else if (location.y +20> _sub_location.y + _sub_erea.height)
@@ -383,7 +380,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	else
 	{
 		location.y = _sub_location.y - erea.height;
-		OnFloor(num, _sub_location);
+		OnFloor();
 	}
 }
 
@@ -394,10 +391,7 @@ void Player::Reset()
 	touch_ceil_flg = false;
 	rightwall_flg = false;
 	leftwall_flg = false;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	onfloor_flg = false;
 	for (int i = 0; i < 4; i++)
 	{
 		external_move[i] = 0;
@@ -469,7 +463,7 @@ void Player::SetPowerUp()
 	acs_max = ACS_MAX * 2;							//最大加速度を2倍
 	jump_power = DEFAULT_JUMP_POWER * 1.2f;			//跳躍力を1.2倍
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//攻撃間隔を半分に
-	combo_attack_interval = DEFAULT_ATTACK_INTERVAL;	//連続攻撃受付時間を半分に
+	combo_attack_interval = DEFAULT_ATTACK_INTERVAL;//連続攻撃受付時間を半分に
 	player_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
 	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//プレイヤーが動けない時間を半分に
 }
@@ -573,7 +567,7 @@ void Player::Attack(GameMain* main)
 		break;
 	case 4:
 		//空中にいる限り攻撃し続ける
-		if (OnAnyFloorFlg() == false)
+		if (onfloor_flg == false)
 		{
 			//現在行っている攻撃の段階に応じたフラグをtrueにし、それ以外をfalseにする
 			SetAttackFlg(attack_step);
@@ -614,16 +608,8 @@ void Player::Attack(GameMain* main)
 
 void Player::Move()
 {
-	//重力を加えるかの処理
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		if (onfloor_flg[i] == true)
-		{
-			apply_gravity = false;
-		}
-	}
 	//床に触れていないなら
-	if (apply_gravity == true)
+	if (onfloor_flg == false)
 	{
 		//重力を与える
 		GiveGravity();
@@ -716,6 +702,13 @@ void Player::Move()
 	//移動処理
 	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
 	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
+
+	//Y座標が一定を上回ったら死
+	if (location.y > SCREEN_HEIGHT * 1.5f)
+	{
+		death_flg = true;
+		move_flg = false;
+	}
 }
 
 void Player::Anim()
@@ -766,7 +759,7 @@ void Player::UpdatePlayerState()
 	if (direction == false)
 	{
 		//重力が加わっているなら
-		if (apply_gravity == true)
+		if (onfloor_flg == false)
 		{
 			player_state = FALL_RIGHT;
 			if (jump_flg == true && acs[UP] >= acs[DOWN])
@@ -829,7 +822,7 @@ void Player::UpdatePlayerState()
 	else
 	{
 		//重力が加わっているなら
-		if (apply_gravity == true)
+		if (onfloor_flg == false)
 		{
 			player_state = FALL_LEFT;
 			if (jump_flg == true && acs[UP] >= acs[DOWN])
@@ -889,20 +882,6 @@ void Player::UpdatePlayerState()
 			player_state = DEATH_LEFT;
 		}
 	}
-}
-
-bool Player::OnAnyFloorFlg()
-{
-	bool ret = false;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		//触れている床があればループを抜ける
-		if (onfloor_flg[i] == true)
-		{
-			ret = true;
-		}
-	}
-	return ret;
 }
 
 bool Player::PlayAnyAttack()
@@ -1092,10 +1071,7 @@ void Player::Respawn(Location _location)
 		acs[i] = 0;
 		external_move[i] = 0;
 	}
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	onfloor_flg = false;
 	touch_ceil_flg = false;
 	rightwall_flg = false;
 	leftwall_flg = false;
@@ -1105,9 +1081,10 @@ void Player::Respawn(Location _location)
 	attack_anim_flg = false;
 	player_anim = 0;
 	attack_anim = 0;
-	inv_flg = false;
+	inv_flg = true;
 	damage_flg = false;
 	hidden_flg = false;
 	death_flg = false;
 	death_time = 120;
+	damage_time = 0;
 }

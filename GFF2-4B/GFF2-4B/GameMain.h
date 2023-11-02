@@ -3,6 +3,7 @@
 #include "BoxCollider.h"
 #include "Player.h"
 #include "Attack.h"
+#include "StageData.h"
 #include "Stage.h"
 #include "Himawari.h"
 #include "Zakuro.h"
@@ -21,8 +22,12 @@ class GameMain :
     public AbstractScene
 {
 private:
-    Player* player;    //プレイヤーのオブジェクト
-    Stage* stage[FLOOR_NUM];   //床のオブジェクト
+    int STAGE_DATA[STAGE_HEIGHT][STAGE_WIDTH];
+    Player* player;                     //プレイヤーのオブジェクト
+  /*  StageData* stagedata;*/
+    int stage_height;
+    int stage_width;
+    Stage* stage[STAGE_HEIGHT][STAGE_WIDTH];   //床のオブジェクト
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
 
     //エネミー
@@ -38,8 +43,8 @@ private:
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
-    int flg;        //
-    int count[2];      //実験用
+    int flg;               //
+    int count[2];          //実験用
     bool onfloor_flg;      //実験用
 public:
     //コンストラクタ
@@ -58,5 +63,8 @@ public:
 
     //各当たり判定の処理
     void HitCheck();
+
+    //ステージを生成する
+    void CreateStage();
 };
 
