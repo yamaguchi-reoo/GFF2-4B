@@ -28,9 +28,9 @@
 #define MELEE 0		//近接攻撃
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
-//ステージ(ゴリ押し、最終手段)
+//ステージ
 #define STAGE_HEIGHT 16									//ステージのブロックの縦の個数
-#define STAGE_WIDTH  32									//ステージのブロックの横の個数
+#define STAGE_WIDTH  64									//ステージのブロックの横の個数
 #define BOX_SIZE	(SCREEN_HEIGHT/STAGE_HEIGHT)		//ステージのブロック一つ当たりの大きさ(とりま正方形)
 
 //エネミーの数

@@ -48,7 +48,8 @@ void Stage::Draw()const
 	}
 }
 
-void Stage::MoveStage(float _x)
+void Stage::MoveStage(float _x, float _y)
 {
 	location.x += _x;
+	location.y += _y;
 }

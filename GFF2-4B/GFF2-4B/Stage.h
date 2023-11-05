@@ -14,7 +14,7 @@ public:
 	void Draw()const;
 
 	//ステージをずらす処理(使いやすい用にいじってもらってOK)
-	void MoveStage(float _x);
+	void MoveStage(float _x, float _y);
 	//種類を取得(0=無 1=地面 2=木 3=岩 4=雲)
 	int GetStageType() { return type; }
 	//種類を設定

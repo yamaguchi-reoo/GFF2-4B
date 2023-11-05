@@ -78,13 +78,33 @@ AbstractScene* EditScene::Update()
 		}
 	}
 	//ステージを動かす
+	if (KeyInput::OnPresed(KEY_INPUT_W))
+	{
+		for (int i = 0; i < STAGE_HEIGHT; i++)
+		{
+			for (int j = 0; j < STAGE_WIDTH; j++)
+			{
+				stage[i][j]->MoveStage(0, 5);
+			}
+		}
+	}
 	if (KeyInput::OnPresed(KEY_INPUT_A))
 	{
 		for (int i = 0; i < STAGE_HEIGHT; i++)
 		{
 			for (int j = 0; j < STAGE_WIDTH; j++)
 			{
-				stage[i][j]->MoveStage(-5);
+				stage[i][j]->MoveStage(+5,0);
+			}
+		}
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_S))
+	{
+		for (int i = 0; i < STAGE_HEIGHT; i++)
+		{
+			for (int j = 0; j < STAGE_WIDTH; j++)
+			{
+				stage[i][j]->MoveStage(0, -5);
 			}
 		}
 	}
@@ -94,7 +114,7 @@ AbstractScene* EditScene::Update()
 		{
 			for (int j = 0; j < STAGE_WIDTH; j++)
 			{
-				stage[i][j]->MoveStage(+5);
+				stage[i][j]->MoveStage(-5,0);
 			}
 		}
 	}
@@ -116,11 +136,10 @@ void EditScene::Draw()const
 			stage[i][j]->Draw();
 			if (select_data[i][j] == true)
 			{
-				DrawBox(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x +BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff0000, true);
+				DrawBox(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x +BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff0000, false);
 			}
 		}
 	}
-	DrawString(cursor.x, cursor.y, "Edit", 0x00ff00);
 	DrawBox(cursor.x, cursor.y, cursor.x + 300, cursor.y + 25, 0x000000, true);
 	DrawBox(cursor.x, cursor.y, cursor.x + 300, cursor.y + 25, 0xffffff, false);
 	DrawString(cursor.x+5, cursor.y+5, "0=無 1=地面 2=木 3=岩 4=雲",0xffffff);
@@ -140,6 +159,7 @@ void EditScene::CreateStage()
 				file >> STAGE_DATA[i][j];
 			}
 		}
+
 	}
 }
 
