@@ -133,11 +133,11 @@ AbstractScene* EditScene::Update()
 		return new GameMain(now_stage);
 	}
 	//ステージの横幅を増やす
-	if (KeyInput::OnKey(KEY_INPUT_G))
-	{
-		stage_width++;
-		UpdateStage();
-	}
+	//if (KeyInput::OnKey(KEY_INPUT_G))
+	//{
+	//	stage_width++;
+	//	UpdateStage();
+	//}
 	return this;
 }
 

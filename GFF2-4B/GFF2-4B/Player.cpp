@@ -343,7 +343,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	p_center.y = location.y + (erea.height / 2);
 
 	//右の壁に触れた時
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && location.y + 30 < _sub_location.y + _sub_erea.height)
+	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y)
 	{
 		location.x = _sub_location.x - erea.width;
 		//右加速度を0にする
@@ -352,7 +352,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && location.y + 30 < _sub_location.y + _sub_erea.height)
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//左加速度を0にする
