@@ -9,7 +9,7 @@ Himawari::Himawari()
 	erea.width = 50;
 
 
-	direction = false;
+	himawari_direction = false;
 	attack_interval_count = 0;
 }
 
@@ -34,7 +34,7 @@ AttackData Himawari::CreateAttactData()
 	attack_data.shift_x = location.x + (erea.width / 2);
 	attack_data.shift_y = location.y + (erea.height / 2);
 	attack_data.who_attack = 3;
-	attack_data.direction = direction;
+	attack_data.direction = himawari_direction;
 
 	//’e‚Ì‘å‚«‚³
 	attack_data.width = 100;
