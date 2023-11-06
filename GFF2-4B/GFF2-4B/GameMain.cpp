@@ -28,23 +28,10 @@ GameMain::GameMain(int _stage)
 	//iruka[1] = new Iruka(500,0,false, who++);
 	//iruka[2] = new Iruka(900,0,true, who++);
 
-	for (int i = 0; i < HIMAWARI_MAX; i++) {
-		himawari[i] = nullptr;
-	}
-	LoadStageData();
-	for (int i = 0; i < stage_height; i++)
-	{
-		for (int j = 0; j < stage_width; j++)
-		{
-			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
-		}
-	}
-	for (int i = 0; i < ATTACK_NUM; i++)
-	{
-		attack[i] = new Attack();
-	}
+	//for (int i = 0; i < HIMAWARI_MAX; i++) {
+	//	himawari[i] = nullptr;
+	//}
 	SetStage(now_stage);
-	himawari = new Himawari();
 	for (int i = 0; i < 2; i++)
 	{
 		count[i] = 0;
@@ -87,7 +74,10 @@ GameMain::~GameMain()
 	//{
 	//	delete iruka[i];
 	//}
-	delete himawari;
+	for (int i = 0; i < HIMAWARI_MAX; i++)
+	{
+		delete himawari[i];
+	}
 	delete powergauge;
 	delete playerhp;
 	delete effect;
@@ -468,6 +458,9 @@ void GameMain::SetStage(int _stage)
 	}
 	for (int i = 0; i < IRUKA_MAX; i++) {
 		iruka[i] = nullptr;
+	}
+	for (int i = 0; i < HIMAWARI_MAX; i++) {
+		himawari[i] = nullptr;
 	}
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
