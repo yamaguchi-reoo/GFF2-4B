@@ -29,6 +29,8 @@ GameMain::GameMain()
 	for (int i = 0; i < HIMAWARI_MAX; i++) {
 		himawari[i] = nullptr;
 	}
+	himawari[0] = new Himawari(700, 580, false, who++);
+
 	LoadStageData();
 	for (int i = 0; i < stage_height; i++)
 	{
@@ -211,7 +213,8 @@ AbstractScene* GameMain::Update()
 					attack[i]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
 				}
 			}		
-		}//イルカ
+		}
+		//イルカ
 		for (int j = 0; j < IRUKA_MAX; j++) 
 		{
 			if (iruka[j] != nullptr) 
@@ -222,6 +225,17 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
+		for (int j = 0; j < HIMAWARI_MAX; j++)
+		{
+			if (himawari[j] != nullptr)
+			{
+				if (attack[i]->GetAttackData().who_attack == himawari[j]->GetWho())
+				{
+					attack[i]->Update(himawari[j]->GetCenterLocation(), himawari[j]->GetErea());
+				}
+			}
+		}
+
 	}
 	//床の数だけ繰り返す
 	for (int i = 0; i < stage_height; i++)

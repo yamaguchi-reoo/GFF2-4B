@@ -12,7 +12,7 @@ private:
 
 public:
     //コンストラクタ
-    Himawari();
+    Himawari(float pos_x, float pos_y, bool direction, int _who);
     //デストラクタ
     ~Himawari();
 
@@ -22,6 +22,8 @@ public:
     AttackData CreateAttactData();
 
     void Attack(GameMain* main);
+
+    ColorDate GetColorDate();
     
 };
 
