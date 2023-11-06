@@ -29,7 +29,7 @@ GameMain::GameMain()
 	for (int i = 0; i < HIMAWARI_MAX; i++) {
 		himawari[i] = nullptr;
 	}
-	himawari[0] = new Himawari(700, 580, false, who++);
+	himawari[0] = new Himawari(700, 580, true, who++);
 
 	LoadStageData();
 	for (int i = 0; i < stage_height; i++)
@@ -400,6 +400,24 @@ void GameMain::HitCheck()
 					if (iruka[j]->GetHp() < 1) {
 						powergauge->SetVolume(iruka[j]->GetColorDate());
 					}
+					attack[i]->DeleteAttack();
+				}
+			}
+		}
+		for (int j = 0; j < HIMAWARI_MAX; j++) {
+			if (himawari[j] != nullptr) {
+				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
+				{
+					//しぶき用
+					effect->HitFlg(true);
+					//effect->SetLocation(zakuro->GetCenterLocation());
+
+					//イルカのダメージ処理
+					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
+					//if (himawari[j]->GetHp() < 1) {
+						powergauge->SetVolume(himawari[j]->GetColorDate());
+					//}
 					attack[i]->DeleteAttack();
 				}
 			}

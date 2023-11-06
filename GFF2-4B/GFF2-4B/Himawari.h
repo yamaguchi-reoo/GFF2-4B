@@ -23,6 +23,13 @@ public:
 
     void Attack(GameMain* main);
 
+    void ApplyDamage(int num);
+
+    int GetSpwanFlg() { return spawn_flg; }
+
+    int GetHp() { return hp; }
+
+
     ColorDate GetColorDate();
     
 };
