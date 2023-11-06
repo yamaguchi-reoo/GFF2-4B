@@ -7,4 +7,6 @@ char PadInput::OldKey[BUTTONS];
 XINPUT_STATE PadInput::Input;
 Stick PadInput::Rstick;
 Stick PadInput::Lstick;
-CURSOR KeyInput::Cursor; //ÉJÅ[É\Éã
+CURSOR KeyInput::Cursor; 
+int KeyInput::NowMouse[MOUSE_MAX];
+int KeyInput::OldMouse[MOUSE_MAX];
