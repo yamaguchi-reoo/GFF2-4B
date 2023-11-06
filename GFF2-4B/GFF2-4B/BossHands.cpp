@@ -88,12 +88,6 @@ AttackData BossHands::BossAttactData()
 	attack_data.attack_type = MELEE;
 
 
-	if (direction == Direction::RIGHT) {
-		attack_data.direction = 0;
-	}
-	else if (direction == Direction::LEFT) {
-		attack_data.direction = 1;
-	}
 
 	return attack_data;
 }

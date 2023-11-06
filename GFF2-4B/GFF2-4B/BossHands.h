@@ -7,7 +7,7 @@ private:
 
 public:
 
-    Direction direction;
+   // Direction direction;
 
     int bhandm;//ボス手　マゼンタの画像
     int bhandc;//ボス手　シアンの画像

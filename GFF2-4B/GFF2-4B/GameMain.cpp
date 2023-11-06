@@ -8,8 +8,6 @@
 #include <string>
 #include "EditScene.h"
 
-int snum = 0;
-
 GameMain::GameMain()
 {
 	who = 1;
@@ -24,9 +22,9 @@ GameMain::GameMain()
 	for (int i = 0; i < IRUKA_MAX; i++) {
 		iruka[i] = nullptr;
 	}
-	iruka[0] = new Iruka(1400,0,true, who++);
-	iruka[1] = new Iruka(500,0,false, who++);
-	iruka[2] = new Iruka(900,0,true, who++);
+	iruka[0] = new Iruka(1400, 0, true, who++);
+	iruka[1] = new Iruka(500, 0, false, who++);
+	iruka[2] = new Iruka(900, 0, true, who++);
 
 	LoadStageData();
 	for (int i = 0; i < stage_height; i++)
@@ -97,13 +95,13 @@ AbstractScene* GameMain::Update()
 		player->GetLocation().x + 0.01;
 	}
 	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
-	if(scene_scroll->ActionRangeBorder(player->GetLocation()) == true)
+	if (scene_scroll->ActionRangeBorder(player->GetLocation()) == true)
 	{
 		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
 	}
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
-		if (zakuro[i] != nullptr) 
+		if (zakuro[i] != nullptr)
 		{
 			zakuro[i]->Update(this);
 		}
@@ -126,7 +124,7 @@ AbstractScene* GameMain::Update()
 		//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
 		player->SetPowerUp();
 	}
-	else if(powergauge->PowerGaugeState() == 2)
+	else if (powergauge->PowerGaugeState() == 2)
 	{
 		//強化状態解除
 		player->StopPowerUp();
@@ -137,7 +135,7 @@ AbstractScene* GameMain::Update()
 	{
 		for (int i = 0; i < ZAKURO_MAX; i++) {
 			if (zakuro[i] != nullptr) {
-				powergauge->SetVolume(zakuro[i]->GetColorDate());	
+				powergauge->SetVolume(zakuro[i]->GetColorDate());
 			}
 		}
 		effect->EndFlg(0);
@@ -146,12 +144,12 @@ AbstractScene* GameMain::Update()
 	//イルカ落下判定
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
-		if (iruka[i] != nullptr) 
+		if (iruka[i] != nullptr)
 		{
-			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x) 
+			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
 			{
 				iruka[i]->SetFallFlg();
-			}			
+			}
 		}
 	}
 
@@ -167,7 +165,7 @@ AbstractScene* GameMain::Update()
 		* 攻撃を生成するときにその値をattack_data.who_attackに格納し、
 		* ここで画面内の敵の種類分だけifを作り、１種類の敵の数だけforで繰り返す
 		* whoはBoxColliderで定義済み
-		* 
+		*
 		*	for(int j = 0; j < (画面内のザクロの数が入っている変数); j++ )
 		*	{
 		*		if (attack[j]->GetAttackData().who_attack == zakuro[j]->GetWho())
@@ -175,7 +173,7 @@ AbstractScene* GameMain::Update()
 		*			attack[j]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
 		*		}
 		*	}
-		* 
+		*
 		* 	for(int j = 0; j < (画面内のひまわりの数が入っている変数); j++ )
 		*	{
 		*		if (attack[j]->GetAttackData().who_attack == himawari[j]->GetWho())
@@ -183,7 +181,7 @@ AbstractScene* GameMain::Update()
 		*			attack[j]->Update(himawari[j]->GetCenterLocation(), himawari[j]->GetErea());
 		*		}
 		*	}
-		* 
+		*
 		* 　for(int i = 0; i < (画面内のいるかの数が入っている変数); i++ )
 		*	{
 		*		if (attack[j]->GetAttackData().who_attack == iruka[j]->GetWho())
@@ -200,11 +198,11 @@ AbstractScene* GameMain::Update()
 				{
 					attack[i]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
 				}
-			}		
+			}
 		}
-		for (int j = 0; j < IRUKA_MAX; j++) 
+		for (int j = 0; j < IRUKA_MAX; j++)
 		{
-			if (iruka[j] != nullptr) 
+			if (iruka[j] != nullptr)
 			{
 				if (attack[i]->GetAttackData().who_attack == iruka[j]->GetWho())
 				{
@@ -225,7 +223,7 @@ AbstractScene* GameMain::Update()
 	HitCheck();
 
 #if DEBUG
-	if (KeyInput::OnKey(KEY_INPUT_S)) 
+	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
 		flg = true;
 		player->ApplyDamage(1);
@@ -243,10 +241,10 @@ void GameMain::Draw() const
 {
 	scene_scroll->Draw();
 	effect->Draw();
-	
+
 	SetFontSize(42);
-//	DrawString(400, 0, "GameMain", 0xffffff);
-	//描画
+	//	DrawString(400, 0, "GameMain", 0xffffff);
+		//描画
 	player->Draw();
 	for (int i = 0; i < stage_height; i++)
 	{
@@ -260,7 +258,7 @@ void GameMain::Draw() const
 	}
 	//エネミーの描画
 	for (int i = 0; i < ZAKURO_MAX; i++) {
-		if (zakuro[i] != nullptr) 
+		if (zakuro[i] != nullptr)
 		{
 			zakuro[i]->Draw(); // ザクロ
 		}
@@ -323,19 +321,13 @@ void GameMain::HitCheck()
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
-					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) 
+					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
 		}
-
-		if (hands->HitBox(stage[i]) == true)
-		{
-			hands->hitflg = true;
-		}
-
 	}
 
 	//攻撃の数だけ繰り返す
@@ -357,7 +349,7 @@ void GameMain::HitCheck()
 					//powergauge->SetVolume(zakuro[j]->GetColorDate());
 				}
 			}
-		 }
+		}
 		for (int j = 0; j < IRUKA_MAX; j++) {
 			if (iruka[j] != nullptr) {
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
