@@ -16,23 +16,20 @@ GameMain::GameMain()
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
 	}
-	zakuro[0] = new Zakuro(200, 200, true, who++);
-	zakuro[1] = new Zakuro(400, 400, false, who++);
-	zakuro[2] = new Zakuro(900, 570, false, who++);
+	zakuro[0] = new Zakuro(200, 0, true, who++);
+	zakuro[1] = new Zakuro(400, 0, false, who++);
+	zakuro[2] = new Zakuro(900, 0, false, who++);
 	for (int i = 0; i < IRUKA_MAX; i++) {
 		iruka[i] = nullptr;
 	}
-	iruka[0] = new Iruka(1400,100,true, who++);
+	iruka[0] = new Iruka(1400,0,true, who++);
 	iruka[1] = new Iruka(500,0,false, who++);
-	iruka[2] = new Iruka(900,400,true, who++);
-	for (int i = 0; i < HIMAWARI_MAX; i++) {
-		himawari[i] = nullptr;
-	}
-	
-	CreateStage();
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	iruka[2] = new Iruka(900,0,true, who++);
+
+	LoadStageData();
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
 		}
@@ -57,16 +54,15 @@ GameMain::GameMain()
 
 	flg = false;
 	onfloor_flg = false;
-
 }
 
 GameMain::~GameMain()
 {
 	delete player;
 	delete scene_scroll;
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			delete stage[i][j];
 		}
@@ -225,9 +221,9 @@ AbstractScene* GameMain::Update()
 		}
 	}
 	//床の数だけ繰り返す
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			stage[i][j]->Update();
 		}
@@ -259,9 +255,9 @@ void GameMain::Draw() const
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
 	player->Draw();
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			stage[i][j]->Draw();
 		}
@@ -322,9 +318,9 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 void GameMain::HitCheck()
 {
 	//床の数だけ繰り返す
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
@@ -403,16 +399,18 @@ void GameMain::HitCheck()
 	}
 }
 
-void GameMain::CreateStage()
+void GameMain::LoadStageData()
 {
 	std::ifstream file("resource/dat/StageData.txt");
 	//ファイルが読み込めていたなら
 	if (file)
 	{
+		file >> stage_width;
+		file >> stage_height;
 		//ランキングデータ配分列データを読み込む
-		for (int i = 0; i < STAGE_HEIGHT; i++)
+		for (int i = 0; i < stage_height; i++)
 		{
-			for (int j = 0; j < STAGE_WIDTH; j++)
+			for (int j = 0; j < stage_width; j++)
 			{
 				file >> STAGE_DATA[i][j];
 			}

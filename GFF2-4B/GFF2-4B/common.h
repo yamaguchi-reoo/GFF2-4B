@@ -29,9 +29,9 @@
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
 //ステージ
-#define STAGE_HEIGHT 16									//ステージのブロックの縦の個数
-#define STAGE_WIDTH  64									//ステージのブロックの横の個数
-#define BOX_SIZE	(SCREEN_HEIGHT/STAGE_HEIGHT)		//ステージのブロック一つ当たりの大きさ(とりま正方形)
+#define MAX_STAGE_HEIGHT 16									//ステージのブロックの縦の最大個数
+#define MAX_STAGE_WIDTH  3000								//ステージのブロックの横の最大個数
+#define BOX_SIZE	(SCREEN_HEIGHT/MAX_STAGE_HEIGHT)		//ステージのブロック一つ当たりの大きさ(とりま正方形)
 
 //エネミーの数
 #define ZAKURO_MAX 3	//ザクロの最大数
