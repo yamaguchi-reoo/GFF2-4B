@@ -156,11 +156,14 @@
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BossHands.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Koban.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="PlayerHP.cpp" />
     <ClCompile Include="PowerGauge.cpp" />
     <ClCompile Include="Scroll.cpp" />
+    <ClCompile Include="StageData.cpp" />
     <ClCompile Include="Zakuro.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="Himawari.cpp" />
@@ -181,8 +184,11 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="CharaBase.h" />
     <ClInclude Include="common.h" />
+    <ClInclude Include="EditScene.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="StageData.h" />
     <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PowerGauge.h" />
     <ClInclude Include="Scroll.h" />

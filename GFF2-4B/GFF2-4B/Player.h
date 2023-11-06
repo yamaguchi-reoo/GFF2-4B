@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "Scroll.h"
 
-#define ATTACK_NUM 6						//攻撃のレパートリー
+#define ATTACK_PATTERN 6  //プレイヤーの攻撃のレパートリー
 
 //循環参照防止
 class GameMain;
@@ -71,6 +71,9 @@ class Player :
 {
 private:
 
+#if DEBUG
+	bool d_inv_flg;					//無敵かどうか（デバッグ用）
+#endif
 	int frame;						//フレーム測定
 
 	//移動関連
@@ -98,7 +101,7 @@ private:
 	bool powerup_flg;								//強化状態か
 
 	//当たり判定関連
-	bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか
+	bool onfloor_flg;	//いずれかの地面に触れているかどうか
 	bool touch_ceil_flg;			//いずれかの天井に触れているかどうか
 	bool rightwall_flg;				//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;				//いずれかの左壁に触れているかどうか
@@ -109,7 +112,8 @@ private:
 	bool damage_flg;				//攻撃を喰らったか
 	int inv_time;					//無敵時間
 	int damage_time;				//モーション再生時間
-
+	bool death_flg;					//死亡したかどうか
+	int death_time;					//死亡演出中時間
 	//描画関連
 	int player_image[18];					//プレイヤー画像
 	PlayerState player_state;				//プレイヤーの状態格納
@@ -133,7 +137,7 @@ public:
 	void DecAcs(int num);
 
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
-	void OnFloor(int num,Location _sub);
+	void OnFloor();
 
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
 	void Push(int num,Location _sub_location, Erea _sub_erea);
@@ -169,16 +173,13 @@ public:
 	void Anim();
 
 	//プレイヤーの状態の取得
-	int GetPlayerState() { return (int)player_state; }
+	//int GetPlayerState() { return (int)player_state; }
 
 	//プレイヤーの状態の更新
 	void UpdatePlayerState();
 
 	//プレイヤーのHPの取得
 	int GetPlayerHP() { return hp; }
-
-	//いずれかの床に触れているか判断する
-	bool OnAnyFloorFlg();
 
 	//いずれかの攻撃が行われている最中か判断する
 	bool PlayAnyAttack();
@@ -188,5 +189,8 @@ public:
 
 	//プレイヤーの攻撃データを格納する
 	void SetPlayerAttackData();
+
+	//プレイヤーをリスポーンさせる(_location=スポーンさせる場所)
+	void Respawn(Location _location);
 };
 
