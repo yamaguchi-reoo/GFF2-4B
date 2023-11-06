@@ -2,7 +2,7 @@
 #include"GameMain.h"
 
 
-BossHands::BossHands() {
+BossHands::BossHands(int _who) {
 	handsimg[0] = LoadGraph("resource/images/Boss/BhandM.png");
 	handsimg[1] = LoadGraph("resource/images/Boss/bhandC.png");
 	location.x = 1000;
@@ -11,8 +11,7 @@ BossHands::BossHands() {
 	erea.width = 190;
 	switching = 0;
 	down_hand = false;
-	who = 1;
-	
+	who = _who;
 }
 
 BossHands::~BossHands() {
@@ -34,7 +33,7 @@ void BossHands::Draw() const {
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
 	DrawFormatString(120, 0, 0xff00ff, "%d", hitflg);
-	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
+//	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
 
 #endif // _DEBUG
 

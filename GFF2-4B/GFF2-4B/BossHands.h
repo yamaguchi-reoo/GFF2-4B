@@ -26,7 +26,7 @@ public:
 
     bool hitflg=false;
 
-    BossHands();
+    BossHands(int _who);
     ~BossHands();
 
 
