@@ -26,6 +26,9 @@ GameMain::GameMain()
 	iruka[1] = new Iruka(500,0,false, who++);
 	iruka[2] = new Iruka(900,0,true, who++);
 
+	for (int i = 0; i < HIMAWARI_MAX; i++) {
+		himawari[i] = nullptr;
+	}
 	LoadStageData();
 	for (int i = 0; i < stage_height; i++)
 	{
