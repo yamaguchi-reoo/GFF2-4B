@@ -14,19 +14,13 @@ struct Splash
 
 };
 
-struct SplashColor
-{
-	float magenta;
-	float syan;
-	float yellow;
-};
 
 class Effect
 {
 private:
 
 	Splash splash;	//オブジェクト化
-	SplashColor s_color;
+	ColorDate color_date;
 
 	bool hit_flg; //テスト用(true->敵に攻撃が当たったとき)
 
@@ -35,7 +29,6 @@ private:
 	float gauge_x, gauge_y;
 	float test_x, test_y;
 
-	float color_date;
 	int Flg;
 
 public:
@@ -46,7 +39,7 @@ public:
 	void Draw()const;
 
 	float SetLocation(Location location);
-	void SetSplashColor(ColorDate color);
+	
 
 	int SetFlg(int flg)
 	{
@@ -56,10 +49,8 @@ public:
 
 	int GetFlg() { return Flg; }
 
-	ColorDate GetSplashColor() { return s_color; }
-
-	//ColorDate GetSplashColor() { return SplashColor; };
-
+	void SetSplashColor(ColorDate color);
+	ColorDate GetSplashColor() { return color_date; }
 
 };
 

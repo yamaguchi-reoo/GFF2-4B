@@ -58,5 +58,6 @@ public:
 
     //Še“–‚½‚è”»’è‚Ìˆ—
     void HitCheck();
+
 };
 

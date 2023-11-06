@@ -1,5 +1,5 @@
 #include "Effect.h"
-
+#include "GameMain.h"
 
 Effect::Effect()
 {
@@ -7,8 +7,6 @@ Effect::Effect()
 	splash.x = 0;
 	splash.y = 0;
 	splash.r = 15;
-
-	color_date = 0xffffff;
 
 	//ƒQ[ƒW‚ÌÀ•W
 	gauge_x = 80;
@@ -39,8 +37,19 @@ void Effect::Update()
 		test_x = gauge_x - splash.x;
 		test_y = gauge_y - splash.y;
 
-		splash.x -= fabsf(test_x) / 20;
-		splash.y -= fabsf(test_y) / v;
+		//ƒQ[ƒW‚Ì’†S‚æ‚è‰E‚Ì“G‚ğ“|‚µ‚½‚ç
+		if (gauge_x < splash.x)
+		{
+			splash.x -= fabsf(test_x) / 20;
+			splash.y -= fabsf(test_y) / v;
+		}
+		//ƒQ[ƒW‚Ì’†S‚æ‚è¶‚Ì“G‚ğ“|‚µ‚½‚ç
+		else if (gauge_x > splash.x)
+		{
+			splash.x += fabsf(test_x) / 20;
+			splash.y -= fabsf(test_y) / v;
+		}
+
 
 		if (splash.y < (int)test_y / 2)
 		{
@@ -48,16 +57,12 @@ void Effect::Update()
 		}
 	}
 
-
-
 	if (Flg == 1 && gauge_x == (int)splash.x && gauge_y == (int)splash.y)
 	{
 		Flg = 2;
 		splash.x = 0;
 		splash.y = 0;
 	}
-
-
 }
 
 
@@ -66,12 +71,11 @@ void Effect::Draw() const
 {
 	if (Flg == 1)
 	{
-		DrawCircle(splash.x, splash.y, splash.r, color_date, TRUE);
+		DrawCircle(splash.x, splash.y, splash.r,0x000000,  TRUE);
 	}
 
 	DrawFormatString(500, 0, 0xff00ff, "flg:%d", Flg);
 }
-
 
 
 float Effect::SetLocation(Location location)
@@ -84,12 +88,10 @@ float Effect::SetLocation(Location location)
 
 void Effect::SetSplashColor(ColorDate color)
 {
-	s_color.magenta = color.magenta;
-	s_color.syan = color.syan;
-	s_color.yellow = color.yellow;
+	color_date.magenta = color.magenta;
+	color_date.syan = color.syan;
+	color_date.yellow = color.yellow;
 
 }
-
-
 
 

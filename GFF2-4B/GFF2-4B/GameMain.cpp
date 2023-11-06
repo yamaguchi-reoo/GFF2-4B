@@ -214,6 +214,8 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 	}
 }
 
+
+
 void GameMain::HitCheck()
 {
 	//床の数だけ繰り返す
@@ -262,14 +264,10 @@ void GameMain::HitCheck()
 		// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(iruka) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka->GetSpwanFlg() == false)
 		{
-			////しぶき用
-			//effect->SetFlg(1);
-			//effect->SetLocation(zakuro->GetCenterLocation());
-
-			//if (effect->GetFlg() == 2)
-			//{
-			//	powergauge->SetVolume(iruka->GetColorDate());
-			//}
+			//しぶき用
+			effect->SetFlg(1);
+			effect->SetLocation(iruka->GetCenterLocation());
+			effect->SetSplashColor(iruka->GetColorDate());
 
 			//イルカのダメージ処理
 			iruka->ApplyDamage(attack[i]->GetAttackData().damage);
