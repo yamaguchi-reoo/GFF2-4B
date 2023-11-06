@@ -24,6 +24,8 @@ class GameMain :
     public AbstractScene
 {
 private:
+    int old_stage;//前のステージ数　デバック用
+
     int now_stage;      //現在のステージ数
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト

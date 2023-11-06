@@ -5,7 +5,7 @@
 BossHands::BossHands(int _who) {
 	handsimg[0] = LoadGraph("resource/images/Boss/BhandM.png");
 	handsimg[1] = LoadGraph("resource/images/Boss/bhandC.png");
-	location.x = 1000;
+	location.x = 700;
 	location.y = 0;
 	erea.height = 190;
 	erea.width = 190;
@@ -51,11 +51,10 @@ void BossHands::HandsMagenta() {
 		location.y += 5;
 	}
 	else {
+		location.y = 0;
 		hitflg = false;
 	}
 		Attack(main);
-
-	
 
 
 		//switch (switching) {
@@ -77,7 +76,7 @@ AttackData BossHands::BossAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = erea.height;
+	attack_data.shift_y = -50;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
@@ -85,7 +84,7 @@ AttackData BossHands::BossAttactData()
 	attack_data.delay = 0;
 	attack_data.damage = 1;
 	attack_data.attack_type = MELEE;
-
+	attack_data.attack_type = MELEE;
 
 
 	return attack_data;

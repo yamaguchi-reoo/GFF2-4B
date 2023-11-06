@@ -14,6 +14,10 @@ GameMain::GameMain(int _stage)
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
+
+	if (now_stage == 3) {
+		hands = new BossHands(who);
+	}
 	//zakuroとirukaの生成はSetStageに移動
 	//for (int i = 0; i < ZAKURO_MAX; i++) {
 	//	zakuro[i] = nullptr;
@@ -119,6 +123,11 @@ AbstractScene* GameMain::Update()
 			himawari[i]->Update(this);
 		}
 	}
+
+	if (now_stage == 3) {
+		hands->Update(this);
+	}
+
 	player->Update(this);
 	powergauge->Update();
 	playerhp->Update(player->GetPlayerHP());
@@ -216,7 +225,19 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
+
+		//ボスの腕
+		if (now_stage == 3) {
+			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+			{
+				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+			}
+		}
 	}
+
+
+
+
 	//床の数だけ繰り返す
 	for (int i = 0; i < stage_height; i++)
 	{
@@ -256,6 +277,11 @@ AbstractScene* GameMain::Update()
 	{
 		return new EditScene(now_stage);
 	}
+
+	//途中でステージの切り替えがあった場合使用
+	if (now_stage == 3 && old_stage!=now_stage) {
+		hands = new BossHands(who);
+	}
 #endif
 
 	return this;
@@ -270,6 +296,11 @@ void GameMain::Draw() const
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
 	player->Draw();
+
+	if (now_stage == 3) {
+		hands->Draw();
+	}
+
 	for (int i = 0; i < stage_height; i++)
 	{
 		for (int j = 0; j < stage_width; j++)
@@ -305,6 +336,7 @@ void GameMain::Draw() const
 			iruka[i]->Draw(); 
 		}
 	}
+
 
 	/*for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
@@ -342,6 +374,14 @@ void GameMain::HitCheck()
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 			}
+
+			if (now_stage == 3) {
+				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+				{
+					hands->hitflg = true;
+				}
+			}
+
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -402,6 +442,7 @@ void GameMain::HitCheck()
 				}
 			}
 		}
+
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
@@ -466,6 +507,7 @@ void GameMain::SetStage(int _stage)
 	{
 		attack[i] = new Attack();
 	}
+	old_stage = now_stage;
 	now_stage = _stage;
 	//ファイルの読込
 	LoadStageData(now_stage);
