@@ -539,8 +539,20 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+				//ひまわりを生成
+			case 7:
+				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				//空いてる枠に生成
+				for (int k = 0; k < HIMAWARI_MAX; k++)
+				{
+					if (himawari[k] == nullptr)
+					{
+						himawari[k] = new Himawari(j * BOX_SIZE, i * BOX_SIZE, true, who++);
+						break;
+					}
+				}
+				break;
 			}
-
 		}
 	}
 	//プレイヤーのリスポーン
