@@ -82,6 +82,14 @@ float Effect::SetLocation(Location location)
 	return splash.x,splash.y;
 }
 
+void Effect::SetSplashColor(ColorDate color)
+{
+	s_color.magenta = color.magenta;
+	s_color.syan = color.syan;
+	s_color.yellow = color.yellow;
+
+}
+
 
 
 

@@ -46,6 +46,7 @@ public:
 	void Draw()const;
 
 	float SetLocation(Location location);
+	void SetSplashColor(ColorDate color);
 
 	int SetFlg(int flg)
 	{
@@ -54,6 +55,10 @@ public:
 	}
 
 	int GetFlg() { return Flg; }
+
+	ColorDate GetSplashColor() { return s_color; }
+
+	//ColorDate GetSplashColor() { return SplashColor; };
 
 
 };
