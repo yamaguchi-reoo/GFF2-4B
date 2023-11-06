@@ -9,6 +9,7 @@ class EditScene :
     public AbstractScene
 {
 private:
+    int now_stage;          //現在編集中のステージ
     CURSOR cursor;      //マウスカーソル
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
@@ -22,7 +23,7 @@ private:
     int stage_height;       //ステージのブロックの縦の個数
 public:
     //コンストラクタ
-    EditScene();
+    EditScene(int _stage);
     //デストラクタ
     ~EditScene();
 
@@ -33,10 +34,10 @@ public:
     void Draw() const override;
 
     //ステージを生成する
-    void LoadStageData();
+    void LoadStageData(int _stage);
 
     //ステージのファイルを更新する
-    void UpdateStageData();
+    void UpdateStageData(int _stage);
 
     //ステージの再読み込み
     void UpdateStage();

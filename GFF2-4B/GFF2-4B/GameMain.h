@@ -22,6 +22,7 @@ class GameMain :
     public AbstractScene
 {
 private:
+    int now_stage;      //現在のステージ数
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
@@ -49,8 +50,8 @@ private:
     int stage_height;       //ステージのブロックの縦の個数
 
 public:
-    //コンストラクタ
-    GameMain();
+    //コンストラクタ(_stage＝読み込むステージ)
+    GameMain(int _stage);
     //デストラクタ
     ~GameMain();
 
@@ -67,6 +68,9 @@ public:
     void HitCheck();
 
     //ステージファイルを読み込む
-    void LoadStageData();
+    void LoadStageData(int _stage);
+
+    //次のステージへ遷移する
+    void SetStage(int _stage);
 };
 

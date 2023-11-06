@@ -8,41 +8,30 @@
 #include <string>
 #include "EditScene.h"
 
-GameMain::GameMain()
+GameMain::GameMain(int _stage)
 {
+	now_stage = _stage;
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
-	for (int i = 0; i < ZAKURO_MAX; i++) {
-		zakuro[i] = nullptr;
-	}
-	zakuro[0] = new Zakuro(200, 0, true, who++);
-	zakuro[1] = new Zakuro(400, 0, false, who++);
-	zakuro[2] = new Zakuro(900, 0, false, who++);
-	for (int i = 0; i < IRUKA_MAX; i++) {
-		iruka[i] = nullptr;
-	}
-	iruka[0] = new Iruka(1400,0,true, who++);
-	iruka[1] = new Iruka(500,0,false, who++);
-	iruka[2] = new Iruka(900,0,true, who++);
+	//zakuroとirukaの生成はSetStageに移動
+	//for (int i = 0; i < ZAKURO_MAX; i++) {
+	//	zakuro[i] = nullptr;
+	//}
+	//zakuro[0] = new Zakuro(200, 0, true, who++);
+	//zakuro[1] = new Zakuro(400, 0, false, who++);
+	//zakuro[2] = new Zakuro(900, 0, false, who++);
+	//for (int i = 0; i < IRUKA_MAX; i++) {
+	//	iruka[i] = nullptr;
+	//}
+	//iruka[0] = new Iruka(1400,0,true, who++);
+	//iruka[1] = new Iruka(500,0,false, who++);
+	//iruka[2] = new Iruka(900,0,true, who++);
 
-	for (int i = 0; i < HIMAWARI_MAX; i++) {
-		himawari[i] = nullptr;
-	}
-	himawari[0] = new Himawari(700, 580, true, who++);
-
-	LoadStageData();
-	for (int i = 0; i < stage_height; i++)
-	{
-		for (int j = 0; j < stage_width; j++)
-		{
-			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
-		}
-	}
-	for (int i = 0; i < ATTACK_NUM; i++)
-	{
-		attack[i] = new Attack();
-	}
+	//for (int i = 0; i < HIMAWARI_MAX; i++) {
+	//	himawari[i] = nullptr;
+	//}
+	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
 	{
 		count[i] = 0;
@@ -85,7 +74,10 @@ GameMain::~GameMain()
 	//{
 	//	delete iruka[i];
 	//}
-	delete himawari;
+	for (int i = 0; i < HIMAWARI_MAX; i++)
+	{
+		delete himawari[i];
+	}
 	delete powergauge;
 	delete playerhp;
 	delete effect;
@@ -248,6 +240,23 @@ AbstractScene* GameMain::Update()
 	//当たり判定関連の処理を行う
 	HitCheck();
 
+	if (KeyInput::OnPresed(KEY_INPUT_0))
+	{
+		SetStage(0);
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_1))
+	{
+		SetStage(1);
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_2))
+	{
+		SetStage(2);
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_3))
+	{
+		SetStage(3);
+	}
+
 #if DEBUG
 	if (KeyInput::OnKey(KEY_INPUT_S)) 
 	{
@@ -257,9 +266,10 @@ AbstractScene* GameMain::Update()
 	//ステージをいじるシーンへ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
-		return new EditScene();
+		return new EditScene(now_stage);
 	}
 #endif
+
 	return this;
 }
 
@@ -434,9 +444,26 @@ void GameMain::HitCheck()
 	}
 }
 
-void GameMain::LoadStageData()
+void GameMain::LoadStageData(int _stage)
 {
-	std::ifstream file("resource/dat/StageData.txt");
+	const char* a = "resource/dat/1stStageData.txt";
+	switch(_stage)
+	{
+	case 0:
+		a = "resource/dat/1stStageData.txt";
+		break;
+	case 1:
+		a = "resource/dat/2ndStageData.txt";
+		break;
+	case 2:
+		a = "resource/dat/3rdStageData.txt";
+		break;
+	case 3:
+		a = "resource/dat/BossStageData.txt";
+		break;
+	}
+
+	std::ifstream file(a);
 	//ファイルが読み込めていたなら
 	if (file)
 	{
@@ -451,4 +478,72 @@ void GameMain::LoadStageData()
 			}
 		}
 	}
+}
+
+void GameMain::SetStage(int _stage)
+{
+	//敵と攻撃をリセット
+	for (int i = 0; i < ZAKURO_MAX; i++) {
+		zakuro[i] = nullptr;
+	}
+	for (int i = 0; i < IRUKA_MAX; i++) {
+		iruka[i] = nullptr;
+	}
+	for (int i = 0; i < HIMAWARI_MAX; i++) {
+		himawari[i] = nullptr;
+	}
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		attack[i] = new Attack();
+	}
+	now_stage = _stage;
+	//ファイルの読込
+	LoadStageData(now_stage);
+	for (int i = 0; i < stage_height; i++)
+	{
+		for (int j = 0; j < stage_width; j++)
+		{
+			switch (STAGE_DATA[i][j])
+			{
+				//ステージ内ブロックを生成
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+				break;
+				//ザクロを生成
+			case 5:
+				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				//空いてる枠に生成
+				for (int k = 0; k < ZAKURO_MAX; k++)
+				{
+					if (zakuro[k] == nullptr)
+					{
+						zakuro[k] = new Zakuro(j * BOX_SIZE, i * BOX_SIZE, true,who++);
+						break;
+					}
+				}
+				break;
+				//イルカを生成
+			case 6:
+				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				//空いてる枠に生成
+				for (int k = 0; k < IRUKA_MAX; k++)
+				{
+					if (iruka[k] == nullptr)
+					{
+						iruka[k] = new Iruka(j * BOX_SIZE, i * BOX_SIZE, true, who++);
+						break;
+					}
+				}
+				break;
+			}
+
+		}
+	}
+	//プレイヤーのリスポーン
+	Location res_location = { 100,100 };
+	player->Respawn(res_location);
 }
