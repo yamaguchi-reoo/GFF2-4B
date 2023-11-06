@@ -5,9 +5,10 @@
 
 #include "GameMain.h"
 
-EditScene::EditScene()
+EditScene::EditScene(int _stage)
 {
-	LoadStageData();
+	now_stage = _stage;
+	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height; i++)
 	{
 		for (int j = 0; j < stage_width; j++)
@@ -61,6 +62,14 @@ AbstractScene* EditScene::Update()
 				if (KeyInput::OnPresed(KEY_INPUT_4))
 				{
 					STAGE_DATA[i][j] = 4;
+				}
+				if (KeyInput::OnPresed(KEY_INPUT_5))
+				{
+					STAGE_DATA[i][j] = 5;
+				}
+				if (KeyInput::OnPresed(KEY_INPUT_6))
+				{
+					STAGE_DATA[i][j] = 6;
 				}
 			}
 			else
@@ -120,8 +129,8 @@ AbstractScene* EditScene::Update()
 	//ゲームメインに戻る
 	if (KeyInput::OnKey(KEY_INPUT_B))
 	{
-		UpdateStageData();
-		return new GameMain();
+		UpdateStageData(now_stage);
+		return new GameMain(now_stage);
 	}
 	//ステージの横幅を増やす
 	if (KeyInput::OnKey(KEY_INPUT_G))
@@ -141,18 +150,43 @@ void EditScene::Draw()const
 			stage[i][j]->Draw();
 			if (select_data[i][j] == true)
 			{
-				DrawBox(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x +BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff0000, false);
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x +BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff0000, false);
+			}
+			if (STAGE_DATA[i][j] == 5)
+			{
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff00ff , true);
+			}
+			if (STAGE_DATA[i][j] == 6)
+			{
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0x00ffff, true);	
 			}
 		}
 	}
-	DrawBox(cursor.x, cursor.y, cursor.x + 300, cursor.y + 25, 0x000000, true);
-	DrawBox(cursor.x, cursor.y, cursor.x + 300, cursor.y + 25, 0xffffff, false);
-	DrawString(cursor.x+5, cursor.y+5, "0=無 1=地面 2=木 3=岩 4=雲",0xffffff);
+	DrawBox(cursor.x, cursor.y, cursor.x + 500, cursor.y + 25, 0x000000, true);
+	DrawBox(cursor.x, cursor.y, cursor.x + 500, cursor.y + 25, 0xffffff, false);
+	DrawString(cursor.x+5, cursor.y+5, "0=無 1=地面 2=木 3=岩 4=雲 5=ザクロ 6=イルカ",0xffffff);
 }
 
-void EditScene::LoadStageData()
+void EditScene::LoadStageData(int _stage)
 {
-	std::ifstream file("resource/dat/StageData.txt");
+	const char* a = "resource/dat/1stStageData.txt";
+	switch (_stage)
+	{
+	case 0:
+		a = "resource/dat/1stStageData.txt";
+		break;
+	case 1:
+		a = "resource/dat/2ndStageData.txt";
+		break;
+	case 2:
+		a = "resource/dat/3rdStageData.txt";
+		break;
+	case 3:
+		a = "resource/dat/BossStageData.txt";
+		break;
+	}
+
+	std::ifstream file(a);
 	//ファイルが読み込めていたなら
 	if (file)
 	{
@@ -166,13 +200,29 @@ void EditScene::LoadStageData()
 				file >> STAGE_DATA[i][j];
 			}
 		}
-
 	}
 }
 
-void EditScene::UpdateStageData()
+
+void EditScene::UpdateStageData(int _stage)
 {
-	std::ofstream file("resource/dat/StageData.txt");
+	const char* a = "resource/dat/1stStageData.txt";
+	switch (_stage)
+	{
+	case 0:
+		a = "resource/dat/1stStageData.txt";
+		break;
+	case 1:
+		a = "resource/dat/2ndStageData.txt";
+		break;
+	case 2:
+		a = "resource/dat/3rdStageData.txt";
+		break;
+	case 3:
+		a = "resource/dat/BossStageData.txt";
+		break;
+	}
+	std::ofstream file(a);
 	//ファイルが読み込めていたなら
 	if (file)
 	{

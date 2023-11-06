@@ -34,5 +34,5 @@
 #define BOX_SIZE	(SCREEN_HEIGHT/MAX_STAGE_HEIGHT)		//ステージのブロック一つ当たりの大きさ(とりま正方形)
 
 //エネミーの数
-#define ZAKURO_MAX 5 //ザクロの最大数
-#define IRUKA_MAX 5 //ザクロの最大数
+#define ZAKURO_MAX 10 //ザクロの最大数
+#define IRUKA_MAX 10 //ザクロの最大数
