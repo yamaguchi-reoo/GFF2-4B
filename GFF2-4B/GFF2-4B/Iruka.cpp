@@ -2,10 +2,10 @@
 #include "GameMain.h"
 #include "PadInput.h"
 
-#define MOVE_SPEED  5
-#define MOVE_FALL_SPEED  7
+#define MOVE_SPEED  3
+#define MOVE_FALL_SPEED  5
 
-#define MAX_FALL_TIME 60
+#define MAX_FALL_TIME 120
 
 
 Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)

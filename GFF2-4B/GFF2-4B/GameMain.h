@@ -30,7 +30,7 @@ private:
 
     //エネミー
     Zakuro* zakuro[ZAKURO_MAX];    //ザクロ
-    Himawari* himawari;//ひまわり
+    Himawari* himawari[HIMAWARI_MAX];//ひまわり
     Iruka* iruka[IRUKA_MAX];      //イルカ
 
     Bamboo* bamboo[BAMBOO_NUM];
