@@ -36,5 +36,6 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
     void HandsMagenta();
+    void HandResetting();
 };
 
