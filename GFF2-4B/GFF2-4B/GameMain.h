@@ -3,6 +3,7 @@
 #include "BoxCollider.h"
 #include "Player.h"
 #include "Attack.h"
+#include "StageData.h"
 #include "Stage.h"
 #include "Himawari.h"
 #include "Zakuro.h"
@@ -21,14 +22,15 @@ class GameMain :
     public AbstractScene
 {
 private:
-    Player* player;    //プレイヤーのオブジェクト
-    Stage* stage[FLOOR_NUM];   //床のオブジェクト
+    int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
+    Player* player;                     //プレイヤーのオブジェクト
+    Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
 
     //エネミー
-    Zakuro* zakuro;    //ザクロ
-    Himawari* himawari;//ひまわり
-    Iruka* iruka;      //イルカ
+    Zakuro* zakuro[ZAKURO_MAX];    //ザクロ
+    Himawari* himawari[HIMAWARI_MAX];//ひまわり
+    Iruka* iruka[IRUKA_MAX];      //イルカ
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
@@ -38,9 +40,14 @@ private:
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
-    int flg;        //
-    int count[2];      //実験用
+    int flg;               //
+    int count[2];          //実験用
     bool onfloor_flg;      //実験用
+    int who;                //誰が攻撃したか判断する用
+
+    int stage_width;        //ステージのブロックの横の個数 
+    int stage_height;       //ステージのブロックの縦の個数
+
 public:
     //コンストラクタ
     GameMain();
@@ -59,5 +66,7 @@ public:
     //各当たり判定の処理
     void HitCheck();
 
+    //ステージファイルを読み込む
+    void LoadStageData();
 };
 

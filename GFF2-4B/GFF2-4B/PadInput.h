@@ -8,11 +8,19 @@
 #define STICKL_Y 2		
 #define MAXL_X 32767.f  //左スティックX軸の最大値(float型)
 #define MAXL_Y 32767.f  //左スティックY軸の最大値(float型)
+
 //スティック
 struct Stick
 {
 	short ThumbX;	//横軸値
 	short ThumbY;	//縦軸値
+};
+
+//マウスカーソル
+struct CURSOR
+{
+	int x;	//横軸値
+	int y;	//縦軸値
 };
 
 class PadInput
@@ -88,6 +96,7 @@ class KeyInput
 private:
 	static int NowKey[KEY_MAX];		//今回の入力キー
 	static int OldKey[KEY_MAX];		//前回の入力キー
+	static CURSOR Cursor; //カーソル
 public:
 	//パッド情報の更新
 	static void UpdateKey() {
@@ -96,6 +105,7 @@ public:
 			OldKey[i] = NowKey[i];
 			NowKey[i] = CheckHitKey(i);
 		}
+		GetMousePoint(&Cursor.x, &Cursor.y);
 	}
 	//ボタンを押した瞬間
 	static bool OnKey(int key) {
@@ -110,5 +120,10 @@ public:
 	//ボタンを押した瞬間
 	static bool OnRelease(int key) {
 		return (NowKey[key] == 0 && OldKey[key] == 1);
+	}
+	//マウスカーソルの位置を返す
+	static CURSOR GetMouseCursor()
+	{
+		return  Cursor;
 	}
 };

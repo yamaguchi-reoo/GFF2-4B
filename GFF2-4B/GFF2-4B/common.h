@@ -16,10 +16,9 @@
 #define SCREEN_LEFT_END 0
 #define FLOOR_NUM	3	//床の数
 
-
 #define BAMBOO_NUM 3 //竹の積まれている数
 
-#define ATTACK_NUM 100   //画面に存在できる最大の攻撃数
+#define ATTACK_NUM 200   //画面に存在できる最大の攻撃数
 
 //攻撃時に誰が攻撃したのか判断する用
 #define PLAYER	0	//プレイヤー
@@ -29,5 +28,12 @@
 #define MELEE 0		//近接攻撃
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
-#define SPLASH_MAX 10
+//ステージ
+#define MAX_STAGE_HEIGHT 16									//ステージのブロックの縦の最大個数
+#define MAX_STAGE_WIDTH  3000								//ステージのブロックの横の最大個数
+#define BOX_SIZE	(SCREEN_HEIGHT/MAX_STAGE_HEIGHT)		//ステージのブロック一つ当たりの大きさ(とりま正方形)
 
+//エネミーの数
+#define ZAKURO_MAX 3	//ザクロの最大数
+#define IRUKA_MAX 3		//イルカの最大数
+#define HIMAWARI_MAX 3	//ひまわりの最大数

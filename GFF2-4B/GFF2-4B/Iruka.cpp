@@ -2,27 +2,27 @@
 #include "GameMain.h"
 #include "PadInput.h"
 
-#define MOVE_SPEED  5
-#define MOVE_FALL_SPEED  7
+#define MOVE_SPEED  3
+#define MOVE_FALL_SPEED  5
 
-#define MAX_FALL_TIME 60
+#define MAX_FALL_TIME 120
 
 
-Iruka::Iruka()
+Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 {
 	iruka_state = IrukaState::LEFT;
 
-	location.x = 1400;
-	location.y = 100;
+	location.x = pos_x;//1400;
+	location.y = pos_y;// 100;
 	erea.width = 120;
 	erea.height = 50;
 	speed = 5;
-	who = 2;
+	who = _who;
 	hp = 2;
 
 	fps_count = 0;
 
-	iruka_direction = true;
+	iruka_direction = direction;// true;
 	for (int i = 0; i < FLOOR_NUM; i++)
 	{
 		onfloor_flg[i] = false;
@@ -159,7 +159,7 @@ void Iruka::MoveReturn()
 	if (++fps_count > MAX_FALL_TIME)
 	{
 		fall_flg = false;
-		location.y = 100;
+		location.y = 50;
 		erea.width = 120;
 		erea.height = 50;
 		fps_count = 0;
