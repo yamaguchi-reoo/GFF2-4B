@@ -36,6 +36,8 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
     void HandsMagenta();
+    AttackData ShockWaveData();
+    void ShockWaveAttack(GameMain* main);
     void HandResetting();
 };
 
