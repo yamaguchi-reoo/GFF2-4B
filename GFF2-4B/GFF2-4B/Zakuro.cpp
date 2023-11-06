@@ -1,9 +1,10 @@
 #include "Zakuro.h"
 #include "DxLib.h"
 #include "Player.h"
-#include"GameMain.h"
+#include "GameMain.h"
+#include "common.h"
 
-#define MOVE_SPEED  4
+#define MOVE_SPEED  2
 #define ZAKURO_GRAVITY  10
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)

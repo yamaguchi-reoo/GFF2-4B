@@ -5,7 +5,9 @@ class Himawari :
 {
 private:
 
-    bool direction;					//顔の向き(0=右向き 1=左向き)
+    bool attack_flg;    //攻撃しているか
+    bool spawn_flg;	    //スポーンしているか
+    bool himawari_direction;	//顔の向き(0=右向き 1=左向き)
     int attack_interval_count;
 
 public:

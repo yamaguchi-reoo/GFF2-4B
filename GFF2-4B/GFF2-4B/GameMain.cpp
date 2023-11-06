@@ -25,7 +25,10 @@ GameMain::GameMain()
 	iruka[0] = new Iruka(1400,100,true, who++);
 	iruka[1] = new Iruka(500,0,false, who++);
 	iruka[2] = new Iruka(900,400,true, who++);
-
+	for (int i = 0; i < HIMAWARI_MAX; i++) {
+		himawari[i] = nullptr;
+	}
+	
 	CreateStage();
 	for (int i = 0; i < STAGE_HEIGHT; i++)
 	{
@@ -34,7 +37,6 @@ GameMain::GameMain()
 			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
 		}
 	}
-	himawari = new Himawari();
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i] = new Attack();
@@ -100,6 +102,7 @@ AbstractScene* GameMain::Update()
 	{
 		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
 	}
+	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		if (zakuro[i] != nullptr) 
@@ -107,11 +110,20 @@ AbstractScene* GameMain::Update()
 			zakuro[i]->Update(this);
 		}
 	}
+	//イルカ
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
 		{
 			iruka[i]->Update(this);
+		}
+	}
+	//ひまわり
+	for (int i = 0; i < HIMAWARI_MAX; i++) 
+	{
+		if (himawari[i] != nullptr) 
+		{
+			himawari[i]->Update(this);
 		}
 	}
 	player->Update(this);
@@ -191,7 +203,7 @@ AbstractScene* GameMain::Update()
 		*		}
 		*	}
 		*********************************************************************************************/
-
+		//ザクロ
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr) {
@@ -200,7 +212,7 @@ AbstractScene* GameMain::Update()
 					attack[i]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
 				}
 			}		
-		}
+		}//イルカ
 		for (int j = 0; j < IRUKA_MAX; j++) 
 		{
 			if (iruka[j] != nullptr) 
@@ -258,18 +270,28 @@ void GameMain::Draw() const
 		//DrawString(300, 300,"flg", 0xffffff);
 	}
 	//エネミーの描画
-	for (int i = 0; i < ZAKURO_MAX; i++) {
+	// ザクロ
+	for (int i = 0; i < ZAKURO_MAX; i++) 
+	{
 		if (zakuro[i] != nullptr) 
 		{
-			zakuro[i]->Draw(); // ザクロ
+			zakuro[i]->Draw(); 
 		}
 	}
-	himawari->Draw();// ひまわり
-
-	for (int i = 0; i < IRUKA_MAX; i++) {
+	// ひまわり
+	for (int i = 0; i < HIMAWARI_MAX; i++) 
+	{
+		if (himawari[i] != nullptr)
+		{
+			himawari[i]->Draw();
+		}
+	}
+	// イルカ
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
 		if (iruka[i] != nullptr)
 		{
-			iruka[i]->Draw(); // イルカ
+			iruka[i]->Draw(); 
 		}
 	}
 
