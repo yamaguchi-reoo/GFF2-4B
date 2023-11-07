@@ -35,6 +35,6 @@
 #define MAX_STAGE_WIDTH  3000								//ステージのブロックの横の最大個数
 
 //エネミーの数
-#define ZAKURO_MAX 3	//ザクロの最大数
-#define IRUKA_MAX 3		//イルカの最大数
-#define HIMAWARI_MAX 3	//ひまわりの最大数
+#define ZAKURO_MAX 30	//ザクロの最大数
+#define IRUKA_MAX 30		//イルカの最大数
+#define HIMAWARI_MAX 30	//ひまわりの最大数
