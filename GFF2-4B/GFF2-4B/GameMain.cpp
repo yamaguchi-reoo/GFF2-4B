@@ -512,43 +512,43 @@ void GameMain::SetStage(int _stage)
 			case 2:
 			case 3:
 			case 4:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 				break;
 				//ÉUÉNÉçÇê∂ê¨
 			case 5:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//ãÛÇ¢ÇƒÇÈògÇ…ê∂ê¨
 				for (int k = 0; k < ZAKURO_MAX; k++)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro(j * BOX_SIZE, i * BOX_SIZE, true,who++);
+						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true,who++);
 						break;
 					}
 				}
 				break;
 				//ÉCÉãÉJÇê∂ê¨
 			case 6:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//ãÛÇ¢ÇƒÇÈògÇ…ê∂ê¨
 				for (int k = 0; k < IRUKA_MAX; k++)
 				{
 					if (iruka[k] == nullptr)
 					{
-						iruka[k] = new Iruka(j * BOX_SIZE, i * BOX_SIZE, true, who++);
+						iruka[k] = new Iruka(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
 						break;
 					}
 				}
 				break;
 				//Ç–Ç‹ÇÌÇËÇê∂ê¨
 			case 7:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//ãÛÇ¢ÇƒÇÈògÇ…ê∂ê¨
 				for (int k = 0; k < HIMAWARI_MAX; k++)
 				{
 					if (himawari[k] == nullptr)
 					{
-						himawari[k] = new Himawari(j * BOX_SIZE, i * BOX_SIZE, true, who++);
+						himawari[k] = new Himawari(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
 						break;
 					}
 				}
