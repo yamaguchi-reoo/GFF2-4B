@@ -217,6 +217,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
+		//‚Ð‚Ü‚í‚è
 		for (int j = 0; j < HIMAWARI_MAX; j++)
 		{
 			if (himawari[j] != nullptr)
