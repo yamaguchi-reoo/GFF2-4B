@@ -41,6 +41,14 @@ void Himawari::Update(GameMain* main)
 		//攻撃
 		Attack(main);
 	}
+	//床に触れていないなら
+	if (apply_gravity == true)
+	{
+		//重力を与える
+		HimawariGiveGravity();
+	}
+	//各移動用変数をリセット
+	HimawariReset();
 }
 
 void Himawari::Draw() const
