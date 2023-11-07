@@ -1,4 +1,5 @@
 #include "PlayerHP.h"
+#include"DxLib.h"
 
 PlayerHP::PlayerHP()
 {
