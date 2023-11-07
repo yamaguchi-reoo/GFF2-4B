@@ -39,6 +39,10 @@ void Stage::Draw()const
 	case 3:
 		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x333333, true);
 		break;
+		//‰_
+	case 4:
+		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xdddddd, true);
+		break;
 	default:
 		break;
 	}
@@ -48,7 +52,8 @@ void Stage::Draw()const
 	}
 }
 
-void Stage::MoveStage(float _x)
+void Stage::MoveStage(float _x, float _y)
 {
 	location.x += _x;
+	location.y += _y;
 }

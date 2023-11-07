@@ -342,23 +342,8 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	p_center.x = location.x + (erea.width / 2);
 	p_center.y = location.y + (erea.height / 2);
 
-	//°‚ÉG‚ê‚½
-	if (location.y +erea.height-12 < _sub_location.y)
-	{
-		location.y = _sub_location.y- erea.height+0.1f;
-		OnFloor();
-	}
-	//“Vˆä‚ÉG‚ê‚½
-	else if (location.y +20> _sub_location.y + _sub_erea.height)
-	{
-		location.y = _sub_location.y + _sub_erea.height;
-		//ã‰Á‘¬“x‚ğ0‚É‚·‚é
-		acs[UP] = 0;
-		//“Vˆä‚ÉG‚ê‚½ƒtƒ‰ƒO‚ğ—§‚Ä‚é
-		touch_ceil_flg = true;
-	}
 	//‰E‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x +erea.width-10 < _sub_location.x)
+	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y)
 	{
 		location.x = _sub_location.x - erea.width;
 		//‰E‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -367,7 +352,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		rightwall_flg = true;
 	}
 	//¶‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x+10 > _sub_location.x + _sub_erea.width)
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//¶‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -375,12 +360,34 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		//¶‚Ì•Ç‚ÉG‚ê‚½ƒtƒ‰ƒO‚ğ—§‚Ä‚é
 		leftwall_flg = true;
 	}
-	//‚Ç‚Á‚¿‚Ì•Ç‚É‚àG‚ê‚Ä‚¢‚È‚¢‚Æ‚«‚Ì’n–Ê‚·‚è”²‚¯–h~
-	else
+	//°‚ÉG‚ê‚½
+	else if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height;
+		location.y = _sub_location.y - erea.height + 0.1f;
 		OnFloor();
 	}
+	//“Vˆä‚ÉG‚ê‚½
+	else if (location.y + 30 > _sub_location.y + _sub_erea.height)
+	{
+		location.y = _sub_location.y + _sub_erea.height;
+		//ã‰Á‘¬“x‚ğ0‚É‚·‚é
+		acs[UP] = 0;
+		//“Vˆä‚ÉG‚ê‚½ƒtƒ‰ƒO‚ğ—§‚Ä‚é
+		touch_ceil_flg = true;
+	}
+	//‚Ç‚Á‚¿‚Ì•Ç‚É‚àG‚ê‚Ä‚¢‚È‚¢‚Æ‚«‚Ì’n–Ê‚·‚è”²‚¯–h~
+	//else
+	//{
+	//	if (onfloor_flg == true)
+	//	{
+	//		location.y = _sub_location.y - erea.height;
+	//		OnFloor();
+	//	}
+	//	else
+	//	{
+	//		location.y = _sub_location.y + _sub_erea.height;
+	//	}
+	//}
 }
 
 void Player::Reset()

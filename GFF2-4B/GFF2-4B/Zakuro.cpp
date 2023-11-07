@@ -1,9 +1,10 @@
 #include "Zakuro.h"
 #include "DxLib.h"
 #include "Player.h"
-#include"GameMain.h"
+#include "GameMain.h"
+#include "common.h"
 
-#define MOVE_SPEED  4
+#define MOVE_SPEED  3
 #define ZAKURO_GRAVITY  10
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
@@ -73,18 +74,8 @@ void Zakuro::Update(GameMain* main)
 		//重力を与える
 		ZakuroGiveGravity();
 	}
-	//左の壁にぶつかったら右に移動
-	if (leftwall_flg == true) {
-		zakuro_state = ZakuroState::RIGHT;
-		zakuro_direction = false;
-		leftwall_flg = false;
-	}
-	//右の壁にぶつかったら左に移動
-	if (rightwall_flg == true) {
-		zakuro_state = ZakuroState::LEFT;
-		zakuro_direction = true;
-		rightwall_flg = false;
-	}
+	HitWall();
+
 	if (KeyInput::OnKey(KEY_INPUT_Z)) 
 	{
 		spawn_flg = false;
@@ -99,6 +90,7 @@ void Zakuro::Draw() const
 	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
 	if (spawn_flg == false) 
 	{
+		//DrawBoxAA(location.x + (erea.width / 2), location.y + (erea.height / 2), erea.width, erea.height, 0xff00ff, TRUE);
 		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
 		if (zakuro_state == ZakuroState::RIGHT)
 		{
@@ -207,6 +199,22 @@ void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
 	}
 }
 
+void Zakuro::HitWall()
+{
+	//左の壁にぶつかったら右に移動
+	if (leftwall_flg == true) {
+		zakuro_state = ZakuroState::RIGHT;
+		zakuro_direction = false;
+		leftwall_flg = false;
+	}
+	//右の壁にぶつかったら左に移動
+	if (rightwall_flg == true) {
+		zakuro_state = ZakuroState::LEFT;
+		zakuro_direction = true;
+		rightwall_flg = false;
+	}
+}
+
 AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
@@ -235,6 +243,19 @@ void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
 	spawn_flg = true;
+}
+
+void Zakuro::HitZakuro()
+{
+
+	//if (zakuro_state == ZakuroState::RIGHT) {
+	//	zakuro_state = ZakuroState::LEFT;
+	//}
+	zakuro_direction = !zakuro_direction;
+	//if (zakuro_state == ZakuroState::LEFT) {
+	//	zakuro_state = ZakuroState::RIGHT;
+	//}
+
 }
 
 ColorDate Zakuro::GetColorDate()

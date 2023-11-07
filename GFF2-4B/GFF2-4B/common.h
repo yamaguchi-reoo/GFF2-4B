@@ -28,11 +28,13 @@
 #define MELEE 0		//近接攻撃
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
-//ステージ(ゴリ押し、最終手段)
-#define STAGE_HEIGHT 16									//ステージのブロックの縦の個数
-#define STAGE_WIDTH  32									//ステージのブロックの横の個数
-#define BOX_SIZE	(SCREEN_HEIGHT/STAGE_HEIGHT)		//ステージのブロック一つ当たりの大きさ(とりま正方形)
+//ステージ	
+#define BOX_HEIGHT	45										//ステージのブロック一つ当たりの高さ
+#define BOX_WIDTH	48										//ステージのブロック一つ当たりの幅
+#define MAX_STAGE_HEIGHT 60									//ステージのブロックの縦の最大個数
+#define MAX_STAGE_WIDTH  3000								//ステージのブロックの横の最大個数
 
 //エネミーの数
-#define ZAKURO_MAX 5 //ザクロの最大数
-#define IRUKA_MAX 5 //ザクロの最大数
+#define ZAKURO_MAX 30	//ザクロの最大数
+#define IRUKA_MAX 30		//イルカの最大数
+#define HIMAWARI_MAX 30	//ひまわりの最大数

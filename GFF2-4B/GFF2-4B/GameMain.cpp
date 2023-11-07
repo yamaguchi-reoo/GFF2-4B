@@ -14,37 +14,30 @@ Location screen_origin =		//カメラ座標からスクロール座標への変換
 	(SCREEN_WIDTH / 2),
 	0
 };
-GameMain::GameMain()
+GameMain::GameMain(int _stage)
 {
+	now_stage = _stage;
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
-	for (int i = 0; i < ZAKURO_MAX; i++) {
-		zakuro[i] = nullptr;
-	}
-	zakuro[0] = new Zakuro(200, 200, true, who++);
-	zakuro[1] = new Zakuro(400, 400, false, who++);
-	zakuro[2] = new Zakuro(900, 570, false, who++);
-	for (int i = 0; i < IRUKA_MAX; i++) {
-		iruka[i] = nullptr;
-	}
-	iruka[0] = new Iruka(1400,100,true, who++);
-	iruka[1] = new Iruka(500,0,false, who++);
-	iruka[2] = new Iruka(900,400,true, who++);
+	//zakuroとirukaの生成はSetStageに移動
+	//for (int i = 0; i < ZAKURO_MAX; i++) {
+	//	zakuro[i] = nullptr;
+	//}
+	//zakuro[0] = new Zakuro(200, 0, true, who++);
+	//zakuro[1] = new Zakuro(400, 0, false, who++);
+	//zakuro[2] = new Zakuro(900, 0, false, who++);
+	//for (int i = 0; i < IRUKA_MAX; i++) {
+	//	iruka[i] = nullptr;
+	//}
+	//iruka[0] = new Iruka(1400,0,true, who++);
+	//iruka[1] = new Iruka(500,0,false, who++);
+	//iruka[2] = new Iruka(900,0,true, who++);
 
-	CreateStage();
-	for (int i = 0; i < STAGE_HEIGHT; i++)
-	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
-		{
-			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
-		}
-	}
-	himawari = new Himawari();
-	for (int i = 0; i < ATTACK_NUM; i++)
-	{
-		attack[i] = new Attack();
-	}
+	//for (int i = 0; i < HIMAWARI_MAX; i++) {
+	//	himawari[i] = nullptr;
+	//}
+	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
 	{
 		count[i] = 0;
@@ -68,9 +61,9 @@ GameMain::~GameMain()
 {
 	delete player;
 	delete scene_scroll;
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			delete stage[i][j];
 		}
@@ -88,7 +81,10 @@ GameMain::~GameMain()
 	//{
 	//	delete iruka[i];
 	//}
-	delete himawari;
+	for (int i = 0; i < HIMAWARI_MAX; i++)
+	{
+		delete himawari[i];
+	}
 	delete powergauge;
 	delete playerhp;
 	delete effect;
@@ -106,6 +102,7 @@ AbstractScene* GameMain::Update()
 	{
 		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
 	}
+	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		if (zakuro[i] != nullptr) 
@@ -113,11 +110,20 @@ AbstractScene* GameMain::Update()
 			zakuro[i]->Update(this);
 		}
 	}
+	//イルカ
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
 		{
 			iruka[i]->Update(this);
+		}
+	}
+	//ひまわり
+	for (int i = 0; i < HIMAWARI_MAX; i++) 
+	{
+		if (himawari[i] != nullptr) 
+		{
+			himawari[i]->Update(this);
 		}
 	}
 	player->Update(this);
@@ -146,6 +152,21 @@ AbstractScene* GameMain::Update()
 			}
 		}
 		effect->EndFlg(0);
+	}
+	//ひまわり向き
+	for (int i = 0; i < HIMAWARI_MAX; i++)
+	{
+		if (himawari[i] != nullptr)
+		{
+			if (himawari[i]->GetLocation().x <= player->GetLocation().x	) {
+				himawari[i]->ReverseDirection();
+				
+			}
+			if (himawari[i]->GetLocation().x >= player->GetLocation().x) {
+				himawari[i]->ObverseDirection();
+				
+			}
+		}
 	}
 
 	//イルカ落下判定
@@ -197,7 +218,7 @@ AbstractScene* GameMain::Update()
 		*		}
 		*	}
 		*********************************************************************************************/
-
+		//ザクロ
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr) {
@@ -207,6 +228,7 @@ AbstractScene* GameMain::Update()
 				}
 			}		
 		}
+		//イルカ
 		for (int j = 0; j < IRUKA_MAX; j++) 
 		{
 			if (iruka[j] != nullptr) 
@@ -217,11 +239,23 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
+		//ひまわり
+		for (int j = 0; j < HIMAWARI_MAX; j++)
+		{
+			if (himawari[j] != nullptr)
+			{
+				if (attack[i]->GetAttackData().who_attack == himawari[j]->GetWho())
+				{
+					attack[i]->Update(himawari[j]->GetCenterLocation(), himawari[j]->GetErea());
+				}
+			}
+		}
+
 	}
 	//床の数だけ繰り返す
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			stage[i][j]->Update();
 		}
@@ -230,6 +264,24 @@ AbstractScene* GameMain::Update()
 	HitCheck();
 
 #if DEBUG
+	//ステージ遷移
+	if (KeyInput::OnPresed(KEY_INPUT_0))
+	{
+		SetStage(0);
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_1))
+	{
+		SetStage(1);
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_2))
+	{
+		SetStage(2);
+	}
+	if (KeyInput::OnPresed(KEY_INPUT_3))
+	{
+		SetStage(3);
+	}
+	//プレイヤーに強制ダメージ
 	if (KeyInput::OnKey(KEY_INPUT_S)) 
 	{
 		flg = true;
@@ -238,9 +290,10 @@ AbstractScene* GameMain::Update()
 	//ステージをいじるシーンへ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
-		return new EditScene();
+		return new EditScene(now_stage);
 	}
 #endif
+
 	return this;
 }
 
@@ -253,9 +306,9 @@ void GameMain::Draw() const
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
 	player->Draw();
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			stage[i][j]->Draw();
 		}
@@ -264,18 +317,28 @@ void GameMain::Draw() const
 		//DrawString(300, 300,"flg", 0xffffff);
 	}
 	//エネミーの描画
-	for (int i = 0; i < ZAKURO_MAX; i++) {
+	// ザクロ
+	for (int i = 0; i < ZAKURO_MAX; i++) 
+	{
 		if (zakuro[i] != nullptr) 
 		{
-			zakuro[i]->Draw(); // ザクロ
+			zakuro[i]->Draw(); 
 		}
 	}
-	himawari->Draw();// ひまわり
-
-	for (int i = 0; i < IRUKA_MAX; i++) {
+	// ひまわり
+	for (int i = 0; i < HIMAWARI_MAX; i++) 
+	{
+		if (himawari[i] != nullptr)
+		{
+			himawari[i]->Draw();
+		}
+	}
+	// イルカ
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
 		if (iruka[i] != nullptr)
 		{
-			iruka[i]->Draw(); // イルカ
+			iruka[i]->Draw(); 
 		}
 	}
 
@@ -306,15 +369,16 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 void GameMain::HitCheck()
 {
 	//床の数だけ繰り返す
-	for (int i = 0; i < STAGE_HEIGHT; i++)
+	for (int i = 0; i < stage_height; i++)
 	{
-		for (int j = 0; j < STAGE_WIDTH; j++)
+		for (int j = 0; j < stage_width; j++)
 		{
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 			}
+			//ザクロ
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -325,12 +389,23 @@ void GameMain::HitCheck()
 					}
 				}
 			}
+			//イルカ
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
 					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) 
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+					}
+				}
+			}
+			//ひまわり
+			for (int k = 0; k < HIMAWARI_MAX; k++)
+			{
+				if (himawari[k] != nullptr) {
+					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					{
+						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
@@ -375,6 +450,24 @@ void GameMain::HitCheck()
 				}
 			}
 		}
+		for (int j = 0; j < HIMAWARI_MAX; j++) {
+			if (himawari[j] != nullptr) {
+				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
+				{
+					//しぶき用
+					effect->HitFlg(true);
+					//effect->SetLocation(zakuro->GetCenterLocation());
+
+					//ひまわりのダメージ処理
+					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
+					//if (himawari[j]->GetHp() < 1) {
+						powergauge->SetVolume(himawari[j]->GetColorDate());
+					//}
+					attack[i]->DeleteAttack();
+				}
+			}
+		}
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
@@ -385,21 +478,52 @@ void GameMain::HitCheck()
 			//zakuro->Stop_Attack();
 		}
 	}
-	//プレイヤーリスポーン
-	Location respown_location = { 100,100 };
-	player->Respawn(respown_location);
+	for (int i = 0; i < ZAKURO_MAX; i++)
+	{
+		for (int j = i + 1; j < ZAKURO_MAX; j++)
+		{
+			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+			{
+				if (zakuro[i]->HitBox(zakuro[j]) == true) {
+					zakuro[i]->HitZakuro();
+				}
+				if (zakuro[j]->HitBox(zakuro[i]) == true) {
+					zakuro[j]->HitZakuro();
+				}
+			}
+		}	
+	}
 }
 
-void GameMain::CreateStage()
+void GameMain::LoadStageData(int _stage)
 {
-	std::ifstream file("resource/dat/StageData.txt");
+	const char* a = "resource/dat/1stStageData.txt";
+	switch(_stage)
+	{
+	case 0:
+		a = "resource/dat/1stStageData.txt";
+		break;
+	case 1:
+		a = "resource/dat/2ndStageData.txt";
+		break;
+	case 2:
+		a = "resource/dat/3rdStageData.txt";
+		break;
+	case 3:
+		a = "resource/dat/BossStageData.txt";
+		break;
+	}
+
+	std::ifstream file(a);
 	//ファイルが読み込めていたなら
 	if (file)
 	{
+		file >> stage_width;
+		file >> stage_height;
 		//ランキングデータ配分列データを読み込む
-		for (int i = 0; i < STAGE_HEIGHT; i++)
+		for (int i = 0; i < stage_height; i++)
 		{
-			for (int j = 0; j < STAGE_WIDTH; j++)
+			for (int j = 0; j < stage_width; j++)
 			{
 				file >> STAGE_DATA[i][j];
 			}
@@ -411,4 +535,83 @@ void GameMain::CameraLocation(Location _location)
 {
 	screen_origin.x = _location.x - (SCREEN_WIDTH / 2);
 	screen_origin.y = 0;
+
+void GameMain::SetStage(int _stage)
+{
+	//敵と攻撃をリセット
+	for (int i = 0; i < ZAKURO_MAX; i++) {
+		zakuro[i] = nullptr;
+	}
+	for (int i = 0; i < IRUKA_MAX; i++) {
+		iruka[i] = nullptr;
+	}
+	for (int i = 0; i < HIMAWARI_MAX; i++) {
+		himawari[i] = nullptr;
+	}
+	for (int i = 0; i < ATTACK_NUM; i++)
+	{
+		attack[i] = new Attack();
+	}
+	now_stage = _stage;
+	//ファイルの読込
+	LoadStageData(now_stage);
+	for (int i = 0; i < stage_height; i++)
+	{
+		for (int j = 0; j < stage_width; j++)
+		{
+			switch (STAGE_DATA[i][j])
+			{
+				//ステージ内ブロックを生成
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
+				break;
+				//ザクロを生成
+			case 5:
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
+				//空いてる枠に生成
+				for (int k = 0; k < ZAKURO_MAX; k++)
+				{
+					if (zakuro[k] == nullptr)
+					{
+						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true,who++);
+						break;
+					}
+				}
+				break;
+				//イルカを生成
+			case 6:
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
+				//空いてる枠に生成
+				for (int k = 0; k < IRUKA_MAX; k++)
+				{
+					if (iruka[k] == nullptr)
+					{
+						iruka[k] = new Iruka(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
+						break;
+					}
+				}
+				break;
+				//ひまわりを生成
+			case 7:
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
+				//空いてる枠に生成
+				for (int k = 0; k < HIMAWARI_MAX; k++)
+				{
+					if (himawari[k] == nullptr)
+					{
+						himawari[k] = new Himawari(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+	//プレイヤーのリスポーン
+	Location res_location = { 100,100 };
+	player->Respawn(res_location);
 }
