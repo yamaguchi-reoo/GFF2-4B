@@ -49,7 +49,7 @@ private:
     int stage_width;        //ステージのブロックの横の個数 
     int stage_height;       //ステージのブロックの縦の個数
 
-    bool himawari_reverse_flg;
+ 
 
 public:
     //コンストラクタ(_stage＝読み込むステージ)

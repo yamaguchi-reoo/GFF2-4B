@@ -15,7 +15,7 @@ private:
     bool rightwall_flg;				//いずれかの右壁に触れているかどうか
     bool leftwall_flg;				//いずれかの左壁に触れているかどうか
     bool apply_gravity;				//重力を適用するかどうか
-
+   
 public:
     //コンストラクタ
     Himawari(float pos_x, float pos_y, bool direction, int _who);
@@ -43,7 +43,7 @@ public:
     int GetHp() { return hp; }
 
     void ReverseDirection();
-
+    void ObverseDirection();
 
     ColorDate GetColorDate();
     

@@ -21,6 +21,7 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	leftwall_flg = false;
 	apply_gravity = true;
 	onfloor_flg = false;
+	
 
 	attack_interval_count = 0;
 
@@ -171,7 +172,12 @@ void Himawari::ApplyDamage(int num)
 
 void Himawari::ReverseDirection()
 {
-	himawari_direction = !himawari_direction;
+		himawari_direction = false;
+}
+
+void Himawari::ObverseDirection()
+{
+	himawari_direction =true ;
 }
 
 ColorDate Himawari::GetColorDate()

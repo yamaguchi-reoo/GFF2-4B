@@ -49,7 +49,6 @@ GameMain::GameMain(int _stage)
 	flg = false;
 	onfloor_flg = false;
 
-	himawari_reverse_flg = true;
 }
 
 GameMain::~GameMain()
@@ -153,13 +152,13 @@ AbstractScene* GameMain::Update()
 	{
 		if (himawari[i] != nullptr)
 		{
-			if (himawari[i]->GetLocation().x <= player->GetLocation().x	&& himawari_reverse_flg == true) {
+			if (himawari[i]->GetLocation().x <= player->GetLocation().x	) {
 				himawari[i]->ReverseDirection();
-				himawari_reverse_flg = false;
+				
 			}
-			if (himawari[i]->GetLocation().x >= player->GetLocation().x && himawari_reverse_flg == false) {
-				himawari[i]->ReverseDirection();
-				himawari_reverse_flg = true;
+			if (himawari[i]->GetLocation().x >= player->GetLocation().x) {
+				himawari[i]->ObverseDirection();
+				
 			}
 		}
 	}
