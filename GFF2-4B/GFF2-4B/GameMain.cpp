@@ -473,6 +473,21 @@ void GameMain::HitCheck()
 			//zakuro->Stop_Attack();
 		}
 	}
+	for (int i = 0; i < ZAKURO_MAX; i++)
+	{
+		for (int j = i + 1; j < ZAKURO_MAX; j++)
+		{
+			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+			{
+				if (zakuro[i]->HitBox(zakuro[j]) == true) {
+					zakuro[i]->HitZakuro();
+				}
+				if (zakuro[j]->HitBox(zakuro[i]) == true) {
+					zakuro[j]->HitZakuro();
+				}
+			}
+		}	
+	}
 }
 
 void GameMain::LoadStageData(int _stage)
