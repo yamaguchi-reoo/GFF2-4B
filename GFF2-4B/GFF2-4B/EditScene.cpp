@@ -46,6 +46,8 @@ AbstractScene* EditScene::Update()
 		for (int j = 0; j < stage_width; j++)
 		{
 			stage[i][j]->Update();
+			Location location = { 0,0 };
+			stage[i][j]->SetScreenPosition(location);
 			switch (ChechSelectErea(i, j))
 			{
 			case STAGE_EDIT:

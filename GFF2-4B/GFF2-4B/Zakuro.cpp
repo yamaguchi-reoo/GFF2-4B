@@ -87,18 +87,18 @@ void Zakuro::Update(GameMain* main)
 void Zakuro::Draw() const
 {
 	SetFontSize(20);
-	DrawFormatString(200, 0, 0xffffff, "%f", location.x);
+	DrawFormatString(200, 0, 0xffffff, "%f", local_location.x);
 	if (spawn_flg == false) 
 	{
 		//DrawBoxAA(location.x + (erea.width / 2), location.y + (erea.height / 2), erea.width, erea.height, 0xff00ff, TRUE);
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff00ff, TRUE);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xff00ff, TRUE);
 		if (zakuro_state == ZakuroState::RIGHT)
 		{
-			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
+			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
 		}
 		else
 		{
-			DrawBoxAA(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
+			DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
 		}
 	}
 }

@@ -56,16 +56,16 @@ void Himawari::Draw() const
 {
 	if (spawn_flg == false) 
 	{
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, TRUE);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, TRUE);
 		//ç∂å¸Ç´	
 		if (himawari_direction == true) 
 		{
-			DrawBoxAA(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
+			DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
 		}
 		//âEå¸Ç´
 		else if (himawari_direction == false) 
 		{
-			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
+			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
 		}
 	}
 }

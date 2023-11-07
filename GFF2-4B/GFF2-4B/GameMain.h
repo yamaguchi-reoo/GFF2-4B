@@ -26,13 +26,10 @@ private:
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
-    Stage* stage[STAGE_HEIGHT][STAGE_WIDTH];   //床のオブジェクト
-    Stage* stage[STAGE_HEIGHT][STAGE_WIDTH];   //床のオブジェクト
-    Stage* stage[STAGE_HEIGHT][STAGE_WIDTH];   //床のオブジェクト
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
 
     //エネミー
-    Himawari* himawari;//ひまわり
+    Zakuro* zakuro[ZAKURO_MAX];    //ザクロ
     Himawari* himawari[HIMAWARI_MAX];//ひまわり
     Iruka* iruka[IRUKA_MAX];      //イルカ
 
@@ -47,12 +44,12 @@ private:
     int flg;               //
     int count[2];          //実験用
     bool onfloor_flg;      //実験用
+    int who;                //誰が攻撃したか判断する用
 
     int stage_width_num;    //ステージブロックの横数
     int stage_height_num;   //ステージブロックの縦数
 
     int stage_width;        //ステージ横幅
-    int who;                //誰が攻撃したか判断する用
 public:
     //コンストラクタ(_stage＝読み込むステージ)
     GameMain(int _stage);
@@ -68,18 +65,19 @@ public:
     //攻撃を発生させる(_location = 攻撃したプレイヤーor敵の中心座標  _direction = 攻撃する方向(0=右 1=左))
     void SpawnAttack(AttackData _attackdata);
 
+    //各当たり判定の処理
+    void HitCheck();
+
     //ステージファイルを読み込む
     void LoadStageData(int _stage);
 
     //次のステージへ遷移する
     void SetStage(int _stage);
-};
 
     //ステージを生成する
-    void CreateStage();
+    void CreateStage(int _stage);
 
     //カメラ座標の更新
     void CameraLocation(Location _location);
-};    void CreateStage();
 };
 

@@ -20,23 +20,6 @@ GameMain::GameMain(int _stage)
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
-	//zakuroとirukaの生成はSetStageに移動
-	//for (int i = 0; i < ZAKURO_MAX; i++) {
-	//	zakuro[i] = nullptr;
-	//}
-	//zakuro[0] = new Zakuro(200, 0, true, who++);
-	//zakuro[1] = new Zakuro(400, 0, false, who++);
-	//zakuro[2] = new Zakuro(900, 0, false, who++);
-	//for (int i = 0; i < IRUKA_MAX; i++) {
-	//	iruka[i] = nullptr;
-	//}
-	//iruka[0] = new Iruka(1400,0,true, who++);
-	//iruka[1] = new Iruka(500,0,false, who++);
-	//iruka[2] = new Iruka(900,0,true, who++);
-
-	//for (int i = 0; i < HIMAWARI_MAX; i++) {
-	//	himawari[i] = nullptr;
-	//}
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
 	{
@@ -60,10 +43,9 @@ GameMain::GameMain(int _stage)
 GameMain::~GameMain()
 {
 	delete player;
-	delete scene_scroll;
-	for (int i = 0; i < stage_height; i++)
+	for (int i = 0; i < stage_height_num; i++)
 	{
-		for (int j = 0; j < stage_width; j++)
+		for (int j = 0; j < stage_width_num; j++)
 		{
 			delete stage[i][j];
 		}
@@ -93,14 +75,9 @@ GameMain::~GameMain()
 AbstractScene* GameMain::Update()
 {
 	//更新
-	if (player->GetLocation().x <= SCREEN_LEFT_END)
+	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
 	{
-		player->GetLocation().x + 0.01;
-	}
-	scene_scroll->Update(player->GetLocation(), player->GetAcs(2), player->GetAcs(3));
-	if(scene_scroll->ActionRangeBorder(player->GetLocation()) == true)
-	{
-		player->ForciblyMovePlayer(scene_scroll->PlayerScroll(player->GetLocation()));
+		CameraLocation(player->GetLocation());
 	}
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
@@ -108,6 +85,7 @@ AbstractScene* GameMain::Update()
 		if (zakuro[i] != nullptr) 
 		{
 			zakuro[i]->Update(this);
+			zakuro[i]->SetScreenPosition(camera_location);
 		}
 	}
 	//イルカ
@@ -116,6 +94,7 @@ AbstractScene* GameMain::Update()
 		if (iruka[i] != nullptr)
 		{
 			iruka[i]->Update(this);
+			iruka[i]->SetScreenPosition(camera_location);
 		}
 	}
 	//ひまわり
@@ -124,9 +103,11 @@ AbstractScene* GameMain::Update()
 		if (himawari[i] != nullptr) 
 		{
 			himawari[i]->Update(this);
+			himawari[i]->SetScreenPosition(camera_location);
 		}
 	}
 	player->Update(this);
+	player->SetScreenPosition(camera_location);
 	powergauge->Update();
 	playerhp->Update(player->GetPlayerHP());
 
@@ -188,36 +169,6 @@ AbstractScene* GameMain::Update()
 		{
 			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
 		}
-		/*************************************************************************************************
-		* 新しい敵を生成するたびに、whoの変数に1、２、3と数字を割り振っていき(被りなしで　０はプレイヤー)、
-		* 攻撃を生成するときにその値をattack_data.who_attackに格納し、
-		* ここで画面内の敵の種類分だけifを作り、１種類の敵の数だけforで繰り返す
-		* whoはBoxColliderで定義済み
-		* 
-		*	for(int j = 0; j < (画面内のザクロの数が入っている変数); j++ )
-		*	{
-		*		if (attack[j]->GetAttackData().who_attack == zakuro[j]->GetWho())
-		*		{
-		*			attack[j]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
-		*		}
-		*	}
-		* 
-		* 	for(int j = 0; j < (画面内のひまわりの数が入っている変数); j++ )
-		*	{
-		*		if (attack[j]->GetAttackData().who_attack == himawari[j]->GetWho())
-		*		{
-		*			attack[j]->Update(himawari[j]->GetCenterLocation(), himawari[j]->GetErea());
-		*		}
-		*	}
-		* 
-		* 　for(int i = 0; i < (画面内のいるかの数が入っている変数); i++ )
-		*	{
-		*		if (attack[j]->GetAttackData().who_attack == iruka[j]->GetWho())
-		*		{
-		*			attack[j]->Update(iruka[j]->GetCenterLocation(),iruka[j]->GetErea());
-		*		}
-		*	}
-		*********************************************************************************************/
 		//ザクロ
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
@@ -225,6 +176,7 @@ AbstractScene* GameMain::Update()
 				if (attack[i]->GetAttackData().who_attack == zakuro[j]->GetWho())
 				{
 					attack[i]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
+					attack[i]->SetScreenPosition(camera_location);
 				}
 			}		
 		}
@@ -236,6 +188,7 @@ AbstractScene* GameMain::Update()
 				if (attack[i]->GetAttackData().who_attack == iruka[j]->GetWho())
 				{
 					attack[i]->Update(iruka[j]->GetCenterLocation(), iruka[j]->GetErea());
+					attack[i]->SetScreenPosition(camera_location);
 				}
 			}
 		}
@@ -247,17 +200,19 @@ AbstractScene* GameMain::Update()
 				if (attack[i]->GetAttackData().who_attack == himawari[j]->GetWho())
 				{
 					attack[i]->Update(himawari[j]->GetCenterLocation(), himawari[j]->GetErea());
+					attack[i]->SetScreenPosition(camera_location);
 				}
 			}
 		}
 
 	}
 	//床の数だけ繰り返す
-	for (int i = 0; i < stage_height; i++)
+	for (int i = 0; i < stage_height_num; i++)
 	{
-		for (int j = 0; j < stage_width; j++)
+		for (int j = 0; j < stage_width_num; j++)
 		{
 			stage[i][j]->Update();
+			stage[i][j]->SetScreenPosition(camera_location);
 		}
 	}
 	//当たり判定関連の処理を行う
@@ -299,16 +254,15 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
-	scene_scroll->Draw();
 	effect->Draw();
 	
 	SetFontSize(42);
 //	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
 	player->Draw();
-	for (int i = 0; i < stage_height; i++)
+	for (int i = 0; i < stage_height_num; i++)
 	{
-		for (int j = 0; j < stage_width; j++)
+		for (int j = 0; j < stage_width_num; j++)
 		{
 			stage[i][j]->Draw();
 		}
@@ -369,9 +323,9 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 void GameMain::HitCheck()
 {
 	//床の数だけ繰り返す
-	for (int i = 0; i < stage_height; i++)
+	for (int i = 0; i < stage_height_num; i++)
 	{
-		for (int j = 0; j < stage_width; j++)
+		for (int j = 0; j < stage_width_num; j++)
 		{
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
@@ -518,26 +472,23 @@ void GameMain::LoadStageData(int _stage)
 	//ファイルが読み込めていたなら
 	if (file)
 	{
-		file >> stage_width;
-		file >> stage_height;
+		file >> stage_width_num;
+		file >> stage_height_num;
+
+		stage_width = stage_width_num * BOX_WIDTH;
 		//ランキングデータ配分列データを読み込む
-		for (int i = 0; i < stage_height; i++)
+		for (int i = 0; i < stage_height_num; i++)
 		{
-			for (int j = 0; j < stage_width; j++)
+			for (int j = 0; j < stage_width_num; j++)
 			{
 				file >> STAGE_DATA[i][j];
 			}
 		}
 	}
 }
-
-void GameMain::CameraLocation(Location _location)
-{
-	screen_origin.x = _location.x - (SCREEN_WIDTH / 2);
-	screen_origin.y = 0;
-
 void GameMain::SetStage(int _stage)
 {
+	CameraLocation(screen_origin);
 	//敵と攻撃をリセット
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
@@ -555,9 +506,9 @@ void GameMain::SetStage(int _stage)
 	now_stage = _stage;
 	//ファイルの読込
 	LoadStageData(now_stage);
-	for (int i = 0; i < stage_height; i++)
+	for (int i = 0; i < stage_height_num; i++)
 	{
-		for (int j = 0; j < stage_width; j++)
+		for (int j = 0; j < stage_width_num; j++)
 		{
 			switch (STAGE_DATA[i][j])
 			{
@@ -614,4 +565,9 @@ void GameMain::SetStage(int _stage)
 	//プレイヤーのリスポーン
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
+}
+void GameMain::CameraLocation(Location _location)
+{
+	camera_location.x = _location.x - (SCREEN_WIDTH / 2);
+	camera_location.y = 0;
 }
