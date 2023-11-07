@@ -49,6 +49,8 @@ private:
     int stage_width;        //ステージのブロックの横の個数 
     int stage_height;       //ステージのブロックの縦の個数
 
+ 
+
 public:
     //コンストラクタ(_stage＝読み込むステージ)
     GameMain(int _stage);

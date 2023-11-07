@@ -16,7 +16,7 @@ EditScene::EditScene(int _stage)
 	{
 		for (int j = 0; j < stage_width; j++)
 		{
-			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			stage[i][j]->SetDebugFlg();
 			select_data[i][j] = false;
 		}
@@ -56,7 +56,7 @@ AbstractScene* EditScene::Update()
 					}
 				}
 			}
-			else if (cursor.x > stage[i][j]->GetLocation().x && cursor.x<stage[i][j]->GetLocation().x + BOX_SIZE && cursor.y>stage[i][j]->GetLocation().y && cursor.y < stage[i][j]->GetLocation().y + BOX_SIZE)
+			else if (cursor.x > stage[i][j]->GetLocation().x && cursor.x<stage[i][j]->GetLocation().x + BOX_WIDTH && cursor.y>stage[i][j]->GetLocation().y && cursor.y < stage[i][j]->GetLocation().y + BOX_HEIGHT)
 			{
 				select_data[i][j] = true;
 				if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT))
@@ -142,15 +142,19 @@ void EditScene::Draw()const
 			stage[i][j]->Draw();
 			if (select_data[i][j] == true)
 			{
-				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x +BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff0000, false);
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x +BOX_WIDTH, stage[i][j]->GetLocation().y + BOX_HEIGHT, 0xff0000, false);
 			}
 			if (STAGE_DATA[i][j] == 5)
 			{
-				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0xff00ff , true);
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_WIDTH, stage[i][j]->GetLocation().y + BOX_HEIGHT, 0xff00ff , true);
 			}
 			if (STAGE_DATA[i][j] == 6)
 			{
-				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_SIZE, stage[i][j]->GetLocation().y + BOX_SIZE, 0x00ffff, true);	
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_WIDTH, stage[i][j]->GetLocation().y + BOX_HEIGHT, 0x00ffff, true);
+			}
+			if (STAGE_DATA[i][j] == 7)
+			{
+				DrawBoxAA(stage[i][j]->GetLocation().x, stage[i][j]->GetLocation().y, stage[i][j]->GetLocation().x + BOX_WIDTH, stage[i][j]->GetLocation().y + BOX_HEIGHT, 0xffff00, true);
 			}
 		}
 	}
@@ -241,6 +245,16 @@ void EditScene::Draw()const
 				DrawString((i * 50), 15, "ƒCƒ‹ƒJ", 0xffffff);
 			}
 			break;
+		case 7:
+			if (current_type == i)
+			{
+				DrawString((i * 50)+20, 15, "‚Ð‚Ü", 0x000000);
+			}
+			else
+			{
+				DrawString((i * 50)+20, 15, "‚Ð‚Ü", 0xffffff);
+			}
+			break;
 		default:
 			break;
 		}
@@ -324,7 +338,7 @@ void EditScene::UpdateStage()
 	{
 		for (int j = 0; j < stage_width; j++)
 		{
-			stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			stage[i][j]->SetDebugFlg();
 			select_data[i][j] = false;
 		}

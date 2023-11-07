@@ -48,6 +48,7 @@ GameMain::GameMain(int _stage)
 
 	flg = false;
 	onfloor_flg = false;
+
 }
 
 GameMain::~GameMain()
@@ -146,6 +147,21 @@ AbstractScene* GameMain::Update()
 		}
 		effect->EndFlg(0);
 	}
+	//ひまわり向き
+	for (int i = 0; i < HIMAWARI_MAX; i++)
+	{
+		if (himawari[i] != nullptr)
+		{
+			if (himawari[i]->GetLocation().x <= player->GetLocation().x	) {
+				himawari[i]->ReverseDirection();
+				
+			}
+			if (himawari[i]->GetLocation().x >= player->GetLocation().x) {
+				himawari[i]->ObverseDirection();
+				
+			}
+		}
+	}
 
 	//イルカ落下判定
 	for (int i = 0; i < IRUKA_MAX; i++)
@@ -217,6 +233,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
+		//ひまわり
 		for (int j = 0; j < HIMAWARI_MAX; j++)
 		{
 			if (himawari[j] != nullptr)
@@ -355,6 +372,7 @@ void GameMain::HitCheck()
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 			}
+			//ザクロ
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -365,12 +383,23 @@ void GameMain::HitCheck()
 					}
 				}
 			}
+			//イルカ
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
 					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) 
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+					}
+				}
+			}
+			//ひまわり
+			for (int k = 0; k < HIMAWARI_MAX; k++)
+			{
+				if (himawari[k] != nullptr) {
+					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					{
+						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
@@ -417,14 +446,14 @@ void GameMain::HitCheck()
 		}
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
-				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
 					effect->HitFlg(true);
 					//effect->SetLocation(zakuro->GetCenterLocation());
 
-					//イルカのダメージ処理
+					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
 						powergauge->SetVolume(himawari[j]->GetColorDate());
@@ -442,6 +471,21 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
+	}
+	for (int i = 0; i < ZAKURO_MAX; i++)
+	{
+		for (int j = i + 1; j < ZAKURO_MAX; j++)
+		{
+			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+			{
+				if (zakuro[i]->HitBox(zakuro[j]) == true) {
+					zakuro[i]->HitZakuro();
+				}
+				if (zakuro[j]->HitBox(zakuro[i]) == true) {
+					zakuro[j]->HitZakuro();
+				}
+			}
+		}	
 	}
 }
 
@@ -512,43 +556,43 @@ void GameMain::SetStage(int _stage)
 			case 2:
 			case 3:
 			case 4:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, STAGE_DATA[i][j]);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 				break;
 				//ザクロを生成
 			case 5:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < ZAKURO_MAX; k++)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro(j * BOX_SIZE, i * BOX_SIZE, true,who++);
+						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true,who++);
 						break;
 					}
 				}
 				break;
 				//イルカを生成
 			case 6:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < IRUKA_MAX; k++)
 				{
 					if (iruka[k] == nullptr)
 					{
-						iruka[k] = new Iruka(j * BOX_SIZE, i * BOX_SIZE, true, who++);
+						iruka[k] = new Iruka(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
 						break;
 					}
 				}
 				break;
 				//ひまわりを生成
 			case 7:
-				stage[i][j] = new Stage(j * BOX_SIZE, i * BOX_SIZE, BOX_SIZE, BOX_SIZE, 0);
+				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < HIMAWARI_MAX; k++)
 				{
 					if (himawari[k] == nullptr)
 					{
-						himawari[k] = new Himawari(j * BOX_SIZE, i * BOX_SIZE, true, who++);
+						himawari[k] = new Himawari(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
 						break;
 					}
 				}

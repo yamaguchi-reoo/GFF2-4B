@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "PadInput.h"
 
-#define OBJECT_TYPE_NUM 7   //配置できるオブジェクトの種類数
+#define OBJECT_TYPE_NUM 8   //配置できるオブジェクトの種類数
 
 class EditScene :
     public AbstractScene
