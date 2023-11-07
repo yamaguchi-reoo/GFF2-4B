@@ -240,6 +240,8 @@ AbstractScene* GameMain::Update()
 	//当たり判定関連の処理を行う
 	HitCheck();
 
+#if DEBUG
+	//ステージ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_0))
 	{
 		SetStage(0);
@@ -256,8 +258,7 @@ AbstractScene* GameMain::Update()
 	{
 		SetStage(3);
 	}
-
-#if DEBUG
+	//プレイヤーに強制ダメージ
 	if (KeyInput::OnKey(KEY_INPUT_S)) 
 	{
 		flg = true;
