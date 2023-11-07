@@ -105,6 +105,11 @@ void Himawari::ApplyDamage(int num)
 	spawn_flg = true;
 }
 
+void Himawari::ReverseDirection()
+{
+	himawari_direction = !himawari_direction;
+}
+
 ColorDate Himawari::GetColorDate()
 {
 	 return Date;

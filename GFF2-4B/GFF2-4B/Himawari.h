@@ -29,6 +29,8 @@ public:
 
     int GetHp() { return hp; }
 
+    void ReverseDirection();
+
 
     ColorDate GetColorDate();
     

@@ -48,6 +48,8 @@ GameMain::GameMain(int _stage)
 
 	flg = false;
 	onfloor_flg = false;
+
+	himawari_reverse_flg = true;
 }
 
 GameMain::~GameMain()
@@ -145,6 +147,21 @@ AbstractScene* GameMain::Update()
 			}
 		}
 		effect->EndFlg(0);
+	}
+	//‚Ğ‚Ü‚í‚èŒü‚«
+	for (int i = 0; i < HIMAWARI_MAX; i++)
+	{
+		if (himawari[i] != nullptr)
+		{
+			if (himawari[i]->GetLocation().x <= player->GetLocation().x	&& himawari_reverse_flg == true) {
+				himawari[i]->ReverseDirection();
+				himawari_reverse_flg = false;
+			}
+			if (himawari[i]->GetLocation().x >= player->GetLocation().x && himawari_reverse_flg == false) {
+				himawari[i]->ReverseDirection();
+				himawari_reverse_flg = true;
+			}
+		}
 	}
 
 	//ƒCƒ‹ƒJ—‰º”»’è
