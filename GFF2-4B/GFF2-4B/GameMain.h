@@ -25,8 +25,7 @@ private:
     int STAGE_DATA[STAGE_HEIGHT][STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
   /*  StageData* stagedata;*/
-    int stage_height;
-    int stage_width;
+
     Stage* stage[STAGE_HEIGHT][STAGE_WIDTH];   //床のオブジェクト
     Attack* attack[ATTACK_NUM];     //攻撃のオブジェクト
 
@@ -47,6 +46,11 @@ private:
     int count[2];          //実験用
     bool onfloor_flg;      //実験用
     int who;                //誰が攻撃したか判断する用
+
+    int stage_width_num;    //ステージブロックの横数
+    int stage_height_num;   //ステージブロックの縦数
+
+    int stage_width;        //ステージ横幅
 public:
     //コンストラクタ
     GameMain();
@@ -67,5 +71,7 @@ public:
 
     //ステージを生成する
     void CreateStage();
-};
 
+    //カメラ座標の更新
+    void CameraLocation(Location _location);
+};

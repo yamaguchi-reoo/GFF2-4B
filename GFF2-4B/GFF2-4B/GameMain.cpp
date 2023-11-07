@@ -8,6 +8,12 @@
 #include <string>
 #include "EditScene.h"
 
+static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
+Location screen_origin =		//カメラ座標からスクロール座標への変換
+{
+	(SCREEN_WIDTH / 2),
+	0
+};
 GameMain::GameMain()
 {
 	who = 1;
@@ -379,6 +385,9 @@ void GameMain::HitCheck()
 			//zakuro->Stop_Attack();
 		}
 	}
+	//プレイヤーリスポーン
+	Location respown_location = { 100,100 };
+	player->Respawn(respown_location);
 }
 
 void GameMain::CreateStage()
@@ -396,4 +405,10 @@ void GameMain::CreateStage()
 			}
 		}
 	}
+}
+
+void GameMain::CameraLocation(Location _location)
+{
+	screen_origin.x = _location.x - (SCREEN_WIDTH / 2);
+	screen_origin.y = 0;
 }
