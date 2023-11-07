@@ -234,6 +234,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
+		//ひまわり
 		for (int j = 0; j < HIMAWARI_MAX; j++)
 		{
 			if (himawari[j] != nullptr)
@@ -372,6 +373,7 @@ void GameMain::HitCheck()
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 			}
+			//ザクロ
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -382,12 +384,23 @@ void GameMain::HitCheck()
 					}
 				}
 			}
+			//イルカ
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
 					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) 
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+					}
+				}
+			}
+			//ひまわり
+			for (int k = 0; k < HIMAWARI_MAX; k++)
+			{
+				if (himawari[k] != nullptr) {
+					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					{
+						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
@@ -434,14 +447,14 @@ void GameMain::HitCheck()
 		}
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
-				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
 					effect->HitFlg(true);
 					//effect->SetLocation(zakuro->GetCenterLocation());
 
-					//イルカのダメージ処理
+					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
 						powergauge->SetVolume(himawari[j]->GetColorDate());

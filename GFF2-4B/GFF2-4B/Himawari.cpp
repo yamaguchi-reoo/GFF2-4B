@@ -2,6 +2,7 @@
 #include "GameMain.h"
 
 #define BULLET_INTERVAL 60
+#define HIMAWARI_GRAVITY  10
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 {
@@ -15,6 +16,11 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 
 	attack_flg = true;
 	spawn_flg = false;
+
+	rightwall_flg = false;
+	leftwall_flg = false;
+	apply_gravity = true;
+	onfloor_flg = false;
 
 	attack_interval_count = 0;
 
@@ -35,6 +41,14 @@ void Himawari::Update(GameMain* main)
 		//攻撃
 		Attack(main);
 	}
+	//床に触れていないなら
+	if (apply_gravity == true)
+	{
+		//重力を与える
+		HimawariGiveGravity();
+	}
+	//各移動用変数をリセット
+	HimawariReset();
 }
 
 void Himawari::Draw() const
@@ -52,6 +66,56 @@ void Himawari::Draw() const
 		{
 			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
 		}
+	}
+}
+
+void Himawari::HimawariReset()
+{
+	//重力が働くかの判定をリセット
+	apply_gravity = true;
+	rightwall_flg = false;
+	leftwall_flg = false;
+	onfloor_flg = false;
+}
+
+void Himawari::HimawariGiveGravity()
+{
+	location.y += HIMAWARI_GRAVITY;
+}
+
+void Himawari::HimawariPush(int num, Location _sub_location, Erea _sub_erea)
+{
+	Location h_center = { 0 };
+	h_center.x = location.x + (erea.width / 2);
+	h_center.y = location.y + (erea.height / 2);
+
+	//床に触れた時
+	if (location.y + erea.height - 12 < _sub_location.y)
+	{
+		location.y = _sub_location.y - erea.height + 0.1f;
+		onfloor_flg = true;
+	}
+	//右の壁に触れた時
+	else if (location.x + erea.width - 10 < _sub_location.x)
+	{
+		location.x = _sub_location.x - erea.width;
+
+		//右の壁に触れたフラグを立てる
+		rightwall_flg = true;
+	}
+	//左の壁に触れた時
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width)
+	{
+		location.x = _sub_location.x + _sub_erea.width;
+
+		//左の壁に触れたフラグを立てる
+		leftwall_flg = true;
+	}
+	//どっちの壁にも触れていないときの地面すり抜け防止
+	else
+	{
+		location.y = _sub_location.y - erea.height;
+		onfloor_flg = true;
 	}
 }
 
