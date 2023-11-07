@@ -6,12 +6,14 @@ BossHands::BossHands(int _who) {
 	handsimg[0] = LoadGraph("resource/images/Boss/BhandM.png");
 	handsimg[1] = LoadGraph("resource/images/Boss/bhandC.png");
 	location.x = 700;
-	location.y = 0;
+	location.y = -500;
 	erea.height = 190;
 	erea.width = 190;
 	switching = 0;
 	down_hand = false;
 	who = _who;
+	count = STOPBOSS;
+	Attack_Num=0;
 }
 
 BossHands::~BossHands() {
@@ -19,13 +21,14 @@ BossHands::~BossHands() {
 }
 
 void BossHands::Update(GameMain* main) {
-	if (down_hand ==false) {
-		HandsMagenta();
-		BossAttack(main);
-	}
-	if (hitflg == true) {
-		ShockWaveAttack(main);
-	}
+
+	//マゼンタ
+		HandsMagenta(main);
+
+
+	//シアン
+
+	//イエロー
 }
 
 void BossHands::Draw() const {
@@ -42,51 +45,132 @@ void BossHands::Draw() const {
 
 }
 
-void BossHands::HandsMagenta() {
+void BossHands::HandsMagenta(GameMain* main) {
 
 	/*if (switching > 2) {
 		down_hand = true;
 	}*/
 
+	//ボスの拳の攻撃判定
+	Attack_Num = 0;
+	BossAttack(main);
 
+	//衝撃波を出す
+	if (hitflg == true && onceflg == true) {
+		switch (switching) {
+		case 0:
+			Attack_Num = 1;
+			BossAttack(main);
+			break;
+		case 1:
+			Attack_Num = 2;
+			BossAttack(main);
+			break;
+		case 2:
+			Attack_Num = 1;
+			BossAttack(main);
+			Attack_Num = 2;
+			BossAttack(main);
+			break;
+		default:
+			break;
+		}
+		onceflg = false;
+	}
+
+	//地面に付いた後カウントが0より小さくなったら、次の出現位置に移動
+	if (count < 0) {
+		location.y -= 10;
+	}
+
+	if (location.y < -500) {
+		hitflg = false;
+		onceflg = true;
+		location.y = -500;
+		count = STOPBOSS;
+		switching++;
+	}
+
+	//拳を振り下ろす動き
 	if (hitflg != true) {
 		location.y += 5;
 	}
 	else {
-
-		//location.y = 0;
-		//hitflg = false;
+		count--;
 	}
-		Attack(main);
 
+		switch (switching) {
+		case 0:
+			location.x = Magentax[switching];
+			break;
+		case 1:
+			location.x = Magentax[switching];
+			break;
+		case 2:
+			location.x = Magentax[switching];
+			break;
+		default:
+			break;
+		}
 
-		//switch (switching) {
-		//case 0:
-		//	location.x = Magentax[switching];
-		//	break;
-		//case 1:
-		//	location.x = Magentax[switching];
-		//	break;
-		//case 2:
-		//	location.x = Magentax[switching];
-		//	break;
-		//default:
-		//	break;
-		//}
 }
 
 AttackData BossHands::BossAttactData()
 {
 	AttackData attack_data;
-	attack_data.shift_x = -erea.width-3;
-	attack_data.shift_y = -30;
-	attack_data.width = erea.width;
-	attack_data.height = erea.height-20;
-	attack_data.who_attack = who;
-	attack_data.attack_time = 30;
-	attack_data.delay = 0;
-	attack_data.damage = 1;
-	attack_data.attack_type = MELEE;
+	switch (Attack_Num) {
+	//ザクロの拳
+	case 0:
+		attack_data.shift_x = -erea.width - 3;
+		attack_data.shift_y = -30;
+		attack_data.width = erea.width;
+		attack_data.height = erea.height - 20;
+		attack_data.who_attack = who;
+		attack_data.attack_time = 30;
+		attack_data.delay = 0;
+		attack_data.damage = 1;
+		attack_data.attack_type = MELEE;
+		break;
+	case 1:
+		attack_data.shift_x = -erea.width;
+		attack_data.shift_y = 50;
+		attack_data.width = erea.width;
+		attack_data.height = erea.height / 2;
+		attack_data.who_attack = who;
+		attack_data.attack_time = 300;
+		attack_data.delay = 0;
+		attack_data.damage = 1;
+		attack_data.attack_type = BULLET;
+		attack_data.speed = 3;
+		attack_data.angle = 0.5;
+		break;
+	case 2:
+		attack_data.shift_x = -erea.width;
+		attack_data.shift_y = 50;
+		attack_data.width = erea.width;
+		attack_data.height = erea.height / 2;
+		attack_data.who_attack = who;
+		attack_data.attack_time = 300;
+		attack_data.delay = 0;
+		attack_data.damage = 1;
+		attack_data.attack_type = BULLET;
+		attack_data.speed = 3;
+		attack_data.angle = 1.0;
+		break;
+	default:
+		attack_data.shift_x = 0;
+		attack_data.shift_y = 0;
+		attack_data.width = 0;
+		attack_data.height = 0;
+		attack_data.who_attack = who;
+		attack_data.attack_time = 0;
+		attack_data.delay = 0;
+		attack_data.damage = 0;
+		attack_data.attack_type =MELEE;
+
+		break;
+	}
+
 
 
 	return attack_data;
@@ -99,30 +183,5 @@ void BossHands::BossAttack(GameMain* main)
 
 }
 
-void BossHands::HandResetting() {
-	location.x;
-}
 
-AttackData BossHands::ShockWaveData() {
-	AttackData attack_data;
-	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = -50;
-	attack_data.width = erea.width;
-	attack_data.height = erea.height;
-	attack_data.who_attack = who;
-	attack_data.attack_time = 300;
-	attack_data.delay = 0;
-	attack_data.damage = 1;
-	attack_data.attack_type = BULLET;
-	attack_data.speed = 3;
-	attack_data.angle = 0.4;
 
-	return attack_data;
-}
-
-void BossHands::ShockWaveAttack(GameMain* main)
-{
-	//攻撃を生成する
-	main->SpawnAttack(ShockWaveData());
-
-}

@@ -4,7 +4,7 @@ class BossHands :
     public CharaBase
 {
 private:
-
+#define STOPBOSS (160)  //ボスが次の行動に行くまでの時間
 public:
 
    // Direction direction;
@@ -25,6 +25,10 @@ public:
     int down_hand;
 
     bool hitflg=false;
+    bool onceflg=true;
+    int count;
+
+    int Attack_Num;//ボスの手が今何の攻撃しているか
 
     BossHands(int _who);
     ~BossHands();
@@ -35,7 +39,7 @@ public:
     
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
-    void HandsMagenta();
+    void HandsMagenta(GameMain* main);
     AttackData ShockWaveData();
     void ShockWaveAttack(GameMain* main);
     void HandResetting();
