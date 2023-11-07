@@ -14,6 +14,7 @@ BossHands::BossHands(int _who) {
 	who = _who;
 	count = STOPBOSS;
 	Attack_Num=0;
+	hp=10;
 }
 
 BossHands::~BossHands() {
@@ -38,6 +39,7 @@ void BossHands::Draw() const {
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
 	DrawFormatString(120, 0, 0xff00ff, "%d", hitflg);
+	DrawFormatString(159, 0, 0xff00ff, "%d", hp);
 //	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
 
 #endif // _DEBUG
@@ -47,73 +49,79 @@ void BossHands::Draw() const {
 
 void BossHands::HandsMagenta(GameMain* main) {
 
-	/*if (switching > 2) {
-		down_hand = true;
-	}*/
+		/*if (switching > 2) {
+			down_hand = true;
+		}*/
+	if (switching < 3) {
+		//ボスの拳の攻撃判定
+		Attack_Num = 0;
+		BossAttack(main);
 
-	//ボスの拳の攻撃判定
-	Attack_Num = 0;
-	BossAttack(main);
+		//衝撃波を出す
+		if (hitflg == true && onceflg == true) {
+			switch (switching) {
+			case 0:
+				Attack_Num = 1;
+				BossAttack(main);
+				break;
+			case 1:
+				Attack_Num = 2;
+				BossAttack(main);
+				break;
+			case 2:
+				Attack_Num = 1;
+				BossAttack(main);
+				Attack_Num = 2;
+				BossAttack(main);
+				break;
+			default:
+				break;
+			}
+			onceflg = false;
+		}
 
-	//衝撃波を出す
-	if (hitflg == true && onceflg == true) {
+		if (switching < 2) {
+			//地面に付いた後カウントが0より小さくなったら、次の出現位置に移動
+			if (count < 0) {
+				location.y -= 10;
+			}
+
+			if (location.y < -500) {
+				hitflg = false;
+				onceflg = true;
+				location.y = -500;
+				count = STOPBOSS;
+				switching++;
+			}
+		}
+
+		//拳を振り下ろす動き
+		if (hitflg != true) {
+			location.y += 5;
+		}
+		else {
+			count--;
+		}
+
 		switch (switching) {
 		case 0:
-			Attack_Num = 1;
-			BossAttack(main);
+			location.x = Magentax[switching];
 			break;
 		case 1:
-			Attack_Num = 2;
-			BossAttack(main);
+			location.x = Magentax[switching];
 			break;
 		case 2:
-			Attack_Num = 1;
-			BossAttack(main);
-			Attack_Num = 2;
-			BossAttack(main);
+			location.x = Magentax[switching];
 			break;
 		default:
 			break;
 		}
-		onceflg = false;
-	}
-
-	//地面に付いた後カウントが0より小さくなったら、次の出現位置に移動
-	if (count < 0) {
-		location.y -= 10;
-	}
-
-	if (location.y < -500) {
-		hitflg = false;
-		onceflg = true;
-		location.y = -500;
-		count = STOPBOSS;
-		switching++;
-	}
-
-	//拳を振り下ろす動き
-	if (hitflg != true) {
-		location.y += 5;
 	}
 	else {
-		count--;
+
 	}
-
-		switch (switching) {
-		case 0:
-			location.x = Magentax[switching];
-			break;
-		case 1:
-			location.x = Magentax[switching];
-			break;
-		case 2:
-			location.x = Magentax[switching];
-			break;
-		default:
-			break;
-		}
-
 }
+
 
 AttackData BossHands::BossAttactData()
 {
@@ -138,7 +146,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.height = erea.height / 2;
 		attack_data.who_attack = who;
 		attack_data.attack_time = 300;
-		attack_data.delay = 0;
+		attack_data.delay = 3;
 		attack_data.damage = 1;
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 3;
@@ -151,7 +159,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.height = erea.height / 2;
 		attack_data.who_attack = who;
 		attack_data.attack_time = 300;
-		attack_data.delay = 0;
+		attack_data.delay = 3;
 		attack_data.damage = 1;
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 3;
@@ -164,14 +172,12 @@ AttackData BossHands::BossAttactData()
 		attack_data.height = 0;
 		attack_data.who_attack = who;
 		attack_data.attack_time = 0;
-		attack_data.delay = 0;
+		attack_data.delay = 3;
 		attack_data.damage = 0;
 		attack_data.attack_type =MELEE;
 
 		break;
 	}
-
-
 
 	return attack_data;
 }
@@ -183,5 +189,7 @@ void BossHands::BossAttack(GameMain* main)
 
 }
 
+void BossHands::ApplyDamage(int num) {
 
-
+	hp -= num;
+}

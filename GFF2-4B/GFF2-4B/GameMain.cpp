@@ -236,8 +236,6 @@ AbstractScene* GameMain::Update()
 	}
 
 
-
-
 	//床の数だけ繰り返す
 	for (int i = 0; i < stage_height; i++)
 	{
@@ -443,6 +441,15 @@ void GameMain::HitCheck()
 			}
 		}
 
+		if (now_stage == 3) {
+			if (hands != nullptr) {
+				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+				{
+					//ボスのダメージ処理
+					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+				}
+			}
+		}
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)

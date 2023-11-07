@@ -43,5 +43,6 @@ public:
     AttackData ShockWaveData();
     void ShockWaveAttack(GameMain* main);
     void HandResetting();
+    void ApplyDamage(int num);
 };
 
