@@ -35,7 +35,7 @@ void Stage::Draw()const
 	case 2:
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
 		break;
-		//Šâ
+		//Šâde
 	case 3:
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x333333, true);
 		break;

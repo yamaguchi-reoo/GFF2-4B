@@ -91,6 +91,7 @@ void Attack::Draw()const
 	{
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, false);
 	}
+
 }
 
 void Attack::SpawnAttack(AttackData _attackdata)

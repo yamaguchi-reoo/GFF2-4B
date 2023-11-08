@@ -338,14 +338,14 @@ void Player::OnFloor()
 	jump_flg = false;
 }
 
-void Player::Push(int num,Location _sub_location, Erea _sub_erea)
+void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 {
 	Location p_center = { 0 };
 	p_center.x = location.x + (erea.width / 2);
 	p_center.y = location.y + (erea.height / 2);
 
 	//‰E‚Ì•Ç‚ÉG‚ê‚½
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y)
+	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x - erea.width;
 		//‰E‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -354,7 +354,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		rightwall_flg = true;
 	}
 	//¶‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y)
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//¶‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -365,11 +365,15 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	//°‚ÉG‚ê‚½
 	else if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
-		OnFloor();
+		//–Ø‚Æ‰_‚Íã‚©‚ç~‚è‚Ä‚«‚½‚Æ‚«‚¾‚¯æ‚ê‚é‚æ‚¤‚É‚·‚é
+		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
+		{
+			location.y = _sub_location.y - erea.height + 0.1f;
+			OnFloor();
+		}
 	}
 	//“Vˆä‚ÉG‚ê‚½
-	else if (location.y + 30 > _sub_location.y + _sub_erea.height)
+	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2 && _type != 4)
 	{
 		location.y = _sub_location.y + _sub_erea.height;
 		//ã‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -621,6 +625,7 @@ void Player::Move()
 	{
 		//d—Í‚ğ—^‚¦‚é
 		GiveGravity();
+		jump_flg = true;
 	}
 
 	//‚¢‚¸‚ê‚©‚ÌUŒ‚‚ª”­¶‚µ‚Ä‚¢‚é‚©Aƒ_ƒ[ƒW‚ğó‚¯‚Ä‚¢‚é“r’†‚©A€‚ñ‚Å‚¢‚é“r’†‚È‚ç
@@ -680,7 +685,7 @@ void Player::Move()
 #else
 		PadInput::OnButton(XINPUT_BUTTON_A) == true
 #endif
-		&& jump_flg == false && move_flg == true)
+		&& jump_flg == false && move_flg == true)   
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;
@@ -709,6 +714,10 @@ void Player::Move()
 	old_location = location;
 	//ˆÚ“®ˆ—
 	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
+	if (location.x < 0)
+	{
+		location.x = old_location.x;
+	}
 	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
 
 	//YÀ•W‚ªˆê’è‚ğã‰ñ‚Á‚½‚ç€

@@ -59,4 +59,6 @@ public:
 
 	//オブジェクトのワールド座標をスクリーン座標に変換する
 	void SetScreenPosition(Location _world_to_screen);
+
+	int GetLocaLocationX() { return local_location.x; }
 };
