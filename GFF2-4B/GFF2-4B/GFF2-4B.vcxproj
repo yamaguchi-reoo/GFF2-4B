@@ -158,6 +158,8 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="GameClear.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="Koban.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="PlayerHP.cpp" />
@@ -188,6 +190,8 @@
     <ClInclude Include="common.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="GameClear.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="SelectStage.h" />

@@ -1,6 +1,5 @@
 #include "Title.h"
 #include "DxLib.h"
-#include "Title.h"
 #include "GameMain.h"
 #include "PadInput.h"
 
@@ -8,7 +7,7 @@
 Title::Title()
 {
 	//初期化
-	Select = 0;
+	Select = 1;
 	Once = TRUE;
 
 }
@@ -63,12 +62,6 @@ AbstractScene* Title::Update()
 		case TITLE_MENU::GAME_START:
 
 			return new GameMain(0);
-			break;
-			//ヘルプ画面
-		case TITLE_MENU::GAME_HELP:
-			//return new Help();
-			//StopSoundMem(TitleBGM);
-			break;
 			//エンド画面へ
 		case TITLE_MENU::GAME_END:
 
@@ -87,9 +80,10 @@ void Title::Draw()const
 	DrawString(150, 100, "禊", 0xffffff);
 
 	//メニューの描画
-	DrawString(730, 240, "開始", 0xffffff);
+	DrawString(730, 260, "開始", 0xffffff);
 	//DrawString(730, 320, "ヘルプ", 0xffffff);
-	DrawString(730, 320/*400*/, "終了", 0xffffff);
+	DrawString(730, 340/*400*/, "終了", 0xffffff);
+	DrawFormatString(730, 410/*400*/,0x00ff00, "%d",Select);
 
 
 	////カーソルの描画
