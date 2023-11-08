@@ -88,6 +88,7 @@ AbstractScene* SelectStage::Update()
 //•`‰æ‚ÉŠÖ‚·‚é‚±‚Æ‚ðŽÀ‘•
 void SelectStage::Draw() const
 {
+	SetFontSize(16);
 	DrawBox(0, 0, 1280, 720, 0xadadad, TRUE);
 
 	switch (stage_num)
