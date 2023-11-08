@@ -86,24 +86,24 @@ void Iruka::Update(GameMain* main)
 void Iruka::Draw() const
 {
 	if (spawn_flg == false) {
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ffff, TRUE);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ffff, TRUE);
 		
 		//ç∂å¸Ç´	
 		if (iruka_state == IrukaState::LEFT) {
-			DrawBoxAA(location.x + 40, location.y + 10, location.x, location.y + 40, 0x00ff00, true);
+			DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
 		}
 		//âEå¸Ç´
 		else if (iruka_state == IrukaState::RIGHT) {
-			DrawBoxAA(location.x + erea.width - 40, location.y + 10, location.x + erea.width, location.y + 40, 0x00ff00, true);
-			DrawBoxAA(location.x + erea.width - 35, location.y, location.x + erea.width, location.y, 0x0000ff, FALSE);
+			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
+			DrawBoxAA(local_location.x + erea.width - 35, local_location.y, local_location.x + erea.width, local_location.y, 0x0000ff, FALSE);
 		}
 		//âEå¸Ç´óéâ∫
 		else if (iruka_state == IrukaState::RIGHT_FALL) {
-			DrawBoxAA(location.x + erea.width, location.y + erea.height - 40, location.x + 30, location.y + erea.height, 0x00ff00, true);
+			DrawBoxAA(local_location.x + erea.width, local_location.y + erea.height - 40, local_location.x + 30, local_location.y + erea.height, 0x00ff00, true);
 		}
 		//ç∂å¸Ç´óéâ∫
 		else if (iruka_state == IrukaState::LEFT_FALL) {
-			DrawBoxAA(location.x + 30, location.y + erea.height - 40, location.x, location.y + erea.height, 0x00ff00, true);
+			DrawBoxAA(local_location.x + 30, local_location.y + erea.height - 40, local_location.x, local_location.y + erea.height, 0x00ff00, true);
 		}
 	}
 	DrawFormatString(600, 0, 0xffffff, "%d", hp);

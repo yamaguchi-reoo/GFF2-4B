@@ -22,6 +22,7 @@ class GameMain :
     public AbstractScene
 {
 private:
+    int now_stage;      //現在のステージ数
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
@@ -45,12 +46,13 @@ private:
     bool onfloor_flg;      //実験用
     int who;                //誰が攻撃したか判断する用
 
-    int stage_width;        //ステージのブロックの横の個数 
-    int stage_height;       //ステージのブロックの縦の個数
+    int stage_width_num;    //ステージブロックの横数
+    int stage_height_num;   //ステージブロックの縦数
 
+    int stage_width;        //ステージ横幅
 public:
-    //コンストラクタ
-    GameMain();
+    //コンストラクタ(_stage＝読み込むステージ)
+    GameMain(int _stage);
     //デストラクタ
     ~GameMain();
 
@@ -67,6 +69,18 @@ public:
     void HitCheck();
 
     //ステージファイルを読み込む
-    void LoadStageData();
+    void LoadStageData(int _stage);
+
+    //次のステージへ遷移する
+    void SetStage(int _stage);
+
+    //ステージを生成する
+    void CreateStage(int _stage);
+
+    //カメラ座標の更新
+    void CameraLocation(Location _location);
+
+    //カメラ座標を初期地点に戻す
+    void ResetCamera();
 };
 

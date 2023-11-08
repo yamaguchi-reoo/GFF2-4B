@@ -1,4 +1,5 @@
 #include "PowerGauge.h"
+#include "PadInput.h"
 
 PowerGauge::PowerGauge()
 {

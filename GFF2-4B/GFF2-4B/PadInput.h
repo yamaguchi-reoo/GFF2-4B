@@ -2,6 +2,7 @@
 #include"DxLib.h"
 
 #define KEY_MAX 256
+#define MOUSE_MAX 256
 
 #define BUTTONS 16
 #define STICKL_X 1		
@@ -96,6 +97,8 @@ class KeyInput
 private:
 	static int NowKey[KEY_MAX];		//今回の入力キー
 	static int OldKey[KEY_MAX];		//前回の入力キー
+	static int NowMouse[MOUSE_MAX]; //今回の入力マウスボタン
+	static int OldMouse[MOUSE_MAX]; //前回の入力マウスボタン
 	static CURSOR Cursor; //カーソル
 public:
 	//パッド情報の更新
@@ -104,6 +107,18 @@ public:
 		for (int i = 0; i < KEY_MAX; i++) {
 			OldKey[i] = NowKey[i];
 			NowKey[i] = CheckHitKey(i);
+		}
+		for (int i = 0; i < MOUSE_MAX; i++)
+		{
+			OldMouse[i] = NowMouse[i];
+			if (GetMouseInput() == i)
+			{
+				NowMouse[i] = 1;
+			}
+			else
+			{
+				NowMouse[i] = 0;
+			}
 		}
 		GetMousePoint(&Cursor.x, &Cursor.y);
 	}
@@ -120,6 +135,23 @@ public:
 	//ボタンを押した瞬間
 	static bool OnRelease(int key) {
 		return (NowKey[key] == 0 && OldKey[key] == 1);
+	}
+	//マウスボタンを押された瞬間
+	static bool OnMouse(int mouse)
+	{
+		return (NowMouse[mouse] == 1 && OldMouse[mouse] == 0);
+	}
+
+	//マウスボタンを押してる間
+	static bool OnPressedMouse(int mouse)
+	{
+		return (NowMouse[mouse] == 1);
+	}
+
+	//マウスボタンを離した瞬間
+	static bool OnReleaseMouse(int mouse)
+	{
+		return (NowMouse[mouse] == 0 && OldMouse[mouse] == 1);
 	}
 	//マウスカーソルの位置を返す
 	static CURSOR GetMouseCursor()

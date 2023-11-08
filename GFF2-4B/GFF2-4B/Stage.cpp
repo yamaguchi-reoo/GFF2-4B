@@ -29,22 +29,26 @@ void Stage::Draw()const
 		break;
 		//’n–Ê
 	case 1:
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffffff, true);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, true);
 		break;
 		//–Ø
 	case 2:
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x00ff00, true);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
 		break;
 		//Šâ
 	case 3:
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0x333333, true);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x333333, true);
+		break;
+		//‰_
+	case 4:
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xdddddd, true);
 		break;
 	default:
 		break;
 	}
 	if (debug_flg == true)
 	{
-		DrawFormatStringF(location.x, location.y, 0xff0000, "%d", type);
+		DrawFormatStringF(local_location.x, local_location.y, 0xff0000, "%d", type);
 	}
 }
 
