@@ -153,15 +153,7 @@ AbstractScene* GameMain::Update()
 			effect[i]->SetFlg(0);
 		}
 	}
-	
 
-		for (int i = 0; i < ZAKURO_MAX; i++) {
-			if (zakuro[i] != nullptr) {
-				powergauge->SetVolume(zakuro[i]->GetColorDate());	
-			}
-		}
-		effect->EndFlg(0);
-	}
 	//ひまわり向き
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
@@ -282,7 +274,11 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
-	effect->Draw();
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		effect[i]->Draw();
+
+	}
 	
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
@@ -445,8 +441,9 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
-					effect->HitFlg(true);
-					//effect->SetLocation(zakuro->GetCenterLocation());
+					effect[j]->SetFlg(1);
+					effect[j]->SetLocation(himawari[i]->GetCenterLocation());
+					effect[j]->SetSplashColor(himawari[j]->GetColorDate());
 
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
