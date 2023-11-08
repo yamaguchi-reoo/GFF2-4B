@@ -134,15 +134,6 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
-	if (effect->InitSplash() == 2)
-	{
-		for (int i = 0; i < ZAKURO_MAX; i++) {
-			if (zakuro[i] != nullptr) {
-				powergauge->SetVolume(zakuro[i]->GetColorDate());
-			}
-		}
-		effect->EndFlg(0);
-	}
 	//‚Ð‚Ü‚í‚èŒü‚«
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
