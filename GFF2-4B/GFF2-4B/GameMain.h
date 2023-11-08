@@ -15,8 +15,6 @@
 #include "PlayerHP.h"
 #include "Boss.h"
 #include "BossHands.h"
-
-//effect
 #include "Effect.h"
 
 class Player;

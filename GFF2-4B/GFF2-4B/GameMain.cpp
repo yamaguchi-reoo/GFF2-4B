@@ -124,10 +124,14 @@ AbstractScene* GameMain::Update()
 
 	player->Update(this);
 	player->SetScreenPosition(camera_location);
-	powergauge->Update();
+	
+	powergauge->Update(this);
+	powergauge->SetScreenPosition(camera_location);
+
 	playerhp->Update(player->GetPlayerHP());
 
-	effect->Update();
+	effect->Update(this);
+	effect->SetScreenPosition(camera_location);
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -428,7 +432,6 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
@@ -444,7 +447,8 @@ void GameMain::HitCheck()
 
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(zakuro[j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(zakuro[j]->GetLocalLocation());
 					effect->SetSplashColor(zakuro[j]->GetColorDate());
 				}
 			}
@@ -456,7 +460,8 @@ void GameMain::HitCheck()
 				{
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(iruka[j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(iruka[j]->GetLocalLocation());
 					effect->SetSplashColor(iruka[j]->GetColorDate());
 
 					//イルカのダメージ処理
@@ -475,7 +480,8 @@ void GameMain::HitCheck()
 				{
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(himawari[ j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(himawari[j]->GetLocalLocation());
 					effect->SetSplashColor(himawari[j]->GetColorDate());
 
 					//ひまわりのダメージ処理

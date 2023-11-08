@@ -15,7 +15,7 @@ struct GuegeBase
 	int maxFlg;   //CMYの場合(0:ゲージMAX未満 1:ゲージMAX),黒の場合(0:それ以外 1:ゲージが黒の状態
 };
 
-class PowerGauge
+class PowerGauge :public CharaBase
 {
 private:
 	GuegeBase magenta; //マゼンタ
@@ -38,7 +38,7 @@ public:
 	PowerGauge();  //コンストラクタ
 	~PowerGauge(); //デストラクタ
 
-	void Update(); //更新処理
+	void Update(GameMain* main); //更新処理
 	void Draw()const; //描画処理
 
 	float CalculateVolume(float volume, float h); //ゲージの溜まり具合を計算

@@ -51,6 +51,9 @@ public:
 	//中心座標の取得
 	Location GetCenterLocation()const;
 
+	//ローカル座標の取得
+	Location GetLocalLocation()const;
+
 	//直径の取得
 	Erea GetErea()const;
 

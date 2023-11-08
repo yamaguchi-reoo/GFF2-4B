@@ -1,8 +1,14 @@
 #include "PowerGauge.h"
 #include "PadInput.h"
+#include "GameMain.h"
 
 PowerGauge::PowerGauge()
 {
+	location.x = 5;
+	location.y = 3;
+	erea.height = 150;
+	erea.width = 150;
+
 	magenta.x = 112.0f;
 	magenta.y = 70.0f;
 	magenta.h = 65.0f;
@@ -58,7 +64,7 @@ PowerGauge::~PowerGauge()
 	DeleteMask(MaskHandle[1]);
 }
 
-void PowerGauge::Update()
+void PowerGauge::Update(GameMain* main)
 {
 	if ((black.maxFlg == 0) && (rotaFlg == 0))
 	{
