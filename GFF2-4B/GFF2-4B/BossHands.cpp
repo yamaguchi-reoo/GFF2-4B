@@ -39,8 +39,7 @@ void BossHands::Draw() const {
 
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
-	DrawFormatString(120, 0, 0xff00ff, "%d", hitflg);
-	DrawFormatString(159, 0, 0xff00ff, "%d", hp);
+	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	DrawGraph(200, 300, Hands_img[1], TRUE);
 //	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
 
@@ -54,11 +53,12 @@ void BossHands::HandsMagenta(GameMain* main) {
 		/*if (switching > 2) {
 			down_hand = true;
 		}*/
-	if (switching < 3) {
+
 		//ƒ{ƒX‚ÌŒ‚ÌUŒ‚”»’è
+	if (switching != 3) {
 		Attack_Num = 0;
 		BossAttack(main);
-
+	}
 		//ÕŒ‚”g‚ðo‚·
 		if (hitflg == true && onceflg == true) {
 			switch (switching) {
@@ -105,6 +105,12 @@ void BossHands::HandsMagenta(GameMain* main) {
 			count--;
 		}
 
+		if (switching == 2 && hitflg == true) {
+			count = 300;
+			switching++;
+		}
+
+
 		switch (switching) {
 		case 0:
 			location.x = Magentax[switching];
@@ -115,13 +121,23 @@ void BossHands::HandsMagenta(GameMain* main) {
 		case 2:
 			location.x = Magentax[switching];
 			break;
+		case 3:
+			count--;
+			if (count < 0) {
+				location.y -= 10;
+			}
+			if (location.y < -500) {
+				hitflg = false;
+				onceflg = true;
+				location.y = -500;
+				count = STOPBOSS;
+				switching = 0;
+			}
+			break;
 		default:
 			break;
 		}
-	}
-	else {
 
-	}
 }
 
 
@@ -153,6 +169,8 @@ AttackData BossHands::BossAttactData()
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 3;
 		attack_data.angle = 0.5;
+
+		attack_data.direction = true;
 		break;
 	case 2:
 		attack_data.shift_x = -erea.width;
@@ -166,6 +184,8 @@ AttackData BossHands::BossAttactData()
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 3;
 		attack_data.angle = 1.0;
+		attack_data.direction = false;
+
 		break;
 	default:
 		attack_data.shift_x = 0;
@@ -196,7 +216,4 @@ void BossHands::ApplyDamage(int num) {
 	if (Hit_Once != false) {
 		hp++;
 	}
-
-
-
 }

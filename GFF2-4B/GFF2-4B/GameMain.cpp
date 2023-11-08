@@ -22,6 +22,7 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
+		//UŒ‚‚É•ª‚¯‚Äwho‘òR“n‚·•K—v‚ ‚éà
 		hands = new BossHands(who);
 	}
 	SetStage(now_stage);
