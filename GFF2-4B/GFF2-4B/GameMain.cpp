@@ -188,6 +188,7 @@ AbstractScene* GameMain::Update()
 		if (attack[i]->GetAttackData().who_attack == player->GetWho())
 		{
 			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
+			attack[i]->SetScreenPosition(camera_location);
 		}
 		//ÉUÉNÉç
 		for (int j = 0; j < ZAKURO_MAX; j++)
