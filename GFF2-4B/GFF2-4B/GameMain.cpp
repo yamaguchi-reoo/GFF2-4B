@@ -331,7 +331,7 @@ void GameMain::HitCheck()
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
 				//êGÇÍÇΩñ Ç…âûÇ∂ÇƒâüÇµèoÇ∑
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageType());
 			}
 			//ÉUÉNÉç
 			for (int k = 0; k < ZAKURO_MAX; k++)
