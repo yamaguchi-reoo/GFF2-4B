@@ -30,7 +30,7 @@
 
 Player::Player()
 {
-#if DEBUG
+#ifdef _DEBUG
 	d_inv_flg = false;
 #endif
 	frame = 0;
@@ -92,7 +92,7 @@ Player::~Player()
 void Player::Update(GameMain* main)
 {
 	//無敵状態の切り替え（デバッグ用）
-#if DEBUG
+#ifdef _DEBUG
 	if (KeyInput::OnKey(KEY_INPUT_Q) == true)
 	{
 		d_inv_flg = !d_inv_flg;
@@ -239,7 +239,7 @@ void Player::Draw()const
 	}
 
 	//デバッグ用表示
-#if DEBUG
+#ifdef _DEBUG
 	//当たり判定表示
 	//強化状態でないなら
 	if (powerup_flg == false)
@@ -428,7 +428,7 @@ void Player::ApplyDamage(int num)
 {
 	//無敵状態でない＆死んでいる状態でない、デバッグ用の無敵状態でないなら
 	if (inv_flg == false && death_flg == false 
-#if DEBUG
+#ifdef _DEBUG
 		&& d_inv_flg == false
 #endif
 		){

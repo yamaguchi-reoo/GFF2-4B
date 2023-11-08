@@ -461,9 +461,9 @@ void GameMain::HitCheck()
 
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					if (iruka[j]->GetHp() < 1) {
+					/*if (iruka[j]->GetHp() < 1) {
 						powergauge->SetVolume(iruka[j]->GetColorDate());
-					}
+					}*/
 					attack[i]->DeleteAttack();
 				}
 			}
@@ -481,7 +481,7 @@ void GameMain::HitCheck()
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
-					powergauge->SetVolume(himawari[j]->GetColorDate());
+					//powergauge->SetVolume(himawari[j]->GetColorDate());
 					//}
 					attack[i]->DeleteAttack();
 				}

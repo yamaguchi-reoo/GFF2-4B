@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "GameMain.h"
 #include "PadInput.h"
-
+#include "SelectStage.h"
 
 Title::Title()
 {
@@ -61,7 +61,7 @@ AbstractScene* Title::Update()
 			//ゲーム画面へ
 		case TITLE_MENU::GAME_START:
 
-			return new GameMain(0);
+			return new SelectStage();
 			//エンド画面へ
 		case TITLE_MENU::GAME_END:
 
@@ -83,7 +83,7 @@ void Title::Draw()const
 	DrawString(730, 260, "開始", 0xffffff);
 	//DrawString(730, 320, "ヘルプ", 0xffffff);
 	DrawString(730, 340/*400*/, "終了", 0xffffff);
-	DrawFormatString(730, 410/*400*/,0x00ff00, "%d",Select);
+	//DrawFormatString(730, 410/*400*/,0x00ff00, "%d",Select);
 
 
 	////カーソルの描画

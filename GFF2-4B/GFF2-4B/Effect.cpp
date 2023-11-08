@@ -79,8 +79,8 @@ void Effect::Draw() const
 		DrawCircleAA(splash.x, splash.y, splash.r,0xffffff,  TRUE);
 	}
 
-	DrawFormatString(500, 0, 0xff00ff, "x:%f", splash.x);
-	DrawFormatString(500, 20, 0xff00ff, "y:%f", splash.y);
+	//DrawFormatString(500, 0, 0xff00ff, "x:%f", splash.x);
+	//DrawFormatString(500, 20, 0xff00ff, "y:%f", splash.y);
 }
 
 
