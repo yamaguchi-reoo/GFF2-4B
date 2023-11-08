@@ -9,11 +9,7 @@
 #include "EditScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
-static Location screen_origin =		//カメラ座標からスクロール座標への変換
-{
-	(SCREEN_WIDTH / 2),
-	0
-};
+static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
 	now_stage = _stage;
@@ -22,7 +18,6 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
-		//攻撃に分けてwho沢山渡す必要ある説
 		hands = new BossHands(who);
 	}
 	SetStage(now_stage);
@@ -87,10 +82,14 @@ AbstractScene* GameMain::Update()
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
-		if (zakuro[i] != nullptr) 
+		if (zakuro[i] != nullptr)
 		{
-			zakuro[i]->Update(this);
 			zakuro[i]->SetScreenPosition(camera_location);
+
+			if (zakuro[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && zakuro[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				zakuro[i]->Update(this);
+			}
+			
 		}
 	}
 	//イルカ
@@ -98,17 +97,22 @@ AbstractScene* GameMain::Update()
 	{
 		if (iruka[i] != nullptr)
 		{
-			iruka[i]->Update(this);
 			iruka[i]->SetScreenPosition(camera_location);
+			if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				iruka[i]->Update(this);
+			}
+			
 		}
 	}
 	//ひまわり
-	for (int i = 0; i < HIMAWARI_MAX; i++) 
+	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
-		if (himawari[i] != nullptr) 
+		if (himawari[i] != nullptr)
 		{
-			himawari[i]->Update(this);
 			himawari[i]->SetScreenPosition(camera_location);
+			if (himawari[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && himawari[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				himawari[i]->Update(this);
+			}
 		}
 	}
 
@@ -128,34 +132,25 @@ AbstractScene* GameMain::Update()
 		//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
 		player->SetPowerUp();
 	}
-	else if(powergauge->PowerGaugeState() == 2)
+	else if (powergauge->PowerGaugeState() == 2)
 	{
 		//強化状態解除
 		player->StopPowerUp();
 		powergauge->SetPowerFlg(0);
 	}
 
-	if (effect->InitSplash() == 2)
-	{
-		for (int i = 0; i < ZAKURO_MAX; i++) {
-			if (zakuro[i] != nullptr) {
-				powergauge->SetVolume(zakuro[i]->GetColorDate());	
-			}
-		}
-		effect->EndFlg(0);
-	}
 	//ひまわり向き
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
 		{
-			if (himawari[i]->GetLocation().x <= player->GetLocation().x	) {
+			if (himawari[i]->GetLocation().x <= player->GetLocation().x) {
 				himawari[i]->ReverseDirection();
-				
+
 			}
 			if (himawari[i]->GetLocation().x >= player->GetLocation().x) {
 				himawari[i]->ObverseDirection();
-				
+
 			}
 		}
 	}
@@ -163,12 +158,12 @@ AbstractScene* GameMain::Update()
 	//イルカ落下判定
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
-		if (iruka[i] != nullptr) 
+		if (iruka[i] != nullptr)
 		{
-			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x) 
+			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
 			{
 				iruka[i]->SetFallFlg();
-			}			
+			}
 		}
 	}
 
@@ -189,12 +184,12 @@ AbstractScene* GameMain::Update()
 					attack[i]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
 					attack[i]->SetScreenPosition(camera_location);
 				}
-			}		
+			}
 		}
 		//イルカ
-		for (int j = 0; j < IRUKA_MAX; j++) 
+		for (int j = 0; j < IRUKA_MAX; j++)
 		{
-			if (iruka[j] != nullptr) 
+			if (iruka[j] != nullptr)
 			{
 				if (attack[i]->GetAttackData().who_attack == iruka[j]->GetWho())
 				{
@@ -221,13 +216,25 @@ AbstractScene* GameMain::Update()
 			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
 			{
 				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+			}
+		}
+
+		//ボスの腕
+		if (now_stage == 3) {
+			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+			{
+				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
 				attack[i]->SetScreenPosition(camera_location);
 			}
 		}
 
 	}
 
-	
+	if (effect->GetFlg() == 2)
+	{
+		powergauge->SetVolume(effect->GetSplashColor());
+		effect->SetFlg(0);
+	}
 	
 
 
@@ -261,8 +268,14 @@ AbstractScene* GameMain::Update()
 	{
 		SetStage(3);
 	}
+
+	//ステージ選択画面へ遷移
+	if (KeyInput::OnPresed(KEY_INPUT_4))
+	{
+		return new SelectStage();
+	}
 	//プレイヤーに強制ダメージ
-	if (KeyInput::OnKey(KEY_INPUT_S)) 
+	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
 		flg = true;
 		player->ApplyDamage(1);
@@ -286,10 +299,10 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0x7d7d7d, true);
 	effect->Draw();
-	
+
 	SetFontSize(42);
-//	DrawString(400, 0, "GameMain", 0xffffff);
-	//描画
+	//	DrawString(400, 0, "GameMain", 0xffffff);
+		//描画
 	player->Draw();
 
 	if (now_stage == 3) {
@@ -308,15 +321,15 @@ void GameMain::Draw() const
 	}
 	//エネミーの描画
 	// ザクロ
-	for (int i = 0; i < ZAKURO_MAX; i++) 
+	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
-		if (zakuro[i] != nullptr) 
+		if (zakuro[i] != nullptr)
 		{
-			zakuro[i]->Draw(); 
+			zakuro[i]->Draw();
 		}
 	}
 	// ひまわり
-	for (int i = 0; i < HIMAWARI_MAX; i++) 
+	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
 		{
@@ -328,7 +341,7 @@ void GameMain::Draw() const
 	{
 		if (iruka[i] != nullptr)
 		{
-			iruka[i]->Draw(); 
+			iruka[i]->Draw();
 		}
 	}
 
@@ -391,7 +404,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
-					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0) 
+					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
@@ -424,20 +437,21 @@ void GameMain::HitCheck()
 					attack[i]->DeleteAttack();
 
 					//しぶき用
-					effect->HitFlg(true);
+					effect->SetFlg(1);
 					effect->SetLocation(zakuro[j]->GetCenterLocation());
-					//powergauge->SetVolume(zakuro[j]->GetColorDate());
+					effect->SetSplashColor(zakuro[j]->GetColorDate());
 				}
 			}
-		 }
+		}
 		for (int j = 0; j < IRUKA_MAX; j++) {
 			if (iruka[j] != nullptr) {
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(iruka[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
-					effect->HitFlg(true);
-					//effect->SetLocation(zakuro->GetCenterLocation());
+					effect->SetFlg(1);
+					effect->SetLocation(iruka[j]->GetCenterLocation());
+					effect->SetSplashColor(iruka[j]->GetColorDate());
 
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
@@ -454,16 +468,18 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
-					effect->HitFlg(true);
-					//effect->SetLocation(zakuro->GetCenterLocation());
+					effect->SetFlg(1);
+					effect->SetLocation(himawari[ j]->GetCenterLocation());
+					effect->SetSplashColor(himawari[j]->GetColorDate());
 
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
-						powergauge->SetVolume(himawari[j]->GetColorDate());
+					powergauge->SetVolume(himawari[j]->GetColorDate());
 					//}
 					attack[i]->DeleteAttack();
 				}
+
 			}
 		}
 
@@ -487,6 +503,7 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
+
 	}
 	//ザクロ同士で当たったら...
 	for (int i = 0; i < ZAKURO_MAX; i++)
@@ -502,14 +519,14 @@ void GameMain::HitCheck()
 					zakuro[j]->HitZakuro();
 				}
 			}
-		}	
+		}
 	}
 }
 
 void GameMain::LoadStageData(int _stage)
 {
 	const char* a = "resource/dat/1stStageData.txt";
-	switch(_stage)
+	switch (_stage)
 	{
 	case 0:
 		a = "resource/dat/1stStageData.txt";
@@ -543,9 +560,9 @@ void GameMain::LoadStageData(int _stage)
 		}
 	}
 }
+
 void GameMain::SetStage(int _stage)
 {
-	CameraLocation(screen_origin);
 	//敵と攻撃をリセット
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
@@ -586,7 +603,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true,who++);
+						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
 						break;
 					}
 				}
@@ -623,7 +640,10 @@ void GameMain::SetStage(int _stage)
 	//プレイヤーのリスポーン
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
+	//カメラのリセット
+	ResetCamera();
 }
+
 void GameMain::CameraLocation(Location _location)
 {
 	camera_location.x = _location.x - (SCREEN_WIDTH / 2);

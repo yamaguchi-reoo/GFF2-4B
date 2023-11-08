@@ -365,8 +365,12 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	//°‚ÉG‚ê‚½
 	else if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
-		OnFloor();
+		//–Ø‚Æ‰_‚Íã‚©‚ç~‚è‚Ä‚«‚½‚Æ‚«‚¾‚¯æ‚ê‚é‚æ‚¤‚É‚·‚é
+		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
+		{
+			location.y = _sub_location.y - erea.height + 0.1f;
+			OnFloor();
+		}
 	}
 	//“Vˆä‚ÉG‚ê‚½
 	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2 && _type != 4)
@@ -710,6 +714,10 @@ void Player::Move()
 	old_location = location;
 	//ˆÚ“®ˆ—
 	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
+	if (location.x < 0)
+	{
+		location.x = old_location.x;
+	}
 	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
 
 	//YÀ•W‚ªˆê’è‚ğã‰ñ‚Á‚½‚ç€

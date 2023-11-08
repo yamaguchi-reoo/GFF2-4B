@@ -1,7 +1,7 @@
 #include "Himawari.h"
 #include "GameMain.h"
 
-#define BULLET_INTERVAL 60
+#define BULLET_INTERVAL 120
 #define HIMAWARI_GRAVITY  10
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
@@ -130,12 +130,12 @@ AttackData Himawari::CreateAttactData()
 	attack_data.who_attack = who;
 	attack_data.direction = himawari_direction;
 	//’e‚Ì‘å‚«‚³
-	attack_data.width = 40;
-	attack_data.height = 40;
+	attack_data.width = 10;
+	attack_data.height = 10;
 	//UŒ‚‚ÉŠÖ‚·‚éî•ñ
 	attack_data.attack_time = 200;
 	attack_data.damage = 1;
-	attack_data.delay = 5;
+	attack_data.delay = 10;
 	attack_data.attack_type = BULLET;//MELEE;
 
 	//‰E‚ÉŒü‚¢‚Ä‚¢‚½‚çƒAƒ“ƒOƒ‹‚Í‚»‚Ì‚Ü‚Ü
