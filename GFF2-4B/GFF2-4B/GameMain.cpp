@@ -282,6 +282,7 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
+	DrawBox(0, 0, 1280, 720, 0x7d7d7d, true);
 	effect->Draw();
 	
 	SetFontSize(42);
