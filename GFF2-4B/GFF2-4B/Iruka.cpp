@@ -95,7 +95,7 @@ void Iruka::Draw() const
 		//‰EŒü‚«
 		else if (iruka_state == IrukaState::RIGHT) {
 			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
-			DrawBoxAA(local_location.x + erea.width - 35, local_location.y, local_location.x + erea.width, local_location.y, 0x0000ff, FALSE);
+			//DrawBoxAA(local_location.x + erea.width - 35, local_location.y, local_location.x + erea.width, local_location.y, 0x0000ff, FALSE);
 		}
 		//‰EŒü‚«—Ž‰º
 		else if (iruka_state == IrukaState::RIGHT_FALL) {
@@ -106,7 +106,7 @@ void Iruka::Draw() const
 			DrawBoxAA(local_location.x + 30, local_location.y + erea.height - 40, local_location.x, local_location.y + erea.height, 0x00ff00, true);
 		}
 	}
-	DrawFormatString(600, 0, 0xffffff, "%d", hp);
+	//DrawFormatString(600, 0, 0xffffff, "%d", hp);
 }
 
 void Iruka::Move()

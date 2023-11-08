@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include "EditScene.h"
+#include "GameClear.h"
+#include "GameOver.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
@@ -291,6 +293,13 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who);
 	}
 #endif
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL * stage_width)) {
+		return new GameClear();
+	}
+	if (player->GetPlayerHP() < 0) {
+		return new GameOver();
+	}
 
 	return this;
 }
@@ -315,9 +324,6 @@ void GameMain::Draw() const
 		{
 			stage[i][j]->Draw();
 		}
-	}
-	if (flg == true) {
-		//DrawString(300, 300,"flg", 0xffffff);
 	}
 	//エネミーの描画
 	// ザクロ
