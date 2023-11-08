@@ -53,4 +53,8 @@ Erea BoxCollider::GetErea()const
 {
 	return erea;
 }
-
+void BoxCollider::SetScreenPosition(Location _world_to_screen)
+{
+	local_location.x = location.x - _world_to_screen.x;
+	local_location.y = location.y - _world_to_screen.y;
+}

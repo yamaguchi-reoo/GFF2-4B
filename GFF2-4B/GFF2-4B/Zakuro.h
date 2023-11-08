@@ -41,12 +41,16 @@ public:
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
 	void ZakuroPush(int num, Location _sub_location, Erea _sub_erea);
 
+	void HitWall();
+
 	//攻撃をスポーンさせるのに必要な情報をまとめる
 	AttackData CreateAttactData();
 	void Attack(GameMain*main);
 	void Stop_Attack() { attack_flg = false; }
 	//ダメージ受ける処理
 	void ApplyDamage(int num);
+
+	void HitZakuro();
 
 	//スポーンフラグの取得
 	int GetSpwanFlg() { return spawn_flg; }

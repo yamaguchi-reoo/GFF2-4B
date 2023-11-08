@@ -53,9 +53,10 @@ private:
     bool onfloor_flg;      //実験用
     int who;                //誰が攻撃したか判断する用
 
-    int stage_width;        //ステージのブロックの横の個数 
-    int stage_height;       //ステージのブロックの縦の個数
+    int stage_width_num;    //ステージブロックの横数
+    int stage_height_num;   //ステージブロックの縦数
 
+    int stage_width;        //ステージ横幅
 public:
     //コンストラクタ(_stage＝読み込むステージ)
     GameMain(int _stage);
@@ -79,5 +80,11 @@ public:
 
     //次のステージへ遷移する
     void SetStage(int _stage);
+
+    //ステージを生成する
+    void CreateStage(int _stage);
+
+    //カメラ座標の更新
+    void CameraLocation(Location _location);
 };
 

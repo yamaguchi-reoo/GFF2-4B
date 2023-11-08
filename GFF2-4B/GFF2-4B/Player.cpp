@@ -160,76 +160,76 @@ void Player::Draw()const
 		switch (player_state)
 		{
 		case IDOL_RIGHT:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case IDOL_LEFT:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case MOVE_RIGHT:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
 			break;
 		case MOVE_LEFT:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
 			break;
 		case JUMP_RIGHT:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case JUMP_LEFT:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case FALL_RIGHT:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case FALL_LEFT:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case ATTACK_RIGHT_ONE:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_TWO:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_THREE:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_FOUR:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_ONE:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_TWO:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_THREE:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
 			break;
 		case ATTACK_LEFT_FOUR:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
 			break;
 		case JUMP_ATTACK_RIGHT:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
 			break;
 		case JUMP_ATTACK_RIGHT_END:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case JUMP_ATTACK_LEFT:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
 			break;
 		case JUMP_ATTACK_LEFT_END:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case DAMAGE_RIGHT:
-			DrawGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
 			break;
 		case DAMAGE_LEFT:
-			DrawTurnGraphF(location.x - PLAYER_IMAGE_SHIFT_X, location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
 			break;
 		case DEATH_RIGHT:
-			DrawRotaGraphF(location.x + PLAYER_IMAGE_SHIFT_X, location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
 			break;
 		case DEATH_LEFT:
-			DrawRotaGraphF(location.x + PLAYER_IMAGE_SHIFT_X, location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
 			break;
 		}
 	}
@@ -240,12 +240,12 @@ void Player::Draw()const
 	//強化状態でないなら
 	if (powerup_flg == false)
 	{
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xff0000, false);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xff0000, false);
 	}
 	//強化状態なら
 	else
 	{
-		DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, false);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, false);
 	}
 	int old_size = GetFontSize();	//元のサイズを保持
 	SetFontSize(14);
@@ -343,7 +343,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	p_center.y = location.y + (erea.height / 2);
 
 	//右の壁に触れた時
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && location.y + 30 < _sub_location.y + _sub_erea.height)
+	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y)
 	{
 		location.x = _sub_location.x - erea.width;
 		//右加速度を0にする
@@ -352,7 +352,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && location.y + 30 < _sub_location.y + _sub_erea.height)
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//左加速度を0にする
