@@ -710,6 +710,10 @@ void Player::Move()
 	old_location = location;
 	//ˆÚ“®ˆ—
 	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
+	if (location.x < 0)
+	{
+		location.x = old_location.x;
+	}
 	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
 
 	//YÀ•W‚ªˆê’è‚ğã‰ñ‚Á‚½‚ç€
