@@ -214,8 +214,6 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-	}
-
 		//ƒ{ƒX‚Ì˜r
 		if (now_stage == 3) {
 			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
@@ -223,11 +221,15 @@ AbstractScene* GameMain::Update()
 				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
 			}
 		}
+
 	}
+
+	
+	
 
 
 	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
-	for (int i = 0; i < stage_height_num; i++)
+	for(int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
