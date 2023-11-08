@@ -214,14 +214,23 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
+		//ボスの腕
+		if (now_stage == 3) {
+			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+			{
+				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+				attack[i]->SetScreenPosition(camera_location);
+			}
+		}
+
 	}
 
-
-
+	
+	
 
 
 	//床の数だけ繰り返す
-	for (int i = 0; i < stage_height_num; i++)
+	for(int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
@@ -263,7 +272,7 @@ AbstractScene* GameMain::Update()
 	}
 
 	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage != now_stage) {
+	if (now_stage == 3 && old_stage!=now_stage) {
 		hands = new BossHands(who);
 	}
 #endif
@@ -356,7 +365,7 @@ void GameMain::HitCheck()
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
 				//触れた面に応じて押し出す
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(), stage[i][j]->GetStageType());
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageType());
 			}
 
 			if (now_stage == 3) {
