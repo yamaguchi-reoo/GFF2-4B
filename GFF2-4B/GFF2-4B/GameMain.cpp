@@ -9,7 +9,7 @@
 #include "EditScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
-Location screen_origin =		//カメラ座標からスクロール座標への変換
+static Location screen_origin =		//カメラ座標からスクロール座標への変換
 {
 	(SCREEN_WIDTH / 2),
 	0
@@ -570,4 +570,10 @@ void GameMain::CameraLocation(Location _location)
 {
 	camera_location.x = _location.x - (SCREEN_WIDTH / 2);
 	camera_location.y = 0;
+}
+
+void GameMain::ResetCamera()
+{
+	camera_location.x = screen_origin.x - (SCREEN_WIDTH / 2);
+	camera_location.y = screen_origin.y;
 }
