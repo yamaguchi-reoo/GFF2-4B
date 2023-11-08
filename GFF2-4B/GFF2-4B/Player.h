@@ -101,7 +101,7 @@ private:
 	bool powerup_flg;								//強化状態か
 
 	//当たり判定関連
-	bool onfloor_flg;	//いずれかの地面に触れているかどうか
+	bool onfloor_flg;				//いずれかの地面に触れているかどうか
 	bool touch_ceil_flg;			//いずれかの天井に触れているかどうか
 	bool rightwall_flg;				//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;				//いずれかの左壁に触れているかどうか
@@ -139,8 +139,8 @@ public:
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
 	void OnFloor();
 
-	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
-	void Push(int num,Location _sub_location, Erea _sub_erea);
+	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標 _type = 当たった床の種類)
+	void Push(int num,Location _sub_location, Erea _sub_erea, int _type);
 
 	//各判定をリセット
 	void Reset();
