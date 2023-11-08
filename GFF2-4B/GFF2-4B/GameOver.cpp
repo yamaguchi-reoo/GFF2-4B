@@ -22,6 +22,6 @@ AbstractScene* GameOver::Update()
 
 void GameOver::Draw() const
 {
-	SetFontSize(120);
+
 	DrawString(500, 400, "Ž€", 0xffffff);
 }
