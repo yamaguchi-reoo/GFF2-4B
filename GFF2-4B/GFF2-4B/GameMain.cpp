@@ -18,7 +18,7 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
-		hands = new BossHands(who);
+		hands = new BossHands(10);
 	}
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
@@ -558,6 +558,7 @@ void GameMain::LoadStageData(int _stage)
 		}
 	}
 }
+
 void GameMain::SetStage(int _stage)
 {
 	//敵と攻撃をリセット
@@ -640,6 +641,7 @@ void GameMain::SetStage(int _stage)
 	//カメラのリセット
 	ResetCamera();
 }
+
 void GameMain::CameraLocation(Location _location)
 {
 	camera_location.x = _location.x - (SCREEN_WIDTH / 2);

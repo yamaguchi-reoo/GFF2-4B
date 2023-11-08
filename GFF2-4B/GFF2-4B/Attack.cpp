@@ -100,4 +100,5 @@ void Attack::SpawnAttack(AttackData _attackdata)
 	attack_data = _attackdata;
 	erea.width = attack_data.width;
 	erea.height = attack_data.height;
+	once = false;
 }
