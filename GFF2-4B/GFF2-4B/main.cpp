@@ -4,6 +4,7 @@
 #include "PadInput.h"
 #include "GameMain.h"
 #include "common.h"
+#include "Title.h"
 
 //メインプログラム 開始
 
@@ -19,7 +20,7 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     SetDrawScreen(DX_SCREEN_BACK);                 // 描画先画面を裏にする（ダブルバッファリング）
 
     // タイトル シーンオブジェクト作成
-    SceneManager* sceneMng = new SceneManager((AbstractScene*) new GameMain(0));
+    SceneManager* sceneMng = new SceneManager((AbstractScene*) new Title());
 
     Fps* fps = new Fps;
 

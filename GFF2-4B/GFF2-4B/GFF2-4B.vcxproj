@@ -164,6 +164,7 @@
     <ClCompile Include="PowerGauge.cpp" />
     <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="StageData.cpp" />
+    <ClCompile Include="Title.cpp" />
     <ClCompile Include="Zakuro.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="Himawari.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PowerGauge.h" />
     <ClInclude Include="Scroll.h" />
+    <ClInclude Include="Title.h" />
     <ClInclude Include="Zakuro.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GameMain.h" />
