@@ -3,8 +3,9 @@
 
 
 BossHands::BossHands(int _who) {
-	handsimg[0] = LoadGraph("resource/images/Boss/BhandM.png");
-	handsimg[1] = LoadGraph("resource/images/Boss/bhandC.png");
+
+	LoadDivGraph("resource/images/Boss/BossHandsImg.png", 2, 2, 1, 200, 200,Hands_img);
+
 	location.x = 700;
 	location.y = -500;
 	erea.height = 190;
@@ -33,8 +34,8 @@ void BossHands::Update(GameMain* main) {
 }
 
 void BossHands::Draw() const {
-	DrawGraphF(location.x, location.y,handsimg[0], TRUE);
-	DrawGraph(200, 300, handsimg[1], TRUE);
+	DrawGraphF(location.x, location.y,Hands_img[0], TRUE);
+	DrawGraph(200, 300, Hands_img[1], TRUE);
 
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);

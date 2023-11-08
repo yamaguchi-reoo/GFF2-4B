@@ -5,18 +5,19 @@ class BossHands :
 {
 private:
 #define STOPBOSS (160)  //ボスが次の行動に行くまでの時間
+#define IMGMAX (5)      //ボスの画像最大数
 public:
 
    // Direction direction;
 
+
     int bhandm;//ボス手　マゼンタの画像
     int bhandc;//ボス手　シアンの画像
-    //バルーンファイトと同じような感じで画像読込する
 
     int hands_height[3] = { 190,190,190 };
     int hands_width[3] = { 190,190,190 };
 
-    int handsimg[3];
+    int Hands_img[IMGMAX];
     int Magentax[10] = { 1000,100,500 };
     int switching;
 
@@ -40,9 +41,7 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
     void HandsMagenta(GameMain* main);
-    AttackData ShockWaveData();
-    void ShockWaveAttack(GameMain* main);
-    void HandResetting();
+
     void ApplyDamage(int num);
 };
 
