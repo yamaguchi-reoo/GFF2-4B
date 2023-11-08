@@ -20,6 +20,10 @@ GameMain::GameMain(int _stage)
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
+
+	if (now_stage == 3) {
+		hands = new BossHands(who);
+	}
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
 	{
@@ -29,15 +33,11 @@ GameMain::GameMain(int _stage)
 		bamboo[i] = new Bamboo(i * 60);
 	}
 
-	for (int i = 0; i < SPLASH_MAX; i++) {
-
-		effect[i] = new Effect();
-	}
-
 	powergauge = new PowerGauge();
 
 	playerhp = new PlayerHP();
 
+	effect = new Effect();
 
 	flg = false;
 	onfloor_flg = false;
@@ -71,16 +71,9 @@ GameMain::~GameMain()
 	{
 		delete himawari[i];
 	}
-
-	for (int i = 0; i < SPLASH_MAX; i++)
-	{
-		delete effect[i];
-	}
-
-	delete himawari;
 	delete powergauge;
 	delete playerhp;
-
+	delete effect;
 }
 
 AbstractScene* GameMain::Update()
@@ -118,9 +111,8 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	for (int i = 0; i < SPLASH_MAX; i++)
-	{
-		effect[i]->Update();
+	if (now_stage == 3) {
+		hands->Update(this);
 	}
 
 	player->Update(this);
@@ -128,8 +120,7 @@ AbstractScene* GameMain::Update()
 	powergauge->Update();
 	playerhp->Update(player->GetPlayerHP());
 
-
-
+	effect->Update();
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -143,29 +134,27 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
-
-	//しぶきがゲージにたどり着いたらためる
-	for (int i = 0; i < SPLASH_MAX; i++)
+	if (effect->InitSplash() == 2)
 	{
-		if (effect[i]->GetFlg() == 2)
-		{
-			powergauge->SetVolume(effect[i]->GetSplashColor());
-			effect[i]->SetFlg(0);
+		for (int i = 0; i < ZAKURO_MAX; i++) {
+			if (zakuro[i] != nullptr) {
+				powergauge->SetVolume(zakuro[i]->GetColorDate());
+			}
 		}
+		effect->EndFlg(0);
 	}
-
 	//ひまわり向き
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
 		{
-			if (himawari[i]->GetLocation().x <= player->GetLocation().x	) {
+			if (himawari[i]->GetLocation().x <= player->GetLocation().x) {
 				himawari[i]->ReverseDirection();
-				
+
 			}
 			if (himawari[i]->GetLocation().x >= player->GetLocation().x) {
 				himawari[i]->ObverseDirection();
-				
+
 			}
 		}
 	}
@@ -199,10 +188,10 @@ AbstractScene* GameMain::Update()
 					attack[i]->Update(zakuro[j]->GetCenterLocation(), zakuro[j]->GetErea());
 					attack[i]->SetScreenPosition(camera_location);
 				}
-			}		
+			}
 		}
 		//イルカ
-		for (int j = 0; j < IRUKA_MAX; j++) 
+		for (int j = 0; j < IRUKA_MAX; j++)
 		{
 			if (iruka[j] != nullptr)
 			{
@@ -226,7 +215,20 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
+		//ボスの腕
+		if (now_stage == 3) {
+			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+			{
+				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+			}
+		}
+
 	}
+
+
+
+
+
 	//床の数だけ繰り返す
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -258,7 +260,7 @@ AbstractScene* GameMain::Update()
 		SetStage(3);
 	}
 	//プレイヤーに強制ダメージ
-	if (KeyInput::OnKey(KEY_INPUT_S)) 
+	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
 		flg = true;
 		player->ApplyDamage(1);
@@ -268,6 +270,11 @@ AbstractScene* GameMain::Update()
 	{
 		return new EditScene(now_stage);
 	}
+
+	//途中でステージの切り替えがあった場合使用
+	if (now_stage == 3 && old_stage != now_stage) {
+		hands = new BossHands(who);
+	}
 #endif
 
 	return this;
@@ -275,16 +282,18 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
-	for (int i = 0; i < SPLASH_MAX; i++)
-	{
-		effect[i]->Draw();
+	DrawBox(0, 0, 1280, 720, 0x7d7d7d, true);
+	effect->Draw();
 
-	}
-	
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
 		//描画
 	player->Draw();
+
+	if (now_stage == 3) {
+		hands->Draw();
+	}
+
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -321,15 +330,10 @@ void GameMain::Draw() const
 		}
 	}
 
+
 	/*for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
 	}*/
-
-	//エフェクト
-	for (int i = 0; i < SPLASH_MAX; i++)
-	{
-		effect[i]->Draw();
-	}
 
 	powergauge->Draw();
 	playerhp->Draw();
@@ -361,10 +365,16 @@ void GameMain::HitCheck()
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
 				//触れた面に応じて押し出す
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(), stage[i][j]->GetStageType());
 			}
 
-			//ザクロ
+			if (now_stage == 3) {
+				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+				{
+					hands->hitflg = true;
+				}
+			}
+
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -404,7 +414,6 @@ void GameMain::HitCheck()
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr) {
-
 				//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(zakuro[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro[j]->GetSpwanFlg() == false)
 				{
@@ -413,9 +422,9 @@ void GameMain::HitCheck()
 					attack[i]->DeleteAttack();
 
 					//しぶき用
-					effect[j]->SetFlg(1);
-					effect[j]->SetLocation(zakuro[j]->GetCenterLocation());
-					effect[j]->SetSplashColor(zakuro[j]->GetColorDate());
+					effect->HitFlg(true);
+					effect->SetLocation(zakuro[j]->GetCenterLocation());
+					//powergauge->SetVolume(zakuro[j]->GetColorDate());
 				}
 			}
 		}
@@ -424,18 +433,16 @@ void GameMain::HitCheck()
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(iruka[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka[j]->GetSpwanFlg() == false)
 				{
+					//しぶき用
+					effect->HitFlg(true);
+					//effect->SetLocation(zakuro->GetCenterLocation());
+
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					if (iruka[j]->GetHp() < 1) {
 						powergauge->SetVolume(iruka[j]->GetColorDate());
 					}
 					attack[i]->DeleteAttack();
-
-					//しぶき用
-					effect[j]->SetFlg(1);
-					effect[j]->SetLocation(iruka[i]->GetCenterLocation());
-					effect[j]->SetSplashColor(iruka[j]->GetColorDate());
-
 				}
 			}
 		}
@@ -444,17 +451,26 @@ void GameMain::HitCheck()
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
+					//しぶき用
+					effect->HitFlg(true);
+					//effect->SetLocation(zakuro->GetCenterLocation());
+
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
-						powergauge->SetVolume(himawari[j]->GetColorDate());
+					powergauge->SetVolume(himawari[j]->GetColorDate());
 					//}
 					attack[i]->DeleteAttack();
+				}
+			}
+		}
 
-					//しぶき用
-					effect[j]->SetFlg(1);
-					effect[j]->SetLocation(himawari[i]->GetCenterLocation());
-					effect[j]->SetSplashColor(himawari[j]->GetColorDate());
+		if (now_stage == 3) {
+			if (hands != nullptr) {
+				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+				{
+					//ボスのダメージ処理
+					hands->ApplyDamage(attack[i]->GetAttackData().damage);
 				}
 			}
 		}
@@ -468,6 +484,7 @@ void GameMain::HitCheck()
 			//zakuro->Stop_Attack();
 		}
 	}
+	//ザクロ同士で当たったら...
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		for (int j = i + 1; j < ZAKURO_MAX; j++)
@@ -481,14 +498,14 @@ void GameMain::HitCheck()
 					zakuro[j]->HitZakuro();
 				}
 			}
-		}	
+		}
 	}
 }
 
 void GameMain::LoadStageData(int _stage)
 {
 	const char* a = "resource/dat/1stStageData.txt";
-	switch(_stage)
+	switch (_stage)
 	{
 	case 0:
 		a = "resource/dat/1stStageData.txt";
@@ -539,6 +556,7 @@ void GameMain::SetStage(int _stage)
 	{
 		attack[i] = new Attack();
 	}
+	old_stage = now_stage;
 	now_stage = _stage;
 	//ファイルの読込
 	LoadStageData(now_stage);
@@ -564,7 +582,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true,who++);
+						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
 						break;
 					}
 				}
