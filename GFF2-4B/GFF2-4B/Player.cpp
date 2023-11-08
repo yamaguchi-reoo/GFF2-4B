@@ -345,7 +345,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	p_center.y = location.y + (erea.height / 2);
 
 	//右の壁に触れた時
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2)
+	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x - erea.width;
 		//右加速度を0にする
@@ -354,7 +354,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2)
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//左加速度を0にする
@@ -369,7 +369,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		OnFloor();
 	}
 	//天井に触れた時
-	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2)
+	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2 && _type != 4)
 	{
 		location.y = _sub_location.y + _sub_erea.height;
 		//上加速度を0にする
@@ -621,6 +621,7 @@ void Player::Move()
 	{
 		//重力を与える
 		GiveGravity();
+		jump_flg = true;
 	}
 
 	//いずれかの攻撃が発生しているか、ダメージを受けている途中か、死んでいる途中なら
@@ -680,7 +681,7 @@ void Player::Move()
 #else
 		PadInput::OnButton(XINPUT_BUTTON_A) == true
 #endif
-		&& jump_flg == false && move_flg == true)
+		&& jump_flg == false && move_flg == true)   
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;
