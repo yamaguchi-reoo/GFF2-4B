@@ -220,6 +220,7 @@ AbstractScene* GameMain::Update()
 			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
 			{
 				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+				attack[i]->SetScreenPosition(camera_location);
 			}
 		}
 
