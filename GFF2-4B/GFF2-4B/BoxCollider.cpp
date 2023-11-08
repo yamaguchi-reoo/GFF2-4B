@@ -49,6 +49,10 @@ Location BoxCollider::GetCenterLocation()const
 	ret.y = location.y + erea.height / 2;
 	return ret;
 }
+Location BoxCollider::GetLocalLocation()const
+{
+	return local_location;
+}
 Erea BoxCollider::GetErea()const
 {
 	return erea;
