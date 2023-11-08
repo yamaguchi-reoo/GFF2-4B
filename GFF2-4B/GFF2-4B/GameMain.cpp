@@ -365,7 +365,7 @@ void GameMain::HitCheck()
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
 			{
 				//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageType());
 			}
 
 			if (now_stage == 3) {
@@ -484,6 +484,7 @@ void GameMain::HitCheck()
 			//zakuro->Stop_Attack();
 		}
 	}
+	//ƒUƒNƒ“¯m‚Å“–‚½‚Á‚½‚ç...
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		for (int j = i + 1; j < ZAKURO_MAX; j++)
