@@ -87,7 +87,7 @@ void Zakuro::Update(GameMain* main)
 void Zakuro::Draw() const
 {
 	SetFontSize(20);
-	DrawFormatString(200, 0, 0xffffff, "%f", local_location.x);
+	//DrawFormatString(200, 0, 0xffffff, "%f", local_location.x);
 	if (spawn_flg == false) 
 	{
 		//DrawBoxAA(location.x + (erea.width / 2), location.y + (erea.height / 2), erea.width, erea.height, 0xff00ff, TRUE);
@@ -110,7 +110,7 @@ void Zakuro::Move()
 	{
 		location.x -= MOVE_SPEED;
 		zakuro_direction = true;
-		/*if (location.x < 0) 
+	/*	if (location.x < 0) 
 		{
 			zakuro_state = ZakuroState::RIGHT;
 			zakuro_direction = false;
@@ -133,12 +133,12 @@ void Zakuro::MoveNockBack()
 	//¶ˆÚ“®
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		location.x += speed * 0.3;
+		location.x += speed * 0.3f;
 	}
 	//‰EˆÚ“®
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		location.x -= speed * 0.3;
+		location.x -= speed * 0.3f;
 	}
 
 	if (--stop_count <= 0) 

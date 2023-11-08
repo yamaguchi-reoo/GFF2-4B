@@ -30,11 +30,10 @@
 
 Player::Player()
 {
-#if DEBUG
+#ifdef _DEBUG
 	d_inv_flg = false;
 #endif
 	frame = 0;
-	player_state = IDOL_RIGHT;
 	old_location = { 0 };
 	location.x = 100;
 	location.y = 400;
@@ -48,7 +47,7 @@ Player::Player()
 	attack_interval_count = 0;
 	ca_interval_count = 0;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
-	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
+	combo_attack_interval = (int)(DEFAULT_ATTACK_INTERVAL * 1.5f);
 	attack_step = 0;
 	attack_time = DEFAULT_ATTACK_INTERVAL;
 	attack_time_count = 0;
@@ -93,7 +92,7 @@ Player::~Player()
 void Player::Update(GameMain* main)
 {
 	//無敵状態の切り替え（デバッグ用）
-#if DEBUG
+#ifdef _DEBUG
 	if (KeyInput::OnKey(KEY_INPUT_Q) == true)
 	{
 		d_inv_flg = !d_inv_flg;
@@ -233,11 +232,14 @@ void Player::Draw()const
 		case DEATH_LEFT:
 			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
 			break;
+		default:
+			DrawStringF(local_location.x, local_location.y, "no image", 0xff0000);
+			break;
 		}
 	}
 
 	//デバッグ用表示
-#if DEBUG
+#ifdef _DEBUG
 	//当たり判定表示
 	//強化状態でないなら
 	if (powerup_flg == false)
@@ -426,7 +428,7 @@ void Player::ApplyDamage(int num)
 {
 	//無敵状態でない＆死んでいる状態でない、デバッグ用の無敵状態でないなら
 	if (inv_flg == false && death_flg == false 
-#if DEBUG
+#ifdef _DEBUG
 		&& d_inv_flg == false
 #endif
 		){
@@ -487,7 +489,7 @@ void Player::StopPowerUp()
 	acs_max = ACS_MAX;
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
-	combo_attack_interval = DEFAULT_ATTACK_INTERVAL * 1.5f;
+	combo_attack_interval = (int)(DEFAULT_ATTACK_INTERVAL * 1.5f);
 	player_anim_speed = PLAYER_ANIM;
 	attack_time = DEFAULT_ATTACK_INTERVAL;		
 }

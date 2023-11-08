@@ -6,20 +6,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-//しぶき
-struct Splash
-{
-	float x, y;	//中心座標
-	int r;	//半径
-
-};
-
-
-class Effect
+class Effect : 
+	public CharaBase
 {
 private:
 
-	Splash splash;	//オブジェクト化
 	ColorDate color_date;
 
 	float v;
@@ -33,10 +24,11 @@ public:
 	Effect();
 	~Effect();
 
-	void Update();
+	void Update(GameMain* main);
 	void Draw()const;
 
-	float SetLocation(Location location);
+	float SetLocation(Location _location);
+	float SetGaugeLocation(Location _location);
 	
 
 	int SetFlg(int flg)

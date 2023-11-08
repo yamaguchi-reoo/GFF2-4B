@@ -7,6 +7,8 @@
 #include <iostream>
 #include <string>
 #include "EditScene.h"
+#include "GameClear.h"
+#include "GameOver.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
@@ -122,10 +124,14 @@ AbstractScene* GameMain::Update()
 
 	player->Update(this);
 	player->SetScreenPosition(camera_location);
-	powergauge->Update();
+	
+	powergauge->Update(this);
+	powergauge->SetScreenPosition(camera_location);
+
 	playerhp->Update(player->GetPlayerHP());
 
-	effect->Update();
+	effect->Update(this);
+	effect->SetScreenPosition(camera_location);
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -268,6 +274,12 @@ AbstractScene* GameMain::Update()
 	{
 		SetStage(3);
 	}
+
+	//ステージ選択画面へ遷移
+	if (KeyInput::OnPresed(KEY_INPUT_4))
+	{
+		return new SelectStage();
+	}
 	//プレイヤーに強制ダメージ
 	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
@@ -285,6 +297,13 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who);
 	}
 #endif
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL * stage_width)) {
+		return new GameClear();
+	}
+	if (player->GetPlayerHP() < 0) {
+		return new GameOver();
+	}
 
 	return this;
 }
@@ -309,9 +328,6 @@ void GameMain::Draw() const
 		{
 			stage[i][j]->Draw();
 		}
-	}
-	if (flg == true) {
-		//DrawString(300, 300,"flg", 0xffffff);
 	}
 	//エネミーの描画
 	// ザクロ
@@ -416,7 +432,6 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
@@ -432,7 +447,8 @@ void GameMain::HitCheck()
 
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(zakuro[j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(zakuro[j]->GetLocalLocation());
 					effect->SetSplashColor(zakuro[j]->GetColorDate());
 				}
 			}
@@ -444,14 +460,15 @@ void GameMain::HitCheck()
 				{
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(iruka[j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(iruka[j]->GetLocalLocation());
 					effect->SetSplashColor(iruka[j]->GetColorDate());
 
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					if (iruka[j]->GetHp() < 1) {
+					/*if (iruka[j]->GetHp() < 1) {
 						powergauge->SetVolume(iruka[j]->GetColorDate());
-					}
+					}*/
 					attack[i]->DeleteAttack();
 				}
 			}
@@ -463,13 +480,14 @@ void GameMain::HitCheck()
 				{
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(himawari[ j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(himawari[j]->GetLocalLocation());
 					effect->SetSplashColor(himawari[j]->GetColorDate());
 
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
-					powergauge->SetVolume(himawari[j]->GetColorDate());
+					//powergauge->SetVolume(himawari[j]->GetColorDate());
 					//}
 					attack[i]->DeleteAttack();
 				}
@@ -483,6 +501,8 @@ void GameMain::HitCheck()
 				{
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					attack[i]->DeleteAttack();
+
 				}
 			}
 		}
@@ -552,6 +572,7 @@ void GameMain::LoadStageData(int _stage)
 		}
 	}
 }
+
 void GameMain::SetStage(int _stage)
 {
 	//敵と攻撃をリセット
@@ -634,6 +655,7 @@ void GameMain::SetStage(int _stage)
 	//カメラのリセット
 	ResetCamera();
 }
+
 void GameMain::CameraLocation(Location _location)
 {
 	camera_location.x = _location.x - (SCREEN_WIDTH / 2);

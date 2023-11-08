@@ -38,7 +38,7 @@ class BoxCollider
 protected:
 	Location location;			//中心座標
 	Location local_location;	//画面上での座標
-	Erea erea; //範囲
+	Erea erea;					//範囲
 	int who;	//プレイヤーか敵か、敵ならどの種類の何体目かを保存する
 public:
 
@@ -51,6 +51,9 @@ public:
 	//中心座標の取得
 	Location GetCenterLocation()const;
 
+	//ローカル座標の取得
+	Location GetLocalLocation()const;
+
 	//直径の取得
 	Erea GetErea()const;
 
@@ -60,5 +63,5 @@ public:
 	//オブジェクトのワールド座標をスクリーン座標に変換する
 	void SetScreenPosition(Location _world_to_screen);
 
-	int GetLocaLocationX() { return local_location.x; }
+	float GetLocaLocationX() { return local_location.x; }
 };
