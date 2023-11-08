@@ -139,8 +139,8 @@ public:
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
 	void OnFloor();
 
-	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
-	void Push(int num,Location _sub_location, Erea _sub_erea);
+	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標 _type = 当たった床の種類)
+	void Push(int num,Location _sub_location, Erea _sub_erea, int _type);
 
 	//各判定をリセット
 	void Reset();
