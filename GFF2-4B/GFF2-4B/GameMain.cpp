@@ -16,9 +16,9 @@ GameMain::GameMain()
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
 	}
-	zakuro[0] = new Zakuro(200, 0, true, who++);
-	zakuro[1] = new Zakuro(400, 0, false, who++);
-	zakuro[2] = new Zakuro(900, 0, false, who++);
+	zakuro[0] = new Zakuro(200, 300, true, who++);
+	zakuro[1] = new Zakuro(400, 300, false, who++);
+	zakuro[2] = new Zakuro(900, 300, false, who++);
 	for (int i = 0; i < IRUKA_MAX; i++) {
 		iruka[i] = nullptr;
 	}
@@ -49,11 +49,15 @@ GameMain::GameMain()
 		bamboo[i] = new Bamboo(i * 60);
 	}
 
+	for (int i = 0; i < SPLASH_MAX; i++) {
+
+		effect[i] = new Effect();
+	}
+
 	powergauge = new PowerGauge();
 
 	playerhp = new PlayerHP();
 
-	effect = new Effect();
 
 	flg = false;
 	onfloor_flg = false;
@@ -83,10 +87,16 @@ GameMain::~GameMain()
 	//{
 	//	delete iruka[i];
 	//}
+
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		delete effect[i];
+	}
+
 	delete himawari;
 	delete powergauge;
 	delete playerhp;
-	delete effect;
+
 }
 
 AbstractScene* GameMain::Update()
@@ -125,11 +135,18 @@ AbstractScene* GameMain::Update()
 			himawari[i]->Update(this);
 		}
 	}
+
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		effect[i]->Update();
+	}
+
 	player->Update(this);
 	powergauge->Update();
 	playerhp->Update(player->GetPlayerHP());
 
-	effect->Update();
+
+
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -143,15 +160,17 @@ AbstractScene* GameMain::Update()
 		powergauge->SetPowerFlg(0);
 	}
 
-	if (effect->GetFlg() == 2)
+
+	//しぶきがゲージにたどり着いたらためる
+	for (int i = 0; i < SPLASH_MAX; i++)
 	{
-		for (int i = 0; i < ZAKURO_MAX; i++) {
-			if (zakuro[i] != nullptr) {
-				powergauge->SetVolume(zakuro[i]->GetColorDate());
-			}
+		if (effect[i]->GetFlg() == 2)
+		{
+			powergauge->SetVolume(effect[i]->GetSplashColor());
+			effect[i]->SetFlg(0);
 		}
-		effect->SetFlg(0);
 	}
+	
 
 	//イルカ落下判定
 	for (int i = 0; i < IRUKA_MAX; i++)
@@ -252,7 +271,8 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	scene_scroll->Draw();
-	effect->Draw();
+
+
 
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
@@ -297,6 +317,12 @@ void GameMain::Draw() const
 	/*for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
 	}*/
+
+	//エフェクト
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		effect[i]->Draw();
+	}
 
 	powergauge->Draw();
 	playerhp->Draw();
@@ -366,9 +392,9 @@ void GameMain::HitCheck()
 					attack[i]->DeleteAttack();
 
 					//しぶき用
-					effect->SetFlg(1);
-					effect->SetLocation(zakuro[j]->GetCenterLocation());
-					effect->SetSplashColor(zakuro[j]->GetColorDate());
+					effect[j]->SetFlg(1);
+					effect[j]->SetLocation(zakuro[j]->GetCenterLocation());
+					effect[j]->SetSplashColor(zakuro[j]->GetColorDate());
 				}
 			}
 		}
@@ -378,9 +404,9 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(iruka[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
-					effect->SetFlg(1);
-					effect->SetLocation(iruka[i]->GetCenterLocation());
-					effect->SetSplashColor(iruka[j]->GetColorDate());
+					effect[j]->SetFlg(1);
+					effect[j]->SetLocation(iruka[i]->GetCenterLocation());
+					effect[j]->SetSplashColor(iruka[j]->GetColorDate());
 
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);

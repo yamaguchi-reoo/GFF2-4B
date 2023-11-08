@@ -38,7 +38,7 @@ private:
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
 
-    Effect* effect;     //しぶきエフェクトのオブジェクト
+    Effect* effect[SPLASH_MAX];     //しぶきエフェクトのオブジェクト
 
     int flg;               //
     int count[2];          //実験用

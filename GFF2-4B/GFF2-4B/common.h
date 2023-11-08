@@ -37,3 +37,6 @@
 #define ZAKURO_MAX 3	//ザクロの最大数
 #define IRUKA_MAX 3		//イルカの最大数
 #define HIMAWARI_MAX 3	//ひまわりの最大数
+
+//エフェクト
+#define SPLASH_MAX 50
