@@ -26,6 +26,7 @@ private:
     int current_type;                                     //今選ばれているオブジェクトタイプ
     Location tool_location;                               //ツールボックスの左上座標
     Erea tool_size;                                       //左上のツールボックスの幅
+    bool tool_pickup_flg;                                 //ツールボックスを持っているか判断
     bool select_data[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];  //そのデータが現在選択中かどうか
 
     int stage_width;        //ステージのブロックの横の個数 

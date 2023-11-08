@@ -13,6 +13,7 @@ EditScene::EditScene(int _stage)
 	tool_location.y = 0;
 	tool_size.width = 500;
 	tool_size.height = 100;
+	tool_pickup_flg = false;
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height; i++)
 	{
@@ -98,13 +99,22 @@ AbstractScene* EditScene::Update()
 				//つかんで動かす
 				if (KeyInput::OnPressedMouse(MOUSE_INPUT_RIGHT))
 				{
-					MoveInsideScreen();
+					tool_pickup_flg = true;
 				}
 				break;
 			default:
 				break;
 			}
 		}
+	}
+	//つかんで動かす
+	if (tool_pickup_flg == true)
+	{
+		MoveInsideScreen();
+	}
+	if (KeyInput::OnReleaseMouse(MOUSE_INPUT_RIGHT))
+	{
+		tool_pickup_flg = false;
 	}
 	//操作取り消し
 	if (KeyInput::OnPresed(KEY_INPUT_LCONTROL) && KeyInput::OnKey(KEY_INPUT_Z))
@@ -151,12 +161,18 @@ AbstractScene* EditScene::Update()
 		UpdateStageData(now_stage);
 		return new GameMain(now_stage);
 	}
-	//ステージの横幅を増やす
-	//if (KeyInput::OnKey(KEY_INPUT_G))
-	//{
-	//	stage_width++;
-	//	UpdateStage();
-	//}
+	//全部無に
+	if (KeyInput::OnKey(KEY_INPUT_0))
+	{
+		SaveOldData();
+		for (int i = 0; i < stage_height; i++)
+		{
+			for (int j = 0; j < stage_width; j++)
+			{
+				stage_data[i][j] = 0;
+			}
+		}
+	}
 	return this;
 }
 
@@ -185,11 +201,10 @@ void EditScene::Draw()const
 			}
 		}
 	}
-	DrawBox(tool_location.x, tool_location.y, tool_location.x + tool_size.width, tool_location.y + tool_size.height, 0x000000, true);
-	DrawBox(tool_location.x, tool_location.y, tool_location.x + tool_size.width, tool_location.y + tool_size.height, 0xffffff, false);
-	DrawString(tool_location.x, tool_location.y + 70, "左クリックで選択＆配置", 0xffffff);
-	DrawString(tool_location.x + 300, tool_location.y + 70, "Bキーでゲームメイン", 0xffffff);
-
+	DrawBoxAA(tool_location.x, tool_location.y, tool_location.x + tool_size.width, tool_location.y + tool_size.height, 0x000000, true);
+	DrawBoxAA(tool_location.x, tool_location.y, tool_location.x + tool_size.width, tool_location.y + tool_size.height, 0xffffff, false);
+	DrawStringF(tool_location.x, tool_location.y + 70, "左クリックで選択＆配置", 0xffffff);
+	DrawStringF(tool_location.x + 300, tool_location.y + 70, "Bキーでゲームメイン", 0xffffff);
 	//現在選択中のオブジェクトを分かりやすく	
 	for (int i = 0; i < OBJECT_TYPE_NUM; i++)
 	{
@@ -391,9 +406,9 @@ int EditScene::ChechSelectErea(int _i, int _j)
 	{
 		return TOOL_BOX;
 	}
-	else if (cursor.x > stage[_i][_j]->GetLocation().x && cursor.x<stage[_i][_j]->GetLocation().x + BOX_WIDTH && cursor.y>stage[_i][_j]->GetLocation().y && cursor.y < stage[_i][_j]->GetLocation().y + BOX_HEIGHT)
+	//ツールボックスをつかんでいなければツールボックス外の処理
+	else if (cursor.x > stage[_i][_j]->GetLocation().x && cursor.x<stage[_i][_j]->GetLocation().x + BOX_WIDTH && cursor.y>stage[_i][_j]->GetLocation().y && cursor.y < stage[_i][_j]->GetLocation().y + BOX_HEIGHT && tool_pickup_flg == false)
 	{
-		//ツールボックス外なら
 		return STAGE_EDIT;
 	}
 	else
@@ -404,6 +419,7 @@ int EditScene::ChechSelectErea(int _i, int _j)
 
 void EditScene::MoveInsideScreen()
 {
+	tool_location.x = cursor.x - (tool_size.width / 2);
 	if (tool_location.x < 0)
 	{
 		tool_location.x = 0;
@@ -412,10 +428,8 @@ void EditScene::MoveInsideScreen()
 	{
 		tool_location.x = SCREEN_WIDTH - tool_size.width;
 	}
-	else
-	{
-		tool_location.x = cursor.x - (tool_size.width / 2);
-	}
+
+	tool_location.y = cursor.y - (tool_size.height / 2);
 	if (tool_location.y < 0)
 	{
 		tool_location.y = 0;
@@ -423,10 +437,6 @@ void EditScene::MoveInsideScreen()
 	else if (tool_location.y + tool_size.height > SCREEN_HEIGHT)
 	{
 		tool_location.y = SCREEN_HEIGHT - tool_size.height;
-	}
-	else
-	{
-		tool_location.y = cursor.y - (tool_size.height / 2);
 	}
 }
 
