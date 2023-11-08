@@ -15,7 +15,8 @@ BossHands::BossHands(int _who) {
 	who = _who;
 	count = STOPBOSS;
 	Attack_Num=0;
-	hp=10;
+	hp=0;
+	Hit_Once = true;
 }
 
 BossHands::~BossHands() {
@@ -192,5 +193,10 @@ void BossHands::BossAttack(GameMain* main)
 
 void BossHands::ApplyDamage(int num) {
 
-	hp -= num;
+	if (Hit_Once != false) {
+		hp++;
+	}
+
+
+
 }

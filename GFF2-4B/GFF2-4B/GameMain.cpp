@@ -471,6 +471,8 @@ void GameMain::HitCheck()
 				{
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					attack[i]->DeleteAttack();
+
 				}
 			}
 		}

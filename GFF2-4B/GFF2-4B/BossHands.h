@@ -28,6 +28,7 @@ public:
     bool hitflg=false;
     bool onceflg=true;
     int count;
+    bool Hit_Once;
 
     int Attack_Num;//ƒ{ƒX‚Ìè‚ª¡‰½‚ÌUŒ‚‚µ‚Ä‚¢‚é‚©
 
