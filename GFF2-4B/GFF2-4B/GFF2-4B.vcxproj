@@ -161,7 +161,9 @@
     <ClCompile Include="PlayerHP.cpp" />
     <ClCompile Include="PowerGauge.cpp" />
     <ClCompile Include="Scroll.cpp" />
+    <ClCompile Include="SelectStage.cpp" />
     <ClCompile Include="StageData.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="Zakuro.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="Himawari.cpp" />
@@ -184,10 +186,12 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="SelectStage.h" />
     <ClInclude Include="StageData.h" />
     <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PowerGauge.h" />
     <ClInclude Include="Scroll.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="Zakuro.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GameMain.h" />

@@ -247,6 +247,11 @@ AbstractScene* GameMain::Update()
 	{
 		return new EditScene(now_stage);
 	}
+	//ステージ選択画面へ遷移
+	if (KeyInput::OnPresed(KEY_INPUT_4))
+	{
+		return new SelectStage();
+	}
 #endif
 
 	return this;

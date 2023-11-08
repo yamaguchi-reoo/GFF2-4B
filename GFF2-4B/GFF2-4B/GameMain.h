@@ -1,5 +1,6 @@
 #pragma once
 #include "AbstractScene.h"
+#include "SelectStage.h"
 #include "BoxCollider.h"
 #include "Player.h"
 #include "Attack.h"
@@ -40,6 +41,8 @@ private:
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
+
+    SelectStage* select_stage; //ステージ選択画面のオブジェクト
 
     int flg;               //
     int count[2];          //実験用
