@@ -22,8 +22,6 @@ private:
 	Splash splash;	//オブジェクト化
 	ColorDate color_date;
 
-	bool hit_flg; //テスト用(true->敵に攻撃が当たったとき)
-
 	float v;
 
 	float gauge_x, gauge_y;

@@ -363,6 +363,7 @@ void GameMain::HitCheck()
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 			}
+
 			//ザクロ
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
@@ -403,6 +404,7 @@ void GameMain::HitCheck()
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr) {
+
 				//攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(zakuro[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro[j]->GetSpwanFlg() == false)
 				{
@@ -422,17 +424,18 @@ void GameMain::HitCheck()
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(iruka[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka[j]->GetSpwanFlg() == false)
 				{
-					//しぶき用
-					effect[j]->SetFlg(1);
-					effect[j]->SetLocation(iruka[i]->GetCenterLocation());
-					effect[j]->SetSplashColor(iruka[j]->GetColorDate());
-
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					if (iruka[j]->GetHp() < 1) {
 						powergauge->SetVolume(iruka[j]->GetColorDate());
 					}
 					attack[i]->DeleteAttack();
+
+					//しぶき用
+					effect[j]->SetFlg(1);
+					effect[j]->SetLocation(iruka[i]->GetCenterLocation());
+					effect[j]->SetSplashColor(iruka[j]->GetColorDate());
+
 				}
 			}
 		}
@@ -441,17 +444,17 @@ void GameMain::HitCheck()
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
-					//しぶき用
-					effect[j]->SetFlg(1);
-					effect[j]->SetLocation(himawari[i]->GetCenterLocation());
-					effect[j]->SetSplashColor(himawari[j]->GetColorDate());
-
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
 						powergauge->SetVolume(himawari[j]->GetColorDate());
 					//}
 					attack[i]->DeleteAttack();
+
+					//しぶき用
+					effect[j]->SetFlg(1);
+					effect[j]->SetLocation(himawari[i]->GetCenterLocation());
+					effect[j]->SetSplashColor(himawari[j]->GetColorDate());
 				}
 			}
 		}
