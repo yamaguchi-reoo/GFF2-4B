@@ -35,12 +35,12 @@ void BossHands::Update(GameMain* main) {
 
 void BossHands::Draw() const {
 	DrawGraphF(location.x, location.y,Hands_img[0], TRUE);
-	DrawGraph(200, 300, Hands_img[1], TRUE);
 
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
 	DrawFormatString(120, 0, 0xff00ff, "%d", hitflg);
 	DrawFormatString(159, 0, 0xff00ff, "%d", hp);
+	DrawGraph(200, 300, Hands_img[1], TRUE);
 //	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
 
 #endif // _DEBUG
