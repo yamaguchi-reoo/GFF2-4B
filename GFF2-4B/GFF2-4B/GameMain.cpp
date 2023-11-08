@@ -9,11 +9,7 @@
 #include "EditScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
-static Location screen_origin =		//カメラ座標からスクロール座標への変換
-{
-	(SCREEN_WIDTH / 2),
-	0
-};
+static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
 	now_stage = _stage;
@@ -84,8 +80,12 @@ AbstractScene* GameMain::Update()
 	{
 		if (zakuro[i] != nullptr) 
 		{
-			zakuro[i]->Update(this);
 			zakuro[i]->SetScreenPosition(camera_location);
+
+			if (zakuro[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && zakuro[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				zakuro[i]->Update(this);
+			}
+			
 		}
 	}
 	//イルカ
@@ -93,8 +93,11 @@ AbstractScene* GameMain::Update()
 	{
 		if (iruka[i] != nullptr)
 		{
-			iruka[i]->Update(this);
 			iruka[i]->SetScreenPosition(camera_location);
+			if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				iruka[i]->Update(this);
+			}
+			
 		}
 	}
 	//ひまわり
@@ -102,8 +105,10 @@ AbstractScene* GameMain::Update()
 	{
 		if (himawari[i] != nullptr) 
 		{
-			himawari[i]->Update(this);
 			himawari[i]->SetScreenPosition(camera_location);
+			if (himawari[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && himawari[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				himawari[i]->Update(this);
+			}
 		}
 	}
 	player->Update(this);
