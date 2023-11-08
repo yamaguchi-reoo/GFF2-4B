@@ -421,6 +421,7 @@ void GameMain::HitCheck()
 					//}
 					attack[i]->DeleteAttack();
 				}
+
 			}
 		}
 
@@ -432,6 +433,7 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
+
 	}
 	//ƒUƒNƒ“¯m‚Å“–‚½‚Á‚½‚ç...
 	for (int i = 0; i < ZAKURO_MAX; i++)
