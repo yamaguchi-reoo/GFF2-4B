@@ -76,7 +76,7 @@ void Effect::Draw() const
 {
 	if (Flg == 1)
 	{
-		DrawCircle(splash.x, splash.y, splash.r,0xffffff,  TRUE);
+		DrawCircleAA(splash.x, splash.y, splash.r,0xffffff,  TRUE);
 	}
 
 	DrawFormatString(500, 0, 0xff00ff, "x:%f", splash.x);

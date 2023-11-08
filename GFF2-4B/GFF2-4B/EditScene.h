@@ -62,7 +62,7 @@ public:
     void MoveInsideScreen();
 
     //すべてのステージオブジェクトを指定した値動かす
-    void MoveAllStageObj(int _x, int _y);
+    void MoveAllStageObj(float _x, float _y);
 
     //どの箱が選択中かの情報をリセットする
     void ResetSelectData();
