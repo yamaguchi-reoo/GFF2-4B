@@ -316,9 +316,6 @@ void GameMain::Draw() const
 			stage[i][j]->Draw();
 		}
 	}
-	if (flg == true) {
-		//DrawString(300, 300,"flg", 0xffffff);
-	}
 	//エネミーの描画
 	// ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)

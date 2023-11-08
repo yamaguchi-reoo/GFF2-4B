@@ -106,13 +106,13 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 		switch (switching) {
 		case 0:
-			location.x = Magentax[switching];
+			location.x = (float)Magentax[switching];
 			break;
 		case 1:
-			location.x = Magentax[switching];
+			location.x = (float)Magentax[switching];
 			break;
 		case 2:
-			location.x = Magentax[switching];
+			location.x = (float)Magentax[switching];
 			break;
 		default:
 			break;

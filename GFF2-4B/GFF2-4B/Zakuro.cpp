@@ -133,12 +133,12 @@ void Zakuro::MoveNockBack()
 	//¶ˆÚ“®
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		location.x += speed * 0.3;
+		location.x += speed * 0.3f;
 	}
 	//‰EˆÚ“®
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		location.x -= speed * 0.3;
+		location.x -= speed * 0.3f;
 	}
 
 	if (--stop_count <= 0) 

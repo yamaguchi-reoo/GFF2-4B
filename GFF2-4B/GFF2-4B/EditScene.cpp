@@ -208,93 +208,93 @@ void EditScene::Draw()const
 	//現在選択中のオブジェクトを分かりやすく	
 	for (int i = 0; i < OBJECT_TYPE_NUM; i++)
 	{
-		DrawBox(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0x000000, true);
-		DrawBox(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0xffffff, false);
+		DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0x000000, true);
+		DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0xffffff, false);
 		if (current_type == i)
 		{
-			DrawBox(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0xffffff, true);
-			DrawBox(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0x000000, false);
+			DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0xffffff, true);
+			DrawBoxAA(tool_location.x + (i * 50), tool_location.y, tool_location.x + (i * 50) + 50, tool_location.y + 50, 0x000000, false);
 		}
 		switch (i)
 		{
 		case 0:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "無", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "無", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "無", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "無", 0xffffff);
 			}
 			break;
 		case 1:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 10, tool_location.y + 15, "地面", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 10, tool_location.y + 15, "地面", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 10, tool_location.y + 15, "地面", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 10, tool_location.y + 15, "地面", 0xffffff);
 			}
 			break;
 		case 2:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "木", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "木", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "木", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "木", 0xffffff);
 			}
 			break;
 		case 3:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "岩", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "岩", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "岩", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "岩", 0xffffff);
 			}
 			break;
 		case 4:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "雲", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "雲", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "雲", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "雲", 0xffffff);
 			}
 			break;
 		case 5:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "ザクロ", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "ザクロ", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 15, tool_location.y + 15, "ザクロ", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 15, tool_location.y + 15, "ザクロ", 0xffffff);
 			}
 			break;
 		case 6:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50), tool_location.y + 15, "イルカ", 0x000000);
+				DrawStringF(tool_location.x + (i * 50), tool_location.y + 15, "イルカ", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50), tool_location.y + 15, "イルカ", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50), tool_location.y + 15, "イルカ", 0xffffff);
 			}
 			break;
 		case 7:
 			if (current_type == i)
 			{
-				DrawString(tool_location.x + (i * 50) + 20, tool_location.y + 15, "ひま", 0x000000);
+				DrawStringF(tool_location.x + (i * 50) + 20, tool_location.y + 15, "ひま", 0x000000);
 			}
 			else
 			{
-				DrawString(tool_location.x + (i * 50) + 20, tool_location.y + 15, "ひま", 0xffffff);
+				DrawStringF(tool_location.x + (i * 50) + 20, tool_location.y + 15, "ひま", 0xffffff);
 			}
 			break;
 		default:
@@ -440,7 +440,7 @@ void EditScene::MoveInsideScreen()
 	}
 }
 
-void EditScene::MoveAllStageObj(int _x, int _y)
+void EditScene::MoveAllStageObj(float _x, float _y)
 {
 	for (int i = 0; i < stage_height; i++)
 	{
