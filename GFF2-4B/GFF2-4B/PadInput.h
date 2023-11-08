@@ -32,6 +32,7 @@ private:
 	static XINPUT_STATE Input; //パッド
 	static Stick Rstick; //右スティック
 	static Stick Lstick; //左スティック
+	
 public:
 	//パッド情報の更新
 	static void UpdateKey()
@@ -90,6 +91,7 @@ public:
 
 		return 0;
 	}
+
 };
 //キー入力
 class KeyInput

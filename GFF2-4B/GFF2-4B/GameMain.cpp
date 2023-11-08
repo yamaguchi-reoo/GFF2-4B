@@ -270,6 +270,12 @@ AbstractScene* GameMain::Update()
 	{
 		SetStage(3);
 	}
+
+	//ステージ選択画面へ遷移
+	if (KeyInput::OnPresed(KEY_INPUT_4))
+	{
+		return new SelectStage();
+	}
 	//プレイヤーに強制ダメージ
 	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
