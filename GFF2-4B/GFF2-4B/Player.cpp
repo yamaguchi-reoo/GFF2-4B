@@ -365,8 +365,12 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	//è∞Ç…êGÇÍÇΩéû
 	else if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
-		OnFloor();
+		//ñÿÇ∆â_ÇÕè„Ç©ÇÁç~ÇËÇƒÇ´ÇΩÇ∆Ç´ÇæÇØèÊÇÍÇÈÇÊÇ§Ç…Ç∑ÇÈ
+		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
+		{
+			location.y = _sub_location.y - erea.height + 0.1f;
+			OnFloor();
+		}
 	}
 	//ìVà‰Ç…êGÇÍÇΩéû
 	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2 && _type != 4)

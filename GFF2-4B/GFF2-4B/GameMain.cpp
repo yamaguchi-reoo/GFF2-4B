@@ -547,7 +547,6 @@ void GameMain::LoadStageData(int _stage)
 }
 void GameMain::SetStage(int _stage)
 {
-	CameraLocation(screen_origin);
 	//敵と攻撃をリセット
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
@@ -625,6 +624,8 @@ void GameMain::SetStage(int _stage)
 	//プレイヤーのリスポーン
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
+	//カメラのリセット
+	ResetCamera();
 }
 void GameMain::CameraLocation(Location _location)
 {
