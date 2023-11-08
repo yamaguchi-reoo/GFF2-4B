@@ -136,6 +136,8 @@ void Player::Update(GameMain* main)
 			//仮に演出が終わったらすぐにリスポーンするようにする
 			Location res_location = { 100,100 };
 			Respawn(res_location);
+			//カメラのリセット
+			main->ResetCamera();
 		}
 	}
 

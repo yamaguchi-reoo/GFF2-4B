@@ -86,5 +86,8 @@ public:
 
     //カメラ座標の更新
     void CameraLocation(Location _location);
+
+    //カメラ座標を初期地点に戻す
+    void ResetCamera();
 };
 
