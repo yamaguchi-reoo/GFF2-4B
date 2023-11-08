@@ -13,6 +13,8 @@
 #include "Scroll.h"
 #include "PowerGauge.h"
 #include "PlayerHP.h"
+#include "Boss.h"
+#include "BossHands.h"
 
 //effect
 #include "Effect.h"
@@ -23,6 +25,8 @@ class GameMain :
     public AbstractScene
 {
 private:
+    int old_stage;//前のステージ数　デバック用
+
     int now_stage;      //現在のステージ数
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
@@ -33,6 +37,9 @@ private:
     Zakuro* zakuro[ZAKURO_MAX];    //ザクロ
     Himawari* himawari[HIMAWARI_MAX];//ひまわり
     Iruka* iruka[IRUKA_MAX];      //イルカ
+
+    Boss* boss; //ボス
+    BossHands* hands;//ボスの腕
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
@@ -82,5 +89,8 @@ public:
 
     //カメラ座標の更新
     void CameraLocation(Location _location);
+
+    //カメラ座標を初期地点に戻す
+    void ResetCamera();
 };
 

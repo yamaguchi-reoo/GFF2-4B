@@ -18,7 +18,7 @@
 
 #define BAMBOO_NUM 3 //竹の積まれている数
 
-#define ATTACK_NUM 200   //画面に存在できる最大の攻撃数
+#define ATTACK_NUM 2000   //画面に存在できる最大の攻撃数
 
 //攻撃時に誰が攻撃したのか判断する用
 #define PLAYER	0	//プレイヤー
@@ -38,3 +38,7 @@
 #define ZAKURO_MAX 30	//ザクロの最大数
 #define IRUKA_MAX 30		//イルカの最大数
 #define HIMAWARI_MAX 30	//ひまわりの最大数
+
+
+//エフェクト
+#define SPLASH_MAX 50

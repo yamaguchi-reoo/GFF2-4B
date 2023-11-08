@@ -17,8 +17,8 @@ protected:
 	int image = 0;
 	float speed = 0;
 	int hp = 0;
+
 private:
 	virtual void Update(GameMain* main) = 0;
-
 	virtual void Draw()const = 0;
 };

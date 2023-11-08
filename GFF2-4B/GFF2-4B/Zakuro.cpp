@@ -110,22 +110,22 @@ void Zakuro::Move()
 	{
 		location.x -= MOVE_SPEED;
 		zakuro_direction = true;
-		if (location.x < 0) 
+		/*if (location.x < 0) 
 		{
 			zakuro_state = ZakuroState::RIGHT;
 			zakuro_direction = false;
-		}
+		}*/
 	}
 	//‰EˆÚ“®
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
 		location.x += MOVE_SPEED;
 		zakuro_direction = false;
-		if (location.x > SCREEN_WIDTH - 50) 
+	/*	if (location.x > SCREEN_WIDTH - 50) 
 		{
 			zakuro_state = ZakuroState::LEFT;
 			zakuro_direction = true;
-		}
+		}*/
 	}
 }
 void Zakuro::MoveNockBack()

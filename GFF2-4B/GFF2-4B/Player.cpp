@@ -136,6 +136,8 @@ void Player::Update(GameMain* main)
 			//仮に演出が終わったらすぐにリスポーンするようにする
 			Location res_location = { 100,100 };
 			Respawn(res_location);
+			//カメラのリセット
+			main->ResetCamera();
 		}
 	}
 
@@ -336,14 +338,14 @@ void Player::OnFloor()
 	jump_flg = false;
 }
 
-void Player::Push(int num,Location _sub_location, Erea _sub_erea)
+void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 {
 	Location p_center = { 0 };
 	p_center.x = location.x + (erea.width / 2);
 	p_center.y = location.y + (erea.height / 2);
 
 	//右の壁に触れた時
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y)
+	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x - erea.width;
 		//右加速度を0にする
@@ -352,7 +354,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y)
+	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//左加速度を0にする
@@ -363,11 +365,15 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea)
 	//床に触れた時
 	else if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
-		OnFloor();
+		//木と雲は上から降りてきたときだけ乗れるようにする
+		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
+		{
+			location.y = _sub_location.y - erea.height + 0.1f;
+			OnFloor();
+		}
 	}
 	//天井に触れた時
-	else if (location.y + 30 > _sub_location.y + _sub_erea.height)
+	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2 && _type != 4)
 	{
 		location.y = _sub_location.y + _sub_erea.height;
 		//上加速度を0にする
@@ -619,6 +625,7 @@ void Player::Move()
 	{
 		//重力を与える
 		GiveGravity();
+		jump_flg = true;
 	}
 
 	//いずれかの攻撃が発生しているか、ダメージを受けている途中か、死んでいる途中なら
@@ -678,7 +685,7 @@ void Player::Move()
 #else
 		PadInput::OnButton(XINPUT_BUTTON_A) == true
 #endif
-		&& jump_flg == false && move_flg == true)
+		&& jump_flg == false && move_flg == true)   
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;
@@ -707,6 +714,10 @@ void Player::Move()
 	old_location = location;
 	//移動処理
 	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
+	if (location.x < 0)
+	{
+		location.x = old_location.x;
+	}
 	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
 
 	//Y座標が一定を上回ったら死

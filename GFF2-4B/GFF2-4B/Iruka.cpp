@@ -116,22 +116,22 @@ void Iruka::Move()
 	{
 		location.x -= MOVE_SPEED;
 		iruka_direction = true;
-		if (location.x < -100)
+	/*	if (location.x < -100)
 		{
 			iruka_state = IrukaState::RIGHT;
 			iruka_direction = false;
-		}
+		}*/
 	}
 	//‰EˆÚ“®
 	if (iruka_state == IrukaState::RIGHT) 
 	{
 		location.x += MOVE_SPEED;
 		iruka_direction = false;
-		if (location.x > SCREEN_WIDTH + 100) 
+	/*	if (location.x > SCREEN_WIDTH + 100) 
 		{
 			iruka_state = IrukaState::LEFT;
 			iruka_direction = true;
-		}
+		}*/
 	}
 }
 

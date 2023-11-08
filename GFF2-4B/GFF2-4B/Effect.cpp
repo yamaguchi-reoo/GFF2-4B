@@ -1,5 +1,5 @@
 #include "Effect.h"
-
+#include "GameMain.h"
 
 Effect::Effect()
 {
@@ -7,8 +7,6 @@ Effect::Effect()
 	splash.x = 0;
 	splash.y = 0;
 	splash.r = 15;
-
-	splash.color_flg = 0x000000;
 
 	//ゲージの座標
 	gauge_x = 80;
@@ -20,7 +18,7 @@ Effect::Effect()
 	test_x = 0;
 	test_y = 0;
 
-	end_flg = 0;
+	Flg = 0;
 
 }
 
@@ -33,32 +31,42 @@ Effect::~Effect()
 void Effect::Update()
 {
 
-	if (hit_flg == true)
+	if (Flg == 1)
 	{
 		//しぶきの座標とゲージの座標の差
 		test_x = gauge_x - splash.x;
 		test_y = gauge_y - splash.y;
 
-		splash.x -= fabsf(test_x) / 20;
-		splash.y -= fabsf(test_y) / v;
-		
-		end_flg = 1;
+		//ゲージの中心より右の敵を倒したら
+		if (gauge_x < splash.x)
+		{
+			splash.x -= fabsf(test_x) / 20;
+			splash.y -= fabsf(test_y) / v;
+		}
+		//ゲージの中心より左の敵を倒したら
+		else if (gauge_x > splash.x)
+		{
+			splash.x += fabsf(test_x) / 20;
+			splash.y -= fabsf(test_y) / v;
+		}
+
 
 		if (splash.y < (int)test_y / 2)
 		{
 			v = 15;
+
+			if (splash.x < (int)test_x / 3)
+			{
+				splash.y -= 12;
+			}
 		}
 	}
 
-
-
-	if (gauge_x == (int)splash.x && gauge_y == (int)splash.y)
+	if (Flg == 1 && gauge_x == (int)splash.x && gauge_y == (int)splash.y)
 	{
-		hit_flg = false;
+		Flg = 2;
 		splash.x = 0;
 		splash.y = 0;
-
-		end_flg = 2;
 	}
 }
 
@@ -66,14 +74,14 @@ void Effect::Update()
 
 void Effect::Draw() const
 {
-	if (hit_flg == true)
+	if (Flg == 1)
 	{
-		DrawCircle(splash.x, splash.y, splash.r, splash.color_flg, TRUE);
+		DrawCircle(splash.x, splash.y, splash.r,0xffffff,  TRUE);
 	}
 
-	DrawFormatString(500, 0, 0xff00ff, "end:%d", end_flg);
+	DrawFormatString(500, 0, 0xff00ff, "x:%f", splash.x);
+	DrawFormatString(500, 20, 0xff00ff, "y:%f", splash.y);
 }
-
 
 
 float Effect::SetLocation(Location location)
@@ -84,8 +92,12 @@ float Effect::SetLocation(Location location)
 	return splash.x,splash.y;
 }
 
-int Effect::InitSplash()
+void Effect::SetSplashColor(ColorDate color)
 {
-	return end_flg;
+	color_date.magenta = color.magenta;
+	color_date.syan = color.syan;
+	color_date.yellow = color.yellow;
+
 }
+
 
