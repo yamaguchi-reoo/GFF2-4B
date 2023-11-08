@@ -212,7 +212,7 @@ void BossHands::BossAttack(GameMain* main)
 }
 
 void BossHands::ApplyDamage(int num) {
-
+	//UŒ‚‚ªƒqƒbƒg‚µ‚½‰ñ”‚Å“|‚ê‚é
 	if (Hit_Once != false) {
 		hp++;
 	}
