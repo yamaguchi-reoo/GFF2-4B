@@ -225,7 +225,11 @@ AbstractScene* GameMain::Update()
 
 	}
 
-	
+	if (effect->GetFlg() == 2)
+	{
+		powergauge->SetVolume(effect->GetSplashColor());
+		effect->SetFlg(0);
+	}
 	
 
 
@@ -422,9 +426,9 @@ void GameMain::HitCheck()
 					attack[i]->DeleteAttack();
 
 					//しぶき用
-					effect->HitFlg(true);
+					effect->SetFlg(1);
 					effect->SetLocation(zakuro[j]->GetCenterLocation());
-					//powergauge->SetVolume(zakuro[j]->GetColorDate());
+					effect->SetSplashColor(zakuro[j]->GetColorDate());
 				}
 			}
 		}
@@ -434,8 +438,9 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(iruka[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
-					effect->HitFlg(true);
-					//effect->SetLocation(zakuro->GetCenterLocation());
+					effect->SetFlg(1);
+					effect->SetLocation(iruka[j]->GetCenterLocation());
+					effect->SetSplashColor(iruka[j]->GetColorDate());
 
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
@@ -452,8 +457,9 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
 				{
 					//しぶき用
-					effect->HitFlg(true);
-					//effect->SetLocation(zakuro->GetCenterLocation());
+					effect->SetFlg(1);
+					effect->SetLocation(himawari[ j]->GetCenterLocation());
+					effect->SetSplashColor(himawari[j]->GetColorDate());
 
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);

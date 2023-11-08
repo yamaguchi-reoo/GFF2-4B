@@ -57,7 +57,7 @@ void Effect::Update()
 
 			if (splash.x < (int)test_x / 3)
 			{
-				splash.y -= 7;
+				splash.y -= 12;
 			}
 		}
 	}
