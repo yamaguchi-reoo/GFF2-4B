@@ -13,6 +13,8 @@ public:
     int hands_width[3] = { 190,190,190 };
 
     int Hands_img[IMGMAX];
+    int hi[3];
+    int bosf[3];
 
     //M‚ÌŒ‚ª~‚è‚Ä‚­‚éXÀ•W
     int Magentax[10] = { 1000,100,500 };

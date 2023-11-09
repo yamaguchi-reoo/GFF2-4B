@@ -6,6 +6,9 @@ BossHands::BossHands(int _who) {
 
 	LoadDivGraph("resource/images/Boss/BossHandsImg.png", 2, 2, 1, 200, 200,Hands_img);
 
+	hi[0] = LoadGraph("resource/images/Boss/Boss.png",true);
+	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
+	bosf[1] = LoadGraph("resource/images/Boss/LongTuru.png", true);
 	location.x = 700;
 	location.y = -500;
 	erea.height = 190;
@@ -35,12 +38,19 @@ void BossHands::Update(GameMain* main) {
 }
 
 void BossHands::Draw() const {
-	DrawGraphF(location.x, location.y,Hands_img[0], TRUE);
+
+	DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
+	DrawGraphF(location.x, location.y,hi[0], TRUE);
+
 
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
-	DrawGraph(200, 300, Hands_img[1], TRUE);
+	//DrawGraphF(500, 300, hi[0], TRUE);
+	//DrawGraphF(500, 490, hi[0], TRUE);
+	//DrawGraphF(480, 300, hi[0], TRUE);
+	//DrawGraphF(480, 490, hi[0], TRUE);
+	//DrawGraph(460, 80, bosf[0], TRUE);
 //	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
 
 #endif // _DEBUG
