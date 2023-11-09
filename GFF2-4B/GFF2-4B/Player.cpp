@@ -239,7 +239,7 @@ void Player::Draw()const
 	}
 
 	//デバッグ用表示
-#if DEBUG
+#ifdef _DEBUG
 	//当たり判定表示
 	//強化状態でないなら
 	if (powerup_flg == false)
