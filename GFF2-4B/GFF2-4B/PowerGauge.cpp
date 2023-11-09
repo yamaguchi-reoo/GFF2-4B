@@ -6,7 +6,7 @@ PowerGauge::PowerGauge()
 {
 	location.x = 5;
 	location.y = 3;
-	erea.height = 150;
+	erea.height = 140;
 	erea.width = 150;
 
 	magenta.x = 112.0f;
@@ -141,24 +141,36 @@ void PowerGauge::Draw() const
 		DrawMask(5, 3, MaskHandle[0], DX_MASKTRANS_NONE);
 
 		//勾玉の背景を白に
-		DrawBox(5, 3, 155, 153, 0xffffff, TRUE);
+		DrawBox(5, 3, 155, 153, 0xdddddd, TRUE);
 
 		//強化ゲージが0%以上の時に表示
-		if (yellow.volume != 0.0f)
+		
+		
+		//マゼンタ
+		DrawBox(80, 10, 112, 70, 0xdddddd, TRUE);
+		DrawBoxAA(magenta.x - 107, magenta.y - magenta.ratio, magenta.x, magenta.y, 0xe4007f, TRUE);
+		
+		
+		//イエロー
+		DrawBox(15, 66, 70, 70, 0xdddddd, TRUE);
+		DrawBoxAA(yellow.x - 92, yellow.y - yellow.ratio, yellow.x, yellow.y, 0xffff00, TRUE);
+		
+		
+		//シアン
+		DrawBox(87, 70, 112, 130, 0xdddddd, TRUE);
+		DrawBoxAA(cyan.x - 65, cyan.y - cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
+		
+
+		if ((magenta.volume >= 14.0f) && (cyan.volume >= 2.0f))
 		{
-			DrawBoxAA(yellow.x - 92, yellow.y - yellow.ratio, yellow.x, yellow.y, 0xffff00, TRUE);
-		}
-		if (cyan.volume != 0.0f)
-		{
-			DrawBoxAA(cyan.x - 65, cyan.y - cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
-		}
-		if (magenta.volume != 0.0f)
-		{
-			DrawBoxAA(magenta.x - 107, magenta.y - magenta.ratio, magenta.x, magenta.y, 0xe4007f, TRUE);
+			
 		}
 		
+		
+		
+
 		/**図形描画の重なりを隠す(ここから)**/
-		DrawBox(87, 70, 112, 130, 0xffffff, TRUE);
+		/*DrawBox(87, 70, 112, 130, 0xffffff, TRUE);
 
 		if (cyan.volume >= 2.0f)
 		{
@@ -167,7 +179,6 @@ void PowerGauge::Draw() const
 
 		if (magenta.volume >= 2.0f)
 		{
-			DrawBox(15, 66, 70, 70, 0xffffff, TRUE);
 
 			if (yellow.volume > 95.0f)
 			{
@@ -180,7 +191,7 @@ void PowerGauge::Draw() const
 		if (magenta.volume >= 14.0f)
 		{
 			DrawBoxAA(80.0f, 70.0f - ((magenta.volume * 1.1f) / 100.0f * 59.5f ), 112.0f, 70.0f, 0xe4007f, TRUE);
-		}
+		}*/
 		/**図形描画の重なりを隠す(ここまで)**/
 	}
 	else if ((rotaFlg == 1) && (black.maxFlg == 0))
