@@ -48,7 +48,7 @@ void Stage::Draw()const
 	}
 	if (debug_flg == true)
 	{
-		//DrawFormatStringF(local_location.x, local_location.y, 0xff0000, "%d", type);
+		DrawFormatStringF(local_location.x, local_location.y, 0xff0000, "%d", type);
 	}
 }
 
