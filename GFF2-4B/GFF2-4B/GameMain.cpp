@@ -60,11 +60,15 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-	//エディットモードに移行する時にイルカが地面に刺さっていると、deleteで例外が発生するバグが起こっているので、コメントアウト
-	//for (int i = 0; i < IRUKA_MAX; i++)
-	//{
-	//	delete iruka[i];
-	//}
+#ifdef _DEBUG
+	//エディットモードに移行する時にイルカが地面に刺さっていると、
+	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
+#else
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
+		delete iruka[i];
+	}
+#endif
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		delete himawari[i];
@@ -242,8 +246,6 @@ AbstractScene* GameMain::Update()
 		effect->SetFlg(0);
 	}
 	
-
-
 	//床の数だけ繰り返す
 	for(int i = 0; i < stage_height_num; i++)
 	{
@@ -253,10 +255,19 @@ AbstractScene* GameMain::Update()
 			stage[i][j]->SetScreenPosition(camera_location);
 		}
 	}
+
 	//当たり判定関連の処理を行う
 	HitCheck();
 
-#if DEBUG
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
+		return new GameClear();
+	}
+	if (player->GetPlayerHP() < 0) {
+		return new GameOver();
+	}
+
+#ifdef _DEBUG
 	//ステージ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_0))
 	{
@@ -297,13 +308,6 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who);
 	}
 #endif
-	//ステージクリア
-	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
-		return new GameClear();
-	}
-	if (player->GetPlayerHP() < 0) {
-		return new GameOver();
-	}
 
 	return this;
 }

@@ -13,7 +13,13 @@ GameClear::~GameClear()
 AbstractScene* GameClear::Update()
 {
 
-	if (PadInput::OnButton(XINPUT_BUTTON_A)) {
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		) {
 		return new Title();
 	}
 	return this;

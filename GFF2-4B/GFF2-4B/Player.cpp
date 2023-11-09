@@ -347,7 +347,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	p_center.y = location.y + (erea.height / 2);
 
 	//âEÇÃï«Ç…êGÇÍÇΩéû
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
+	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x - erea.width;
 		//âEâ¡ë¨ìxÇ0Ç…Ç∑ÇÈ
@@ -356,7 +356,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//ç∂ÇÃï«Ç…êGÇÍÇΩéû
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
+	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//ç∂â¡ë¨ìxÇ0Ç…Ç∑ÇÈ
@@ -365,7 +365,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		leftwall_flg = true;
 	}
 	//è∞Ç…êGÇÍÇΩéû
-	else if (location.y + erea.height - 30 < _sub_location.y)
+	else if (location.y + erea.height - 31 < _sub_location.y)
 	{
 		//ñÿÇ∆â_ÇÕè„Ç©ÇÁç~ÇËÇƒÇ´ÇΩÇ∆Ç´ÇæÇØèÊÇÍÇÈÇÊÇ§Ç…Ç∑ÇÈ
 		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
@@ -498,7 +498,7 @@ void Player::Attack(GameMain* main)
 {
 	//çUåÇ
 	if (
-#if DEBUG
+#ifdef _DEBUG
 		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
 #else
 		PadInput::OnButton(XINPUT_BUTTON_B) == true
@@ -645,17 +645,27 @@ void Player::Move()
 
 	//ç∂à⁄ìÆ
 	if (
-#if DEBUG
+#ifdef _DEBUG
 	(KeyInput::OnPresed(KEY_INPUT_A) == true || PadInput::TipLeftLStick(STICKL_X) <= -0.5)
 #else
 		PadInput::TipLeftLStick(STICKL_X) <= -0.5
 #endif
 		&& move_flg == true)
 	{
-		if (acs[LEFT] <= acs_max && rightwall_flg == false)
+		//ï«Ç…êGÇÍÇƒÇ¢Ç»Ç¢Ç»ÇÁ
+		if (rightwall_flg == false)
+		{
+			//ç≈ëÂâ¡ë¨ìxà»â∫Ç»ÇÁ
+			if (acs[LEFT] <= acs_max)
 			{
+				//â¡ë¨ìxÇâ¡éZÇ∑ÇÈ
 				acs[LEFT] += move_speed;
 			}
+			else
+			{
+				acs[LEFT] = acs_max;
+			}
+		}
 	}
 	else
 		{
@@ -664,16 +674,23 @@ void Player::Move()
 
 	//âEà⁄ìÆ
 	if (
-#if DEBUG
+#ifdef _DEBUG
 	(KeyInput::OnPresed(KEY_INPUT_D) == true || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
 #else
 		PadInput::TipLeftLStick(STICKL_X) >= 0.5
 #endif 
 		&& move_flg == true)
 		{
-			if (acs[RIGHT] <= acs_max && leftwall_flg == false)
+			if (leftwall_flg == false)
 			{
-				acs[RIGHT] += move_speed;
+				if (acs[RIGHT] <= acs_max)
+				{
+					acs[RIGHT] += move_speed;
+				}
+				else
+				{
+					acs[RIGHT] = acs_max;
+				}
 			}
 		}
 	else
@@ -682,7 +699,7 @@ void Player::Move()
 		}
 	//ÉWÉÉÉìÉv
 	if (
-#if DEBUG
+#ifdef _DEBUG
 	(KeyInput::OnKey(KEY_INPUT_SPACE) == true || PadInput::OnButton(XINPUT_BUTTON_A) == true)
 #else
 		PadInput::OnButton(XINPUT_BUTTON_A) == true
