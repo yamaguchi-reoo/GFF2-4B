@@ -30,6 +30,10 @@ public:
     int count;
     bool Hit_Once;
 
+    bool HitJumpAttack = false;
+    bool Death_Flg = false;
+    
+
     int Attack_Num;//ƒ{ƒX‚Ìè‚ª¡‰½‚ÌUŒ‚‚µ‚Ä‚¢‚é‚©
 
     BossHands(int _who);

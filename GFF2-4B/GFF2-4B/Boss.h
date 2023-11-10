@@ -6,7 +6,6 @@ class Boss :
 private:
     int bfaceimg;//ボスの顔画像
 
-
     enum bosshand
     {
 
@@ -14,6 +13,8 @@ private:
     };
 
 public:
+    int Count_Death;//腕が何回やられたかカウント用
+
     Boss();
     ~Boss();
 

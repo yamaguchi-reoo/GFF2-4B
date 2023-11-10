@@ -20,6 +20,8 @@ BossHands::BossHands(int _who) {
 	Attack_Num=0;
 	hp=0;
 	Hit_Once = true;
+	HitJumpAttack = false;
+	Death_Flg = false;
 }
 
 BossHands::~BossHands() {
@@ -30,7 +32,6 @@ void BossHands::Update(GameMain* main) {
 
 	//ƒ}ƒ[ƒ“ƒ^
 		HandsMagenta(main);
-
 
 	//ƒVƒAƒ“
 
@@ -46,6 +47,7 @@ void BossHands::Draw() const {
 #ifdef _DEBUG
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
+	DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
 	//DrawGraphF(500, 300, hi[0], TRUE);
 	//DrawGraphF(500, 490, hi[0], TRUE);
 	//DrawGraphF(480, 300, hi[0], TRUE);
@@ -63,7 +65,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 		/*if (switching > 2) {
 			down_hand = true;
 		}*/
-
+	
 		//ƒ{ƒX‚ÌŒ‚ÌUŒ‚”»’è
 	if (switching != 3) {
 		Attack_Num = 0;
@@ -216,14 +218,20 @@ AttackData BossHands::BossAttactData()
 
 void BossHands::BossAttack(GameMain* main)
 {
-	//UŒ‚‚ğ¶¬‚·‚é
-	main->SpawnAttack(BossAttactData());
+	if (Death_Flg == false) {
+		//UŒ‚‚ğ¶¬‚·‚é
+		main->SpawnAttack(BossAttactData());
+	}
 
 }
 
 void BossHands::ApplyDamage(int num) {
 	//UŒ‚‚ªƒqƒbƒg‚µ‚½‰ñ”‚Å“|‚ê‚é
-	if (Hit_Once != false) {
-		hp++;
+	if (HitJumpAttack!=true) {
+		hp--;
+	}
+	
+	if (hp < 0) {
+		Death_Flg = true;
 	}
 }

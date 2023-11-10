@@ -21,6 +21,7 @@ GameMain::GameMain(int _stage)
 
 	if (now_stage == 3) {
 		hands = new BossHands(who);
+		boss = new Boss();
 	}
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
@@ -122,8 +123,12 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	//ボスの腕アップデート
 	if (now_stage == 3) {
-		hands->Update(this);
+		if (hands != nullptr) {
+			hands->Update(this);
+	
+		}
 	}
 
 	player->Update(this);
@@ -223,18 +228,28 @@ AbstractScene* GameMain::Update()
 
 		//ボスの腕
 		if (now_stage == 3) {
-			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-			{
-				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+			if (hands != nullptr) {
+				if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+				{
+					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+				}
 			}
 		}
 
 		//ボスの腕
 		if (now_stage == 3) {
-			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-			{
-				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-				attack[i]->SetScreenPosition(camera_location);
+			if (hands != nullptr) {
+				if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+				{
+					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+					attack[i]->SetScreenPosition(camera_location);
+				}
+
+				if (hands->Death_Flg == true) {
+					boss->Count_Death--;
+					attack[i]->DeleteAttack();
+					hands = nullptr;
+				}
 			}
 		}
 
@@ -306,6 +321,7 @@ AbstractScene* GameMain::Update()
 	//途中でステージの切り替えがあった場合使用
 	if (now_stage == 3 && old_stage!=now_stage) {
 		hands = new BossHands(who);
+		boss = new Boss();
 	}
 #endif
 
@@ -322,9 +338,17 @@ void GameMain::Draw() const
 		//描画
 	player->Draw();
 
+	//ボスの腕表示
 	if (now_stage == 3) {
-		hands->Draw();
+		if (hands != nullptr) {
+			hands->Draw();
+		}
+		if (boss != nullptr) {
+			boss->Draw();
+		}
 	}
+	
+
 
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -398,9 +422,11 @@ void GameMain::HitCheck()
 			}
 
 			if (now_stage == 3) {
-				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
-				{
-					hands->hitflg = true;
+				if (hands != nullptr) {
+					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					{
+						hands->hitflg = true;
+					}
 				}
 			}
 
@@ -500,16 +526,25 @@ void GameMain::HitCheck()
 		}
 
 		if (now_stage == 3) {
+
 			if (hands != nullptr) {
-				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+
+				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
+
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
-					attack[i]->DeleteAttack();
+					if (player->GetAcs(0) > 0.1) {
+						hands->HitJumpAttack = true;
+					}
+					else {
+						hands->HitJumpAttack = false;
+					}
 
 				}
 			}
 		}
+		
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)

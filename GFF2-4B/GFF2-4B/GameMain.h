@@ -38,6 +38,7 @@ private:
 
     Boss* boss; //ボス
     BossHands* hands;//ボスの腕
+    int Check_Num;
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
