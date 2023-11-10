@@ -1,7 +1,5 @@
 #pragma once
 
-#define DEBUG true		//デバッグ用表示や操作を適用するか false=適用しない true=適用
-
 //画面サイズ
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
@@ -33,13 +31,12 @@
 #define BOX_WIDTH	48										//ステージのブロック一つ当たりの幅
 #define MAX_STAGE_HEIGHT 60									//ステージのブロックの縦の最大個数
 #define MAX_STAGE_WIDTH  3000								//ステージのブロックの横の最大個数
-#define STAGE_GOAL 0.25
+#define STAGE_GOAL 0.05
 
 //エネミーの数
 #define ZAKURO_MAX 30	//ザクロの最大数
 #define IRUKA_MAX 30		//イルカの最大数
 #define HIMAWARI_MAX 30	//ひまわりの最大数
-
 
 //エフェクト
 #define SPLASH_MAX 50

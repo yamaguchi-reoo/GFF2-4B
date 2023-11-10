@@ -37,7 +37,7 @@ enum PlayerState {
 };
 
 //プレイヤーの状態(文字列) デバッグ表示用
-#if DEBUG
+#ifdef _DEBUG
 static char player_state_char[24][256]{
 	"IDOL_RIGHT",
 	"IDOL_LEFT",
@@ -71,7 +71,7 @@ class Player :
 {
 private:
 
-#if DEBUG
+#ifdef _DEBUG
 	bool d_inv_flg;					//無敵かどうか（デバッグ用）
 #endif
 	int frame;						//フレーム測定

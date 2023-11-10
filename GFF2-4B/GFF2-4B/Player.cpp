@@ -30,7 +30,7 @@
 
 Player::Player()
 {
-#if DEBUG
+#ifdef _DEBUG
 	d_inv_flg = false;
 #endif
 	frame = 0;
@@ -92,7 +92,7 @@ Player::~Player()
 void Player::Update(GameMain* main)
 {
 	//無敵状態の切り替え（デバッグ用）
-#if DEBUG
+#ifdef _DEBUG
 	if (KeyInput::OnKey(KEY_INPUT_Q) == true)
 	{
 		d_inv_flg = !d_inv_flg;
@@ -239,7 +239,7 @@ void Player::Draw()const
 	}
 
 	//デバッグ用表示
-#if DEBUG
+#ifdef _DEBUG
 	//当たり判定表示
 	//強化状態でないなら
 	if (powerup_flg == false)
@@ -347,7 +347,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	p_center.y = location.y + (erea.height / 2);
 
 	//右の壁に触れた時
-	if (location.x + erea.width - 10 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
+	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x - erea.width;
 		//右加速度を0にする
@@ -356,7 +356,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
+	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//左加速度を0にする
@@ -365,7 +365,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		leftwall_flg = true;
 	}
 	//床に触れた時
-	else if (location.y + erea.height - 30 < _sub_location.y)
+	else if (location.y + erea.height - 31 < _sub_location.y)
 	{
 		//木と雲は上から降りてきたときだけ乗れるようにする
 		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
@@ -428,7 +428,7 @@ void Player::ApplyDamage(int num)
 {
 	//無敵状態でない＆死んでいる状態でない、デバッグ用の無敵状態でないなら
 	if (inv_flg == false && death_flg == false 
-#if DEBUG
+#ifdef _DEBUG
 		&& d_inv_flg == false
 #endif
 		){
@@ -498,7 +498,7 @@ void Player::Attack(GameMain* main)
 {
 	//攻撃
 	if (
-#if DEBUG
+#ifdef _DEBUG
 		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
 #else
 		PadInput::OnButton(XINPUT_BUTTON_B) == true
@@ -645,17 +645,27 @@ void Player::Move()
 
 	//左移動
 	if (
-#if DEBUG
+#ifdef _DEBUG
 	(KeyInput::OnPresed(KEY_INPUT_A) == true || PadInput::TipLeftLStick(STICKL_X) <= -0.5)
 #else
 		PadInput::TipLeftLStick(STICKL_X) <= -0.5
 #endif
 		&& move_flg == true)
 	{
-		if (acs[LEFT] <= acs_max && rightwall_flg == false)
+		//壁に触れていないなら
+		if (rightwall_flg == false)
+		{
+			//最大加速度以下なら
+			if (acs[LEFT] <= acs_max)
 			{
+				//加速度を加算する
 				acs[LEFT] += move_speed;
 			}
+			else
+			{
+				acs[LEFT] = acs_max;
+			}
+		}
 	}
 	else
 		{
@@ -664,16 +674,23 @@ void Player::Move()
 
 	//右移動
 	if (
-#if DEBUG
+#ifdef _DEBUG
 	(KeyInput::OnPresed(KEY_INPUT_D) == true || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
 #else
 		PadInput::TipLeftLStick(STICKL_X) >= 0.5
 #endif 
 		&& move_flg == true)
 		{
-			if (acs[RIGHT] <= acs_max && leftwall_flg == false)
+			if (leftwall_flg == false)
 			{
-				acs[RIGHT] += move_speed;
+				if (acs[RIGHT] <= acs_max)
+				{
+					acs[RIGHT] += move_speed;
+				}
+				else
+				{
+					acs[RIGHT] = acs_max;
+				}
 			}
 		}
 	else
@@ -682,7 +699,7 @@ void Player::Move()
 		}
 	//ジャンプ
 	if (
-#if DEBUG
+#ifdef _DEBUG
 	(KeyInput::OnKey(KEY_INPUT_SPACE) == true || PadInput::OnButton(XINPUT_BUTTON_A) == true)
 #else
 		PadInput::OnButton(XINPUT_BUTTON_A) == true

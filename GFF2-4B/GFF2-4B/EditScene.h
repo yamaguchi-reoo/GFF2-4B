@@ -21,7 +21,7 @@ private:
     int now_stage;                                        //現在編集中のステージ
     CURSOR cursor;                                        //マウスカーソル
     int stage_data[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];    //ステージのデータ格納用
-    int old_stage_data[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];    //ステージの変更前データ格納用
+    int old_stage_data[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];//ステージの変更前データ格納用
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];      //床のオブジェクト
     int current_type;                                     //今選ばれているオブジェクトタイプ
     Location tool_location;                               //ツールボックスの左上座標

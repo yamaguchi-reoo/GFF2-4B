@@ -60,11 +60,15 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-	//エディットモードに移行する時にイルカが地面に刺さっていると、deleteで例外が発生するバグが起こっているので、コメントアウト
-	//for (int i = 0; i < IRUKA_MAX; i++)
-	//{
-	//	delete iruka[i];
-	//}
+#ifdef _DEBUG
+	//エディットモードに移行する時にイルカが地面に刺さっていると、
+	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
+#else
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
+		delete iruka[i];
+	}
+#endif
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		delete himawari[i];
@@ -124,10 +128,14 @@ AbstractScene* GameMain::Update()
 
 	player->Update(this);
 	player->SetScreenPosition(camera_location);
-	powergauge->Update();
+	
+	powergauge->Update(this);
+	powergauge->SetScreenPosition(camera_location);
+
 	playerhp->Update(player->GetPlayerHP());
 
-	effect->Update();
+	effect->Update(this);
+	effect->SetScreenPosition(camera_location);
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -238,8 +246,6 @@ AbstractScene* GameMain::Update()
 		effect->SetFlg(0);
 	}
 	
-
-
 	//床の数だけ繰り返す
 	for(int i = 0; i < stage_height_num; i++)
 	{
@@ -249,10 +255,19 @@ AbstractScene* GameMain::Update()
 			stage[i][j]->SetScreenPosition(camera_location);
 		}
 	}
+
 	//当たり判定関連の処理を行う
 	HitCheck();
 
-#if DEBUG
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
+		return new GameClear();
+	}
+	if (player->GetPlayerHP() < 0) {
+		return new GameOver();
+	}
+
+#ifdef _DEBUG
 	//ステージ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_0))
 	{
@@ -293,13 +308,6 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who);
 	}
 #endif
-	//ステージクリア
-	if (player->GetLocation().x > stage_width - (STAGE_GOAL * stage_width)) {
-		return new GameClear();
-	}
-	if (player->GetPlayerHP() < 0) {
-		return new GameOver();
-	}
 
 	return this;
 }
@@ -428,7 +436,6 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-
 	//攻撃の数だけ繰り返す
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
@@ -444,7 +451,8 @@ void GameMain::HitCheck()
 
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(zakuro[j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(zakuro[j]->GetLocalLocation());
 					effect->SetSplashColor(zakuro[j]->GetColorDate());
 				}
 			}
@@ -456,14 +464,15 @@ void GameMain::HitCheck()
 				{
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(iruka[j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(iruka[j]->GetLocalLocation());
 					effect->SetSplashColor(iruka[j]->GetColorDate());
 
 					//イルカのダメージ処理
 					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					if (iruka[j]->GetHp() < 1) {
+					/*if (iruka[j]->GetHp() < 1) {
 						powergauge->SetVolume(iruka[j]->GetColorDate());
-					}
+					}*/
 					attack[i]->DeleteAttack();
 				}
 			}
@@ -475,13 +484,14 @@ void GameMain::HitCheck()
 				{
 					//しぶき用
 					effect->SetFlg(1);
-					effect->SetLocation(himawari[ j]->GetCenterLocation());
+					effect->SetGaugeLocation(powergauge->GetCenterLocation());
+					effect->SetLocation(himawari[j]->GetLocalLocation());
 					effect->SetSplashColor(himawari[j]->GetColorDate());
 
 					//ひまわりのダメージ処理
 					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					//if (himawari[j]->GetHp() < 1) {
-					powergauge->SetVolume(himawari[j]->GetColorDate());
+					//powergauge->SetVolume(himawari[j]->GetColorDate());
 					//}
 					attack[i]->DeleteAttack();
 				}

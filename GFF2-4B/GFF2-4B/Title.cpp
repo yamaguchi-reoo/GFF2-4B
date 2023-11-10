@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "GameMain.h"
 #include "PadInput.h"
-
+#include "SelectStage.h"
 
 Title::Title()
 {
@@ -20,13 +20,25 @@ Title::~Title()
 AbstractScene* Title::Update()
 {
 	//十字キー↑入力
-	if (PadInput::OnButton(XINPUT_BUTTON_DPAD_UP))
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_UP) || KeyInput::OnKey(KEY_INPUT_W)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_UP)
+#endif
+		)
 	{
 		Select--;
 		if (Select < 0)Select = 1;
 	}
 	//十字キー↓入力
-	if (PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN))
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN) || KeyInput::OnKey(KEY_INPUT_S)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN)
+#endif
+		)
 	{
 		Select++;
 		if (Select > 1)Select = 0;
@@ -53,15 +65,20 @@ AbstractScene* Title::Update()
 	{
 		Once = TRUE;
 	}
-
-	if (PadInput::OnButton(XINPUT_BUTTON_A))
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		)
 	{
 		switch (static_cast<TITLE_MENU>(Select))
 		{
 			//ゲーム画面へ
 		case TITLE_MENU::GAME_START:
 
-			return new GameMain(0);
+			return new SelectStage();
 			//エンド画面へ
 		case TITLE_MENU::GAME_END:
 
@@ -83,7 +100,7 @@ void Title::Draw()const
 	DrawString(730, 260, "開始", 0xffffff);
 	//DrawString(730, 320, "ヘルプ", 0xffffff);
 	DrawString(730, 340/*400*/, "終了", 0xffffff);
-	DrawFormatString(730, 410/*400*/,0x00ff00, "%d",Select);
+	//DrawFormatString(730, 410/*400*/,0x00ff00, "%d",Select);
 
 
 	////カーソルの描画
