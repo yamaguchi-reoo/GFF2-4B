@@ -15,6 +15,7 @@
 #include "PlayerHP.h"
 #include "Boss.h"
 #include "BossHands.h"
+#include "Rock.h"
 #include "Effect.h"
 
 class Player;
@@ -39,6 +40,7 @@ private:
     Boss* boss; //ボス
     BossHands* hands;//ボスの腕
     int Check_Num;
+    Rock* rock;//岩
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト

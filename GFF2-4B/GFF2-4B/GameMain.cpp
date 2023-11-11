@@ -20,7 +20,7 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
-		hands = new BossHands(who);
+		hands = new BossHands(who,boss);
 		boss = new Boss();
 	}
 	SetStage(now_stage);
@@ -127,8 +127,19 @@ AbstractScene* GameMain::Update()
 	if (now_stage == 3) {
 		if (hands != nullptr) {
 			hands->Update(this);
-	
 		}
+			//岩生成
+			if (hands->Rock_Once != false) {
+				hands->Rock_Once = false;
+				rock = new Rock(who++,hands->GetHandsX(),hands->GetHandsY());
+			}
+			if (rock != nullptr) {
+				rock->Update(this);
+	
+
+		}
+
+
 	}
 
 	player->Update(this);
@@ -320,8 +331,8 @@ AbstractScene* GameMain::Update()
 
 	//途中でステージの切り替えがあった場合使用
 	if (now_stage == 3 && old_stage!=now_stage) {
-		hands = new BossHands(who);
 		boss = new Boss();
+		hands = new BossHands(who, boss);
 	}
 #endif
 
@@ -340,11 +351,15 @@ void GameMain::Draw() const
 
 	//ボスの腕表示
 	if (now_stage == 3) {
+		if (boss != nullptr) {
+			boss->Draw();
+		}
 		if (hands != nullptr) {
 			hands->Draw();
 		}
-		if (boss != nullptr) {
-			boss->Draw();
+
+		if (rock != nullptr) {
+			rock->Draw();
 		}
 	}
 	
@@ -543,6 +558,8 @@ void GameMain::HitCheck()
 
 				}
 			}
+
+
 		}
 		
 

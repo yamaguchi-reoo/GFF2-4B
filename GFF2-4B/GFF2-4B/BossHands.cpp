@@ -1,8 +1,9 @@
 #include "BossHands.h"
 #include"GameMain.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
-
-BossHands::BossHands(int _who) {
+BossHands::BossHands(int _who,Boss* boss) {
 
 	LoadDivGraph("resource/images/Boss/BossHandsImg.png", 2, 2, 1, 200, 200,Hands_img);
 
@@ -22,20 +23,29 @@ BossHands::BossHands(int _who) {
 	Hit_Once = true;
 	HitJumpAttack = false;
 	Death_Flg = false;
+
+
+
+	Rock_Once = true;
+
+	if(boss->GetBossForm()==1){
+		Power_Up=true;
+	}
+	else {
+		Power_Up = false;
+	}
 }
 
 BossHands::~BossHands() {
-
 }
 
 void BossHands::Update(GameMain* main) {
 
 	//マゼンタ
 		HandsMagenta(main);
-
 	//シアン
-
 	//イエロー
+
 }
 
 void BossHands::Draw() const {
@@ -48,20 +58,13 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 0, 0xffffff, "%d", switching);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
-	//DrawGraphF(500, 300, hi[0], TRUE);
-	//DrawGraphF(500, 490, hi[0], TRUE);
-	//DrawGraphF(480, 300, hi[0], TRUE);
-	//DrawGraphF(480, 490, hi[0], TRUE);
-	//DrawGraph(460, 80, bosf[0], TRUE);
-//	DrawBox(-erea.width, -erea.height, erea.width, erea.height, 0xffffff, TRUE);
-
+	
 #endif // _DEBUG
 
 
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
-
 		/*if (switching > 2) {
 			down_hand = true;
 		}*/
@@ -71,16 +74,29 @@ void BossHands::HandsMagenta(GameMain* main) {
 		Attack_Num = 0;
 		BossAttack(main);
 	}
+
 		//衝撃波を出す
 		if (hitflg == true && onceflg == true) {
+			//岩
+			if (Power_Up == true) {
+				if (Rock_Once == true) {
+					Rock_Once = false;
+				}
+				//if (rock != nullptr) {
+				//	rock->Update();
+				//}
+			}
+
 			switch (switching) {
 			case 0:
 				Attack_Num = 1;
 				BossAttack(main);
+
 				break;
 			case 1:
 				Attack_Num = 2;
 				BossAttack(main);
+
 				break;
 			case 2:
 				Attack_Num = 1;
@@ -122,15 +138,18 @@ void BossHands::HandsMagenta(GameMain* main) {
 			switching++;
 		}
 
-
+		//拳出現位置セット用
 		switch (switching) {
 		case 0:
+			//右に出現
 			location.x = (float)Magentax[switching];
 			break;
 		case 1:
+			//左に出現
 			location.x = (float)Magentax[switching];
 			break;
 		case 2:
+			//中央に出現
 			location.x = (float)Magentax[switching];
 			break;
 		case 3:
@@ -152,7 +171,6 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 }
 
-
 AttackData BossHands::BossAttactData()
 {
 	AttackData attack_data;
@@ -169,6 +187,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.damage = 1;
 		attack_data.attack_type = MELEE;
 		break;
+		//衝撃波
 	case 1:
 		attack_data.shift_x = -erea.width;
 		attack_data.shift_y = 50;
@@ -197,7 +216,6 @@ AttackData BossHands::BossAttactData()
 		attack_data.speed = 3;
 		attack_data.angle = 1.0;
 		attack_data.direction = false;
-
 		break;
 	default:
 		attack_data.shift_x = 0;
@@ -222,7 +240,6 @@ void BossHands::BossAttack(GameMain* main)
 		//攻撃を生成する
 		main->SpawnAttack(BossAttactData());
 	}
-
 }
 
 void BossHands::ApplyDamage(int num) {
