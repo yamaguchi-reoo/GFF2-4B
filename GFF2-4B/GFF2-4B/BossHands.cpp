@@ -26,7 +26,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 
 
 
-	Rock_Once = true;
+	Rock_Once = false;
 
 	if(boss->GetBossForm()==1){
 		Power_Up=true;
@@ -55,9 +55,9 @@ void BossHands::Draw() const {
 
 
 #ifdef _DEBUG
-	DrawFormatString(100, 0, 0xffffff, "%d", switching);
-	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
-	DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
+	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
+	//DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
+	//DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
 	
 #endif // _DEBUG
 
@@ -77,11 +77,9 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 		//衝撃波を出す
 		if (hitflg == true && onceflg == true) {
-			//岩
+			//ボスが第二形態だったら
 			if (Power_Up == true) {
-				if (Rock_Once == true) {
-					Rock_Once = false;
-				}
+				Rock_Once = true;
 				//if (rock != nullptr) {
 				//	rock->Update();
 				//}
@@ -115,7 +113,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			if (count < 0) {
 				location.y -= 10;
 			}
-
+			//次の出現位置に移動
 			if (location.y < -500) {
 				hitflg = false;
 				onceflg = true;

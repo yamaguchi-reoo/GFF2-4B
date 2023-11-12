@@ -40,7 +40,7 @@ private:
     Boss* boss; //ボス
     BossHands* hands;//ボスの腕
     int Check_Num;
-    Rock* rock;//岩
+    Rock* rock[2];//岩
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト

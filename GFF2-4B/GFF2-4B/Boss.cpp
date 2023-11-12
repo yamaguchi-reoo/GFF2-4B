@@ -3,7 +3,7 @@
 Boss::Boss() {
 	bfaceimg = LoadGraph("resource/images/Boss/BossFace.png");
 	Count_Death = 2;
-	Boss_Form=1;
+	Boss_Form=0;
 }
 
 Boss::~Boss() {

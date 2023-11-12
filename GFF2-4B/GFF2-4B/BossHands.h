@@ -12,7 +12,7 @@ private:
 #define IMGMAX (5)      //ボスの画像最大数
 public:
 
-
+    /*ザクロ拳*/
     //受け取った値によってCMYのサイズ変更用
     int hands_height[3] = { 190,190,190 };
     int hands_width[3] = { 190,190,190 };
@@ -22,7 +22,9 @@ public:
     int bosf[3];
 
     //Mの拳が降りてくるX座標
-    int Magentax[10] = { 1000,100,500 };
+    float Magentax[10] = { 1000,100,500 };
+
+    /*イルカ*/
 
     int switching;
 
