@@ -5,13 +5,41 @@
 
 BossHands::BossHands(int _who,Boss* boss) {
 
-	LoadDivGraph("resource/images/Boss/BossHandsImg.png", 2, 2, 1, 200, 200,Hands_img);
-
+	//ザクロ画像
 	hi[0] = LoadGraph("resource/images/Boss/Boss.png",true);
+
+	//イルカ画像
+	LoadDivGraph("resource/images/Boss/Iruka.png", 2, 2, 1, 256, 256, Hands_img);
+	//hi[1] = LoadGraph("resource/images/Boss/Iruka.png",true);
+
 	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
 	bosf[1] = LoadGraph("resource/images/Boss/LongTuru.png", true);
-	location.x = 700;
-	location.y = -500;
+
+	Hands_who = 1;
+
+	switch (Hands_who)
+	{
+	case 0:
+		//マゼンタ
+		location.x = 700;
+		location.y = -500;
+		break;
+	case 1:
+		//シアン
+		// 動き１
+		//location.x = 1280;
+		//location.y = 0;
+		//動き２
+		location.x = 0;
+		location.y = 0;
+		break;
+	case 2:
+		//イエロー
+		break;
+	default:
+		break;
+	}
+
 	erea.height = 190;
 	erea.width = 190;
 	switching = 0;
@@ -23,11 +51,10 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Hit_Once = true;
 	HitJumpAttack = false;
 	Death_Flg = false;
-
-
-
 	Rock_Once = false;
 
+
+	//強化形態になってるか？
 	if(boss->GetBossForm()==1){
 		Power_Up=true;
 	}
@@ -40,19 +67,34 @@ BossHands::~BossHands() {
 }
 
 void BossHands::Update(GameMain* main) {
-
-	//マゼンタ
+	switch (Hands_who)
+	{
+	case 0:
+		//マゼンタ
 		HandsMagenta(main);
-	//シアン
-	//イエロー
+		break;
+	case 1:
+		//シアン
+		HandsCyan(main);
+		break;
+	case 2:
+		//イエロー
+		break;
+	default:
+		break;
+	}
+
+	
+
 
 }
 
 void BossHands::Draw() const {
 
-	DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
-	DrawGraphF(location.x, location.y,hi[0], TRUE);
+	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
 
+	//DrawGraphF(location.x, location.y,Hands_img[0], TRUE);
+	DrawRotaGraph(location.x, location.y,1,0,Hands_img[0], TRUE);
 
 #ifdef _DEBUG
 	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
@@ -166,6 +208,20 @@ void BossHands::HandsMagenta(GameMain* main) {
 		default:
 			break;
 		}
+
+}
+
+void BossHands::HandsCyan(GameMain* main){
+
+	//最初に出現して左下に向かって落ちる
+	//location.x -= 5;
+	//location.y += 3;
+
+	location.x += 5;
+	location.y += 2;
+
+
+	
 
 }
 

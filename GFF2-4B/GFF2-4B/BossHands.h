@@ -46,6 +46,9 @@ public:
     //ボスの状態が何か受け取る
     int Boss_Form;
 
+    //どの腕を出すか用 0:マゼンタ 1:シアン 2:イエロー
+    int Hands_who;
+
     int Attack_Num;//ボスの手が今何の攻撃しているか
 
     BossHands(int _who,Boss* boss);
@@ -58,6 +61,7 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
     void HandsMagenta(GameMain* main);
+    void HandsCyan(GameMain* main);
     void ApplyDamage(int num);
     float GetHandsY() { return location.y; };
     float GetHandsX() { return location.x; };
