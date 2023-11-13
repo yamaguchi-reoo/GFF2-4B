@@ -161,14 +161,11 @@ void PowerGauge::Draw() const
 		DrawBoxAA(cyan.x - 65, cyan.y - cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
 		
 
-		if ((magenta.volume >= 14.0f) && (cyan.volume >= 2.0f))
-		{
-			
-		}
+		//if ((magenta.volume >= 14.0f) && (cyan.volume >= 2.0f))
+		//{
+		//	
+		//}
 		
-		
-		
-
 		/**}Œ`•`‰æ‚Ìd‚È‚è‚ð‰B‚·(‚±‚±‚©‚ç)**/
 		/*DrawBox(87, 70, 112, 130, 0xffffff, TRUE);
 
