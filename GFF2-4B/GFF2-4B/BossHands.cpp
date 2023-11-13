@@ -9,7 +9,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	hi[0] = LoadGraph("resource/images/Boss/Boss.png",true);
 
 	//イルカ画像
-	LoadDivGraph("resource/images/Boss/Iruka.png", 2, 2, 1, 256, 256, Hands_img);
+	LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
 	//hi[1] = LoadGraph("resource/images/Boss/Iruka.png",true);
 
 	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
@@ -29,9 +29,10 @@ BossHands::BossHands(int _who,Boss* boss) {
 		// 動き１
 		//location.x = 1280;
 		//location.y = 0;
-		//動き２
-		location.x = 0;
-		location.y = 0;
+		//出現位置
+		Direction = 0;
+		location.x = 1280;
+		location.y = 500;
 		break;
 	case 2:
 		//イエロー
@@ -93,8 +94,30 @@ void BossHands::Draw() const {
 
 	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
 
-	//DrawGraphF(location.x, location.y,Hands_img[0], TRUE);
-	DrawRotaGraph(location.x, location.y,1,0,Hands_img[0], TRUE);
+
+	switch (Hands_who)
+	{
+	case 0:
+		//マゼンタ
+		DrawGraphF(location.x, location.y, hi[0], TRUE);
+		break;
+	case 1:
+		//シアン
+		if (Direction == 0) {
+			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[0], TRUE);
+		}
+		else {
+			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[2], TRUE);
+		}
+
+		break;
+	case 2:
+		//イエロー
+		break;
+	default:
+		break;
+	}
+
 
 #ifdef _DEBUG
 	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
@@ -217,10 +240,21 @@ void BossHands::HandsCyan(GameMain* main){
 	//location.x -= 5;
 	//location.y += 3;
 
-	location.x += 5;
-	location.y += 2;
+	//if(location.x<0)
+	//イルカが左をむいていたら
+	if (Direction == 0) {
+		location.x -= 5;
+	}
+	else {
+		location.x += 5;
+	}
 
-
+	if (location.x > 1100) {
+		Direction = 0;
+	}
+	else if (location.x < 150) {
+		Direction = 1;
+	}
 	
 
 }

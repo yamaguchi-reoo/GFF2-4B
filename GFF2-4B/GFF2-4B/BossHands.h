@@ -25,6 +25,7 @@ public:
     float Magentax[10] = { 1000,100,500 };
 
     /*ƒCƒ‹ƒJ*/
+    int Direction;  //0:¶Œü‚« 1:‰EŒü‚«
 
     int switching;
 
