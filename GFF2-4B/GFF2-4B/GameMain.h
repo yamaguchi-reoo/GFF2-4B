@@ -82,9 +82,6 @@ public:
     //次のステージへ遷移する
     void SetStage(int _stage);
 
-    //ステージを生成する
-    void CreateStage(int _stage);
-
     //カメラ座標の更新
     void CameraLocation(Location _location);
 
