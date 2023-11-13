@@ -391,14 +391,14 @@ void GameMain::HitCheck()
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
 				//触れた面に応じて押し出す
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageType());
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
 			if (now_stage == 3) {
-				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 				{
 					hands->hitflg = true;
 				}
@@ -407,7 +407,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
-					if (zakuro[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (zakuro[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						//触れた面に応じて押し出す
 						zakuro[k]->ZakuroPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
@@ -418,7 +418,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
-					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
@@ -428,7 +428,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
 				if (himawari[k] != nullptr) {
-					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
@@ -601,19 +601,12 @@ void GameMain::SetStage(int _stage)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
+			//ステージ内ブロックを生成
+			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			switch (STAGE_DATA[i][j])
 			{
-				//ステージ内ブロックを生成
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
-				break;
-				//ザクロを生成
+			//ザクロを生成
 			case 5:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < ZAKURO_MAX; k++)
 				{
@@ -626,7 +619,6 @@ void GameMain::SetStage(int _stage)
 				break;
 				//イルカを生成
 			case 6:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < IRUKA_MAX; k++)
 				{
@@ -639,7 +631,6 @@ void GameMain::SetStage(int _stage)
 				break;
 				//ひまわりを生成
 			case 7:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < HIMAWARI_MAX; k++)
 				{
@@ -649,6 +640,8 @@ void GameMain::SetStage(int _stage)
 						break;
 					}
 				}
+				break;
+			default:
 				break;
 			}
 		}
