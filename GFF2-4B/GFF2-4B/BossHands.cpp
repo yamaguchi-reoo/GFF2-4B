@@ -18,7 +18,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
 	bosf[1] = LoadGraph("resource/images/Boss/LongTuru.png", true);
 
-	Hands_who = 1;
+	Hands_who = 0;
 
 	switch (Hands_who)
 	{
@@ -51,12 +51,13 @@ BossHands::BossHands(int _who,Boss* boss) {
 	who = _who;
 	count = STOPBOSS;
 	Attack_Num=0;
-	hp=0;
+	hp=1;
 	Hit_Once = true;
 	HitJumpAttack = false;
 	Death_Flg = false;
 	Rock_Once = false;
 
+	Death_Anim = 0;
 
 	//強化形態になってるか？
 	if(boss->GetBossForm()==1){
@@ -65,66 +66,70 @@ BossHands::BossHands(int _who,Boss* boss) {
 	else {
 		Power_Up = false;
 	}
+
 }
 
 BossHands::~BossHands() {
 }
 
 void BossHands::Update(GameMain* main) {
-	switch (Hands_who)
-	{
-	case 0:
-		//マゼンタ
-		HandsMagenta(main);
-		break;
-	case 1:
-		//シアン
-		HandsCyan(main);
-		break;
-	case 2:
-		//イエロー
-		break;
-	default:
-		break;
+
+	if (Death_Flg == false) {
+		switch (Hands_who)
+		{
+		case 0:
+			//マゼンタ
+			HandsMagenta(main);
+			break;
+		case 1:
+			//シアン
+			HandsCyan(main);
+			break;
+		case 2:
+			//イエロー
+			break;
+		default:
+			break;
+		}
+
+
 	}
-
-	
-
 
 }
 
 void BossHands::Draw() const {
 
 	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
+	
 
 
-	switch (Hands_who)
-	{
-	case 0:
-		//マゼンタ
-		DrawGraphF(location.x, location.y, hi[0], TRUE);
-		break;
-	case 1:
-		//シアン
-		if (Direction == 0) {
-			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
+		switch (Hands_who)
+		{
+		case 0:
+			//マゼンタ
+			DrawGraphF(location.x, location.y, hi[0], TRUE);
+			break;
+		case 1:
+			//シアン
+			if (Direction == 0) {
+				DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
+			}
+			else {
+				DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
+			}
+
+			break;
+		case 2:
+			//イエロー
+			break;
+		default:
+			break;
 		}
-		else {
-			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
-		}
-
-		break;
-	case 2:
-		//イエロー
-		break;
-	default:
-		break;
-	}
-
+	
 
 #ifdef _DEBUG
 	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
-	//DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
+	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	//DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
 	
 #endif // _DEBUG
@@ -137,11 +142,13 @@ void BossHands::HandsMagenta(GameMain* main) {
 			down_hand = true;
 		}*/
 	
+	if (Death_Flg == false) {
+
 		//ボスの拳の攻撃判定
-	if (switching != 3) {
-		Attack_Num = 0;
-		BossAttack(main);
-	}
+		if (switching != 3) {
+			Attack_Num = 0;
+			BossAttack(main);
+		}
 
 		//衝撃波を出す
 		if (hitflg == true && onceflg == true) {
@@ -234,7 +241,28 @@ void BossHands::HandsMagenta(GameMain* main) {
 		default:
 			break;
 		}
-
+	}
+	else {
+		//死亡アニメーション
+		count = 0;
+		switch (Death_Anim) {
+		case 0:
+			if (count++ > 100) {
+				Death_Anim++;
+			}
+			break;
+		case 1:
+			if (count++ > 100) {
+				Death_Anim++;
+			}
+			break;
+		case 2:
+			main->Hands_Delete_Flg = true;
+			break;
+		default:
+			break;
+		};
+	}
 }
 
 void BossHands::HandsCyan(GameMain* main){
@@ -292,7 +320,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.width = erea.width;
 		attack_data.height = erea.height - 20;
 		attack_data.who_attack = who;
-		attack_data.attack_time = 30;
+		attack_data.attack_time = 3;
 		attack_data.delay = 0;
 		attack_data.damage = 1;
 		attack_data.attack_type = MELEE;
@@ -328,16 +356,6 @@ AttackData BossHands::BossAttactData()
 		attack_data.direction = false;
 		break;
 	default:
-		attack_data.shift_x = 0;
-		attack_data.shift_y = 0;
-		attack_data.width = 0;
-		attack_data.height = 0;
-		attack_data.who_attack = who;
-		attack_data.attack_time = 0;
-		attack_data.delay = 3;
-		attack_data.damage = 0;
-		attack_data.attack_type =MELEE;
-
 		break;
 	}
 
@@ -358,7 +376,7 @@ void BossHands::ApplyDamage(int num) {
 		hp--;
 	}
 	
-	if (hp < 0) {
+	if (hp <= 0) {
 		Death_Flg = true;
 	}
 }

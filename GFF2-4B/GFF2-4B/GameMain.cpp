@@ -42,6 +42,7 @@ GameMain::GameMain(int _stage)
 	flg = false;
 	onfloor_flg = false;
 
+	Hands_Delete_Flg = false;
 }
 
 GameMain::~GameMain()
@@ -138,7 +139,10 @@ AbstractScene* GameMain::Update()
 				else {
 					rock[0] = new Rock(who++, hands->switching);
 				}
+
 			}
+
+
 		}
 		
 		//岩アップデート
@@ -267,13 +271,9 @@ AbstractScene* GameMain::Update()
 				{
 					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
 					attack[i]->SetScreenPosition(camera_location);
+
 				}
-				//腕が死んだ場合
-				if (hands->Death_Flg == true) {
-					boss->Count_Death--;
-					attack[i]->DeleteAttack();
-					hands = nullptr;
-				}
+
 			}
 				//岩
 				for (int j = 0; j < 2; j++) {
@@ -282,11 +282,15 @@ AbstractScene* GameMain::Update()
 						{
 							attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
 							attack[i]->SetScreenPosition(camera_location);
+							if (hands->Death_Flg == true) {
+								//boss->Count_Death--;
+								attack[i]->DeleteAttack();
+								//hands = nullptr;
+							}
 						}
 					}
 				}
 			
-
 		}
 
 	}
@@ -355,11 +359,14 @@ AbstractScene* GameMain::Update()
 	}
 
 	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage!=now_stage) {
+	if (now_stage == 3 && old_stage!=now_stage &&Hands_Delete_Flg==true) {
+		//Hands_Delete_Flg = false;
 		boss = new Boss();
 		hands = new BossHands(who++, boss);
 	}
 #endif
+
+
 
 	return this;
 }
@@ -568,12 +575,14 @@ void GameMain::HitCheck()
 		}
 
 		if (now_stage == 3) {
-
 			if (hands != nullptr) {
 				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
+
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					attack[i]->DeleteAttack();
+					//ジャンプ攻撃多段防止
 					if (player->GetAcs(0) > 0.1) {
 						hands->HitJumpAttack = true;
 					}
@@ -581,11 +590,11 @@ void GameMain::HitCheck()
 						hands->HitJumpAttack = false;
 					}
 				}
+
 			}
-
-
 		}
 		
+	
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
@@ -613,6 +622,17 @@ void GameMain::HitCheck()
 			}
 		}
 	}
+
+
+	//腕が死んだ場合
+	if (hands != nullptr) {
+		if (Hands_Delete_Flg==true) {
+			
+			boss->Count_Death--;
+			hands = nullptr;
+		}
+	}
+
 }
 
 void GameMain::LoadStageData(int _stage)

@@ -41,6 +41,7 @@ public:
 
     bool HitJumpAttack = false;
     bool Death_Flg = false;
+    int Death_Anim;
     
     bool Power_Up;   //強化状態か？
     bool Rock_Once; //出現位置一度だけ格納する用
