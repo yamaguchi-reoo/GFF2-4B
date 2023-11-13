@@ -17,7 +17,6 @@ EditScene::EditScene(int _stage)
 	tool_size.height = 100;
 	tool_pickup_flg = false;
 	current_leftbutton_flg = false;
-	current_center_flg = false;
 	current_rightbutton_flg = false;
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
@@ -62,36 +61,39 @@ AbstractScene* EditScene::Update()
 		{
 			for (int j = 0; j < stage_width_num; j++)
 			{
-				//リセットしてから選択されたselect_dataをtrueにする
-				ResetSelectData();
-				select_data[i][j] = true;
 
-				//変えようとしているステージのデータが変更後のデータと一緒でないなら
-				if (stage_data[i][j] != current_type)
+				if (cursor.x > stage[i][j]->GetLocalLocation().x && cursor.x<stage[i][j]->GetLocalLocation().x + BOX_WIDTH && cursor.y>stage[i][j]->GetLocalLocation().y && cursor.y < stage[i][j]->GetLocalLocation().y + BOX_HEIGHT && tool_pickup_flg == false)
 				{
-					//ひとつ前の状態を保持
-					if (KeyInput::OnMouse(MOUSE_INPUT_LEFT))
+					//リセットしてから選択されたselect_dataをtrueにする
+					ResetSelectData();
+					select_data[i][j] = true;
+					//変えようとしているステージのデータが変更後のデータと一緒でないなら
+					if (stage_data[i][j] != current_type)
 					{
-						SaveOldData();
+						//ひとつ前の状態を保持
+						if (KeyInput::OnMouse(MOUSE_INPUT_LEFT))
+						{
+							SaveOldData();
+						}
+						//更新
+						if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT))
+						{
+							stage_data[i][j] = current_type;
+						}
 					}
-					//更新
-					if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT))
+					//変えようとしているステージのデータが変更後のデータと一緒でないなら
+					if (stage_data[i][j] != 0)
 					{
-						stage_data[i][j] = current_type;
-					}
-				}
-				//変えようとしているステージのデータが変更後のデータと一緒でないなら
-				if (stage_data[i][j] != 0)
-				{
-					//ひとつ前の状態を保持
-					if (KeyInput::OnMouse(MOUSE_INPUT_RIGHT))
-					{
-						SaveOldData();
-					}
-					//更新
-					if (KeyInput::OnPressedMouse(MOUSE_INPUT_RIGHT))
-					{
-						stage_data[i][j] = 0;
+						//ひとつ前の状態を保持
+						if (KeyInput::OnMouse(MOUSE_INPUT_RIGHT))
+						{
+							SaveOldData();
+						}
+						//更新
+						if (KeyInput::OnPressedMouse(MOUSE_INPUT_RIGHT))
+						{
+							stage_data[i][j] = 0;
+						}
 					}
 				}
 			}
@@ -114,22 +116,12 @@ AbstractScene* EditScene::Update()
 			current_leftbutton_flg = true;
 			if (KeyInput::OnMouse(MOUSE_INPUT_LEFT))
 			{
-				UpdateStageWidth(-1);
+				UpdateStageWidth(stage_width_num - 1);
 			}
 		}
 		else
 		{
 			current_leftbutton_flg = false;
-		}
-
-
-		if (cursor.x > tool_location.x + tool_size.width - 65 && cursor.x < tool_location.x + tool_size.width-15 && cursor.y>tool_location.y + 20 && cursor.y < tool_location.y + 45)
-		{
-			current_center_flg = true;
-		}
-		else
-		{
-			current_center_flg = false;
 		}
 
 		//幅を増やす
@@ -138,7 +130,7 @@ AbstractScene* EditScene::Update()
 			current_rightbutton_flg = true;
 			if (KeyInput::OnMouse(MOUSE_INPUT_LEFT))
 			{
-				UpdateStageWidth(+1);
+				UpdateStageWidth(stage_width_num + 1);
 			}
 		}
 		else
@@ -210,6 +202,7 @@ AbstractScene* EditScene::Update()
 		UpdateStageData(now_stage);
 		return new GameMain(now_stage);
 	}
+
 	//全部無に
 	if (KeyInput::OnKey(KEY_INPUT_0))
 	{
@@ -279,19 +272,13 @@ void EditScene::Draw()const
 
 	//ステージ幅変更用表示
 	DrawStringF(tool_location.x + tool_size.width - 85, tool_location.y + 2, "ステージ幅", 0xffffff);
-	if (current_center_flg == false)
-	{
-		DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0x000000, true);
-		DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0xffffff, false);
-		DrawFormatStringF(tool_location.x + tool_size.width - 55, tool_location.y + 25, 0xffffff, "%d", stage_width_num);
-	}
-	else
-	{
-		DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0xffffff, true);
-		DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0x000000, false);
-		DrawFormatStringF(tool_location.x + tool_size.width - 55, tool_location.y + 25, 0x000000, "%d", stage_width_num);
-	}
 
+	//ステージの横のブロック数が表示されるエリア
+	DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0x000000, true);
+	DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0xffffff, false);
+	DrawFormatStringF(tool_location.x + tool_size.width - 55, tool_location.y + 25, 0xffffff, "%d", stage_width_num);
+
+	//ステージサイズ変更ボタン
 	if (current_leftbutton_flg == false)
 	{
 		DrawBoxAA(tool_location.x + tool_size.width - 80, tool_location.y + 20, tool_location.x + tool_size.width - 65, tool_location.y + 45, 0x000000, true);
@@ -304,7 +291,6 @@ void EditScene::Draw()const
 		DrawBoxAA(tool_location.x + tool_size.width - 80, tool_location.y + 20, tool_location.x + tool_size.width - 65, tool_location.y + 45, 0x000000, false);
 		DrawStringF(tool_location.x + tool_size.width - 75, tool_location.y + 25, "<", 0x000000);
 	}
-	
 	if (current_rightbutton_flg == false)
 	{
 		DrawBoxAA(tool_location.x + tool_size.width - 15, tool_location.y + 20, tool_location.x + tool_size.width, tool_location.y + 45, 0x000000, true);
@@ -395,7 +381,7 @@ void EditScene::UpdateStageData(int _stage)
 
 void EditScene::UpdateStageWidth(int _width)
 {
-	stage_width_num += _width;
+	stage_width_num = _width;
 	//拡張の上限と縮小の下限
 	if (stage_width_num > MAX_STAGE_WIDTH)
 	{
@@ -417,12 +403,6 @@ void EditScene::UpdateStageWidth(int _width)
 			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
 			stage[i][j]->SetDebugFlg();
 			select_data[i][j] = false;
-			//if (stage[i][j] == nullptr)
-			//{
-			//	stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
-			//	stage[i][j]->SetDebugFlg();
-			//	select_data[i][j] = false;
-			//}
 		}
 	}
 }
@@ -440,19 +420,23 @@ void EditScene::SaveOldData()
 
 int EditScene::ChechSelectErea()
 {
+
 	//カーソルがツールボックス内かどうか判断
 	if (cursor.x > tool_location.x && cursor.x < tool_location.x + tool_size.width && cursor.y>tool_location.y && cursor.y < tool_location.y + tool_size.height)
 	{
 		return TOOL_BOX;
 	}
-	//ツールボックスをつかんでいなければツールボックス外の処理
-	for (int i = 0; i < stage_height_num; i++)
+	else
 	{
-		for (int j = 0; j < stage_width_num; j++)
+		//ツールボックスをつかんでいなければツールボックス外の処理
+		for (int i = 0; i < stage_height_num; i++)
 		{
-			if (cursor.x > stage[i][j]->GetLocalLocation().x && cursor.x<stage[i][j]->GetLocalLocation().x + BOX_WIDTH && cursor.y>stage[i][j]->GetLocalLocation().y && cursor.y < stage[i][j]->GetLocalLocation().y + BOX_HEIGHT && tool_pickup_flg == false)
+			for (int j = 0; j < stage_width_num; j++)
 			{
-				return STAGE_EDIT;
+				if (cursor.x > stage[i][j]->GetLocalLocation().x && cursor.x<stage[i][j]->GetLocalLocation().x + BOX_WIDTH && cursor.y>stage[i][j]->GetLocalLocation().y && cursor.y < stage[i][j]->GetLocalLocation().y + BOX_HEIGHT && tool_pickup_flg == false)
+				{
+					return STAGE_EDIT;
+				}
 			}
 		}
 	}
