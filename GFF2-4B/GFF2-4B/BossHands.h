@@ -18,6 +18,7 @@ public:
     int hands_width[3] = { 190,190,190 };
 
     int Hands_img[IMGMAX];
+    int Hands_Img_num;//‰æ‘œØ‚è‘Ö‚¦—p
     int hi[3];
     int bosf[3];
 

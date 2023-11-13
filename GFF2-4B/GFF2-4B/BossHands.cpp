@@ -3,6 +3,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+int cou = 0;
+
 BossHands::BossHands(int _who,Boss* boss) {
 
 	//ザクロ画像
@@ -11,6 +13,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//イルカ画像
 	LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
 	//hi[1] = LoadGraph("resource/images/Boss/Iruka.png",true);
+	Hands_Img_num = 0;
 
 	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
 	bosf[1] = LoadGraph("resource/images/Boss/LongTuru.png", true);
@@ -32,7 +35,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 		//出現位置
 		Direction = 0;
 		location.x = 1280;
-		location.y = 500;
+		location.y = 700;
 		break;
 	case 2:
 		//イエロー
@@ -104,10 +107,10 @@ void BossHands::Draw() const {
 	case 1:
 		//シアン
 		if (Direction == 0) {
-			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[0], TRUE);
+			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 		}
 		else {
-			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[2], TRUE);
+			DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 		}
 
 		break;
@@ -251,11 +254,30 @@ void BossHands::HandsCyan(GameMain* main){
 
 	if (location.x > 1100) {
 		Direction = 0;
+		Hands_Img_num = 0;
 	}
 	else if (location.x < 150) {
+		Hands_Img_num = 2;
 		Direction = 1;
 	}
 	
+	if (cou++ > 100) {
+		cou = 0;
+		if (Direction == 0) {
+			Hands_Img_num = 1;
+		}
+		if (Direction == 1) {
+			Hands_Img_num = 3;
+		}
+	}
+	else {
+		if (Direction == 0) {
+			Hands_Img_num = 0;
+		}
+		if (Direction == 1) {
+			Hands_Img_num = 2;
+		}
+	}
 
 }
 
