@@ -15,6 +15,7 @@
 #include "PlayerHP.h"
 #include "Boss.h"
 #include "BossHands.h"
+#include "Rock.h"
 #include "Effect.h"
 #include "LoadingScene.h"
 
@@ -39,6 +40,8 @@ private:
 
     Boss* boss; //ボス
     BossHands* hands;//ボスの腕
+    int Check_Num;
+    Rock* rock[2];//岩
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
@@ -60,10 +63,9 @@ private:
     int stage_height_num;   //ステージブロックの縦数
 
     int stage_width;        //ステージ横幅
-
-    int loading_time;		//読込時間用変数
-
 public:
+    bool Hands_Delete_Flg; //ボスの腕消す用
+
     //コンストラクタ(_stage＝読み込むステージ)
     GameMain(int _stage);
     //デストラクタ

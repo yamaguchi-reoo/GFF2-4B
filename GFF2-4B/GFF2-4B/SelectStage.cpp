@@ -20,7 +20,13 @@ SelectStage::~SelectStage()
 // 描画以外の更新を実装
 AbstractScene* SelectStage::Update()
 {
-	if (PadInput::TipLeftLStick(STICKL_X) <= -1 && botton_flg == false)
+	if (
+#ifdef _DEBUG
+	(PadInput::TipLeftLStick(STICKL_X) <= -1 || KeyInput::OnKey(KEY_INPUT_A))
+#else
+		PadInput::TipLeftLStick(STICKL_X) <= -1
+#endif
+		 && botton_flg == false)
 	{//左移動
 		botton_flg = true;
 
@@ -42,7 +48,13 @@ AbstractScene* SelectStage::Update()
 		}
 		
 	}
-	else if (PadInput::TipLeftLStick(STICKL_X) >= 1 && botton_flg == false)
+	else if (
+#ifdef _DEBUG
+	(PadInput::TipLeftLStick(STICKL_X) >= 1 || KeyInput::OnKey(KEY_INPUT_D))
+#else
+	PadInput::TipLeftLStick(STICKL_X) >= 1
+#endif
+		&& botton_flg == false)
 	{//右移動
 		botton_flg = true;
 
@@ -72,12 +84,19 @@ AbstractScene* SelectStage::Update()
 		
 	}
 	else if (PadInput::TipLeftLStick(STICKL_X) > -1 && PadInput::TipLeftLStick(STICKL_X) < 1 && PadInput::OnButton(XINPUT_BUTTON_B) == false)
-	{//何もしてないとき
+	{
+		//何もしてないとき
 		botton_flg = false;
 	}
 
 	//Aボタンが押されたらゲームメインに遷移
-	if (PadInput::OnButton(XINPUT_BUTTON_A) == true)
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		)
 	{
 		return new GameMain(stage_num);
 	}

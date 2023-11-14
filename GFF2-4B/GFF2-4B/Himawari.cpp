@@ -1,11 +1,15 @@
 #include "Himawari.h"
 #include "GameMain.h"
 
-#define BULLET_INTERVAL 120
+#define BULLET_INTERVAL 60
+#define RAPID_INTERVAL 9
 #define HIMAWARI_GRAVITY  10
+#define BULLET_NUM_MAX 2
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 {
+	himawari_state = HimawariState::SHOOT;
+
 	location.x = pos_x;
 	location.y = pos_y;
 	erea.height = 100;
@@ -22,8 +26,9 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	apply_gravity = true;
 	onfloor_flg = false;
 	
-
-	attack_interval_count = 0;
+	rapid_fire_interval = RAPID_INTERVAL;
+	attack_interval_count = BULLET_INTERVAL;
+	bullet_num = BULLET_NUM_MAX ;
 
 	Date.magenta = 5.0f;
 	Date.syan = 5.0f;
@@ -39,8 +44,11 @@ void Himawari::Update(GameMain* main)
 	//ƒXƒ|[ƒ“‚µ‚Ä‚¢‚é‚©‚ÂƒAƒ^ƒbƒNƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚é‚Æ‚«
 	if (spawn_flg == false && attack_flg == true)
 	{
-		//UŒ‚
-		Attack(main);
+		if (himawari_state == HimawariState::SHOOT) 
+		{
+			//UŒ‚
+			Attack(main);
+		}
 	}
 	//°‚ÉG‚ê‚Ä‚¢‚È‚¢‚È‚ç
 	if (apply_gravity == true)
@@ -50,6 +58,7 @@ void Himawari::Update(GameMain* main)
 	}
 	//ŠeˆÚ“®—p•Ï”‚ğƒŠƒZƒbƒg
 	HimawariReset();
+
 }
 
 void Himawari::Draw() const
@@ -126,14 +135,14 @@ AttackData Himawari::CreateAttactData()
 	AttackData attack_data;
 	//‚Ç‚Ì’iŠK‚ÌUŒ‚‚Å‚à•Ï‚í‚ç‚È‚¢î•ñ‚Í‚±‚±‚ÅŠi”[‚·‚é
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = 0;
+	attack_data.shift_y = +10;
 	attack_data.who_attack = who;
 	attack_data.direction = himawari_direction;
 	//’e‚Ì‘å‚«‚³
 	attack_data.width = 10;
 	attack_data.height = 10;
 	//UŒ‚‚ÉŠÖ‚·‚éî•ñ
-	attack_data.attack_time = 200;
+	attack_data.attack_time = 70;
 	attack_data.damage = 1;
 	attack_data.delay = 10;
 	attack_data.attack_type = BULLET;//MELEE;
@@ -148,19 +157,28 @@ AttackData Himawari::CreateAttactData()
 	{
 		attack_data.angle = 0.5f;
 	}
-	attack_data.speed = 5;
+	attack_data.speed = 10;
+
 
 	return attack_data;
+	
 }
 
 void Himawari::Attack(GameMain* main)
 {
-	//attack_interval_count = 60;
+	if (--attack_interval_count < 0)
+	{
+		if (--rapid_fire_interval < 0) {
+			bullet_num--;
+			rapid_fire_interval = RAPID_INTERVAL;
+			//UŒ‚‚ğ¶¬‚·‚é
+			main->SpawnAttack(CreateAttactData());
+			if (bullet_num < 0) {
+				bullet_num = BULLET_NUM_MAX;
+				attack_interval_count = (BULLET_INTERVAL * 2);
+			}
+		}
 
-	if (++attack_interval_count >= BULLET_INTERVAL) {
-		//UŒ‚‚ğ¶¬‚·‚é
-		main->SpawnAttack(CreateAttactData());
-		attack_interval_count = 0;
 	}
 }
 

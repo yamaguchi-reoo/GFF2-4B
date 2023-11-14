@@ -20,13 +20,25 @@ Title::~Title()
 AbstractScene* Title::Update()
 {
 	//十字キー↑入力
-	if (PadInput::OnButton(XINPUT_BUTTON_DPAD_UP))
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_UP) || KeyInput::OnKey(KEY_INPUT_W)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_UP)
+#endif
+		)
 	{
 		Select--;
 		if (Select < 0)Select = 1;
 	}
 	//十字キー↓入力
-	if (PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN))
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN) || KeyInput::OnKey(KEY_INPUT_S)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_DPAD_DOWN)
+#endif
+		)
 	{
 		Select++;
 		if (Select > 1)Select = 0;
@@ -53,8 +65,13 @@ AbstractScene* Title::Update()
 	{
 		Once = TRUE;
 	}
-
-	if (PadInput::OnButton(XINPUT_BUTTON_A))
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		)
 	{
 		switch (static_cast<TITLE_MENU>(Select))
 		{

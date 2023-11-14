@@ -35,7 +35,7 @@ void Stage::Draw()const
 	case 2:
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
 		break;
-		//Šâde
+		//Šâ
 	case 3:
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x333333, true);
 		break;
@@ -43,17 +43,26 @@ void Stage::Draw()const
 	case 4:
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xdddddd, true);
 		break;
+		//–³
 	default:
 		break;
 	}
 	if (debug_flg == true)
 	{
-		//DrawFormatStringF(local_location.x, local_location.y, 0xff0000, "%d", type);
+		DrawFormatStringF(local_location.x, local_location.y, 0xff0000, "%d", type);
 	}
 }
 
-void Stage::MoveStage(float _x, float _y)
+int Stage::GetStageCollisionType()
 {
-	location.x += _x;
-	location.y += _y;
+	int col_type = 0;
+	if (type <= 4)
+	{
+		col_type = type;
+	}
+	else
+	{
+		col_type = 0;
+	}
+	return col_type;
 }

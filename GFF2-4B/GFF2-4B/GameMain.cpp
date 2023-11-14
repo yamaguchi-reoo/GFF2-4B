@@ -23,7 +23,9 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
-		hands = new BossHands(who);
+		hands = new BossHands(who++,boss);
+		boss = new Boss();
+
 	}
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
@@ -45,6 +47,7 @@ GameMain::GameMain(int _stage)
 	flg = false;
 	onfloor_flg = false;
 
+	Hands_Delete_Flg = false;
 }
 
 GameMain::~GameMain()
@@ -65,11 +68,15 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-	//エディットモードに移行する時にイルカが地面に刺さっていると、deleteで例外が発生するバグが起こっているので、コメントアウト
-	//for (int i = 0; i < IRUKA_MAX; i++)
-	//{
-	//	delete iruka[i];
-	//}
+#ifdef _DEBUG
+	//エディットモードに移行する時にイルカが地面に刺さっていると、
+	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
+#else
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
+		delete iruka[i];
+	}
+#endif
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		delete himawari[i];
@@ -124,8 +131,38 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	//ボスの腕アップデート
 	if (now_stage == 3) {
-		hands->Update(this);
+		if (hands != nullptr) {
+			hands->Update(this);
+			//岩生成
+			if (hands->Rock_Once == true) {
+				hands->Rock_Once = false;
+				if (hands->switching == 3) {
+					rock[0] = new Rock(who++, 2);
+					rock[1] = new Rock(who++, 3);
+				}
+				else {
+					rock[0] = new Rock(who++, hands->switching);
+				}
+
+			}
+
+
+		}
+		
+		//岩アップデート
+
+			for (int i = 0; i < 2; i++) {
+				if (rock[i] != nullptr) {
+					rock[i]->Update(this);
+					if (rock[i]->Rock_Delete == true) {
+						rock[i] = nullptr;
+					}
+				}
+			}
+		
+
 	}
 
 	player->Update(this);
@@ -223,21 +260,43 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		//ボスの腕
-		if (now_stage == 3) {
-			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-			{
-				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-			}
-		}
+		////ボスの腕
+		//if (now_stage == 3) {
+		//	//if (hands != nullptr) {
+		//	//	if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+		//	//	{
+		//	//		attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+		//	//	}
+		//	//}
+		//}
 
 		//ボスの腕
 		if (now_stage == 3) {
-			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-			{
-				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-				attack[i]->SetScreenPosition(camera_location);
+			if (hands != nullptr) {
+				if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+				{
+					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+					attack[i]->SetScreenPosition(camera_location);
+
+				}
+
 			}
+				//岩
+				for (int j = 0; j < 2; j++) {
+					if (rock[j] != nullptr) {
+						if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
+						{
+							attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
+							attack[i]->SetScreenPosition(camera_location);
+							if (hands->Death_Flg == true) {
+								//boss->Count_Death--;
+								attack[i]->DeleteAttack();
+								//hands = nullptr;
+							}
+						}
+					}
+				}
+			
 		}
 
 	}
@@ -248,8 +307,6 @@ AbstractScene* GameMain::Update()
 		effect->SetFlg(0);
 	}
 	
-
-
 	//床の数だけ繰り返す
 	for(int i = 0; i < stage_height_num; i++)
 	{
@@ -259,10 +316,19 @@ AbstractScene* GameMain::Update()
 			stage[i][j]->SetScreenPosition(camera_location);
 		}
 	}
+
 	//当たり判定関連の処理を行う
 	HitCheck();
 
-#if DEBUG
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
+		return new GameClear();
+	}
+	if (player->GetPlayerHP() < 0) {
+		return new GameOver();
+	}
+
+#ifdef _DEBUG
 	//ステージ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_0))
 	{
@@ -300,7 +366,9 @@ AbstractScene* GameMain::Update()
 
 	//途中でステージの切り替えがあった場合使用
 	if (now_stage == 3 && old_stage!=now_stage) {
-		hands = new BossHands(who);
+		//Hands_Delete_Flg = false;
+		boss = new Boss();
+		hands = new BossHands(who++, boss);
 	}
 #endif
 	//ステージクリア
@@ -315,6 +383,8 @@ AbstractScene* GameMain::Update()
 		return new GameOver();
 	}
 
+
+
 	return this;
 }
 
@@ -328,9 +398,23 @@ void GameMain::Draw() const
 		//描画
 	player->Draw();
 
+	//ボスの腕表示
 	if (now_stage == 3) {
-		hands->Draw();
+		if (boss != nullptr) {
+			boss->Draw();
+		}
+		if (hands != nullptr) {
+			hands->Draw();
+		}
+
+			for (int i = 0; i < 2; i++) {
+				if (rock[i] != nullptr) {
+					rock[i]->Draw();
+				}
+			}
 	}
+	
+
 
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -397,23 +481,25 @@ void GameMain::HitCheck()
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
 				//触れた面に応じて押し出す
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageType());
+				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
 			if (now_stage == 3) {
-				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
-				{
-					hands->hitflg = true;
+				if (hands != nullptr) {
+					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+					{
+						hands->hitflg = true;
+					}
 				}
 			}
 
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
-					if (zakuro[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (zakuro[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						//触れた面に応じて押し出す
 						zakuro[k]->ZakuroPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
@@ -424,7 +510,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
-					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
@@ -434,7 +520,7 @@ void GameMain::HitCheck()
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
 				if (himawari[k] != nullptr) {
-					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
@@ -507,15 +593,29 @@ void GameMain::HitCheck()
 
 		if (now_stage == 3) {
 			if (hands != nullptr) {
-				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
+
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
+					//ジャンプ攻撃多段防止
+					if (player->GetAcs(0) > 0.1) {
+						hands->HitJumpAttack = true;
+					}
+					else {
+						hands->HitJumpAttack = false;
+					}
+				}
+				if (hands->Death_Flg == true) {
+					attack[i]->DeleteAttack();
 
 				}
+
 			}
 		}
+		
+	
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
@@ -543,6 +643,17 @@ void GameMain::HitCheck()
 			}
 		}
 	}
+
+
+	//腕が死んだ場合
+	if (hands != nullptr) {
+		if (Hands_Delete_Flg==true) {
+			
+			boss->Count_Death--;
+			hands = nullptr;
+		}
+	}
+
 }
 
 void GameMain::LoadStageData(int _stage)
@@ -607,19 +718,12 @@ void GameMain::SetStage(int _stage)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
+			//ステージ内ブロックを生成
+			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			switch (STAGE_DATA[i][j])
 			{
-				//ステージ内ブロックを生成
-			case 0:
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
-				break;
-				//ザクロを生成
+			//ザクロを生成
 			case 5:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < ZAKURO_MAX; k++)
 				{
@@ -632,7 +736,6 @@ void GameMain::SetStage(int _stage)
 				break;
 				//イルカを生成
 			case 6:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < IRUKA_MAX; k++)
 				{
@@ -645,7 +748,6 @@ void GameMain::SetStage(int _stage)
 				break;
 				//ひまわりを生成
 			case 7:
-				stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, 0);
 				//空いてる枠に生成
 				for (int k = 0; k < HIMAWARI_MAX; k++)
 				{
@@ -655,6 +757,8 @@ void GameMain::SetStage(int _stage)
 						break;
 					}
 				}
+				break;
+			default:
 				break;
 			}
 		}

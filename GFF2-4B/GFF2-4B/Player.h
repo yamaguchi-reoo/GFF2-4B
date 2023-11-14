@@ -37,7 +37,7 @@ enum PlayerState {
 };
 
 //プレイヤーの状態(文字列) デバッグ表示用
-#if DEBUG
+#ifdef _DEBUG
 static char player_state_char[24][256]{
 	"IDOL_RIGHT",
 	"IDOL_LEFT",
