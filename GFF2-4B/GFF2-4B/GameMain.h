@@ -15,7 +15,9 @@
 #include "PlayerHP.h"
 #include "Boss.h"
 #include "BossHands.h"
+#include "Rock.h"
 #include "Effect.h"
+#include "LoadingScene.h"
 
 class Player;
 
@@ -38,6 +40,8 @@ private:
 
     Boss* boss; //ボス
     BossHands* hands;//ボスの腕
+    int Check_Num;
+    Rock* rock[2];//岩
 
     Bamboo* bamboo[BAMBOO_NUM];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
@@ -48,6 +52,7 @@ private:
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
+    Loading* loading_scene;    //LoadingSceneのオブジェクト
 
     int flg;               //
     int count[2];          //実験用
@@ -59,6 +64,8 @@ private:
 
     int stage_width;        //ステージ横幅
 public:
+    bool Hands_Delete_Flg; //ボスの腕消す用
+
     //コンストラクタ(_stage＝読み込むステージ)
     GameMain(int _stage);
     //デストラクタ

@@ -1,4 +1,7 @@
 #include "LoadingScene.h"
+#include "PadInput.h"
+#include "Title.h"
+#include "GameMain.h"
 
 Loading::Loading()
 {
@@ -22,9 +25,14 @@ Loading::~Loading()
 }
 AbstractScene* Loading::Update()
 {
-	return this;
+	while (loading_time < 150)
+	{
+		loading_time += 1;
+		return this;
+	}
+	return new Title;
 }
 void Loading::Draw()const
 {
-
+	DrawGraph(0, 0, loading_image, FALSE);
 }
