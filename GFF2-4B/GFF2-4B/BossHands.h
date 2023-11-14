@@ -4,6 +4,14 @@
 
 class Boss;
 
+
+//ひまわりの状態
+enum SunFlowerState {
+    WAIT = 0,
+    MOVE,
+    DOWN
+};
+
 class BossHands :
     public CharaBase
 {
@@ -48,6 +56,19 @@ public:
 
     int Attack_Num;//攻撃のデータどれ送るか識別用
 
+    //ひまわり用
+    SunFlowerState sf_state;
+    bool pos;                //自分の現在地(false = 右、true = 左)
+    float sf_speed;          //移動速度
+    float angle_width;       //弾を撃つ方向決定用
+    float angle_height;      //弾を撃つ方向決定用
+    float move_angle;        //移動の角度
+    float bullet_angle;      //弾の角度
+    float acceleration;      //移動の加速度
+    int timer;               //各モーションの時間
+    int attack_cd;           //弾を撃つ頻度
+
+    BossHands(int _who);
     BossHands(int _who,Boss* boss);
     ~BossHands();
 
@@ -59,6 +80,8 @@ public:
     void BossAttack(GameMain* main);
     void HandsMagenta(GameMain* main);
     void HandsCyan(GameMain* main);
+    void HandsYellow(GameMain* main);
+
     void ApplyDamage(int num);
     float GetHandsY() { return location.y; };
     float GetHandsX() { return location.x; };

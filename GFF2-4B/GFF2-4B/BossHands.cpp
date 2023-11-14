@@ -58,6 +58,19 @@ BossHands::BossHands(int _who,Boss* boss) {
 	else {
 		Power_Up = false;
 	}
+	hp=0;
+	Hit_Once = true;
+
+	//ひまわり
+	pos = false;  
+	sf_speed = 1;
+	angle_width = 0;    
+	angle_height = 0;   
+	move_angle = 0;    
+	bullet_angle = 0;      
+	acceleration = 0;     
+	timer = 20;
+}
 
 }
 
@@ -278,6 +291,36 @@ void BossHands::HandsCyan(GameMain* main){
 	
 	//Hands_Img_num[0]左向きくち開け状態の場合
 	if (Direction == 0) {
+}
+
+void BossHands::HandsYellow(GameMain* main)
+{
+	switch (sf_state)
+	{
+		//待機
+	case WAIT:
+		//待機状態が終わったなら
+		if (--timer < 0)
+		{
+			//移動開始
+			sf_state = MOVE;
+		}
+		break;
+		//移動
+	case MOVE:
+		move_angle += 0.01f;
+		float rad = move_angle * (float)M_PI * 2;
+		location.x += sf_speed * cosf(rad);
+		location.y += sf_speed * sinf(rad);
+		break;
+		//やられ
+	case DOWN:
+
+		break;
+	default:
+		break;
+	}
+}
 
 		switch (count++)
 		{
