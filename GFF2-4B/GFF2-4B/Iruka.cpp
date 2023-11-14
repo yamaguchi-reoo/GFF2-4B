@@ -14,6 +14,8 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 
 	location.x = pos_x;//1400;
 	location.y = pos_y;// 100;
+	spawn_location_y = pos_y;
+	spawn_location_x = pos_x;
 	erea.width = 120;
 	erea.height = 50;
 	speed = 5;
@@ -27,6 +29,7 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 	{
 		onfloor_flg[i] = false;
 	}
+	return_flg = false;
 	spawn_flg = false;
 	attack_flg = true;
 	fall_flg = false;
@@ -48,7 +51,7 @@ void Iruka::Update(GameMain* main)
 		if (attack_flg == true) {
 			Attack(main);
 			//落下していないとき
-			if (fall_flg == false) {
+			if (fall_flg == false && return_flg == false) {
 				//左右移動
 				Move();
 			}
@@ -58,9 +61,9 @@ void Iruka::Update(GameMain* main)
 				MoveFall();
 			}
 			//復帰
-			//if (fall_flg == true /* && location.y == 570*/) {
-			//	MoveReturn();
-			//}
+			if (return_flg == true /* && location.y == 570*/) {
+				MoveReturn();
+			}
 		}
 	}
 	//左の壁にぶつかったら右に移動
@@ -112,10 +115,13 @@ void Iruka::Draw() const
 void Iruka::Move()
 {
 	//左移動
-	if (iruka_state == IrukaState::LEFT) 
+	if (iruka_state == IrukaState::LEFT)
 	{
 		location.x -= MOVE_SPEED;
 		iruka_direction = true;
+		if (location.x <= spawn_location_x - 640) {
+			iruka_state = IrukaState::RIGHT;
+		}
 	/*	if (location.x < -100)
 		{
 			iruka_state = IrukaState::RIGHT;
@@ -123,10 +129,14 @@ void Iruka::Move()
 		}*/
 	}
 	//右移動
-	if (iruka_state == IrukaState::RIGHT) 
+	if (iruka_state == IrukaState::RIGHT)
 	{
 		location.x += MOVE_SPEED;
 		iruka_direction = false;
+		if (location.x >= spawn_location_x + 640) {
+			iruka_state = IrukaState::LEFT;
+
+		}
 	/*	if (location.x > SCREEN_WIDTH + 100) 
 		{
 			iruka_state = IrukaState::LEFT;
@@ -156,13 +166,23 @@ void Iruka::MoveFall()
 
 void Iruka::MoveReturn()
 {
+	
 	if (++fps_count > MAX_FALL_TIME)
 	{
-		fall_flg = false;
-		location.y = 50;
-		erea.width = 120;
-		erea.height = 50;
-		fps_count = 0;
+		if (return_flg == true) {
+			location.y -= speed;
+			if (spawn_location_y >= location.y) {
+
+				location.y = spawn_location_y;
+				erea.width = 120;
+				erea.height = 50;
+				return_flg = false;
+				fps_count = 0;
+			}
+		}
+		
+		
+		
 		if (iruka_state == IrukaState::RIGHT_FALL) 
 		{
 			iruka_state = IrukaState::RIGHT;
@@ -171,6 +191,8 @@ void Iruka::MoveReturn()
 		{
 			iruka_state = IrukaState::LEFT;
 		}
+	
+		
 	}
 }
 
@@ -178,7 +200,8 @@ void Iruka::IrukaOnFloor(int num, Location _sub)
 {
 	onfloor_flg[num] = true;
 	if (fall_flg == true) {
-		MoveReturn();
+		return_flg = true;
+		fall_flg = false;
 	}
 	
 }
@@ -251,6 +274,10 @@ AttackData Iruka::CreateAttactData()
 	
 	if (fall_flg == true) {
 		attack_data.shift_y = -12;
+	}
+
+	if (return_flg == true) {
+		attack_data.shift_y = -6.5;
 	}
 
 	return attack_data;

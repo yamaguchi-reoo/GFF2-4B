@@ -104,10 +104,10 @@ AbstractScene* GameMain::Update()
 		if (iruka[i] != nullptr)
 		{
 			iruka[i]->SetScreenPosition(camera_location);
-			if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+			/*if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
 				iruka[i]->Update(this);
-			}
-			
+			}*/
+			iruka[i]->Update(this);
 		}
 	}
 	//‚Ð‚Ü‚í‚è
