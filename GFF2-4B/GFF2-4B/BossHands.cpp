@@ -18,7 +18,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
 	bosf[1] = LoadGraph("resource/images/Boss/LongTuru.png", true);
 
-	Hands_who = 0;
+	Hands_who = 1;
 
 	switch (Hands_who)
 	{
@@ -51,7 +51,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	who = _who;
 	count = STOPBOSS;
 	Attack_Num=0;
-	hp=1;
+	hp=10;
 	Hit_Once = true;
 	HitJumpAttack = false;
 	Death_Flg = false;
@@ -74,7 +74,6 @@ BossHands::~BossHands() {
 
 void BossHands::Update(GameMain* main) {
 
-	if (Death_Flg == false) {
 		switch (Hands_who)
 		{
 		case 0:
@@ -91,9 +90,6 @@ void BossHands::Update(GameMain* main) {
 		default:
 			break;
 		}
-
-
-	}
 
 }
 
@@ -242,9 +238,8 @@ void BossHands::HandsMagenta(GameMain* main) {
 			break;
 		}
 	}
-	else {
+	else if(Death_Flg==true) {
 		//死亡アニメーション
-		count = 0;
 		switch (Death_Anim) {
 		case 0:
 			if (count++ > 100) {
@@ -282,30 +277,64 @@ void BossHands::HandsCyan(GameMain* main){
 
 	if (location.x > 1100) {
 		Direction = 0;
-		Hands_Img_num = 0;
+		Hands_Img_num = 1;
 	}
 	else if (location.x < 150) {
-		Hands_Img_num = 2;
+		//Hands_Img_num = 2;
 		Direction = 1;
 	}
 	
-	if (cou++ > 100) {
-		cou = 0;
-		if (Direction == 0) {
+	//Hands_Img_num[0]左向きくち開け状態の場合
+	if (Direction == 0) {
+
+		switch (cou++)
+		{
+		case 50:
 			Hands_Img_num = 1;
-		}
-		if (Direction == 1) {
-			Hands_Img_num = 3;
-		}
-	}
-	else {
-		if (Direction == 0) {
+			break;
+		case 100:
 			Hands_Img_num = 0;
-		}
-		if (Direction == 1) {
-			Hands_Img_num = 2;
+			break;
+		default:
+			break;
 		}
 	}
+
+	if (Direction == 1) {
+
+		switch (cou++)
+		{
+		case 50:
+			Hands_Img_num = 3;
+			break;
+		case 100:
+			Hands_Img_num = 2;
+			break;
+		default:
+			break;
+		}
+	//Hands_Img_num = 3;
+}
+
+
+
+	//if (cou++ > 50) {
+	//	cou = 0;
+	//	if (Direction == 0) {
+	//		Hands_Img_num = 1;
+	//	}
+	//	//if (Direction == 1) {
+	//	//	Hands_Img_num = 3;
+	//	//}
+	//}
+	//else {
+	//	if (Direction == 0) {
+	//		Hands_Img_num = 0;
+	//	}
+	//	//if (Direction == 1) {
+	//	//	Hands_Img_num = 2;
+	//	//}
+	//}
 
 }
 
@@ -378,5 +407,6 @@ void BossHands::ApplyDamage(int num) {
 	
 	if (hp <= 0) {
 		Death_Flg = true;
+		count = 0;
 	}
 }

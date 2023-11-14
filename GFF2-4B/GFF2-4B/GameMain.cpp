@@ -359,7 +359,7 @@ AbstractScene* GameMain::Update()
 	}
 
 	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage!=now_stage &&Hands_Delete_Flg==true) {
+	if (now_stage == 3 && old_stage!=now_stage) {
 		//Hands_Delete_Flg = false;
 		boss = new Boss();
 		hands = new BossHands(who++, boss);
@@ -589,6 +589,10 @@ void GameMain::HitCheck()
 					else {
 						hands->HitJumpAttack = false;
 					}
+				}
+				if (hands->Death_Flg == true) {
+					attack[i]->DeleteAttack();
+
 				}
 
 			}
