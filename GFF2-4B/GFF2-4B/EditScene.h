@@ -41,6 +41,7 @@ private:
     int current_type;                                     //今選ばれているオブジェクトタイプ
     bool current_leftbutton_flg;                          //ステージサイズ変更用の左ボタンが選ばれているか
     bool current_rightbutton_flg;                          //ステージサイズ変更用の右ボタンが選ばれているか
+    int button_interval;                                  //ステージ幅変更のインターバル
     Location tool_location;                               //ツールボックスの左上座標
     Erea tool_size;                                       //左上のツールボックスの幅
     bool tool_pickup_flg;                                 //ツールボックスを持っているか判断

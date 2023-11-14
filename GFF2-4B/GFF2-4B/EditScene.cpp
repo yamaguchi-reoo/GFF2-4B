@@ -18,6 +18,7 @@ EditScene::EditScene(int _stage)
 	tool_pickup_flg = false;
 	current_leftbutton_flg = false;
 	current_rightbutton_flg = false;
+	button_interval = 0;
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -114,9 +115,14 @@ AbstractScene* EditScene::Update()
 		if (cursor.x > tool_location.x + tool_size.width - 80 && cursor.x < tool_location.x + tool_size.width - 65 && cursor.y>tool_location.y + 20 && cursor.y < tool_location.y + 45)
 		{
 			current_leftbutton_flg = true;
-			if (KeyInput::OnMouse(MOUSE_INPUT_LEFT))
+			if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT) && --button_interval < 0)
 			{
+				button_interval = 10;
 				UpdateStageWidth(stage_width_num - 1);
+			}
+			if (KeyInput::OnReleaseMouse(MOUSE_INPUT_LEFT))
+			{
+				button_interval = 0;
 			}
 		}
 		else
@@ -128,9 +134,14 @@ AbstractScene* EditScene::Update()
 		if (cursor.x > tool_location.x + tool_size.width - 15 && cursor.x < tool_location.x + tool_size.width && cursor.y>tool_location.y + 20 && cursor.y < tool_location.y + 45)
 		{
 			current_rightbutton_flg = true;
-			if (KeyInput::OnMouse(MOUSE_INPUT_LEFT))
+			if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT) && --button_interval < 0)
 			{
+				button_interval = 10;
 				UpdateStageWidth(stage_width_num + 1);
+			}
+			if (KeyInput::OnReleaseMouse(MOUSE_INPUT_LEFT))
+			{
+				button_interval = 0;
 			}
 		}
 		else
