@@ -1,12 +1,10 @@
 #pragma once
 #include "AbstractScene.h"
-#include "GameMain.h"
 
 class Loading :public AbstractScene
 {
 private:
 	int loading_image;		//“Ç—p‰æ‘œ
-
 	int loading_time;		//“ÇŠÔ—p•Ï”
 
 public:
