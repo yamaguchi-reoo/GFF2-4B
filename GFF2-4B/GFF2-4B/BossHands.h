@@ -1,5 +1,17 @@
 #pragma once
 #include "CharaBase.h"
+#include "Rock.h"
+
+class Boss;
+
+
+//ひまわりの状態
+enum SunFlowerState {
+    WAIT = 0,
+    MOVE,
+    DOWN
+};
+
 class BossHands :
     public CharaBase
 {
@@ -8,29 +20,56 @@ private:
 #define IMGMAX (5)      //ボスの画像最大数
 public:
 
+    /*ザクロ拳*/
     //受け取った値によってCMYのサイズ変更用
     int hands_height[3] = { 190,190,190 };
     int hands_width[3] = { 190,190,190 };
 
     int Hands_img[IMGMAX];
+    int Hands_Img_num;//画像切り替え用
+    int hi[3];
 
     //Mの拳が降りてくるX座標
-    int Magentax[10] = { 1000,100,500 };
+    float Magentax[10] = { 1000,100,500 };
 
-    int switching;
+    /*イルカ*/
+    int Direction;  //0:左向き 1:右向き
 
-    int bhandx;
-    int bhandy;
-    int down_hand;
+    int switching;//拳出現位置セット用
 
     bool hitflg=false;
     bool onceflg=true;
     int count;
-    bool Hit_Once;
 
-    int Attack_Num;//ボスの手が今何の攻撃しているか
+    bool HitJumpAttack = false;//ジャンプ攻撃多段ヒット防止
+    bool Death_Flg = false;//HPが0になったらON
+    int Death_Anim;//死亡アニメーション切り替え用
+    
+    bool Power_Up;   //強化状態か？
+    bool Rock_Once; //岩出現位置一度だけ格納する用
+
+    //ボスの状態が何か受け取る
+    int Boss_Form;
+
+    //どの腕を出すか用 0:マゼンタ 1:シアン 2:イエロー
+    int Hands_who;
+
+    int Attack_Num;//攻撃のデータどれ送るか識別用
+
+    //ひまわり用
+    SunFlowerState sf_state;
+    bool pos;                //自分の現在地(false = 右、true = 左)
+    float sf_speed;          //移動速度
+    float angle_width;       //弾を撃つ方向決定用
+    float angle_height;      //弾を撃つ方向決定用
+    float move_angle;        //移動の角度
+    float bullet_angle;      //弾の角度
+    float acceleration;      //移動の加速度
+    int timer;               //各モーションの時間
+    int attack_cd;           //弾を撃つ頻度
 
     BossHands(int _who);
+    BossHands(int _who,Boss* boss);
     ~BossHands();
 
 
@@ -40,7 +79,11 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
     void HandsMagenta(GameMain* main);
+    void HandsCyan(GameMain* main);
+    void HandsYellow(GameMain* main);
 
     void ApplyDamage(int num);
+    float GetHandsY() { return location.y; };
+    float GetHandsX() { return location.x; };
 };
 
