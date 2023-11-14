@@ -20,7 +20,9 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
-		hands = new BossHands(who);
+		hands = new BossHands(who++,boss);
+		boss = new Boss();
+
 	}
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
@@ -40,6 +42,7 @@ GameMain::GameMain(int _stage)
 	flg = false;
 	onfloor_flg = false;
 
+	Hands_Delete_Flg = false;
 }
 
 GameMain::~GameMain()
@@ -122,8 +125,38 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	//ボスの腕アップデート
 	if (now_stage == 3) {
-		hands->Update(this);
+		if (hands != nullptr) {
+			hands->Update(this);
+			//岩生成
+			if (hands->Rock_Once == true) {
+				hands->Rock_Once = false;
+				if (hands->switching == 3) {
+					rock[0] = new Rock(who++, 2);
+					rock[1] = new Rock(who++, 3);
+				}
+				else {
+					rock[0] = new Rock(who++, hands->switching);
+				}
+
+			}
+
+
+		}
+		
+		//岩アップデート
+
+			for (int i = 0; i < 2; i++) {
+				if (rock[i] != nullptr) {
+					rock[i]->Update(this);
+					if (rock[i]->Rock_Delete == true) {
+						rock[i] = nullptr;
+					}
+				}
+			}
+		
+
 	}
 
 	player->Update(this);
@@ -221,21 +254,43 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		//ボスの腕
-		if (now_stage == 3) {
-			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-			{
-				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-			}
-		}
+		////ボスの腕
+		//if (now_stage == 3) {
+		//	//if (hands != nullptr) {
+		//	//	if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+		//	//	{
+		//	//		attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+		//	//	}
+		//	//}
+		//}
 
 		//ボスの腕
 		if (now_stage == 3) {
-			if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-			{
-				attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-				attack[i]->SetScreenPosition(camera_location);
+			if (hands != nullptr) {
+				if (attack[i]->GetAttackData().who_attack == hands->GetWho())
+				{
+					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
+					attack[i]->SetScreenPosition(camera_location);
+
+				}
+
 			}
+				//岩
+				for (int j = 0; j < 2; j++) {
+					if (rock[j] != nullptr) {
+						if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
+						{
+							attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
+							attack[i]->SetScreenPosition(camera_location);
+							if (hands->Death_Flg == true) {
+								//boss->Count_Death--;
+								attack[i]->DeleteAttack();
+								//hands = nullptr;
+							}
+						}
+					}
+				}
+			
 		}
 
 	}
@@ -305,9 +360,13 @@ AbstractScene* GameMain::Update()
 
 	//途中でステージの切り替えがあった場合使用
 	if (now_stage == 3 && old_stage!=now_stage) {
-		hands = new BossHands(who);
+		//Hands_Delete_Flg = false;
+		boss = new Boss();
+		hands = new BossHands(who++, boss);
 	}
 #endif
+
+
 
 	return this;
 }
@@ -322,9 +381,23 @@ void GameMain::Draw() const
 		//描画
 	player->Draw();
 
+	//ボスの腕表示
 	if (now_stage == 3) {
-		hands->Draw();
+		if (boss != nullptr) {
+			boss->Draw();
+		}
+		if (hands != nullptr) {
+			hands->Draw();
+		}
+
+			for (int i = 0; i < 2; i++) {
+				if (rock[i] != nullptr) {
+					rock[i]->Draw();
+				}
+			}
 	}
+	
+
 
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -398,9 +471,11 @@ void GameMain::HitCheck()
 			}
 
 			if (now_stage == 3) {
-				if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-				{
-					hands->hitflg = true;
+				if (hands != nullptr) {
+					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+					{
+						hands->hitflg = true;
+					}
 				}
 			}
 
@@ -501,15 +576,29 @@ void GameMain::HitCheck()
 
 		if (now_stage == 3) {
 			if (hands != nullptr) {
-				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true)
+				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
+
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
+					//ジャンプ攻撃多段防止
+					if (player->GetAcs(0) > 0.1) {
+						hands->HitJumpAttack = true;
+					}
+					else {
+						hands->HitJumpAttack = false;
+					}
+				}
+				if (hands->Death_Flg == true) {
+					attack[i]->DeleteAttack();
 
 				}
+
 			}
 		}
+		
+	
 
 		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
@@ -537,6 +626,17 @@ void GameMain::HitCheck()
 			}
 		}
 	}
+
+
+	//腕が死んだ場合
+	if (hands != nullptr) {
+		if (Hands_Delete_Flg==true) {
+			
+			boss->Count_Death--;
+			hands = nullptr;
+		}
+	}
+
 }
 
 void GameMain::LoadStageData(int _stage)
