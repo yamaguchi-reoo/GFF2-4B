@@ -2,6 +2,7 @@
 #include "PadInput.h"
 #include "GameMain.h"
 
+
 PowerGauge::PowerGauge()
 {
 	location.x = 5;
@@ -128,7 +129,6 @@ void PowerGauge::Draw() const
 	DrawFormatString(300, 70, 0xffffff, "%f", cyan.volume);
 	DrawFormatString(300, 90, 0xffffff, "%d", yellow.remainder);
 	DrawFormatString(300, 100, 0xffffff, "%f", yellow.volume);*/
-
 
 #endif // _DEBUG
 	

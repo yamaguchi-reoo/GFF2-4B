@@ -3,8 +3,8 @@
 class Score
 {
 private:
-	int FontHandle;
-	int Score;
+	int font_handle;
+	int total_score;
 
 public:
 	Score();

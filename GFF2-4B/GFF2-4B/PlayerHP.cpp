@@ -22,7 +22,4 @@ void PlayerHP::Draw() const
 	{
 		DrawGraph(160 + 40 * i, 58, hpImage, TRUE);
 	}
-	
-	SetFontSize(20);
-	DrawFormatString(160, 30, 0xffffff, "スコア：0000000");
 }
