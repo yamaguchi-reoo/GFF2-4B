@@ -20,6 +20,6 @@ void PlayerHP::Draw() const
 {
 	for (int i = 0; i < playerHP; i++)
 	{
-		DrawGraph(160 + 40 * i, 58, hpImage, TRUE);
+		DrawGraph(160 + 40 * i, 80, hpImage, TRUE);
 	}
 }

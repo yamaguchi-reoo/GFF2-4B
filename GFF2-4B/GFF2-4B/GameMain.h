@@ -17,6 +17,7 @@
 #include "BossHands.h"
 #include "Rock.h"
 #include "Effect.h"
+#include "Score.h"
 
 class Player;
 
@@ -47,6 +48,7 @@ private:
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
+    Score* score; //スコアUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 

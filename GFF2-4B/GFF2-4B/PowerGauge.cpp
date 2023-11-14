@@ -2,7 +2,6 @@
 #include "PadInput.h"
 #include "GameMain.h"
 
-
 PowerGauge::PowerGauge()
 {
 	location.x = 5;
@@ -14,7 +13,6 @@ PowerGauge::PowerGauge()
 	magenta.y = 70.0f;
 	magenta.h = 65.0f;
 	magenta.volume = 0.0f;
-	magenta.remainder = 0;
 	magenta.ratio = 0.0f;
 	magenta.maxFlg = 0;
 
@@ -22,7 +20,6 @@ PowerGauge::PowerGauge()
 	cyan.y = 130.0f;
 	cyan.h = 115.0f;
 	cyan.volume = 0.0f;
-	cyan.remainder = 0;
 	cyan.ratio = 0.0f;
 	cyan.maxFlg = 0;
 
@@ -30,7 +27,6 @@ PowerGauge::PowerGauge()
 	yellow.y = 150.0f;
 	yellow.h = 84.0f;
 	yellow.volume = 0.0f;
-	yellow.remainder = 0;
 	yellow.ratio = 0.0f;
 	yellow.maxFlg = 0;
 
@@ -38,7 +34,6 @@ PowerGauge::PowerGauge()
 	black.y = 138.0f;
 	black.h = 131.0f;
 	black.volume = 0.0f;
-	black.remainder = 0;
 	black.ratio = 0.0f;
 	black.maxFlg = 0;
 
@@ -56,6 +51,7 @@ PowerGauge::PowerGauge()
 	i = 0;
 	j = 0;
 
+	remainder = 0;
 }
 
 PowerGauge::~PowerGauge()
@@ -123,12 +119,7 @@ void PowerGauge::Draw() const
 #ifdef _DEBUG
 
 	//デバック表示
-	/*DrawFormatString(300, 10, 0xffffff, "%d", magenta.remainder);
-	DrawFormatString(300, 30, 0xffffff, "%f", magenta.volume);
-	DrawFormatString(300, 50, 0xffffff, "%d", cyan.remainder);
-	DrawFormatString(300, 70, 0xffffff, "%f", cyan.volume);
-	DrawFormatString(300, 90, 0xffffff, "%d", yellow.remainder);
-	DrawFormatString(300, 100, 0xffffff, "%f", yellow.volume);*/
+	DrawFormatString(400, 10, 0xffffff, "%d", remainder);
 
 #endif // _DEBUG
 	
@@ -141,23 +132,23 @@ void PowerGauge::Draw() const
 		DrawMask(5, 3, MaskHandle[0], DX_MASKTRANS_NONE);
 
 		//勾玉の背景を白に
-		DrawBox(5, 3, 155, 153, 0xdddddd, TRUE);
+		DrawBox(5, 3, 155, 153, 0x7d7d7d, TRUE);
 
 		//強化ゲージが0%以上の時に表示
 		
 		
 		//マゼンタ
-		DrawBox(80, 10, 112, 70, 0xdddddd, TRUE);
+		DrawBox(80, 10, 112, 70, 0x7d7d7d, TRUE);
 		DrawBoxAA(magenta.x - 107, magenta.y - magenta.ratio, magenta.x, magenta.y, 0xe4007f, TRUE);
 		
 		
 		//イエロー
-		DrawBox(15, 66, 70, 70, 0xdddddd, TRUE);
+		DrawBox(15, 66, 70, 70, 0x7d7d7d, TRUE);
 		DrawBoxAA(yellow.x - 92, yellow.y - yellow.ratio, yellow.x, yellow.y, 0xffff00, TRUE);
 		
 		
 		//シアン
-		DrawBox(87, 70, 112, 130, 0xdddddd, TRUE);
+		DrawBox(87, 70, 112, 130, 0x7d7d7d, TRUE);
 		DrawBoxAA(cyan.x - 65, cyan.y - cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
 		
 
@@ -290,29 +281,17 @@ void PowerGauge::SetVolume(ColorDate color)
 	{
 		magenta.volume += color.magenta;
 	}
-	else
-	{
-		magenta.remainder += (int)color.magenta;
-	}
 
 	//シアン
 	if (cyan.maxFlg == 0)
 	{
 		cyan.volume += color.syan;
 	}
-	else
-	{
-		cyan.remainder += (int)color.syan;
-	}
 	
 	//イエロー
 	if (yellow.maxFlg == 0)
 	{
 		yellow.volume += color.yellow;
-	}
-	else
-	{
-		yellow.remainder += (int)color.yellow;
 	}
 }
 
@@ -322,7 +301,7 @@ void PowerGauge::CheckVolumeMax()
 	//マゼンタを集めた量が100%以上だったらマゼンタのMAXフラグを1に
 	if (magenta.volume >= 100.0f)
 	{
-		magenta.remainder += (int)magenta.volume - 100;
+		remainder += (int)magenta.volume - 100;
 		magenta.volume = 100.0f;
 		magenta.maxFlg = 1;
 	}
@@ -330,7 +309,7 @@ void PowerGauge::CheckVolumeMax()
 	//イエローを集めた量が100%以上だったらイエローのMAXフラグを1に
 	if (yellow.volume >= 100.0f)
 	{
-		yellow.remainder += (int)yellow.volume - 100;
+		remainder += (int)yellow.volume - 100;
 		yellow.volume = 100.0f;
 		yellow.maxFlg = 1;
 	}
@@ -338,7 +317,7 @@ void PowerGauge::CheckVolumeMax()
 	//シアンを集めた量が100%以上だったらシアンのMAXフラグを1に
 	if (cyan.volume >= 100.0f)
 	{
-		cyan.remainder += (int)cyan.volume - 100;
+		remainder += (int)cyan.volume - 100;
 		cyan.volume = 100.0f;
 		cyan.maxFlg = 1;
 	}
@@ -384,4 +363,9 @@ void PowerGauge::InitGauge()
 	num = 0.0f;
 	i = 0;
 	j = 0;
+}
+
+void PowerGauge::SetColorRem(int num)
+{
+	remainder = num;
 }

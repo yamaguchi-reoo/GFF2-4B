@@ -37,6 +37,8 @@ GameMain::GameMain(int _stage)
 
 	playerhp = new PlayerHP();
 
+	score = new Score();
+
 	effect = new Effect();
 
 	flg = false;
@@ -78,6 +80,7 @@ GameMain::~GameMain()
 	}
 	delete powergauge;
 	delete playerhp;
+	delete score;
 	delete effect;
 }
 
@@ -166,6 +169,8 @@ AbstractScene* GameMain::Update()
 	powergauge->SetScreenPosition(camera_location);
 
 	playerhp->Update(player->GetPlayerHP());
+
+	score->Update();
 
 	effect->Update(this);
 	effect->SetScreenPosition(camera_location);
@@ -314,6 +319,12 @@ AbstractScene* GameMain::Update()
 	//当たり判定関連の処理を行う
 	HitCheck();
 
+	if (powergauge->GetColorRem() > 0)
+	{
+		score->AddScore(powergauge->GetColorRem());
+		powergauge->SetColorRem(0);
+	}
+
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
 		return new GameClear();
@@ -373,7 +384,7 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
-	DrawBox(0, 0, 1280, 720, 0x7d7d7d, true);
+	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 	effect->Draw();
 
 	SetFontSize(42);
@@ -439,6 +450,7 @@ void GameMain::Draw() const
 
 	powergauge->Draw();
 	playerhp->Draw();
+	score->Draw();
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Draw();

@@ -10,7 +10,6 @@ struct GuegeBase
 	float y;	  //色つける四角の右下座標(y)
 	float h;  //色つける四角の高さ
 	float volume; //色の溜まり具合
-	int remainder; //ゲージから溢れた分
 	float ratio;  //ゲージの溜まり具合
 	int maxFlg;   //CMYの場合(0:ゲージMAX未満 1:ゲージMAX),黒の場合(0:それ以外 1:ゲージが黒の状態
 };
@@ -34,6 +33,8 @@ private:
 
 	int rotaFlg; //画像回転アニメーション用フラグ(0:それ以外 1:アニメーション中)
 
+	int remainder; //溢れた分
+
 public:
 	PowerGauge();  //コンストラクタ
 	~PowerGauge(); //デストラクタ
@@ -50,4 +51,6 @@ public:
 	void CheckVolumeMax(); //CMYKのゲージがMAXかチェックする
 	void RotaGauge(); //強化ゲージの回転処理
 	void InitGauge(); //強化状態が終わった後の初期化処理
+	int GetColorRem() { return remainder; } //溢れた分を渡す
+	void SetColorRem(int num);
 };
