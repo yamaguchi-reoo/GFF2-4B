@@ -1,9 +1,10 @@
 #include "Himawari.h"
 #include "GameMain.h"
 
-#define BULLET_INTERVAL 20
-#define RAPID_INTERVAL 10
+#define BULLET_INTERVAL 60
+#define RAPID_INTERVAL 9
 #define HIMAWARI_GRAVITY  10
+#define BULLET_NUM_MAX 2
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 {
@@ -25,8 +26,9 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	apply_gravity = true;
 	onfloor_flg = false;
 	
-	rapid_fire_interval= 0;
-	attack_interval_count = 0;
+	rapid_fire_interval = RAPID_INTERVAL;
+	attack_interval_count = BULLET_INTERVAL;
+	bullet_num = BULLET_NUM_MAX ;
 
 	Date.magenta = 5.0f;
 	Date.syan = 5.0f;
@@ -142,7 +144,7 @@ AttackData Himawari::CreateAttactData()
 	//UŒ‚‚ÉŠÖ‚·‚éî•ñ
 	attack_data.attack_time = 70;
 	attack_data.damage = 1;
-	attack_data.delay = 20;
+	attack_data.delay = 10;
 	attack_data.attack_type = BULLET;//MELEE;
 
 	//‰E‚ÉŒü‚¢‚Ä‚¢‚½‚çƒAƒ“ƒOƒ‹‚Í‚»‚Ì‚Ü‚Ü
@@ -155,7 +157,7 @@ AttackData Himawari::CreateAttactData()
 	{
 		attack_data.angle = 0.5f;
 	}
-	attack_data.speed = 12;
+	attack_data.speed = 10;
 
 
 	return attack_data;
@@ -164,13 +166,19 @@ AttackData Himawari::CreateAttactData()
 
 void Himawari::Attack(GameMain* main)
 {
-	if (++attack_interval_count >= BULLET_INTERVAL)
+	if (--attack_interval_count < 0)
 	{
-		//UŒ‚‚ð¶¬‚·‚é
-		main->SpawnAttack(CreateAttactData());
-		if (attack_interval_count >= BULLET_INTERVAL + 10) {
-			attack_interval_count = -100;
+		if (--rapid_fire_interval < 0) {
+			bullet_num--;
+			rapid_fire_interval = RAPID_INTERVAL;
+			//UŒ‚‚ð¶¬‚·‚é
+			main->SpawnAttack(CreateAttactData());
+			if (bullet_num < 0) {
+				bullet_num = BULLET_NUM_MAX;
+				attack_interval_count = (BULLET_INTERVAL * 2);
+			}
 		}
+
 	}
 }
 

@@ -18,6 +18,8 @@ private:
 
    int rapid_fire_interval;
 
+   int bullet_num;
+
 
 
     //“–‚½‚è”»’èŠÖ˜A
