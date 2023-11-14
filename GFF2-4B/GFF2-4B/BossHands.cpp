@@ -8,7 +8,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 
 
 	Hands_Img_num = 0;//ƒCƒ‹ƒJ‚É‚µ‚©‚Ü‚¾Žg‚Á‚Ä‚È‚¢‚Ì‚ÅŒã‚©‚ç
-	Hands_who = 1;
+	Hands_who = 0;
 
 	switch (Hands_who)
 	{
@@ -45,6 +45,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	HitJumpAttack = false;
 	Death_Flg = false;
 	Rock_Once = false;
+	hitflg = false;
 
 	Death_Anim = 0;
 

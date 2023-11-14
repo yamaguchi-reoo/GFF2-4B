@@ -472,7 +472,7 @@ void GameMain::HitCheck()
 
 			if (now_stage == 3) {
 				if (hands != nullptr) {
-					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageType() != 0)
+					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
 						hands->hitflg = true;
 					}
