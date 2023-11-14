@@ -519,7 +519,6 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-
 	}
 	//ザクロ同士で当たったら...
 	for (int i = 0; i < ZAKURO_MAX; i++)
@@ -537,6 +536,26 @@ void GameMain::HitCheck()
 			}
 		}
 	}
+	//バグ多発↓
+	
+	////プレイヤーの攻撃がエネミーの弾に当たったら消す
+	//for (int i = 0; i < 500; i++)
+	//{
+	//	for (int j = 0; j < 100; j++)
+	//	{
+	//		//プレイヤーの攻撃かつエネミーの攻撃がBULLETの時
+	//		if (attack[i]->GetAttackData().who_attack == PLAYER && attack[j]->GetAttackData().attack_type == BULLET && attack[j]->GetAttackData().who_attack != PLAYER)
+	//		{
+	//			//プレイヤーの攻撃とエネミーの攻撃が重なったら
+	//			if (attack[i]->HitBox(attack[j]) == true)
+	//			{
+	//				//攻撃を削除
+	//				attack[i]->DeleteAttack();
+	//				attack[j]->DeleteAttack();
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void GameMain::LoadStageData(int _stage)
