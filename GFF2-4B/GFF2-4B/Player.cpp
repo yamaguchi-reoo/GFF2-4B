@@ -347,7 +347,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	p_center.y = location.y + (erea.height / 2);
 
 	//‰E‚Ì•Ç‚ÉG‚ê‚½
-	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
+	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3))
 	{
 		location.x = _sub_location.x - erea.width;
 		//‰E‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -356,7 +356,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//¶‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && _type != 2 && _type != 4)
+	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3))
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//¶‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -365,7 +365,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		leftwall_flg = true;
 	}
 	//°‚ÉG‚ê‚½
-	else if (location.y + erea.height - 31 < _sub_location.y)
+	else if (location.y + erea.height - 31 < _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4))
 	{
 		//–Ø‚Æ‰_‚Íã‚©‚ç~‚è‚Ä‚«‚½‚Æ‚«‚¾‚¯æ‚ê‚é‚æ‚¤‚É‚·‚é
 		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
@@ -375,7 +375,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		}
 	}
 	//“Vˆä‚ÉG‚ê‚½
-	else if (location.y + 30 > _sub_location.y + _sub_erea.height && _type != 2 && _type != 4)
+	else if (location.y + 30 > _sub_location.y + _sub_erea.height && (_type == 1 || _type == 3))
 	{
 		location.y = _sub_location.y + _sub_erea.height;
 		//ã‰Á‘¬“x‚ğ0‚É‚·‚é
