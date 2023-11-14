@@ -4,11 +4,13 @@ class Score
 {
 private:
 	int font_handle; //フォントデータ用変数
-	int score_img[2];	 //画像用変数
-	int total_score; //トータルスコア
+	int score_img[2];//画像用変数
+	//int num_img[10]; //数字画像用変数
+	static int total_score; //トータルスコア
 	int draw_score;  //描画用のスコア
 
 public:
+	
 	//コンストラクタ
 	Score();
 
@@ -25,5 +27,8 @@ public:
 	void AddScore(int score); 
 
 	//スコアの値を返す
-	int GetScore() { return total_score; }
+	static int GetScore() { return total_score; }
+
+	//スコアを0に初期化
+	static void SetScore();
 };

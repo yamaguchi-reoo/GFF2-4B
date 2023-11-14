@@ -7,7 +7,7 @@ private:
 	static int stage_num;
 	static int goal_flg[3]; //どこまでクリアしたか
 	bool botton_flg;
-	int img;
+	int img[7];
 
 public:
 	//コンストラクタ

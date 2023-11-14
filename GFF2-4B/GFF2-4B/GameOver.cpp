@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "PadInput.h"
 #include "Title.h"
+#include "Score.h"
 
 GameOver::GameOver()
 {
@@ -21,6 +22,7 @@ AbstractScene* GameOver::Update()
 #endif
 		)
 	{
+		Score::SetScore();
 		return new Title();
 	}
 	return this;

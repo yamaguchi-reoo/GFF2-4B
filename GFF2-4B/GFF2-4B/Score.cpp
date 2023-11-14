@@ -1,6 +1,8 @@
 #include "Score.h"
 #include "PadInput.h"
 
+int Score::total_score = 0;
+
 //コンストラクタ
 Score::Score()
 {
@@ -8,8 +10,6 @@ Score::Score()
 	font_handle = LoadFontDataToHandle("resource/font/Misogi.dft", 0);
 	score_img[0] = LoadGraph("resource/images/Score_UI.png");
 	score_img[1] = LoadGraph("resource/images/Tokuten.png");
-
-	total_score = 0;
 	draw_score = 0;
 }
 
@@ -57,8 +57,8 @@ void Score::Draw() const
 	DrawGraph(155, 10, score_img[0], TRUE);
 
 	//スコア表示
-	DrawGraph(214, 30, score_img[1], TRUE);
-	DrawFormatStringToHandle(280, 26, 0x000000, font_handle, "%06d", draw_score);
+	DrawGraph(205, 29, score_img[1], TRUE);
+	DrawFormatStringToHandle(288, 27, 0x000000, font_handle, "%06d", draw_score);
 }
 
 //トータルスコアに加算(引数:加算するスコアの数値)
@@ -66,3 +66,10 @@ void Score::AddScore(int score)
 {
 	total_score += score;
 }
+
+void Score::SetScore()
+{
+	total_score = 0;
+}
+
+
