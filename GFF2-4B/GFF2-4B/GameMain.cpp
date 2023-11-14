@@ -16,7 +16,6 @@ static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
-	loading_time = 0;
 	now_stage = _stage;
 	who = 1;
 	player = new Player();
@@ -373,11 +372,8 @@ AbstractScene* GameMain::Update()
 #endif
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
-		for (int time = 0; loading_time < 1500; time++)
-		{
-			return new Loading;
-		}
-		return new GameClear();
+	
+		return new Loading;
 	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver();
