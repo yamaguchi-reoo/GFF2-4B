@@ -17,6 +17,16 @@ BossHands::BossHands(int _who) {
 	Attack_Num=0;
 	hp=0;
 	Hit_Once = true;
+
+	//ひまわり
+	pos = false;  
+	sf_speed = 1;
+	angle_width = 0;    
+	angle_height = 0;   
+	move_angle = 0;    
+	bullet_angle = 0;      
+	acceleration = 0;     
+	timer = 20;
 }
 
 BossHands::~BossHands() {
@@ -25,6 +35,7 @@ BossHands::~BossHands() {
 
 void BossHands::Update(GameMain* main) {
 
+
 	//マゼンタ
 		HandsMagenta(main);
 
@@ -32,6 +43,7 @@ void BossHands::Update(GameMain* main) {
 	//シアン
 
 	//イエロー
+		//HandsYellow(main);
 }
 
 void BossHands::Draw() const {
@@ -140,6 +152,34 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 }
 
+void BossHands::HandsYellow(GameMain* main)
+{
+	switch (sf_state)
+	{
+		//待機
+	case WAIT:
+		//待機状態が終わったなら
+		if (--timer < 0)
+		{
+			//移動開始
+			sf_state = MOVE;
+		}
+		break;
+		//移動
+	case MOVE:
+		move_angle += 0.01f;
+		float rad = move_angle * (float)M_PI * 2;
+		location.x += sf_speed * cosf(rad);
+		location.y += sf_speed * sinf(rad);
+		break;
+		//やられ
+	case DOWN:
+
+		break;
+	default:
+		break;
+	}
+}
 
 AttackData BossHands::BossAttactData()
 {
