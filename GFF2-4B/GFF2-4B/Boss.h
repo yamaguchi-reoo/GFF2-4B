@@ -4,12 +4,10 @@ class Boss :
     public CharaBase
 {
 private:
-    int bfaceimg;//ボスの顔画像
+    int Boss_MainBody[10];//ボス本体の画像
 
     enum bosshand
     {
-
-
     };
 
 public:
