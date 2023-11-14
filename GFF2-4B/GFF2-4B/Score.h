@@ -3,16 +3,24 @@
 class Score
 {
 private:
-	int font_handle;
-	int score_img;
-	int total_score;
-	int draw_score;
+	int font_handle; //フォントデータ用変数
+	int score_img;	 //画像用変数
+	int total_score; //トータルスコア
+	int draw_score;  //描画用のスコア
 
 public:
+	//コンストラクタ
 	Score();
+
+	//デストラクタ
 	~Score();
 
-	void Update(); //更新処理
-	void Draw()const; //描画処理
-	void AddScore(int score); //スコアに加算(引数:加算するスコアの数値)
+	//更新処理
+	void Update(); 
+
+	//描画処理
+	void Draw()const; 
+
+	//トータルスコアに加算(引数:加算するスコアの数値)
+	void AddScore(int score); 
 };

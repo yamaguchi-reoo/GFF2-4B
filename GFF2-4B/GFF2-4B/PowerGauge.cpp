@@ -2,6 +2,7 @@
 #include "PadInput.h"
 #include "GameMain.h"
 
+//コンストラクタ
 PowerGauge::PowerGauge()
 {
 	location.x = 5;
@@ -37,33 +38,35 @@ PowerGauge::PowerGauge()
 	black.ratio = 0.0f;
 	black.maxFlg = 0;
 
-	powerFlg = 0;
+	power_flg = 0;
 
 	image[0] = LoadGraph("resource/images/koban.png");
 	image[1] = LoadGraph("resource/images/black.png");
 	image[2] = LoadGraph("resource/images/magatama_max.png");
 	
-	MaskHandle[0] = LoadMask("resource/images/Magatama_mask1.png");
-	MaskHandle[1] = LoadMask("resource/images/black_mask.png");
+	mask_handle[0] = LoadMask("resource/images/Magatama_mask1.png");
+	mask_handle[1] = LoadMask("resource/images/black_mask.png");
 
 	num = 0.0f;
-	rotaFlg = 0;
+	rota_flg = 0;
 	i = 0;
 	j = 0;
 
 	remainder = 0;
 }
 
+//デストラクタ
 PowerGauge::~PowerGauge()
 {
 	// マスクデータを削除
-	DeleteMask(MaskHandle[0]);
-	DeleteMask(MaskHandle[1]);
+	DeleteMask(mask_handle[0]);
+	DeleteMask(mask_handle[1]);
 }
 
+//更新処理
 void PowerGauge::Update(GameMain* main)
 {
-	if ((black.maxFlg == 0) && (rotaFlg == 0))
+	if ((black.maxFlg == 0) && (rota_flg == 0))
 	{
 		//デバック用(LBをおしたら強化ゲージが溜まる)
 		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) == true))
@@ -89,11 +92,11 @@ void PowerGauge::Update(GameMain* main)
 		//デバック用(RBをおしたら強化ゲージがMAXになる)
 		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER) == true))
 		{
-			rotaFlg = 1;
+			rota_flg = 1;
 		}
 
 	}
-	else if(rotaFlg == 1)
+	else if(rota_flg == 1)
 	{
 		RotaGauge();
 	}
@@ -102,18 +105,19 @@ void PowerGauge::Update(GameMain* main)
 		//強化ゲージがMAXかつ、Xボタンが押されたら強化状態フラグを1に
 		if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_Y) == true))
 		{
-			powerFlg = 1;
+			power_flg = 1;
 		}
 	}
 
 	//強化状態フラグが1だったら強化ゲージを減らす
-	if (powerFlg == 1)
+	if (power_flg == 1)
 	{
 		BlackGauge();
 		VolumeSet();
 	}
 }
 
+//描画処理
 void PowerGauge::Draw() const
 {
 #ifdef _DEBUG
@@ -126,10 +130,10 @@ void PowerGauge::Draw() const
 	//マスク画面を作成
 	CreateMaskScreen();
 
-	if ((black.maxFlg == 0) && (rotaFlg == 0))
+	if ((black.maxFlg == 0) && (rota_flg == 0))
 	{
 		//ロードしたマスクデータを画面の左上に描画
-		DrawMask(5, 3, MaskHandle[0], DX_MASKTRANS_NONE);
+		DrawMask(5, 3, mask_handle[0], DX_MASKTRANS_NONE);
 
 		//勾玉の背景を白に
 		DrawBox(5, 3, 155, 153, 0x7d7d7d, TRUE);
@@ -150,15 +154,10 @@ void PowerGauge::Draw() const
 		//シアン
 		DrawBox(87, 70, 112, 130, 0x7d7d7d, TRUE);
 		DrawBoxAA(cyan.x - 65, cyan.y - cyan.ratio, cyan.x, cyan.y, 0x00ffff, TRUE);
-		
-
-		//if ((magenta.volume >= 14.0f) && (cyan.volume >= 2.0f))
-		//{
-		//	
-		//}
+	
 		
 		/**図形描画の重なりを隠す(ここから)**/
-		/*DrawBox(87, 70, 112, 130, 0xffffff, TRUE);
+		DrawBox(87, 70, 112, 130, 0x7d7d7d, TRUE);
 
 		if (cyan.volume >= 2.0f)
 		{
@@ -174,34 +173,34 @@ void PowerGauge::Draw() const
 		    }
 		}
 
-		DrawBox(80, 10, 112, 70, 0xffffff, TRUE);
+		DrawBox(80, 10, 112, 70, 0x7d7d7d, TRUE);
 
 		if (magenta.volume >= 14.0f)
 		{
 			DrawBoxAA(80.0f, 70.0f - ((magenta.volume * 1.1f) / 100.0f * 59.5f ), 112.0f, 70.0f, 0xe4007f, TRUE);
-		}*/
+		}
 		/**図形描画の重なりを隠す(ここまで)**/
 	}
-	else if ((rotaFlg == 1) && (black.maxFlg == 0))
+	else if ((rota_flg == 1) && (black.maxFlg == 0))
 	{
 		//強化ゲージを回転描画
 		DrawRotaGraph(80, 80, 1.0f, PI / 180 * num, image[2], TRUE, FALSE);
 	}
-	else if ((black.maxFlg == 1) && (powerFlg == 0))
+	else if ((black.maxFlg == 1) && (power_flg == 0))
 	{//強化ゲージがMAX(黒)のとき
 
 		//ロードしたマスクデータを画面の左上に描画
-		DrawMask(5, 3, MaskHandle[1], DX_MASKTRANS_NONE);
+		DrawMask(5, 3, mask_handle[1], DX_MASKTRANS_NONE);
 
 		DrawBox(5, 3, 155, 138, 0xffffff, TRUE);
 		
 		DrawBoxAA(black.x - 135.0f, black.y - 131.0f, black.x, black.y, 0x000000, TRUE);
 	}
-	else if(powerFlg == 1)
+	else if(power_flg == 1)
 	{//強化ゲージがMAXでXボタンが押されたとき
 
 		//ロードしたマスクデータを画面の左上に描画
-		DrawMask(5, 3, MaskHandle[1], DX_MASKTRANS_NONE);
+		DrawMask(5, 3, mask_handle[1], DX_MASKTRANS_NONE);
 
 		DrawBox(5, 3, 150, 138, 0xffffff, TRUE);
 
@@ -245,7 +244,7 @@ void PowerGauge::BlackGauge()
 	else
 	{
 		//強化状態が終わったら、強化状態を解除して強化ゲージを初期状態に戻す
-		powerFlg = 2;
+		power_flg = 2;
 		InitGauge();
 	}
 }
@@ -253,12 +252,12 @@ void PowerGauge::BlackGauge()
 //強化状態かどうか渡す
 int PowerGauge::PowerGaugeState()
 {
-	if (powerFlg == 1)
+	if (power_flg == 1)
 	{
 		//強化状態
 		return 1;
 	}
-	else if (powerFlg == 2)
+	else if (power_flg == 2)
 	{
 		//強化解除
 		return 2;
@@ -270,7 +269,7 @@ int PowerGauge::PowerGaugeState()
 //強化状態かどうかを保存する変数の値を引数の値に変更
 void PowerGauge::SetPowerFlg(int i)
 {
-	powerFlg = i;
+	power_flg = i;
 }
 
 //敵が落とした色、量をゲージに加算
@@ -325,7 +324,7 @@ void PowerGauge::CheckVolumeMax()
 	//CMYが全て100%以上だったら画像回転アニメーションフラグを1に
 	if ((magenta.maxFlg == 1) && (yellow.maxFlg == 1) && (cyan.maxFlg == 1))
 	{
-		rotaFlg = 1;
+		rota_flg = 1;
 	}
 }
 
@@ -341,7 +340,7 @@ void PowerGauge::RotaGauge()
 		{
 			black.volume = 100.0f;
 			black.maxFlg = 1;
-			rotaFlg = 0;
+			rota_flg = 0;
 		}
 
 		j++;

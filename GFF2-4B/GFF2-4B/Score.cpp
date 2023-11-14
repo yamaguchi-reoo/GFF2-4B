@@ -1,6 +1,7 @@
 #include "Score.h"
 #include "PadInput.h"
 
+//コンストラクタ
 Score::Score()
 {
 	// ＤＸフォントデータファイルを読み込み、フォントハンドルを変数 FontHandle に保存する
@@ -11,12 +12,14 @@ Score::Score()
 	draw_score = 0;
 }
 
+//デストラクタ
 Score::~Score()
 {
 	// 作成したフォントデータを削除する
 	DeleteFontToHandle(font_handle);
 }
 
+//更新処理
 void Score::Update()
 {
 #ifdef _DEBUG
@@ -40,6 +43,7 @@ void Score::Update()
 	}
 }
 
+//描画処理
 void Score::Draw() const
 {
 #ifdef _DEBUG
@@ -55,6 +59,7 @@ void Score::Draw() const
 	DrawFormatStringToHandle(210, 26, 0x000000, font_handle, "点数:%06d", draw_score);
 }
 
+//トータルスコアに加算(引数:加算するスコアの数値)
 void Score::AddScore(int score)
 {
 	total_score += score;
