@@ -6,7 +6,8 @@ Score::Score()
 {
 	// ＤＸフォントデータファイルを読み込み、フォントハンドルを変数 FontHandle に保存する
 	font_handle = LoadFontDataToHandle("resource/font/Misogi.dft", 0);
-	score_img = LoadGraph("resource/images/Score_UI.png");
+	score_img[0] = LoadGraph("resource/images/Score_UI.png");
+	score_img[1] = LoadGraph("resource/images/Tokuten.png");
 
 	total_score = 0;
 	draw_score = 0;
@@ -53,10 +54,11 @@ void Score::Draw() const
 #endif // _DEBUG
 
 	//UI背景表示
-	DrawGraph(155, 10, score_img, TRUE);
+	DrawGraph(155, 10, score_img[0], TRUE);
 
 	//スコア表示
-	DrawFormatStringToHandle(210, 26, 0x000000, font_handle, "点数:%06d", draw_score);
+	DrawGraph(214, 30, score_img[1], TRUE);
+	DrawFormatStringToHandle(280, 26, 0x000000, font_handle, "%06d", draw_score);
 }
 
 //トータルスコアに加算(引数:加算するスコアの数値)

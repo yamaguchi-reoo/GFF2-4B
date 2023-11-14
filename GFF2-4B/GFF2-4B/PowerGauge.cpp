@@ -123,7 +123,7 @@ void PowerGauge::Draw() const
 #ifdef _DEBUG
 
 	//デバック表示
-	DrawFormatString(400, 10, 0xffffff, "%d", remainder);
+	//DrawFormatString(400, 10, 0xffffff, "%d", remainder);
 
 #endif // _DEBUG
 	
