@@ -3,21 +3,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-int cou = 0;
 
 BossHands::BossHands(int _who,Boss* boss) {
 
-	//ザクロ画像
-	hi[0] = LoadGraph("resource/images/Boss/Boss.png",true);
 
-	//イルカ画像
-	LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
-	//hi[1] = LoadGraph("resource/images/Boss/Iruka.png",true);
-	Hands_Img_num = 0;
-
-	bosf[0] = LoadGraph("resource/images/Boss/BossFace.png", true);
-	bosf[1] = LoadGraph("resource/images/Boss/LongTuru.png", true);
-
+	Hands_Img_num = 0;//イルカにしかまだ使ってないので後から
 	Hands_who = 1;
 
 	switch (Hands_who)
@@ -26,16 +16,18 @@ BossHands::BossHands(int _who,Boss* boss) {
 		//マゼンタ
 		location.x = 700;
 		location.y = -500;
+		hi[0] = LoadGraph("resource/images/Boss/Boss.png", true);
+		count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
 		break;
 	case 1:
 		//シアン
-		// 動き１
-		//location.x = 1280;
-		//location.y = 0;
 		//出現位置
 		Direction = 0;
 		location.x = 1280;
 		location.y = 700;
+		LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
+		count = 0;	//画像切り替え用
+
 		break;
 	case 2:
 		//イエロー
@@ -47,12 +39,9 @@ BossHands::BossHands(int _who,Boss* boss) {
 	erea.height = 190;
 	erea.width = 190;
 	switching = 0;
-	down_hand = false;
 	who = _who;
-	count = STOPBOSS;
 	Attack_Num=0;
 	hp=10;
-	Hit_Once = true;
 	HitJumpAttack = false;
 	Death_Flg = false;
 	Rock_Once = false;
@@ -61,6 +50,8 @@ BossHands::BossHands(int _who,Boss* boss) {
 
 	//強化形態になってるか？
 	if(boss->GetBossForm()==1){
+		//強化攻撃出すようになる
+
 		Power_Up=true;
 	}
 	else {
@@ -287,7 +278,7 @@ void BossHands::HandsCyan(GameMain* main){
 	//Hands_Img_num[0]左向きくち開け状態の場合
 	if (Direction == 0) {
 
-		switch (cou++)
+		switch (count++)
 		{
 		case 50:
 			Hands_Img_num = 1;
@@ -302,7 +293,7 @@ void BossHands::HandsCyan(GameMain* main){
 
 	if (Direction == 1) {
 
-		switch (cou++)
+		switch (count++)
 		{
 		case 50:
 			Hands_Img_num = 3;
@@ -342,7 +333,7 @@ AttackData BossHands::BossAttactData()
 {
 	AttackData attack_data;
 	switch (Attack_Num) {
-	//ザクロの拳
+	//ザクロの拳0~2まで
 	case 0:
 		attack_data.shift_x = -erea.width - 3;
 		attack_data.shift_y = -30;

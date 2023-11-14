@@ -20,7 +20,6 @@ public:
     int Hands_img[IMGMAX];
     int Hands_Img_num;//画像切り替え用
     int hi[3];
-    int bosf[3];
 
     //Mの拳が降りてくるX座標
     float Magentax[10] = { 1000,100,500 };
@@ -28,23 +27,18 @@ public:
     /*イルカ*/
     int Direction;  //0:左向き 1:右向き
 
-    int switching;
-
-    int bhandx;
-    int bhandy;
-    int down_hand;
+    int switching;//拳出現位置セット用
 
     bool hitflg=false;
     bool onceflg=true;
     int count;
-    bool Hit_Once;
 
-    bool HitJumpAttack = false;
-    bool Death_Flg = false;
-    int Death_Anim;
+    bool HitJumpAttack = false;//ジャンプ攻撃多段ヒット防止
+    bool Death_Flg = false;//HPが0になったらON
+    int Death_Anim;//死亡アニメーション切り替え用
     
     bool Power_Up;   //強化状態か？
-    bool Rock_Once; //出現位置一度だけ格納する用
+    bool Rock_Once; //岩出現位置一度だけ格納する用
 
     //ボスの状態が何か受け取る
     int Boss_Form;
@@ -52,7 +46,7 @@ public:
     //どの腕を出すか用 0:マゼンタ 1:シアン 2:イエロー
     int Hands_who;
 
-    int Attack_Num;//ボスの手が今何の攻撃しているか
+    int Attack_Num;//攻撃のデータどれ送るか識別用
 
     BossHands(int _who,Boss* boss);
     ~BossHands();
