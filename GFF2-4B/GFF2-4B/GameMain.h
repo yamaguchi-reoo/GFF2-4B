@@ -16,6 +16,7 @@
 #include "Boss.h"
 #include "BossHands.h"
 #include "Effect.h"
+#include "LoadingScene.h"
 
 class Player;
 
@@ -48,6 +49,7 @@ private:
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
+    Loading* loading_scene;    //LoadingSceneのオブジェクト
 
     int flg;               //
     int count[2];          //実験用
@@ -58,6 +60,9 @@ private:
     int stage_height_num;   //ステージブロックの縦数
 
     int stage_width;        //ステージ横幅
+
+    int loading_time;		//読込時間用変数
+
 public:
     //コンストラクタ(_stage＝読み込むステージ)
     GameMain(int _stage);
@@ -81,9 +86,6 @@ public:
 
     //次のステージへ遷移する
     void SetStage(int _stage);
-
-    //ステージを生成する
-    void CreateStage(int _stage);
 
     //カメラ座標の更新
     void CameraLocation(Location _location);

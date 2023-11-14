@@ -9,11 +9,14 @@
 #include "EditScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
+#include "LoadingScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
+	//変数の初期化
+	loading_time = 0;
 	now_stage = _stage;
 	who = 1;
 	player = new Player();
@@ -36,6 +39,8 @@ GameMain::GameMain(int _stage)
 	playerhp = new PlayerHP();
 
 	effect = new Effect();
+
+	loading_scene = new Loading();
 
 	flg = false;
 	onfloor_flg = false;
@@ -72,6 +77,7 @@ GameMain::~GameMain()
 	delete powergauge;
 	delete playerhp;
 	delete effect;
+	delete loading_scene;
 }
 
 AbstractScene* GameMain::Update()
@@ -299,6 +305,10 @@ AbstractScene* GameMain::Update()
 #endif
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
+		for (int time = 0; loading_time < 1500; time++)
+		{
+			return new Loading;
+		}
 		return new GameClear();
 	}
 	if (player->GetPlayerHP() < 0) {
