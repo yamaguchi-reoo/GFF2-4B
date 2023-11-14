@@ -17,7 +17,7 @@
 #include "BossHands.h"
 #include "Rock.h"
 #include "Effect.h"
-#include "Score.h"
+#include "LoadingScene.h"
 
 class Player;
 
@@ -48,11 +48,11 @@ private:
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
-    Score* score; //スコアUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
+    Loading* loading_scene;    //LoadingSceneのオブジェクト
 
     int flg;               //
     int count[2];          //実験用
@@ -63,8 +63,6 @@ private:
     int stage_height_num;   //ステージブロックの縦数
 
     int stage_width;        //ステージ横幅
-
-
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 

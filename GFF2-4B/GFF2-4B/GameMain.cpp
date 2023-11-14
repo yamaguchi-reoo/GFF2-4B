@@ -9,11 +9,13 @@
 #include "EditScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
+#include "LoadingScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
+	//変数の初期化
 	now_stage = _stage;
 	who = 1;
 	player = new Player();
@@ -40,6 +42,8 @@ GameMain::GameMain(int _stage)
 	score = new Score();
 
 	effect = new Effect();
+
+	loading_scene = new Loading();
 
 	flg = false;
 	onfloor_flg = false;
@@ -82,6 +86,7 @@ GameMain::~GameMain()
 	delete playerhp;
 	delete score;
 	delete effect;
+	delete loading_scene;
 }
 
 AbstractScene* GameMain::Update()
@@ -110,10 +115,10 @@ AbstractScene* GameMain::Update()
 		if (iruka[i] != nullptr)
 		{
 			iruka[i]->SetScreenPosition(camera_location);
-			if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+			/*if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
 				iruka[i]->Update(this);
-			}
-			
+			}*/
+			iruka[i]->Update(this);
 		}
 	}
 	//ひまわり
@@ -376,6 +381,14 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who++, boss);
 	}
 #endif
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
+	
+		return new Loading;
+	}
+	if (player->GetPlayerHP() < 0) {
+		return new GameOver();
+	}
 
 
 
@@ -620,7 +633,6 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-
 	}
 	//ザクロ同士で当たったら...
 	for (int i = 0; i < ZAKURO_MAX; i++)
