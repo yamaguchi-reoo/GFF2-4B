@@ -52,7 +52,7 @@ void Score::Draw() const
 	DrawGraph(155, 10, score_img, TRUE);
 
 	//スコア表示
-	DrawFormatStringToHandle(210, 26, 0x000000, font_handle, "点数:%6d", draw_score);
+	DrawFormatStringToHandle(210, 26, 0x000000, font_handle, "点数:%06d", draw_score);
 }
 
 void Score::AddScore(int score)

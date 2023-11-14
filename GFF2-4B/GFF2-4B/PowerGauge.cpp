@@ -365,7 +365,7 @@ void PowerGauge::InitGauge()
 	j = 0;
 }
 
-void PowerGauge::SetColorRem(int num)
+void PowerGauge::SetColorRem()
 {
-	remainder = num;
+	remainder = 0;
 }

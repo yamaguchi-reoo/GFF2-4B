@@ -14,5 +14,5 @@ public:
 
 	void Update(); //更新処理
 	void Draw()const; //描画処理
-	void AddScore(int score);
+	void AddScore(int score); //スコアに加算(引数:加算するスコアの数値)
 };

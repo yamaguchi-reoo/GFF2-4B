@@ -51,6 +51,6 @@ public:
 	void CheckVolumeMax(); //CMYKのゲージがMAXかチェックする
 	void RotaGauge(); //強化ゲージの回転処理
 	void InitGauge(); //強化状態が終わった後の初期化処理
-	int GetColorRem() { return remainder; } //溢れた分を渡す
-	void SetColorRem(int num);
+	int GetColorRem() { return remainder; } //溢れた分を返す
+	void SetColorRem(); //強化ゲージから溢れた分を0にリセット
 };

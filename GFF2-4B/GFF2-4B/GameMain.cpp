@@ -324,10 +324,11 @@ AbstractScene* GameMain::Update()
 	//当たり判定関連の処理を行う
 	HitCheck();
 
+	//強化ゲージから溢れた分をスコアに加算
 	if (powergauge->GetColorRem() > 0)
 	{
 		score->AddScore(powergauge->GetColorRem());
-		powergauge->SetColorRem(0);
+		powergauge->SetColorRem();
 	}
 
 	//ステージクリア
