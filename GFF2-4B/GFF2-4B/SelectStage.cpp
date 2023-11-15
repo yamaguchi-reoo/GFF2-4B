@@ -16,9 +16,6 @@ SelectStage::SelectStage()
 	img[4] = LoadGraph("resource/images/Stage1w.png");
 	img[5] = LoadGraph("resource/images/Stage2w.png");
 	img[6] = LoadGraph("resource/images/Stage3w.png");
-
-
-
 }
 
 //デストラクタ
