@@ -44,7 +44,7 @@ private:
     int Check_Num;
     Rock* rock[2];//岩
 
-    Bamboo* bamboo[BAMBOO_NUM];
+    Bamboo* bamboo[BAMBOO_MAX];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト

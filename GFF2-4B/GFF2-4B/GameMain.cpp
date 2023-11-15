@@ -31,9 +31,6 @@ GameMain::GameMain(int _stage)
 	{
 		count[i] = 0;
 	}
-	for (int i = 0; i < BAMBOO_NUM; i++) {
-		bamboo[i] = new Bamboo(i * 60);
-	}
 
 	powergauge = new PowerGauge();
 
@@ -82,6 +79,10 @@ GameMain::~GameMain()
 	{
 		delete himawari[i];
 	}
+	for (int i = 0; i < BAMBOO_MAX; i++)
+	{
+		delete bamboo[i];
+}
 	delete powergauge;
 	delete playerhp;
 	delete score;
@@ -130,6 +131,15 @@ AbstractScene* GameMain::Update()
 			if (himawari[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && himawari[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
 				himawari[i]->Update(this);
 			}
+		}
+	}
+	//’|
+	for (int i = 0; i < BAMBOO_MAX; i++)
+	{
+		if (bamboo[i] != nullptr)
+		{
+			bamboo[i]->SetScreenPosition(camera_location);
+			bamboo[i]->Update(this);
 		}
 	}
 
@@ -421,9 +431,6 @@ void GameMain::Draw() const
 				}
 			}
 	}
-	
-
-
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -456,12 +463,14 @@ void GameMain::Draw() const
 			iruka[i]->Draw();
 		}
 	}
-
-
-	/*for (int i = 0; i < BAMBOO_NUM; i++) {
-		bamboo[i]->Draw();
-	}*/
-
+	//’|
+	for (int i = 0; i < BAMBOO_MAX; i++)
+	{
+		if (bamboo[i]!= nullptr)
+		{
+			bamboo[i]->Draw();
+		}
+	}
 	powergauge->Draw();
 	playerhp->Draw();
 	score->Draw();
@@ -535,6 +544,16 @@ void GameMain::HitCheck()
 					}
 				}
 			}
+			//’|
+			for (int k = 0; k < BAMBOO_MAX; k++)
+			{
+				if (bamboo[k] != nullptr) {
+					if (bamboo[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+					{
+						bamboo[k]->BambooPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
+					}
+				}
+			}
 		}
 	}
 	//UŒ‚‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
@@ -596,10 +615,18 @@ void GameMain::HitCheck()
 					//}
 					attack[i]->DeleteAttack();
 				}
-
 			}
 		}
-
+		for (int j = 0; j < BAMBOO_MAX; j++) {
+			if (bamboo[j] != nullptr) {
+				// UŒ‚‚Ì”»’è‚ª	‚Ğ‚Ü‚í‚è‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ªƒvƒŒƒCƒ„[‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
+				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
+				{
+					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
+					attack[i]->DeleteAttack();
+				}
+			}
+		}
 		if (now_stage == 3) {
 			if (hands != nullptr) {
 				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
@@ -623,9 +650,6 @@ void GameMain::HitCheck()
 
 			}
 		}
-		
-	
-
 		//UŒ‚‚Ì”»’è‚ªƒvƒŒƒCƒ„[‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ª“G‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
@@ -635,24 +659,35 @@ void GameMain::HitCheck()
 			//zakuro->Stop_Attack();
 		}
 	}
-	//ƒUƒNƒ“¯m‚Å“–‚½‚Á‚½‚ç...
-	for (int i = 0; i < ZAKURO_MAX; i++)
+	////ƒUƒNƒ“¯m‚Å“–‚½‚Á‚½‚ç...
+	//for (int i = 0; i < ZAKURO_MAX; i++)
+	//{
+	//	for (int j = i + 1; j < ZAKURO_MAX; j++)
+	//	{
+	//		if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+	//		{
+	//			if (zakuro[i]->HitBox(zakuro[j]) == true) {
+	//				zakuro[i]->HitZakuro();
+	//			}
+	//			if (zakuro[j]->HitBox(zakuro[i]) == true) {
+	//				zakuro[j]->HitZakuro();
+	//			}
+	//		}
+	//	}
+	//}
+	//’|“¯m‚ª“–‚½‚Á‚½‚ç~‚Ü‚é
+	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
-		for (int j = i + 1; j < ZAKURO_MAX; j++)
+		for (int j = i + 1; j < BAMBOO_MAX; j++)
 		{
-			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true) {
-					zakuro[i]->HitZakuro();
-				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true) {
-					zakuro[j]->HitZakuro();
+				if (bamboo[i]->HitBox(bamboo[j]) == true) {
+					bamboo[i]->ReverseFlg();
 				}
 			}
 		}
 	}
-
-
 	//˜r‚ª€‚ñ‚¾ê‡
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
@@ -661,7 +696,6 @@ void GameMain::HitCheck()
 			hands = nullptr;
 		}
 	}
-
 }
 
 void GameMain::LoadStageData(int _stage)
@@ -766,6 +800,15 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+			case 8:
+				for (int k = 0; k < BAMBOO_MAX; k++) 
+				{
+					if (bamboo[k] == nullptr)
+					{
+						bamboo[k] = new Bamboo(j * BOX_WIDTH, i * BOX_HEIGHT);
+						break;
+					}
+				}
 			default:
 				break;
 			}
