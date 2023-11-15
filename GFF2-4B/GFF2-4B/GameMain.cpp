@@ -697,7 +697,7 @@ void GameMain::HitCheck()
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
 				if (bamboo[i]->HitBox(bamboo[j]) == true) {
-					bamboo[i]->ReverseFlg();
+					bamboo[i]->FalseGravity();
 				}
 			}
 		}

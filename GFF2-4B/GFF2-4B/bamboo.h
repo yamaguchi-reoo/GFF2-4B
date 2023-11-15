@@ -29,6 +29,7 @@ public:
     //スポーンフラグ取得
     int GetSpwanFlg() { return spawn_flg; }
 
-    void ReverseFlg();
+    void FalseGravity();
+    void TrueGravity();
 };
 

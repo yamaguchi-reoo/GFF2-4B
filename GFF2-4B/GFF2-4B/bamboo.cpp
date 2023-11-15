@@ -7,10 +7,11 @@ Bamboo::Bamboo(float pos_x, float pos_y)
 {
 	location.x = pos_x;
 	location.y = pos_y;
-	erea.width = 40;
-	erea.height = 60;
+	erea.width = 100;
+	erea.height = 200;
 
 	hp = 1;
+	image = LoadGraph("resource/images/Enemy/Bamboo.png");
 
 	apply_gravity = true;
 	onfloor_flg = false;
@@ -23,24 +24,24 @@ Bamboo::~Bamboo()
 
 void Bamboo::Update(GameMain* main)
 {
-	if (PadInput::OnButton(XINPUT_BUTTON_START))
+	if (spawn_flg == false)
 	{
-		spawn_flg = true;
+		//床に触れていないなら
+		if (apply_gravity == true)
+		{
+			//重力を与える
+			BambooGiveGravity();
+		}
+		//各移動用変数をリセット
+		BambooReset();
 	}
-	//床に触れていないなら
-	if (apply_gravity == true)
-	{
-		//重力を与える
-		BambooGiveGravity();
-	}
-	//各移動用変数をリセット
-	BambooReset();
 }
 
 void Bamboo::Draw() const
 {
 	if (spawn_flg == false)
 	{
+		DrawGraph(local_location.x, local_location.y, image, FALSE);
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
 	}
 	DrawFormatString(200, 400, 0xfffff, "%d", spawn_flg);
@@ -77,8 +78,8 @@ void Bamboo::ApplyDamage(int num)
 		spawn_flg = true;
 	}
 }
-void Bamboo::ReverseFlg()
+void Bamboo::FalseGravity()
 {
 	apply_gravity = false;
-	onfloor_flg = true;
 }
+
