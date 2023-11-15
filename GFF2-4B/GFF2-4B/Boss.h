@@ -13,6 +13,7 @@ private:
 public:
     int Count_Death;//腕が何回やられたかカウント用
     int Boss_Form;//今どの形態か 0:第一形態 1:第二形態 3:最終形態
+    int Boss_Check_Playerx;//プレイヤーが今どこ側に居るか 0:右側 1:中央側 2:左側
 
     Boss();
     ~Boss();
@@ -22,5 +23,6 @@ public:
     void Update(GameMain* main)override;
     void Draw()const override;
     int GetBossForm() { return Boss_Form; };
+    void BossImgChange();
 };
 

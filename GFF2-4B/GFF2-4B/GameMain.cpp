@@ -137,7 +137,9 @@ AbstractScene* GameMain::Update()
 	if (now_stage == 3) {
 
 		if (boss != nullptr) {
-			//if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
+			//if (player->GetLocation().x<= 
+			// 
+			// && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
 			//{
 			//	iruka[i]->SetFallFlg();
 			//}
