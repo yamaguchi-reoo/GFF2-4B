@@ -135,6 +135,17 @@ AbstractScene* GameMain::Update()
 
 	//ボスの腕アップデート
 	if (now_stage == 3) {
+
+		if (boss != nullptr) {
+			//if (player->GetLocation().x<= 
+			// 
+			// && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
+			//{
+			//	iruka[i]->SetFallFlg();
+			//}
+
+		}
+
 		if (hands != nullptr) {
 			hands->Update(this);
 			//岩生成
