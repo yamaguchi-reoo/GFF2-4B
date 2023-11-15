@@ -22,7 +22,7 @@ AbstractScene* Result::Update()
 	//スコアを少しずつ増やす(画面表示)
 	if (score > draw_score)
 	{
-		draw_score += 30;
+		draw_score += 1;
 	}
 	else if (score < draw_score)
 	{
