@@ -7,8 +7,6 @@ private:
 	int num_img[10]; //数字画像用変数
 	static int total_score; //トータルスコア
 	int draw_score;  //描画用のスコア
-	int temp_score[6];
-	int i;
 
 public:
 	
@@ -32,7 +30,4 @@ public:
 
 	//スコアを0に初期化
 	static void SetScore();
-
-	//スコアを画像に変更するための処理
-	void ChangeScore();
 };

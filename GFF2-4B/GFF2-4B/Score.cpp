@@ -10,16 +10,7 @@ Score::Score()
 	score_img[1] = LoadGraph("resource/images/Tokuten.png");
 	LoadDivGraph("resource/images/ScoreNum.png", 10, 4, 3, 32, 32, num_img);
 
-	temp_score[0] = 0;
-	temp_score[1] = 0;
-	temp_score[2] = 0;
-	temp_score[3] = 0;
-	temp_score[4] = 0;
-	temp_score[5] = 0;
-
 	draw_score = 0;
-
-	i = 0;
 }
 
 //デストラクタ
@@ -40,24 +31,15 @@ void Score::Update()
 
 #endif // _DEBUG
 
-	////スコアを少しずつ増やす(画面表示)
-	//if (total_score > draw_score)
-	//{
-	//	draw_score += 4;
-	//}
-	//else if (total_score < draw_score)
-	//{
-	//	draw_score = total_score;
-	//}
-
-	total_score = 123456;
-
-	i = total_score;
-
-	/*if (i > 0)
+	//スコアを少しずつ増やす(画面表示)
+	if (total_score > draw_score)
 	{
-		ChangeScore();
-	}*/
+		draw_score += 4;
+	}
+	else if (total_score < draw_score)
+	{
+		draw_score = total_score;
+	}
 	
 }
 
@@ -66,7 +48,7 @@ void Score::Draw() const
 {
 #ifdef _DEBUG
 
-	DrawFormatString(400, 30, 0xffffff, "%d", temp_score[0]);
+	/*DrawFormatString(400, 30, 0xffffff, "%d", temp_score[0]);*/
 
 #endif // _DEBUG
 
@@ -75,22 +57,43 @@ void Score::Draw() const
 
 	//スコア表示
 	DrawGraph(206, 29, score_img[1], TRUE);
-	int a = total_score;
 
-	/*for (int i = 0; i < 6; i++)
+
+	if (draw_score < 10)
 	{
-	*/	DrawGraph(270 + 15 * i, 24, num_img[a / 100000], TRUE);
-	    a = a % 100000;
-		DrawGraph(270 + 15 * i, 24, num_img[a / 10000], TRUE);
-		a = a % 10000;
-		DrawGraph(270 + 15 * i, 24, num_img[a / 1000], TRUE);
-		a = a % 1000;
-		DrawGraph(270 + 15 * i, 24, num_img[a / 100], TRUE);
-		a = a % 100;
-		DrawGraph(270 + 15 * i, 24, num_img[a / 10], TRUE);
-		a = a % 10;
-		DrawGraph(270 + 15 * i, 24, num_img[a / 1], TRUE);
-	//}
+		DrawGraph(330, 24, num_img[0], TRUE);
+	}
+	
+	if (draw_score < 100)
+	{
+		DrawGraph(315, 24, num_img[0], TRUE);
+	} 
+	
+	if (draw_score < 1000)
+	{
+		DrawGraph(300, 24, num_img[0], TRUE);
+	}
+
+	if (draw_score < 10000)
+	{
+		DrawGraph(285, 24, num_img[0], TRUE);
+	}
+
+	if (draw_score < 100000)
+	{
+		DrawGraph(270, 24, num_img[0], TRUE);
+	}
+
+	int a = draw_score;
+	int pos_x = 345;
+
+	do
+	{
+		DrawGraph(pos_x, 24, num_img[a % 10], TRUE);
+		a /= 10;
+		pos_x -= 15;
+	} while (a > 0);
+	
 
 }
 
@@ -105,12 +108,5 @@ void Score::SetScore()
 {
 	total_score = 0;
 }
-
-//スコアを画像に変更するための処理
-//void Score::ChangeScore()
-//{
-//	temp_score[] = i / x;
-//	i = total_score % x;	
-//}
 
 

@@ -8,6 +8,7 @@ Result::Result()
 {
 	score = Score::GetScore();
 	draw_score = 0;
+	LoadDivGraph("resource/images/ScoreNum.png", 10, 4, 3, 32, 32, num_img);
 }
 
 //デストラクタ
