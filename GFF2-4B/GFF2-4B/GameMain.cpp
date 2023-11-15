@@ -410,14 +410,9 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
-	effect->Draw();
 
-	SetFontSize(42);
-	//	DrawString(400, 0, "GameMain", 0xffffff);
-		//•`‰æ
-	player->Draw();
 
-	//ƒ{ƒX‚Ì˜r•\Ž¦
+	//ƒ{ƒX•\Ž¦
 	if (now_stage == 3) {
 		if (boss != nullptr) {
 			boss->Draw();
@@ -426,14 +421,19 @@ void GameMain::Draw() const
 			hands->Draw();
 		}
 
-			for (int i = 0; i < 2; i++) {
-				if (rock[i] != nullptr) {
-					rock[i]->Draw();
-				}
+		for (int i = 0; i < 2; i++) {
+			if (rock[i] != nullptr) {
+				rock[i]->Draw();
 			}
+		}
 	}
-	
 
+	effect->Draw();
+
+	SetFontSize(42);
+	//	DrawString(400, 0, "GameMain", 0xffffff);
+		//•`‰æ
+	player->Draw();
 
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -472,6 +472,9 @@ void GameMain::Draw() const
 	/*for (int i = 0; i < BAMBOO_NUM; i++) {
 		bamboo[i]->Draw();
 	}*/
+
+
+
 
 	powergauge->Draw();
 	playerhp->Draw();

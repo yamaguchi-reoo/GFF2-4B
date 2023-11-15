@@ -5,6 +5,7 @@ class Boss :
 {
 private:
     int Boss_MainBody[10];//ボス本体の画像
+    int Boss_MainArm[10];//ボス本体腕の画像
 
     enum bosshand
     {
@@ -24,5 +25,6 @@ public:
     void Draw()const override;
     int GetBossForm() { return Boss_Form; };
     void BossImgChange();
+
 };
 
