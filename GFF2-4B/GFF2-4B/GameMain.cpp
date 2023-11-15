@@ -145,6 +145,17 @@ AbstractScene* GameMain::Update()
 
 	//ボスの腕アップデート
 	if (now_stage == 3) {
+
+		if (boss != nullptr) {
+			//if (player->GetLocation().x<= 
+			// 
+			// && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
+			//{
+			//	iruka[i]->SetFallFlg();
+			//}
+
+		}
+
 		if (hands != nullptr) {
 			hands->Update(this);
 			//岩生成
@@ -409,14 +420,9 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
-	effect->Draw();
 
-	SetFontSize(42);
-	//	DrawString(400, 0, "GameMain", 0xffffff);
-		//描画
-	player->Draw();
 
-	//ボスの腕表示
+	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
 			boss->Draw();
@@ -425,12 +431,20 @@ void GameMain::Draw() const
 			hands->Draw();
 		}
 
-			for (int i = 0; i < 2; i++) {
-				if (rock[i] != nullptr) {
-					rock[i]->Draw();
-				}
+		for (int i = 0; i < 2; i++) {
+			if (rock[i] != nullptr) {
+				rock[i]->Draw();
 			}
+		}
 	}
+
+	effect->Draw();
+
+	SetFontSize(42);
+	//	DrawString(400, 0, "GameMain", 0xffffff);
+		//描画
+	player->Draw();
+
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
