@@ -27,6 +27,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 		location.y = 500;
 		face_angle = 0.6f;
 		LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
+		turu_img = LoadGraph("resource/images/Boss/LongTuru.png", true);
 		count = 0;	//画像切り替え用
 
 		break;
@@ -50,7 +51,8 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Death_Flg = false;
 	Rock_Once = false;
 	hitflg = false;
-
+	turu_location = { 0,0 };
+	turu_angle = 0;
 	Death_Anim = 0;
 
 	//強化形態になってるか？
@@ -125,7 +127,15 @@ void BossHands::Draw() const {
 			//else {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
-			DrawRotaGraph(location.x+75, location.y+75, 1, face_angle, Hands_img[Hands_Img_num], TRUE);
+			DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, turu_img, TRUE, FALSE);
+			if (face_angle > 0.25f && face_angle <0.75f)
+			{
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,FALSE);
+			}
+			else
+			{
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,TRUE);
+			}
 			break;
 		case 2:
 			//イエロー
@@ -516,6 +526,8 @@ void BossHands::HandsCyan(GameMain* main) {
 	//}*/
 
 	//仮
+	//つるの描画位置を計算
+	
 		//生きているなら
 	if (Death_Flg == false) {
 		//胴体の当たり判定
@@ -657,8 +669,8 @@ float BossHands::GetRandAngle(int _wall)
 		return (GetRand(40) * 0.01f) + 0.3f;
 		//上壁
 	case 2:
-		//0.1から0.4の中からランダムな値を返す
-		return (GetRand(30) * 0.01f) + 0.1f;
+		//0.05から0.45の中からランダムな値を返す
+		return (GetRand(40) * 0.01f) + 0.05f;
 		break;
 	}
 }

@@ -47,6 +47,9 @@ public:
     
     bool Power_Up;   //強化状態か？
     bool Rock_Once; //岩出現位置一度だけ格納する用
+    Location turu_location;  //つる描画位置
+    float turu_angle;        //つる角度
+    int turu_img;            //つる画像用
 
     //ボスの状態が何か受け取る
     int Boss_Form;
@@ -71,7 +74,7 @@ public:
     int attack_cd;           //弾を撃つ頻度
     int attack_combo;        //弾を連続で撃つ用
     int attack_num;          //弾を連続で撃つ用
-    int move_count;          //何回移動したかを測定する       
+    int move_count;          //何回移動したかを測定する     
 
     BossHands(int _who);
     BossHands(int _who,Boss* boss);
