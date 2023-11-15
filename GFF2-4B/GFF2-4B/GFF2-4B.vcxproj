@@ -164,6 +164,7 @@
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="PlayerHP.cpp" />
     <ClCompile Include="PowerGauge.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="Rock.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Scroll.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="Rock.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="SelectStage.h" />

@@ -1,6 +1,7 @@
 #include "GameClear.h"
 #include "PadInput.h"
 #include "Title.h"
+#include "Result.h"
 
 GameClear::GameClear()
 {
@@ -20,8 +21,9 @@ AbstractScene* GameClear::Update()
 		PadInput::OnButton(XINPUT_BUTTON_A)
 #endif
 		) {
-		return new Title();
+		return new Result();
 	}
+
 	return this;
 }
 

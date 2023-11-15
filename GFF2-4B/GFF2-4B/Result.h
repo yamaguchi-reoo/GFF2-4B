@@ -4,10 +4,13 @@
 class Result :public AbstractScene
 {
 private:
-
+	int score; //スコア
+	int draw_score; //描画用スコア
 public:
+	//コンストラクタ
 	Result();
 
+	//デストラクタ
 	~Result();
 
 	// 描画以外の更新を実装
@@ -17,4 +20,3 @@ public:
 	void Draw() const override;
 
 };
-
