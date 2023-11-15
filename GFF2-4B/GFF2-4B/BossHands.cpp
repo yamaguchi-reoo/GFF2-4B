@@ -22,12 +22,15 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 1:
 		//シアン
 		//出現位置
-		Direction = 0;
-		location.x = 1100;
-		location.y = 500;
+		dolphin_state = DolphinState::D_WAIT;
+		location.x = SCREEN_WIDTH;
+		location.y = 0;
 		face_angle = 0.6f;
+		iruka_rad = 0;
+		turu_rad = 0;
+		ref_num = 0;
 		LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
-		turu_img = LoadGraph("resource/images/Boss/LongTuru.png", true);
+		turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
 		count = 0;	//画像切り替え用
 
 		break;
@@ -67,7 +70,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	hp=0;
 
 	//ひまわり
-	sf_state = WAIT;
+	sf_state = SunFlowerState::SF_WAIT;
 	pos = false;  
 	sf_speed = 10;
 	angle_width = 0;    
@@ -127,19 +130,19 @@ void BossHands::Draw() const {
 			//else {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
-			DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, turu_img, TRUE, FALSE);
-			if (face_angle > 0.25f && face_angle <0.75f)
+			DrawRotaGraph(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
+			if (face_angle > 0.0f && face_angle <0.7f)
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,FALSE);
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 			}
 			else
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,TRUE);
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
 			}
 			break;
 		case 2:
 			//イエロー
-			if (sf_state != DOWN)
+			if (sf_state != SunFlowerState::SF_DOWN)
 			{
 				DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
 			}
@@ -154,6 +157,7 @@ void BossHands::Draw() const {
 	
 
 #ifdef _DEBUG
+	DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
 	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	//DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
@@ -309,7 +313,7 @@ void BossHands::HandsYellow(GameMain* main)
 		switch (sf_state)
 		{
 			//待機
-		case WAIT:
+		case SunFlowerState::SF_WAIT:
 			//移動前の立ち位置を保存
 			if (location.x > (SCREEN_WIDTH / 2))
 			{
@@ -325,11 +329,11 @@ void BossHands::HandsYellow(GameMain* main)
 				//加速度リセット
 				acceleration = 0;
 				//移動開始
-				sf_state = MOVE;
+				sf_state = SunFlowerState::SF_MOVE;
 			}
 			break;
 			//移動
-		case MOVE:
+		case SunFlowerState::SF_MOVE:
 			if (location.y <= 500)
 			{
 				if (pos == false)
@@ -401,13 +405,13 @@ void BossHands::HandsYellow(GameMain* main)
 				if (move_count < 3)
 				{
 					timer = 20;
-					sf_state = WAIT;
+					sf_state = SunFlowerState::SF_WAIT;
 				}
 				else
 				{
 					move_count = 0;
 					timer = 200;
-					sf_state = DOWN;
+					sf_state = SunFlowerState::SF_DOWN;
 				}
 			}
 			if (--attack_cd < 0 && location.y < 400)
@@ -418,7 +422,7 @@ void BossHands::HandsYellow(GameMain* main)
 			}
 			break;
 			//やられ
-		case DOWN:
+		case SunFlowerState::SF_DOWN:
 			//移動前の立ち位置を保存
 			if (location.x > (SCREEN_WIDTH / 2))
 			{
@@ -434,7 +438,7 @@ void BossHands::HandsYellow(GameMain* main)
 				//加速度リセット
 				acceleration = 0;
 				//移動開始
-				sf_state = MOVE;
+				sf_state = SunFlowerState::SF_MOVE;
 			}
 			break;
 		default:
@@ -451,40 +455,141 @@ void BossHands::HandsCyan(GameMain* main) {
 
 	//仮
 	//つるの描画位置を計算
-	
+
+	turu_location.x = (SCREEN_WIDTH / 2) + GetCenterLocation().x;
+	turu_location.y = GetCenterLocation().y/2;
+	turu_angle = atan2f(turu_location.y - GetCenterLocation().y, turu_location.x - GetCenterLocation().x);
+	turu_rad =turu_angle*(float)M_PI*2;
 		//生きているなら
 	if (Death_Flg == false) {
 		//胴体の当たり判定
 		Attack_Num = 0;
 		BossAttack(main);
-
-		if (acceleration < 60)
+		switch (dolphin_state)
 		{
-			acceleration++;
+		case DolphinState::D_WAIT:
+			//右上に帰る
+			iruka_rad = atan2f(0 - location.y, SCREEN_WIDTH - location.x);
+			location.x += (120 * 0.22f) * cosf(iruka_rad);
+			location.y += (120 * 0.22f) * sinf(iruka_rad);
+			if (location.x > SCREEN_WIDTH - erea.width)
+			{
+				location.x = SCREEN_WIDTH - erea.width;
+			}
+			if (location.y < 0)
+			{
+				location.y = 0;
+			}
+			if (--timer < 0)
+			{
+				dolphin_state = DolphinState::D_MOVE;
+			}
+			break;
+		case DolphinState::D_MOVE:
+			if (--timer < 0)
+			{
+				//いるかを加速させる
+				if (acceleration < 60)
+				{
+					acceleration++;
+				}
+				//顔の角度が0~1の範囲内から出ないように
+				if (face_angle > 1)face_angle -= 1;
+				//移動距離計算
+				iruka_rad = face_angle * (float)M_PI * 2;
+				location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+				location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+				//壁に反射
+				if (location.x < 0)
+				{
+					location.x = 0;
+					face_angle = GetRandAngle(0);
+					ref_num++;
+					timer = 10;
+				}
+				else if (location.x > SCREEN_WIDTH - erea.width)
+				{
+					location.x = SCREEN_WIDTH - erea.width;
+					face_angle = GetRandAngle(1);
+					ref_num++;
+					timer = 10;
+				}
+				else if (location.y < 0)
+				{
+					location.y = 0;
+					face_angle = GetRandAngle(2);
+					ref_num++;
+					timer = 10;
+				}
+				else if (location.y > SCREEN_HEIGHT - erea.height)
+				{
+					location.y = SCREEN_HEIGHT - erea.height;
+					face_angle = 1 - face_angle;
+				}
+			}
+			//5回床以外に反射したら大技
+			if (ref_num > 5)
+			{
+				dolphin_state = DolphinState::D_DASH;
+				timer = 50;
+				acceleration = 70;
+				ref_num = 0;
+			}
+			break;
+		case DolphinState::D_DASH:
+			if (timer > 0)
+			{
+				iruka_rad = atan2f(main->GetPlayerLocation().y - location.y, main->GetPlayerLocation().x - location.x);
+			}
+			if (--timer < 0)
+			{
+				if (face_angle > 1)face_angle -= 1;
+				location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+				location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+				if (location.x < 0)
+				{
+					location.x = 0;
+					face_angle = GetRandAngle(0);
+					ref_num++;
+				}
+				else if (location.x > SCREEN_WIDTH - erea.width)
+				{
+					location.x = SCREEN_WIDTH - erea.width;
+					face_angle = GetRandAngle(1);
+					ref_num++;
+				}
+				else if (location.y < 0)
+				{
+					location.y = 0;
+					face_angle = GetRandAngle(2);
+					ref_num++;
+				}
+				else if (location.y > SCREEN_HEIGHT - erea.height)
+				{
+					location.y = SCREEN_HEIGHT - erea.height;
+					face_angle = 1 - face_angle;
+					ref_num++;
+				}
+				if (ref_num > 1)
+				{
+					dolphin_state = DolphinState::D_DOWN;
+					timer = 200;
+					ref_num = 0;
+					acceleration = 0;
+				}
+			}
+			break;
+		case DolphinState::D_DOWN:
+			if (--timer < 0)
+			{
+				dolphin_state = DolphinState::D_WAIT;
+				timer = 50;
+			}
+			break;
+		default:
+			break;
 		}
-		rad = face_angle * (float)M_PI * 2;
-		location.x += (acceleration * 0.22f) * cosf(rad);
-		location.y += (acceleration * 0.22f) * sinf(rad);
-		if (location.x < 0)
-		{
-			location.x = 0;
-			face_angle = GetRandAngle(0);
-		}
-		else if (location.x > SCREEN_WIDTH - erea.width)
-		{
-			location.x = SCREEN_WIDTH - erea.width;
-			face_angle = GetRandAngle(1);
-		}
-		else if (location.y < 0)
-		{
-			location.y = 0;
-			face_angle = GetRandAngle(2);
-		}
-		else if (location.y > SCREEN_HEIGHT - erea.height)
-		{
-			location.y = SCREEN_HEIGHT - erea.height;
-			face_angle = 1 - face_angle;
-		}
+		
 	}
 	else //死んでいるなら
 	{
