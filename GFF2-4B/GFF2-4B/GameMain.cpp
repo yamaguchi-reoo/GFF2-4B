@@ -39,6 +39,8 @@ GameMain::GameMain(int _stage)
 
 	playerhp = new PlayerHP();
 
+	score = new Score();
+
 	effect = new Effect();
 
 	loading_scene = new Loading();
@@ -82,6 +84,7 @@ GameMain::~GameMain()
 	}
 	delete powergauge;
 	delete playerhp;
+	delete score;
 	delete effect;
 	delete loading_scene;
 }
@@ -112,10 +115,10 @@ AbstractScene* GameMain::Update()
 		if (iruka[i] != nullptr)
 		{
 			iruka[i]->SetScreenPosition(camera_location);
-			if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+			/*if (iruka[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && iruka[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
 				iruka[i]->Update(this);
-			}
-			
+			}*/
+			iruka[i]->Update(this);
 		}
 	}
 	//ひまわり
@@ -171,6 +174,8 @@ AbstractScene* GameMain::Update()
 	powergauge->SetScreenPosition(camera_location);
 
 	playerhp->Update(player->GetPlayerHP());
+
+	score->Update();
 
 	effect->Update(this);
 	effect->SetScreenPosition(camera_location);
@@ -319,6 +324,13 @@ AbstractScene* GameMain::Update()
 	//当たり判定関連の処理を行う
 	HitCheck();
 
+	//強化ゲージから溢れた分をスコアに加算
+	if (powergauge->GetColorRem() > 0)
+	{
+		score->AddScore(powergauge->GetColorRem());
+		powergauge->SetColorRem();
+	}
+
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
 		return new GameClear();
@@ -386,7 +398,7 @@ AbstractScene* GameMain::Update()
 
 void GameMain::Draw() const
 {
-	DrawBox(0, 0, 1280, 720, 0x7d7d7d, true);
+	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 	effect->Draw();
 
 	SetFontSize(42);
@@ -452,6 +464,7 @@ void GameMain::Draw() const
 
 	powergauge->Draw();
 	playerhp->Draw();
+	score->Draw();
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Draw();
@@ -621,7 +634,6 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-
 	}
 	//ザクロ同士で当たったら...
 	for (int i = 0; i < ZAKURO_MAX; i++)

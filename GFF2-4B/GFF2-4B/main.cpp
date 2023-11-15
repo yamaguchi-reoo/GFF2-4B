@@ -3,7 +3,6 @@
 #include "fps.h"
 #include "PadInput.h"
 #include "SelectStage.h"
-#include "Result.h"
 #include "GameMain.h"
 #include "common.h"
 #include "Title.h"

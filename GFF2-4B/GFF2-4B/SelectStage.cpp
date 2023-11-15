@@ -9,7 +9,16 @@ int SelectStage::goal_flg[3] = {1,1,1}; //デバック用に1
 SelectStage::SelectStage()
 {
 	botton_flg = false;
-	img = LoadGraph("resource/images/SelectCursor.png");
+	img[0] = LoadGraph("resource/images/SelectCursor.png");
+	img[1] = LoadGraph("resource/images/Stage1.png");
+	img[2] = LoadGraph("resource/images/Stage2.png");
+	img[3] = LoadGraph("resource/images/Stage3.png");
+	img[4] = LoadGraph("resource/images/Stage1w.png");
+	img[5] = LoadGraph("resource/images/Stage2w.png");
+	img[6] = LoadGraph("resource/images/Stage3w.png");
+
+
+
 }
 
 //デストラクタ
@@ -113,41 +122,52 @@ void SelectStage::Draw() const
 	switch (stage_num)
 	{
 		case 0:
-			DrawCircle(350, 200, 100, 0x000000, 1, 1);
-			DrawCircle(650, 200, 100, 0xffffff, 1, 1);
-			DrawCircle(950, 200, 100, 0xffffff, 1, 1);
-			DrawFormatString(310, 200, 0xffffff, "ステージ1");
-			DrawFormatString(610, 200, 0x000000, "ステージ2");
-			DrawFormatString(910, 200, 0x000000, "ステージ3");
+			DrawCircle(330, 240, 120, 0x000000, 1, 1);
+			DrawCircle(660, 240, 120, 0xffffff, 1, 1);
+			DrawCircle(980, 240, 120, 0xffffff, 1, 1);
+			//DrawFormatString(310, 200, 0xffffff, "ステージ1");
+			//DrawFormatString(610, 200, 0x000000, "ステージ2");
+			//DrawFormatString(910, 200, 0x000000, "ステージ3");
+			DrawGraph(245, 220, img[4], TRUE);
+			DrawGraph(580, 220, img[2], TRUE);
+			DrawGraph(895, 220, img[3], TRUE);
+
 			break;
 
 		case 1:
-			DrawCircle(350, 200, 100, 0xffffff, 1, 1);
-			DrawCircle(650, 200, 100, 0x000000, 1, 1);
-			DrawCircle(950, 200, 100, 0xffffff, 1, 1);
-			DrawFormatString(310, 200, 0x000000, "ステージ1");
-			DrawFormatString(610, 200, 0xffffff, "ステージ2");
-			DrawFormatString(910, 200, 0x000000, "ステージ3");
+			DrawCircle(330, 240, 120, 0xffffff, 1, 1);
+			DrawCircle(660, 240, 120, 0x000000, 1, 1);
+			DrawCircle(980, 240, 120, 0xffffff, 1, 1);
+			//DrawFormatString(310, 200, 0x000000, "ステージ1");
+			//DrawFormatString(610, 200, 0xffffff, "ステージ2");
+			//DrawFormatString(910, 200, 0x000000, "ステージ3");
+			DrawGraph(245, 220, img[1], TRUE);
+			DrawGraph(580, 220, img[5], TRUE);
+			DrawGraph(895, 220, img[3], TRUE);
 			break;
 
 		case 2:
-			DrawCircle(350, 200, 100, 0xffffff, 1, 1);
-			DrawCircle(650, 200, 100, 0xffffff, 1, 1);
-			DrawCircle(950, 200, 100, 0x000000, 1, 1);
-			DrawFormatString(310, 200, 0x000000, "ステージ1");
-			DrawFormatString(610, 200, 0x000000, "ステージ2");
-			DrawFormatString(910, 200, 0xffffff, "ステージ3");
+			DrawCircle(330, 240, 120, 0xffffff, 1, 1);
+			DrawCircle(660, 240, 120, 0xffffff, 1, 1);
+			DrawCircle(980, 240, 120, 0x000000, 1, 1);
+			//DrawFormatString(310, 200, 0x000000, "ステージ1");
+			//DrawFormatString(610, 200, 0x000000, "ステージ2");
+			//DrawFormatString(910, 200, 0xffffff, "ステージ3");
+			DrawGraph(245, 220, img[1], TRUE);
+			DrawGraph(580, 220, img[2], TRUE);
+			DrawGraph(895, 220, img[6], TRUE);
 			break;
 
 		default:
 		break;
 	}
 
-	DrawGraph(280 + (stage_num * 310), 400, img, TRUE);
+	DrawGraph(260 + (stage_num * 330), 410, img[0], TRUE);
 
 #ifdef _DEBUG
 
-	DrawFormatString(0, 0, 0xffffff, "%d", stage_num);
+	SetFontSize(30);
+	DrawFormatString(450, 40, 0x000000, "ステージを選択してください");
 
 #endif // !_DEBUG
 }
