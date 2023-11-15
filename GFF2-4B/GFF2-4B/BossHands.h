@@ -48,6 +48,7 @@ public:
     bool Power_Up;   //強化状態か？
     bool Rock_Once; //岩出現位置一度だけ格納する用
     Location turu_location;  //つる描画位置
+    float iruka_rad;         //いるかの角度計算用
     float turu_angle;        //つる角度
     int turu_img;            //つる画像用
 

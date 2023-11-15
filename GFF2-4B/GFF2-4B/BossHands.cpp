@@ -23,9 +23,10 @@ BossHands::BossHands(int _who,Boss* boss) {
 		//シアン
 		//出現位置
 		Direction = 0;
-		location.x = 1100;
-		location.y = 500;
+		location.x = 640;
+		location.y = 360;
 		face_angle = 0.6f;
+		iruka_rad = 0;
 		LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
 		turu_img = LoadGraph("resource/images/Boss/LongTuru.png", true);
 		count = 0;	//画像切り替え用
@@ -127,14 +128,14 @@ void BossHands::Draw() const {
 			//else {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
-			DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, turu_img, TRUE, FALSE);
-			if (face_angle > 0.25f && face_angle <0.75f)
+			DrawRotaGraph(location.x + 75 * cosf(iruka_rad), location.y + 75 * sinf(iruka_rad), 1, iruka_rad, turu_img, TRUE, FALSE);
+			if (face_angle > 0.0f && face_angle <0.7f)
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,FALSE);
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 			}
 			else
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,TRUE);
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
 			}
 			break;
 		case 2:
@@ -154,6 +155,7 @@ void BossHands::Draw() const {
 	
 
 #ifdef _DEBUG
+	DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
 	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	//DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
@@ -538,9 +540,10 @@ void BossHands::HandsCyan(GameMain* main) {
 		{
 			acceleration++;
 		}
-		rad = face_angle * (float)M_PI * 2;
-		location.x += (acceleration * 0.22f) * cosf(rad);
-		location.y += (acceleration * 0.22f) * sinf(rad);
+		if (face_angle > 1)face_angle -= 1;
+		iruka_rad = face_angle * (float)M_PI * 2;
+		location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+		location.y += (acceleration * 0.22f) * sinf(iruka_rad);
 		if (location.x < 0)
 		{
 			location.x = 0;
