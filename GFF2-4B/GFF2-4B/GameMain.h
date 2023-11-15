@@ -96,5 +96,9 @@ public:
 
     //カメラ座標を初期地点に戻す
     void ResetCamera();
+
+    //ボスにプレイヤーの座標を渡す用
+    Location GetPlayerLocation();
+
 };
 
