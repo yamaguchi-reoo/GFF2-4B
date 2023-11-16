@@ -146,6 +146,7 @@ AttackData Himawari::CreateAttactData()
 	attack_data.damage = 1;
 	attack_data.delay = 10;
 	attack_data.attack_type = BULLET;//MELEE;
+	attack_data.effect_type = HIMAWARI_BULLET;
 
 	//‰E‚ÉŒü‚¢‚Ä‚¢‚½‚çƒAƒ“ƒOƒ‹‚Í‚»‚Ì‚Ü‚Ü
 	if (himawari_direction == false)
