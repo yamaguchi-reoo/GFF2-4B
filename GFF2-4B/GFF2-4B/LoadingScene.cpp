@@ -1,6 +1,6 @@
 #include "LoadingScene.h"
 #include "PadInput.h"
-#include "Title.h"
+#include "GameClear.h"
 #include "GameMain.h"
 
 Loading::Loading()
@@ -30,7 +30,7 @@ AbstractScene* Loading::Update()
 		loading_time += 1;
 		return this;
 	}
-	return new Title;
+	return new GameClear;
 }
 void Loading::Draw()const
 {

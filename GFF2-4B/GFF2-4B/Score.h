@@ -30,5 +30,5 @@ public:
 	static int GetScore() { return total_score; }
 
 	//ƒXƒRƒA‚ğ0‚É‰Šú‰»
-	static void SetScore();
+	static void ResetScore();
 };
