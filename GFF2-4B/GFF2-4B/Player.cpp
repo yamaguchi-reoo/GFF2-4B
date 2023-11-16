@@ -547,6 +547,8 @@ void Player::Attack(GameMain* main)
 		{
 			//—‰ºUŒ‚‚ğs‚¤
 			attack_step = 4;
+			//UŒ‚‚ğ¶¬‚·‚é
+			main->SpawnAttack(CreateAttactData(attack_step));
 		}
 	}
 	//UŒ‚ŠÔŠu—p•Ï”
@@ -585,8 +587,6 @@ void Player::Attack(GameMain* main)
 		{
 			//Œ»İs‚Á‚Ä‚¢‚éUŒ‚‚Ì’iŠK‚É‰‚¶‚½ƒtƒ‰ƒO‚ğtrue‚É‚µA‚»‚êˆÈŠO‚ğfalse‚É‚·‚é
 			SetAttackFlg(attack_step);
-			//UŒ‚‚ğ¶¬‚·‚é
-			main->SpawnAttack(CreateAttactData(attack_step));
 
 		}
 		//’n–Ê‚É‚Â‚¢‚½‚ç’…’nUŒ‚
@@ -1047,7 +1047,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].width = erea.width+100;
 	player_attack_data[8].height = 100;
 	player_attack_data[8].who_attack = 0;
-	player_attack_data[8].attack_time = 2;
+	player_attack_data[8].attack_time = 200;
 	player_attack_data[8].damage = 1;
 	player_attack_data[8].delay = 0;
 	player_attack_data[8].attack_type = MELEE;
@@ -1057,7 +1057,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[9].width = 100;
 	player_attack_data[9].height = 150;
 	player_attack_data[9].who_attack = 0;
-	player_attack_data[9].attack_time = 2;
+	player_attack_data[9].attack_time = 200;
 	player_attack_data[9].damage = 1;
 	player_attack_data[9].delay = 0;
 	player_attack_data[9].attack_type = MELEE;

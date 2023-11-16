@@ -513,12 +513,14 @@ void GameMain::HitCheck()
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
+			//プレイヤーがステージに触れたなら
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
+			//ボス面のみボスの腕の当たり判定
 			if (now_stage == 3) {
 				if (hands != nullptr) {
 					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
@@ -528,6 +530,7 @@ void GameMain::HitCheck()
 				}
 			}
 
+			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -538,32 +541,35 @@ void GameMain::HitCheck()
 					}
 				}
 			}
-			//イルカ
+			//イルカの数だけ繰り返す
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
 					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
+						//触れた面に応じて押し出す
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
-			//ひまわり
+			//ひまわりの数だけ繰り返す
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
 				if (himawari[k] != nullptr) {
 					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
+						//触れた面に応じて押し出す
 						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
-			//竹
+			//竹の数だけ繰り返す
 			for (int k = 0; k < BAMBOO_MAX; k++)
 			{
 				if (bamboo[k] != nullptr) {
 					if (bamboo[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
+						//触れた面に応じて押し出す
 						bamboo[k]->BambooPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
@@ -669,8 +675,15 @@ void GameMain::HitCheck()
 		{
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
+			//攻撃を消す
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
+		}
+		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で、プレイヤーが床に触れたなら
+		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4 && player->GetOnFloorFlg() == true)
+		{
+			//攻撃を消す
+			attack[i]->DeleteAttack();
 		}
 	}
 	////ザクロ同士で当たったら...
