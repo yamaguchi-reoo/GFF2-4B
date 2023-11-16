@@ -44,7 +44,7 @@ void Bamboo::Draw() const
 		DrawGraphF(local_location.x, local_location.y, image, FALSE);
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
 	}
-	DrawFormatString(200, 400, 0xfffff, "%d", spawn_flg);
+	//DrawFormatString(200, 400, 0xfffff, "%d", spawn_flg);
 }
 	
 

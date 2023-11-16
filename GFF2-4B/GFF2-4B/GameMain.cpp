@@ -639,11 +639,15 @@ void GameMain::HitCheck()
 		}
 		for (int j = 0; j < BAMBOO_MAX; j++) {
 			if (bamboo[j] != nullptr) {
-				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
+				}
+				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
+				{
+					player->Push(j, bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
 				}
 			}
 		}
@@ -686,22 +690,22 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 		}
 	}
-	////ザクロ同士で当たったら...
-	//for (int i = 0; i < ZAKURO_MAX; i++)
-	//{
-	//	for (int j = i + 1; j < ZAKURO_MAX; j++)
-	//	{
-	//		if (zakuro[i] != nullptr && zakuro[j] != nullptr)
-	//		{
-	//			if (zakuro[i]->HitBox(zakuro[j]) == true) {
-	//				zakuro[i]->HitZakuro();
-	//			}
-	//			if (zakuro[j]->HitBox(zakuro[i]) == true) {
-	//				zakuro[j]->HitZakuro();
-	//			}
-	//		}
-	//	}
-	//}
+	//ザクロ同士で当たったら...
+	for (int i = 0; i < ZAKURO_MAX; i++)
+	{
+		for (int j = i + 1; j < ZAKURO_MAX; j++)
+		{
+			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+			{
+				if (zakuro[i]->HitBox(zakuro[j]) == true) {
+					zakuro[i]->HitZakuro();
+				}
+				if (zakuro[j]->HitBox(zakuro[i]) == true) {
+					zakuro[j]->HitZakuro();
+				}
+			}
+		}
+	}
 	//竹同士が当たったら止まる
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
@@ -709,7 +713,7 @@ void GameMain::HitCheck()
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwanFlg() == false && bamboo[j]->GetSpwanFlg() == false) {
 					bamboo[i]->FalseGravity();
 				}
 			}

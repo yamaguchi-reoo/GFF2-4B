@@ -347,7 +347,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	p_center.y = location.y + (erea.height / 2);
 
 	//âEÇÃï«Ç…êGÇÍÇΩéû
-	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3))
+	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
 	{
 		location.x = _sub_location.x - erea.width;
 		//âEâ¡ë¨ìxÇ0Ç…Ç∑ÇÈ
@@ -356,7 +356,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//ç∂ÇÃï«Ç…êGÇÍÇΩéû
-	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3))
+	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//ç∂â¡ë¨ìxÇ0Ç…Ç∑ÇÈ
@@ -365,7 +365,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		leftwall_flg = true;
 	}
 	//è∞Ç…êGÇÍÇΩéû
-	else if (location.y + erea.height - 31 < _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4))
+	else if (location.y + erea.height - 31 < _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4 || _type == 8))
 	{
 		//ñÿÇ∆â_ÇÕè„Ç©ÇÁç~ÇËÇƒÇ´ÇΩÇ∆Ç´ÇæÇØèÊÇÍÇÈÇÊÇ§Ç…Ç∑ÇÈ
 		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))

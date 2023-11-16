@@ -166,7 +166,6 @@ AttackData Himawari::CreateAttactData()
 	}
 	attack_data.speed = 10;
 
-
 	return attack_data;
 	
 }
