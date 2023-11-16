@@ -307,7 +307,6 @@ AbstractScene* GameMain::Update()
 				{
 					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
 					attack[i]->SetScreenPosition(camera_location);
-
 				}
 
 			}
@@ -738,9 +737,10 @@ void GameMain::HitCheck()
 	//˜r‚ªŽ€‚ñ‚¾ê‡
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
-			
 			boss->Count_Death--;
 			hands = nullptr;
+			boss->Dead = true;
+			Hands_Delete_Flg = false;
 		}
 	}
 }

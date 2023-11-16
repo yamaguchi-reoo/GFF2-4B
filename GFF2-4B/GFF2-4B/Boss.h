@@ -1,5 +1,8 @@
 #pragma once
 #include "CharaBase.h"
+#include "GameMain.h"
+
+
 class Boss :
     public CharaBase
 {
@@ -22,7 +25,11 @@ public:
     int Boss_Arm_Rightx; //右腕X座標
     int Boss_Arm_Righty; //右腕Y座標
 
+    int Hand_Num;
     bool New_Hand_Flg;//ボスの手を発生させる用
+
+    bool Dead;
+    bool Boss_Dead;
 
     Boss();
     ~Boss();

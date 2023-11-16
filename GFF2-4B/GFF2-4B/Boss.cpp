@@ -13,8 +13,10 @@ Boss::Boss() {
 	Count_Death = 2;
 	Boss_Form=0;
 	Boss_Check_Playerx = -1;
-
+	Hand_Num = 1;
 	New_Hand_Flg = false;
+	Dead = false;
+	Boss_Dead = false;
 }
 
 Boss::~Boss() {
@@ -22,24 +24,42 @@ Boss::~Boss() {
 }
 
 void Boss::Update(GameMain* main) {
-	
-	if (timer++==100) {
-		New_Hand_Flg = true;
+	if (Boss_Dead != true) {
+		if (timer++ == 100) {
+			New_Hand_Flg = true;
+		}
+		Boss_Arm_Righty += timer;
+
+
+		if (Count_Death > 0) {
+
+			if (Dead == true) {
+				Dead = false;
+				timer = 0;
+				Hand_Num = 2;
+			}
+
+
+		}
+		else {
+			Boss_Dead = true;
+		}
 	}
-	Boss_Arm_Righty += timer;
 }
 
 void Boss::Draw() const {
+	if (Boss_Dead != true) {
 
-	DrawGraph(440, 0, Boss_MainBody[0], TRUE);
-	//DrawGraph(380, 0, Explosion[0], TRUE);
-	//DrawGraph(380, 0, Explosion[1], TRUE);
-	//DrawGraph(440, 0, Boss_MainBody[0], TRUE);
+		DrawGraph(440, 0, Boss_MainBody[0], TRUE);
+		//DrawGraph(380, 0, Explosion[0], TRUE);
+		//DrawGraph(380, 0, Explosion[1], TRUE);
+		//DrawGraph(440, 0, Boss_MainBody[0], TRUE);
 
-	DrawGraph(100, 0, Boss_MainArm[0], TRUE);
-	DrawGraph(Boss_Arm_Rightx, Boss_Arm_Righty, Boss_MainArm[1], TRUE);
-	DrawFormatString(400, 40, 0xff00ff, "death%d", Count_Death);
-
+		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+		DrawGraph(Boss_Arm_Rightx, Boss_Arm_Righty, Boss_MainArm[1], TRUE);
+		DrawFormatString(400, 40, 0xff00ff, "death%d", Count_Death);
+		DrawFormatString(400, 80, 0xff00ff, "%d", timer);
+	}
 }
 
 void Boss::BossImgChange() {

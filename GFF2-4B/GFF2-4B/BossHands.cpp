@@ -9,7 +9,8 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//全腕共通の初期化
 	frame = 0;
 	Hands_Img_num = 0;//イルカにしかまだ使ってないので後から
-	Hands_who = 2;
+	//Hands_who = 2;
+	Hands_who = boss->Hand_Num;
 	erea.height = hands_height[Hands_who];
 	erea.width = hands_width[Hands_who];
 	who = _who;
