@@ -198,5 +198,8 @@ public:
 
 	//プレイヤーが床に触れているか取得
 	bool GetOnFloorFlg() { return onfloor_flg; }
+
+	//プレイヤーの顔の向き
+	bool GetPlayerDirection() { return direction; }
 };
 
