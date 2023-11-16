@@ -20,7 +20,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 #ifdef _DEBUG
 	hp = 0;
 #else
-	hp = 10;
+	hp = 5;
 #endif // _DEBUG
 
 	switch (Hands_who)
