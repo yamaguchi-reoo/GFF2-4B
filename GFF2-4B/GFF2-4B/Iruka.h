@@ -7,6 +7,8 @@ enum  class IrukaState {
     LEFT,
     RIGHT_FALL,
     LEFT_FALL,
+    RIGHT_RETURN,
+    LEFT_RETURN
 };
 class Iruka :
     public CharaBase

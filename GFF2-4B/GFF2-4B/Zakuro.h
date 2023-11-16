@@ -5,6 +5,8 @@
 
 enum  class ZakuroState {
 	IDLE = 0,
+	IDLE_RIGHT,
+	IDLE_LEFT,
 	RIGHT,
 	LEFT,
 };

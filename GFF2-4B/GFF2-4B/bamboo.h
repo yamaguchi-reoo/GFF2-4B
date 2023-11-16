@@ -30,6 +30,5 @@ public:
     int GetSpwanFlg() { return spawn_flg; }
 
     void FalseGravity();
-    void TrueGravity();
 };
 

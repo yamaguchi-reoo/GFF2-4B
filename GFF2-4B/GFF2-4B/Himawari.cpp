@@ -1,10 +1,13 @@
 #include "Himawari.h"
 #include "GameMain.h"
 
-#define BULLET_INTERVAL 60
-#define RAPID_INTERVAL 9
-#define HIMAWARI_GRAVITY  10
-#define BULLET_NUM_MAX 4
+#define BULLET_INTERVAL 120		//インターバル
+#define RAPID_INTERVAL 9		//連射インターバル	
+#define HIMAWARI_GRAVITY  10	// 重力
+#define BULLET_NUM_MAX 3		//弾の最大連射数
+
+#define HIMAWARI_IMAGE_SHIFT_X 20		//画像ずらし用
+#define HIMAWARI_IMAGE_SHIFT_Y 13		//画像ずらし用
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 {
@@ -15,6 +18,8 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	erea.height = 100;
 	erea.width = 50;
 	who = _who;
+
+	image = LoadGraph("resource/images/Enemy/Himawari.png");
 
 	himawari_direction = direction;
 
@@ -65,16 +70,18 @@ void Himawari::Draw() const
 {
 	if (spawn_flg == false) 
 	{
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, TRUE);
+		//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, TRUE);
 		//左向き	
 		if (himawari_direction == true) 
 		{
-			DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
+			//DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
+			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_X, image, true);
 		}
 		//右向き
 		else if (himawari_direction == false) 
 		{
-			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
+			//DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
+			DrawTurnGraphF(local_location.x - HIMAWARI_IMAGE_SHIFT_X, local_location.y - HIMAWARI_IMAGE_SHIFT_Y,image, true);
 		}
 	}
 }
@@ -135,14 +142,14 @@ AttackData Himawari::CreateAttactData()
 	AttackData attack_data;
 	//どの段階の攻撃でも変わらない情報はここで格納する
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = +10;
+	attack_data.shift_y = + 15;
 	attack_data.who_attack = who;
 	attack_data.direction = himawari_direction;
 	//弾の大きさ
-	attack_data.width = 10;
-	attack_data.height = 10;
+	attack_data.width = 12;
+	attack_data.height = 12;
 	//攻撃に関する情報
-	attack_data.attack_time = 50;
+	attack_data.attack_time = 60;
 	attack_data.damage = 1;
 	attack_data.delay = 10;
 	attack_data.attack_type = BULLET;//MELEE;
