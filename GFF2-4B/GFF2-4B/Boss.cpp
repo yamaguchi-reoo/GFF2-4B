@@ -57,8 +57,8 @@ void Boss::Draw() const {
 
 		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
 		DrawGraph(Boss_Arm_Rightx, Boss_Arm_Righty, Boss_MainArm[1], TRUE);
-		DrawFormatString(400, 40, 0xff00ff, "death%d", Count_Death);
-		DrawFormatString(400, 80, 0xff00ff, "%d", timer);
+		//DrawFormatString(400, 40, 0xff00ff, "death%d", Count_Death);
+		//DrawFormatString(400, 80, 0xff00ff, "%d", timer);
 	}
 }
 
