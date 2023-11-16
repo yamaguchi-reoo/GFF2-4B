@@ -25,4 +25,6 @@ public:
 	bool GetCanApplyDamage() { return can_apply_damage; }
 	//UŒ‚‚ğÁ‚·
 	void DeleteAttack() { attack_flg = false; }
+	//UŒ‚‚ğƒvƒŒƒCƒ„[‚ÌŠç‘¤‚ÉˆÚ“®‚³‚¹‚é
+	void SetDirection(bool _dir) { attack_data.direction = _dir; }
 };
