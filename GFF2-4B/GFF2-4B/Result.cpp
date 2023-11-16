@@ -85,8 +85,7 @@ void Result::Draw() const
 
 	DrawGraph(465, 455, img[5], TRUE);
 
-	//int a = draw_score;
-	int a = 999999;
+	int a = draw_score;
 
 	int pos_x = 830;
 
