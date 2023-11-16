@@ -7,7 +7,7 @@
 Title::Title()
 {
 	//初期化
-	Select = 1;
+	Select = 0;
 	Once = TRUE;
 
 }
@@ -29,7 +29,7 @@ AbstractScene* Title::Update()
 		)
 	{
 		Select--;
-		if (Select < 0)Select = 1;
+		if (Select <= -1)Select = 1;
 	}
 	//十字キー↓入力
 	if (
@@ -45,23 +45,29 @@ AbstractScene* Title::Update()
 	}
 
 	//Lスティック上入力
-	if (PadInput::TipLeftLStick(STICKL_X) <= 1 && Once == TRUE)
+	if (PadInput::TipLeftLStick(STICKL_Y) > 0.8f && 
+		PadInput::TipLeftLStick(STICKL_Y) < 1.0f &&
+		Once == TRUE)
 	{
+		Once = FALSE;
 		Select--;
 		if (Select < 0)Select = 1;
-		Once = FALSE;
 	}
 
 	//Lスティック下入力
-	if (PadInput::TipLeftLStick(STICKL_X) >= -1 && Once == TRUE)
+	if (PadInput::TipLeftLStick(STICKL_Y) > -1.f && 
+		PadInput::TipLeftLStick(STICKL_Y) < -0.8f && 
+		Once == TRUE)
 	{
+		Once = FALSE;
 		Select++;
 		if (Select > 1)Select = 0;
-		Once = FALSE;
 	}
 
 	//Lスティックが元に戻されたらOnceをリセット
-	if (Once == FALSE && PadInput::TipLeftLStick(STICKL_X) >= 1 && PadInput::TipLeftLStick(STICKL_X) <= -1)
+	if (Once == FALSE && 
+		PadInput::TipLeftLStick(STICKL_Y) <= 0.1f &&
+		PadInput::TipLeftLStick(STICKL_Y) >= -0.1f)
 	{
 		Once = TRUE;
 	}

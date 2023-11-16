@@ -26,6 +26,8 @@ GameOver::GameOver()
 	ImageLoad(game_over_image, "resource/font/GameOverFont.png");
 	ImageLoad(game_continue_image, "resource/font/GameContinueFont.png");
 	ImageLoad(player_lose_image, "resource/font/PlayerLoseFont.png");
+	select_count = 0;
+	once_flg = TRUE;
 }
 
 GameOver::~GameOver()
@@ -34,7 +36,31 @@ GameOver::~GameOver()
 
 AbstractScene* GameOver::Update()
 {
-
+	//Lスティック上入力
+	if (PadInput::TipLeftLStick(STICKL_Y) > 0.8f &&
+		PadInput::TipLeftLStick(STICKL_Y) < 1.0f &&
+		once_flg == TRUE)
+	{
+		once_flg = FALSE;
+		select_count--;
+		if (select_count < 0)select_count = 1;
+	}
+	//Lスティック上入力
+	if (PadInput::TipLeftLStick(STICKL_Y) > -1.0f &&
+		PadInput::TipLeftLStick(STICKL_Y) < -0.8f &&
+		once_flg == TRUE)
+	{
+		once_flg = FALSE;
+		select_count--;
+		if (select_count < 0)select_count = 1;
+	}
+	//Lスティックが元に戻されたらOnceをリセット
+	if (once_flg == FALSE &&
+		PadInput::TipLeftLStick(STICKL_Y) <= 0.1f &&
+		PadInput::TipLeftLStick(STICKL_Y) >= -0.1f)
+	{
+		once_flg = TRUE;
+}
 	if (
 #ifdef _DEBUG
 		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
@@ -43,7 +69,8 @@ AbstractScene* GameOver::Update()
 #endif
 		)
 	{
-		Score::SetScore();
+		//スコアの初期化
+		Score::ResetScore();
 		return new Title();
 	}
 	return this;
@@ -51,7 +78,7 @@ AbstractScene* GameOver::Update()
 
 void GameOver::Draw() const
 {
-	DrawTriangle(460, 460, 460, 510, 500, 485, 0x000ff0, TRUE);
+	DrawTriangle(460, 380 + (select_count * 80), 460, 430 + (select_count * 80), 500, 405 + (select_count * 80), 0x000ff0, TRUE);
 	DrawGraph(530, 460, game_over_image, FALSE);
 	DrawGraph(530, 360, game_continue_image, FALSE);
 	DrawGraph(400, 50, player_lose_image, FALSE);

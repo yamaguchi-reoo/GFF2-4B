@@ -50,7 +50,7 @@ AbstractScene* Result::Update()
 #endif
 			)
 		{
-			Score::SetScore();
+			Score::ResetScore();
 			return new SelectStage();
 		}
 	}
