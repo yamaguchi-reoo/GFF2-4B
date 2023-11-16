@@ -67,7 +67,7 @@ void Score::AddScore(int score)
 	total_score += score;
 }
 
-void Score::SetScore()
+void Score::ResetScore()
 {
 	total_score = 0;
 }

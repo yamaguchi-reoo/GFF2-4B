@@ -2,14 +2,12 @@
 #include "Dxlib.h"
 #include "PadInput.h"
 #include "common.h"
-#include "StageData.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include "EditScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
-#include "LoadingScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
@@ -66,7 +64,7 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-#ifdef _DEBUG
+#ifdef DEBUG
 	//エディットモードに移行する時にイルカが地面に刺さっていると、
 	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
 #else
