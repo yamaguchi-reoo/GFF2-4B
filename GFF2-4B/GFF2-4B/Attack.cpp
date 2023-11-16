@@ -94,7 +94,9 @@ void Attack::Draw()const
 		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
 		{
 			//•`‰æ‚·‚é
+#ifdef _DEBUG
 			DrawFormatStringF(local_location.x, local_location.y, 0x00ffff, "%d", attack_data.effect_type);
+#endif
 		}
 	}
 }
