@@ -342,6 +342,15 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	//看板の更新
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Update(player->GetLocation());
+			sighboard[i]->SetScreenPosition(camera_location);
+		}
+	}
 	//当たり判定関連の処理を行う
 	HitCheck();
 
@@ -483,6 +492,14 @@ void GameMain::Draw() const
 		if (bamboo[i]!= nullptr)
 		{
 			bamboo[i]->Draw();
+		}
+	}
+	//看板の描画
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Draw();
 		}
 	}
 	powergauge->Draw();
@@ -783,6 +800,10 @@ void GameMain::SetStage(int _stage)
 	{
 		attack[i] = new Attack();
 	}
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		sighboard[i] = nullptr;
+	}
 	old_stage = now_stage;
 	now_stage = _stage;
 	//ファイルの読込
@@ -840,6 +861,21 @@ void GameMain::SetStage(int _stage)
 						break;
 					}
 				}
+				break;
+				//看板を生成
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+				for (int k = 0; k < SIGH_BOARD_NUM; k++)
+				{
+					if (sighboard[k] == nullptr)
+					{
+						sighboard[k] = new SighBoard(j * BOX_WIDTH, i * BOX_HEIGHT, STAGE_DATA[i][j]);
+						break;
+					}
+				}
+				break;
 			default:
 				break;
 			}

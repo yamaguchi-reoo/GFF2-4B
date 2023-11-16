@@ -9,7 +9,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//全腕共通の初期化
 	frame = 0;
 	Hands_Img_num = 0;//イルカにしかまだ使ってないので後から
-	Hands_who = 1;
+	Hands_who = 2;
 	erea.height = hands_height[Hands_who];
 	erea.width = hands_width[Hands_who];
 	who = _who;
@@ -112,7 +112,7 @@ void BossHands::Draw() const {
 			break;
 		case 2:
 			//イエロー
-			if (sf_state != SunFlowerState::SF_DOWN)
+			if (hima_state != BossHimawariState::SF_DOWN)
 			{
 				DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
 			}
@@ -280,7 +280,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 void BossHands::YellowInit()
 {
 	//ひまわり
-	sf_state = SunFlowerState::SF_WAIT;
+	hima_state = BossHimawariState::SF_WAIT;
 	location.x = 1075;
 	location.y = 500;
 	pos = false;
@@ -314,10 +314,10 @@ void BossHands::HandsYellow(GameMain* main)
 		face_angle = rad / M_PI / 2;
 
 		//ひまわりの状態に応じて行動を変える
-		switch (sf_state)
+		switch (hima_state)
 		{
 			//待機
-		case SunFlowerState::SF_WAIT:
+		case BossHimawariState::SF_WAIT:
 			//移動前の立ち位置を保存
 			if (location.x > (SCREEN_WIDTH / 2))
 			{
@@ -333,11 +333,11 @@ void BossHands::HandsYellow(GameMain* main)
 				//加速度リセット
 				acceleration = 0;
 				//移動開始
-				sf_state = SunFlowerState::SF_MOVE;
+				hima_state = BossHimawariState::SF_MOVE;
 			}
 			break;
 			//移動
-		case SunFlowerState::SF_MOVE:
+		case BossHimawariState::SF_MOVE:
 			if (location.y <= 500)
 			{
 				if (pos == false)
@@ -409,13 +409,13 @@ void BossHands::HandsYellow(GameMain* main)
 				if (move_count < 3)
 				{
 					timer = 20;
-					sf_state = SunFlowerState::SF_WAIT;
+					hima_state = BossHimawariState::SF_WAIT;
 				}
 				else
 				{
 					move_count = 0;
 					timer = 200;
-					sf_state = SunFlowerState::SF_DOWN;
+					hima_state = BossHimawariState::SF_DOWN;
 				}
 			}
 			if (--attack_cd < 0 && location.y < 400)
@@ -426,7 +426,7 @@ void BossHands::HandsYellow(GameMain* main)
 			}
 			break;
 			//やられ
-		case SunFlowerState::SF_DOWN:
+		case BossHimawariState::SF_DOWN:
 			//移動前の立ち位置を保存
 			if (location.x > (SCREEN_WIDTH / 2))
 			{
@@ -442,7 +442,7 @@ void BossHands::HandsYellow(GameMain* main)
 				//加速度リセット
 				acceleration = 0;
 				//移動開始
-				sf_state = SunFlowerState::SF_MOVE;
+				hima_state = BossHimawariState::SF_MOVE;
 			}
 			break;
 		default:
@@ -475,7 +475,7 @@ void BossHands::HandsYellow(GameMain* main)
 void BossHands::CyanInit()
 {
 	//出現位置
-	dolphin_state = DolphinState::D_WAIT;
+	iruka_state = BossIrukaState::D_WAIT;
 	location.x = SCREEN_WIDTH;
 	location.y = 0;
 	face_angle = 0.6f;
@@ -505,8 +505,8 @@ void BossHands::HandsCyan(GameMain* main) {
 
 	//アニメーション用
 	if (
-		(dolphin_state == DolphinState::D_DASH && frame % 3 == 0 && timer<=0) || 
-		(dolphin_state == DolphinState::D_MOVE && frame % 10 == 0 && timer <= 0)
+		(iruka_state == BossIrukaState::D_DASH && frame % 3 == 0 && timer<=0) || 
+		(iruka_state == BossIrukaState::D_MOVE && frame % 10 == 0 && timer <= 0)
 		)
 	{
 		if (++Hands_Img_num > 1)
@@ -519,9 +519,9 @@ void BossHands::HandsCyan(GameMain* main) {
 		//胴体の当たり判定
 		Attack_Num = 0;
 		BossAttack(main);
-		switch (dolphin_state)
+		switch (iruka_state)
 		{
-		case DolphinState::D_WAIT:
+		case BossIrukaState::D_WAIT:
 			//右上に帰る
 			iruka_rad = atan2f(0 - location.y, SCREEN_WIDTH - location.x);
 			location.x += (120 * 0.22f) * cosf(iruka_rad);
@@ -536,10 +536,10 @@ void BossHands::HandsCyan(GameMain* main) {
 			}
 			if (--timer < 0)
 			{
-				dolphin_state = DolphinState::D_MOVE;
+				iruka_state = BossIrukaState::D_MOVE;
 			}
 			break;
-		case DolphinState::D_MOVE:
+		case BossIrukaState::D_MOVE:
 			if (--timer < 0)
 			{
 				//いるかを加速させる
@@ -588,13 +588,13 @@ void BossHands::HandsCyan(GameMain* main) {
 			//5回床以外に反射したら大技
 			if (ref_num > 5)
 			{
-				dolphin_state = DolphinState::D_DASH;
+				iruka_state = BossIrukaState::D_DASH;
 				timer = 50;
 				acceleration = 70;
 				ref_num = 0;
 			}
 			break;
-		case DolphinState::D_DASH:
+		case BossIrukaState::D_DASH:
 			if (timer > 0)
 			{
 				iruka_rad = atan2f(main->GetPlayerLocation().y - location.y, main->GetPlayerLocation().x - location.x);
@@ -626,17 +626,17 @@ void BossHands::HandsCyan(GameMain* main) {
 				}
 				if (ref_num > 1)
 				{
-					dolphin_state = DolphinState::D_DOWN;
+					iruka_state = BossIrukaState::D_DOWN;
 					timer = 200;
 					ref_num = 0;
 					acceleration = 0;
 				}
 			}
 			break;
-		case DolphinState::D_DOWN:
+		case BossIrukaState::D_DOWN:
 			if (--timer < 0)
 			{
-				dolphin_state = DolphinState::D_WAIT;
+				iruka_state = BossIrukaState::D_WAIT;
 				timer = 50;
 			}
 			break;
@@ -697,6 +697,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 3;
 		attack_data.angle = 0.5;
+		attack_data.effect_type = BOSSZAKURO_WAVES;
 
 		attack_data.direction = true;
 		break;
@@ -727,6 +728,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 7;
 		attack_data.angle = face_angle;
+		attack_data.effect_type = BOSSHIMAWARI_BULLET;
 		break;
 	default:
 		break;
