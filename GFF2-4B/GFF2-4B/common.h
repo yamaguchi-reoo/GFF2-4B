@@ -17,7 +17,7 @@
 #define BAMBOO_NUM 3 //竹の積まれている数
 #define BAMBOO_MAX 30 //竹の最大数
 
-#define ATTACK_NUM 2000   //画面に存在できる最大の攻撃数
+#define ATTACK_NUM 1000   //画面に存在できる最大の攻撃数
 #define ATTACK_SUB_NUM 100   //forする際の存在できる最大の攻撃数
 
 //攻撃時に誰が攻撃したのか判断する用
@@ -29,17 +29,32 @@
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
 //ステージ	
-#define BOX_HEIGHT	45										//ステージのブロック一つ当たりの高さ
-#define BOX_WIDTH	48										//ステージのブロック一つ当たりの幅
-#define MAX_STAGE_HEIGHT 60									//ステージのブロックの縦の最大個数
-#define MAX_STAGE_WIDTH  3000								//ステージのブロックの横の最大個数
+#define BOX_HEIGHT	45					//ステージのブロック一つ当たりの高さ
+#define BOX_WIDTH	48					//ステージのブロック一つ当たりの幅
+#define MAX_STAGE_HEIGHT 60				//ステージのブロックの縦の最大個数
+#define MAX_STAGE_WIDTH  3000			//ステージのブロックの横の最大個数
 #define STAGE_GOAL 0.05
-
+#define SIGH_BOARD_NUM 5				//看板の数
 //エネミーの数
 #define ZAKURO_MAX 30	//ザクロの最大数
 #define IRUKA_MAX 30		//イルカの最大数
 #define HIMAWARI_MAX 30	//ひまわりの最大数
 
-
 //エフェクト
 #define SPLASH_MAX 50
+
+#define PLAYER_SLASH_ONE 0
+#define PLAYER_SLASH_TWO 1
+#define PLAYER_SLASH_THREE 2
+#define PLAYER_SLASH_FOUR 3
+#define PLAYER_JUMP_SLASH 4
+#define PLAYER_JUMP_SLASH_END 5
+#define POWERUP_PLAYER_SLASH_ONE 6
+#define POWERUP_PLAYER_SLASH_TWO 7
+#define POWERUP_PLAYER_SLASH_THREE 8
+#define POWERUP_PLAYER_SLASH_FOUR 9
+#define POWERUP_PLAYER_JUMP_SLASH 10
+#define POWERUP_PLAYER_JUMP_SLASH_END 11
+#define HIMAWARI_BULLET 12
+#define BOSSZAKURO_WAVES 13
+#define BOSSHIMAWARI_BULLET 14

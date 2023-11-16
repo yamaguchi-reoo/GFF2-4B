@@ -1,11 +1,13 @@
 #include "Zakuro.h"
 #include "DxLib.h"
-#include "Player.h"
 #include "GameMain.h"
 #include "common.h"
 
-#define MOVE_SPEED  3
-#define ZAKURO_GRAVITY  10
+#define MOVE_SPEED  3	//速度
+#define ZAKURO_GRAVITY  5//重力
+
+#define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
+#define ZAKURO_IMAGE_SHIFT_Y 12		//画像ずらし用
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 {
@@ -18,6 +20,8 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	speed = MOVE_SPEED;
 	who = _who;
 	hp = 1;
+
+	image = LoadGraph("resource/images/Enemy/zakuro.png");
 
 	stop_count = 120;
 
@@ -90,15 +94,21 @@ void Zakuro::Draw() const
 	//DrawFormatString(200, 0, 0xffffff, "%f", local_location.x);
 	if (spawn_flg == false) 
 	{
-		//DrawBoxAA(location.x + (erea.width / 2), location.y + (erea.height / 2), erea.width, erea.height, 0xff00ff, TRUE);
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xff00ff, TRUE);
-		if (zakuro_state == ZakuroState::RIGHT)
+		switch (zakuro_state)
 		{
-			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
-		}
-		else
-		{
-			DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
+		case ZakuroState::RIGHT:
+			DrawTurnGraphF(local_location.x - ZAKURO_IMAGE_SHIFT_X, local_location.y - ZAKURO_IMAGE_SHIFT_Y, image, true);
+			break;
+		case ZakuroState::LEFT:
+			DrawGraphF(local_location.x - ZAKURO_IMAGE_SHIFT_X, local_location.y - ZAKURO_IMAGE_SHIFT_Y, image, true);
+			break;
+		case ZakuroState::IDLE_RIGHT:
+			DrawTurnGraphF(local_location.x - ZAKURO_IMAGE_SHIFT_X, local_location.y - ZAKURO_IMAGE_SHIFT_Y, image, true);
+			break;
+		case ZakuroState::IDLE_LEFT:
+			DrawGraphF(local_location.x - ZAKURO_IMAGE_SHIFT_X, local_location.y - ZAKURO_IMAGE_SHIFT_Y, image, true);			break;
+		default:
+			break;
 		}
 	}
 }
@@ -159,7 +169,14 @@ void Zakuro::ZakuroReset()
 
 void Zakuro::ZakuroGiveGravity()
 {
-	zakuro_state = ZakuroState::IDLE;
+	if (zakuro_state == ZakuroState::LEFT)
+	{
+		zakuro_state = ZakuroState::IDLE_LEFT;
+	}
+	if (zakuro_state == ZakuroState::RIGHT)
+	{
+		zakuro_state = ZakuroState::IDLE_RIGHT;
+	}
 	location.y += ZAKURO_GRAVITY;
 }
 

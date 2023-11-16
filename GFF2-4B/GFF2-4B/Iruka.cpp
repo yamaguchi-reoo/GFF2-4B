@@ -7,6 +7,10 @@
 
 #define MAX_FALL_TIME 120
 
+#define IRUKA_IMAGE_SHIFT_X 10		//画像ずらし用
+#define IRUKA_IMAGE_SHIFT_Y 10		//画像ずらし用
+
+#define TRUN_RAD 1.5708f		//90度回転用
 
 Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 {
@@ -16,11 +20,13 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 	location.y = pos_y;// 100;
 	spawn_location_y = pos_y;
 	spawn_location_x = pos_x;
-	erea.width = 120;
+	erea.width = 100;
 	erea.height = 50;
 	speed = 5;
 	who = _who;
 	hp = 2;
+
+	image = LoadGraph("resource/images/Enemy/Iruka.png");
 
 	fps_count = 0;
 
@@ -89,27 +95,33 @@ void Iruka::Update(GameMain* main)
 void Iruka::Draw() const
 {
 	if (spawn_flg == false) {
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ffff, TRUE);
-		
-		//左向き	
-		if (iruka_state == IrukaState::LEFT) {
-			DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
-		}
-		//右向き
-		else if (iruka_state == IrukaState::RIGHT) {
-			DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
-			//DrawBoxAA(local_location.x + erea.width - 35, local_location.y, local_location.x + erea.width, local_location.y, 0x0000ff, FALSE);
-		}
-		//右向き落下
-		else if (iruka_state == IrukaState::RIGHT_FALL) {
-			DrawBoxAA(local_location.x + erea.width, local_location.y + erea.height - 40, local_location.x + 30, local_location.y + erea.height, 0x00ff00, true);
-		}
-		//左向き落下
-		else if (iruka_state == IrukaState::LEFT_FALL) {
-			DrawBoxAA(local_location.x + 30, local_location.y + erea.height - 40, local_location.x, local_location.y + erea.height, 0x00ff00, true);
+		//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ffff, TRUE);
+		switch (iruka_state)
+		{
+		case IrukaState::IDLE:
+			break;
+		case IrukaState::RIGHT:
+			DrawTurnGraphF(local_location.x + IRUKA_IMAGE_SHIFT_X, local_location.y + IRUKA_IMAGE_SHIFT_Y, image, true);
+			break;
+		case IrukaState::LEFT:
+			DrawGraphF(local_location.x, local_location.y + IRUKA_IMAGE_SHIFT_Y, image, true);
+			break;
+		case IrukaState::RIGHT_FALL:
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, TRUN_RAD, image, true, true);
+			break;
+		case IrukaState::LEFT_FALL:
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, -TRUN_RAD, image, true, false);
+			break;
+		case IrukaState::RIGHT_RETURN:
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, -TRUN_RAD, image, true, true);
+			break;
+		case IrukaState::LEFT_RETURN:
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, TRUN_RAD, image, true, false);
+			break;
+		default:
+			break;
 		}
 	}
-	//DrawFormatString(600, 0, 0xffffff, "%d", hp);
 }
 
 void Iruka::Move()
@@ -178,21 +190,25 @@ void Iruka::MoveReturn()
 				erea.height = 50;
 				return_flg = false;
 				fps_count = 0;
+				if (iruka_state == IrukaState::RIGHT_RETURN)
+				{
+					iruka_state = IrukaState::RIGHT;
+				}
+				if (iruka_state == IrukaState::LEFT_RETURN)
+				{
+					iruka_state = IrukaState::LEFT;
+				}
 			}
 		}
 		
-		
-		
 		if (iruka_state == IrukaState::RIGHT_FALL) 
 		{
-			iruka_state = IrukaState::RIGHT;
+			iruka_state = IrukaState::RIGHT_RETURN;
 		}
 		if (iruka_state == IrukaState::LEFT_FALL) 
 		{
-			iruka_state = IrukaState::LEFT;
-		}
-	
-		
+			iruka_state = IrukaState::LEFT_RETURN;
+		}		
 	}
 }
 

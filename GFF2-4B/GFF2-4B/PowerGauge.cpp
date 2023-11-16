@@ -44,7 +44,6 @@ PowerGauge::PowerGauge()
 	image[1] = LoadGraph("resource/images/black.png");
 	image[2] = LoadGraph("resource/images/magatama_max.png");
 
-	
 	mask_handle[0] = LoadMask("resource/images/Magatama_mask1.png");
 	mask_handle[1] = LoadMask("resource/images/black_mask.png");
 

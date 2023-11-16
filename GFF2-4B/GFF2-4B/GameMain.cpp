@@ -2,14 +2,12 @@
 #include "Dxlib.h"
 #include "PadInput.h"
 #include "common.h"
-#include "StageData.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include "EditScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
-#include "LoadingScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
@@ -66,7 +64,7 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-#ifdef _DEBUG
+#ifdef DEBUG
 	//エディットモードに移行する時にイルカが地面に刺さっていると、
 	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
 #else
@@ -342,6 +340,15 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	//看板の更新
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Update(player->GetLocation());
+			sighboard[i]->SetScreenPosition(camera_location);
+		}
+	}
 	//当たり判定関連の処理を行う
 	HitCheck();
 
@@ -354,7 +361,7 @@ AbstractScene* GameMain::Update()
 
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-		return new GameClear();
+		return new Loading();
 	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver();
@@ -485,6 +492,14 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+	//看板の描画
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Draw();
+		}
+	}
 	powergauge->Draw();
 	playerhp->Draw();
 	score->Draw();
@@ -513,12 +528,14 @@ void GameMain::HitCheck()
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
+			//プレイヤーがステージに触れたなら
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
 				//触れた面に応じて押し出す
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
+			//ボス面のみボスの腕の当たり判定
 			if (now_stage == 3) {
 				if (hands != nullptr) {
 					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
@@ -528,6 +545,7 @@ void GameMain::HitCheck()
 				}
 			}
 
+			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				if (zakuro[k] != nullptr) {
@@ -538,32 +556,35 @@ void GameMain::HitCheck()
 					}
 				}
 			}
-			//イルカ
+			//イルカの数だけ繰り返す
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				if (iruka[k] != nullptr) {
 					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
+						//触れた面に応じて押し出す
 						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
-			//ひまわり
+			//ひまわりの数だけ繰り返す
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
 				if (himawari[k] != nullptr) {
 					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
+						//触れた面に応じて押し出す
 						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
 			}
-			//竹
+			//竹の数だけ繰り返す
 			for (int k = 0; k < BAMBOO_MAX; k++)
 			{
 				if (bamboo[k] != nullptr) {
 					if (bamboo[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 					{
+						//触れた面に応じて押し出す
 						bamboo[k]->BambooPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
 					}
 				}
@@ -633,11 +654,15 @@ void GameMain::HitCheck()
 		}
 		for (int j = 0; j < BAMBOO_MAX; j++) {
 			if (bamboo[j] != nullptr) {
-				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
+				}
+				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
+				{
+					player->Push(j, bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
 				}
 			}
 		}
@@ -669,26 +694,33 @@ void GameMain::HitCheck()
 		{
 			//プレイヤーのダメージ処理
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
+			//攻撃を消す
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
+		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で、プレイヤーが床に触れたなら
+		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4 && player->GetOnFloorFlg() == true)
+		{
+			//攻撃を消す
+			attack[i]->DeleteAttack();
+		}
 	}
-	////ザクロ同士で当たったら...
-	//for (int i = 0; i < ZAKURO_MAX; i++)
-	//{
-	//	for (int j = i + 1; j < ZAKURO_MAX; j++)
-	//	{
-	//		if (zakuro[i] != nullptr && zakuro[j] != nullptr)
-	//		{
-	//			if (zakuro[i]->HitBox(zakuro[j]) == true) {
-	//				zakuro[i]->HitZakuro();
-	//			}
-	//			if (zakuro[j]->HitBox(zakuro[i]) == true) {
-	//				zakuro[j]->HitZakuro();
-	//			}
-	//		}
-	//	}
-	//}
+	//ザクロ同士で当たったら...
+	for (int i = 0; i < ZAKURO_MAX; i++)
+	{
+		for (int j = i + 1; j < ZAKURO_MAX; j++)
+		{
+			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
+			{
+				if (zakuro[i]->HitBox(zakuro[j]) == true) {
+					zakuro[i]->HitZakuro();
+				}
+				if (zakuro[j]->HitBox(zakuro[i]) == true) {
+					zakuro[j]->HitZakuro();
+				}
+			}
+		}
+	}
 	//竹同士が当たったら止まる
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
@@ -696,7 +728,7 @@ void GameMain::HitCheck()
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwanFlg() == false && bamboo[j]->GetSpwanFlg() == false) {
 					bamboo[i]->FalseGravity();
 				}
 			}
@@ -766,6 +798,10 @@ void GameMain::SetStage(int _stage)
 	{
 		attack[i] = new Attack();
 	}
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		sighboard[i] = nullptr;
+	}
 	old_stage = now_stage;
 	now_stage = _stage;
 	//ファイルの読込
@@ -823,6 +859,21 @@ void GameMain::SetStage(int _stage)
 						break;
 					}
 				}
+				break;
+				//看板を生成
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+				for (int k = 0; k < SIGH_BOARD_NUM; k++)
+				{
+					if (sighboard[k] == nullptr)
+					{
+						sighboard[k] = new SighBoard(j * BOX_WIDTH, i * BOX_HEIGHT, STAGE_DATA[i][j]);
+						break;
+					}
+				}
+				break;
 			default:
 				break;
 			}

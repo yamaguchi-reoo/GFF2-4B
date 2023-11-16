@@ -25,7 +25,7 @@ Loading::~Loading()
 }
 AbstractScene* Loading::Update()
 {
-	while (loading_time < 150)
+	while (loading_time < 100)
 	{
 		loading_time += 1;
 		return this;
