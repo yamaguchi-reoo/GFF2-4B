@@ -846,3 +846,8 @@ void GameMain::ResetCamera()
 	camera_location.x = screen_origin.x - (SCREEN_WIDTH / 2);
 	camera_location.y = screen_origin.y;
 }
+
+Location GameMain::GetPlayerLocation()
+{
+	return player->GetLocation();
+}

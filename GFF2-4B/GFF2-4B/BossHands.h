@@ -7,9 +7,17 @@ class Boss;
 
 //ひまわりの状態
 enum SunFlowerState {
-    WAIT = 0,
-    MOVE,
-    DOWN
+    SF_WAIT = 0,
+    SF_MOVE,
+    SF_DOWN
+};
+
+//いるかの状態
+enum DolphinState {
+    D_WAIT = 0,
+    D_MOVE,
+    D_DASH,
+    D_DOWN
 };
 
 class BossHands :
@@ -32,9 +40,6 @@ public:
     //Mの拳が降りてくるX座標
     float Magentax[10] = { 1000,100,500 };
 
-    /*イルカ*/
-    int Direction;  //0:左向き 1:右向き
-
     int switching;//拳出現位置セット用
 
     bool hitflg=false;
@@ -47,9 +52,15 @@ public:
     
     bool Power_Up;   //強化状態か？
     bool Rock_Once; //岩出現位置一度だけ格納する用
-    Location turu_location;  //つる描画位置
-    float turu_angle;        //つる角度
-    int turu_img;            //つる画像用
+
+    //いるか
+    DolphinState dolphin_state;     //いるかの状態
+    Location turu_location;         //つる描画位置
+    float iruka_rad;                //いるかの角度計算用
+    float turu_angle;               //つる角度
+    float turu_rad;                 //つるの描画角度計算用
+    int turu_img;                   //つる画像用
+    int ref_num;                    //いるかが壁に跳ね返った回数
 
     //ボスの状態が何か受け取る
     int Boss_Form;
