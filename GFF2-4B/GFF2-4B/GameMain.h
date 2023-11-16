@@ -19,6 +19,7 @@
 #include "Effect.h"
 #include "LoadingScene.h"
 #include "Score.h"
+#include "SighBoard.h"
 
 class Player;
 
@@ -55,6 +56,8 @@ private:
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
     Loading* loading_scene;    //LoadingSceneのオブジェクト
+
+    SighBoard* sighboard[SIGH_BOARD_NUM];      //看板のオブジェクト
 
     int flg;               //
     int count[2];          //実験用
