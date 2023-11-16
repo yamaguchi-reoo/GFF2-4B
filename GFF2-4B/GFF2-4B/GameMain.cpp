@@ -321,7 +321,7 @@ AbstractScene* GameMain::Update()
 
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-		return new GameClear();
+		return new Loading();
 	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver();
