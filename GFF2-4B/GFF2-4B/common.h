@@ -17,7 +17,7 @@
 #define BAMBOO_NUM 3 //’|‚ÌÏ‚Ü‚ê‚Ä‚¢‚é”
 #define BAMBOO_MAX 30 //’|‚ÌÅ‘å”
 
-#define ATTACK_NUM 2000   //‰æ–Ê‚É‘¶Ý‚Å‚«‚éÅ‘å‚ÌUŒ‚”
+#define ATTACK_NUM 1000   //‰æ–Ê‚É‘¶Ý‚Å‚«‚éÅ‘å‚ÌUŒ‚”
 #define ATTACK_SUB_NUM 100   //for‚·‚éÛ‚Ì‘¶Ý‚Å‚«‚éÅ‘å‚ÌUŒ‚”
 
 //UŒ‚Žž‚É’N‚ªUŒ‚‚µ‚½‚Ì‚©”»’f‚·‚é—p

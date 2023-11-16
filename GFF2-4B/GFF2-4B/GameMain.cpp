@@ -2,14 +2,12 @@
 #include "Dxlib.h"
 #include "PadInput.h"
 #include "common.h"
-#include "StageData.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include "EditScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
-#include "LoadingScene.h"
 
 static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
@@ -66,7 +64,7 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-#ifdef _DEBUG
+#ifdef DEBUG
 	//エディットモードに移行する時にイルカが地面に刺さっていると、
 	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
 #else
@@ -428,7 +426,14 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 
-
+	//看板の描画
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Draw();
+		}
+	}
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -490,14 +495,6 @@ void GameMain::Draw() const
 		if (bamboo[i]!= nullptr)
 		{
 			bamboo[i]->Draw();
-		}
-	}
-	//看板の描画
-	for (int i = 0; i < SIGH_BOARD_NUM; i++)
-	{
-		if (sighboard[i] != nullptr)
-		{
-			sighboard[i]->Draw();
 		}
 	}
 	powergauge->Draw();
@@ -698,11 +695,16 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で、プレイヤーが床に触れたなら
-		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4 && player->GetOnFloorFlg() == true)
+		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で
+		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4)
 		{
-			//攻撃を消す
-			attack[i]->DeleteAttack();
+			attack[i]->SetDirection(player->GetPlayerDirection());
+			//プレイヤーが床に触れたなら
+			if (player->GetOnFloorFlg() == true)
+			{
+				//攻撃を消す
+				attack[i]->DeleteAttack();
+			}
 		}
 	}
 	//ザクロ同士で当たったら...
