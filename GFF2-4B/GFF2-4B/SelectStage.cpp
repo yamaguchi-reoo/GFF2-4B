@@ -9,16 +9,13 @@ int SelectStage::goal_flg[3] = {1,1,1}; //デバック用に1
 SelectStage::SelectStage()
 {
 	botton_flg = false;
-	img[0] = LoadGraph("resource/images/SelectCursor.png");
-	img[1] = LoadGraph("resource/images/Stage1.png");
-	img[2] = LoadGraph("resource/images/Stage2.png");
-	img[3] = LoadGraph("resource/images/Stage3.png");
-	img[4] = LoadGraph("resource/images/Stage1w.png");
-	img[5] = LoadGraph("resource/images/Stage2w.png");
-	img[6] = LoadGraph("resource/images/Stage3w.png");
-
-
-
+	img[0] = LoadGraph("resource/images/SelectStage/SelectCursor.png");
+	img[1] = LoadGraph("resource/images/SelectStage/Stage1.png");
+	img[2] = LoadGraph("resource/images/SelectStage/Stage2.png");
+	img[3] = LoadGraph("resource/images/SelectStage/Stage3.png");
+	img[4] = LoadGraph("resource/images/SelectStage/Stage1w.png");
+	img[5] = LoadGraph("resource/images/SelectStage/Stage2w.png");
+	img[6] = LoadGraph("resource/images/SelectStage/Stage3w.png");
 }
 
 //デストラクタ

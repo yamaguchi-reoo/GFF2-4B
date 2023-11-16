@@ -361,7 +361,20 @@ AbstractScene* GameMain::Update()
 
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-		return new Loading();
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//途中でステージの切り替えがあった場合使用
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				boss = new Boss();
+				hands = new BossHands(who++, boss);
+			}
+		}
+		else
+		{
+			return new Loading;
+		}
 	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver(now_stage);
@@ -403,23 +416,10 @@ AbstractScene* GameMain::Update()
 		return new EditScene(now_stage);
 	}
 
-	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage!=now_stage) {
-		//Hands_Delete_Flg = false;
-		boss = new Boss();
-		hands = new BossHands(who++, boss);
-	}
 #endif
-	//ステージクリア
-	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
-	
-		return new Loading;
-	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver(now_stage);
 	}
-
-
 
 	return this;
 }
@@ -428,7 +428,14 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 
-
+	//看板の描画
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Draw();
+		}
+	}
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -490,14 +497,6 @@ void GameMain::Draw() const
 		if (bamboo[i]!= nullptr)
 		{
 			bamboo[i]->Draw();
-		}
-	}
-	//看板の描画
-	for (int i = 0; i < SIGH_BOARD_NUM; i++)
-	{
-		if (sighboard[i] != nullptr)
-		{
-			sighboard[i]->Draw();
 		}
 	}
 	powergauge->Draw();
@@ -698,11 +697,16 @@ void GameMain::HitCheck()
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で、プレイヤーが床に触れたなら
-		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4 && player->GetOnFloorFlg() == true)
+		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で
+		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4)
 		{
-			//攻撃を消す
-			attack[i]->DeleteAttack();
+			attack[i]->SetDirection(player->GetPlayerDirection());
+			//プレイヤーが床に触れたなら
+			if (player->GetOnFloorFlg() == true)
+			{
+				//攻撃を消す
+				attack[i]->DeleteAttack();
+			}
 		}
 	}
 	//ザクロ同士で当たったら...
