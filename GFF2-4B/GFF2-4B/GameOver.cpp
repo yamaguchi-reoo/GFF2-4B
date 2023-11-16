@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "PadInput.h"
 #include "Title.h"
+#include "Score.h"
 
 //‰æ‘œ“Ç‰Šú‰»—pŠÖ”
 void GameOver::ImageLoad(int& _handle,const char* _file_name)
@@ -42,6 +43,7 @@ AbstractScene* GameOver::Update()
 #endif
 		)
 	{
+		Score::SetScore();
 		return new Title();
 	}
 	return this;

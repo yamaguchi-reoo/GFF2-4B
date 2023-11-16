@@ -192,5 +192,11 @@ public:
 
 	//プレイヤーをリスポーンさせる(_location=スポーンさせる場所)
 	void Respawn(Location _location);
+
+	//プレイヤーが現在行っている攻撃を取得
+	int GetAttackStep() { return attack_step; }
+
+	//プレイヤーが床に触れているか取得
+	bool GetOnFloorFlg() { return onfloor_flg; }
 };
 

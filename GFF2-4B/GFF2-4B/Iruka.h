@@ -20,6 +20,9 @@ private:
     bool fall_flg;  //落下用フラグ
     bool spawn_flg;	//スポーンしているか
     bool iruka_direction;
+    float spawn_location_y;
+    float spawn_location_x;
+    bool return_flg;
         
     //当たり判定関連
     bool onfloor_flg[FLOOR_NUM];	//いずれかの地面に触れているかどうか

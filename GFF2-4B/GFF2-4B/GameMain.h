@@ -18,6 +18,7 @@
 #include "Rock.h"
 #include "Effect.h"
 #include "LoadingScene.h"
+#include "Score.h"
 
 class Player;
 
@@ -43,11 +44,12 @@ private:
     int Check_Num;
     Rock* rock[2];//岩
 
-    Bamboo* bamboo[BAMBOO_NUM];
+    Bamboo* bamboo[BAMBOO_MAX];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
+    Score* score; //スコアUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
@@ -94,5 +96,9 @@ public:
 
     //カメラ座標を初期地点に戻す
     void ResetCamera();
+
+    //ボスにプレイヤーの座標を渡す用
+    Location GetPlayerLocation();
+
 };
 
