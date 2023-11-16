@@ -1,6 +1,5 @@
 #include "Zakuro.h"
 #include "DxLib.h"
-#include "Player.h"
 #include "GameMain.h"
 #include "common.h"
 
