@@ -64,7 +64,7 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-#ifdef DEBUG
+#ifdef _DEBUG
 	//エディットモードに移行する時にイルカが地面に刺さっていると、
 	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
 #else
@@ -610,6 +610,17 @@ void GameMain::HitCheck()
 					effect->SetLocation(zakuro[j]->GetLocalLocation());
 					effect->SetSplashColor(zakuro[j]->GetColorDate());
 				}
+				for (int k = 0; k < BAMBOO_MAX; k++) 
+				{
+					if (bamboo[k] != nullptr) 
+					{
+						if (zakuro[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
+						{
+							//触れた面に応じて押し出す
+							zakuro[j]->ZakuroPush(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
+						}
+					}
+				}
 			}
 		}
 		for (int j = 0; j < IRUKA_MAX; j++) {
@@ -629,6 +640,17 @@ void GameMain::HitCheck()
 						powergauge->SetVolume(iruka[j]->GetColorDate());
 					}*/
 					attack[i]->DeleteAttack();
+				}
+				for (int k = 0; k < BAMBOO_MAX; k++)
+				{
+					if (bamboo[k] != nullptr)
+					{
+						if (iruka[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
+						{
+							//触れた面に応じて押し出す
+							iruka[j]->IrukaPush(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
+						}
+					}
 				}
 			}
 		}
@@ -650,16 +672,30 @@ void GameMain::HitCheck()
 					//}
 					attack[i]->DeleteAttack();
 				}
+				for (int k = 0; k < BAMBOO_MAX; k++)
+				{
+					if (bamboo[k] != nullptr)
+					{
+						if (himawari[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
+						{
+							//触れた面に応じて押し出す
+							himawari[j]->HimawariPush(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
+						}
+					}
+				}
 			}
 		}
-		for (int j = 0; j < BAMBOO_MAX; j++) {
-			if (bamboo[j] != nullptr) {
+		for (int j = 0; j < BAMBOO_MAX; j++) 
+		{
+			if (bamboo[j] != nullptr) 
+			{
 				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
 				}
+				//プレイヤーと竹の当たり判定
 				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
 				{
 					player->Push(j, bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
