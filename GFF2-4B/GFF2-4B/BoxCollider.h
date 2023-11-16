@@ -13,7 +13,7 @@ struct AttackData {
 	int damage;				//与えるダメージ量
 	int delay;				//何フレーム待ってから攻撃するか
 	int attack_type;		//攻撃の種類(近接、波状、弾)
-	//int effect_type;		//攻撃のアニメーションの種類
+	int effect_type;		//攻撃のアニメーションの種類
 	// 
 	//攻撃の種類がBULLETの場合この情報も書き込む必要がある
 	float speed;			//１フレームにどれだけ前に進むか

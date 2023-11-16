@@ -5,14 +5,14 @@
 class Boss;
 
 //ひまわりの状態
-enum SunFlowerState {
+enum BossHimawariState {
     SF_WAIT = 0,
     SF_MOVE,
     SF_DOWN
 };
 
 //いるかの状態
-enum DolphinState {
+enum BossIrukaState {
     D_WAIT = 0,
     D_MOVE,
     D_DASH,
@@ -50,7 +50,7 @@ public:
     bool Rock_Once;                 //岩出現位置一度だけ格納する用
 
     //いるか
-    DolphinState dolphin_state;     //いるかの状態
+    BossIrukaState iruka_state;     //いるかの状態
     Location turu_location;         //つる描画位置
     float iruka_rad;                //いるかの角度計算用
     float turu_angle;               //つる角度
@@ -59,7 +59,7 @@ public:
     int ref_num;                    //いるかが壁に跳ね返った回数
 
     //ひまわり
-    SunFlowerState sf_state;        //ひまわりの状態
+    BossHimawariState hima_state;        //ひまわりの状態
     bool pos;                       //自分の現在地(false = 右、true = 左)
     float sf_speed;                 //移動速度
     float angle_width;              //弾を撃つ方向決定用

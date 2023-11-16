@@ -90,6 +90,14 @@ void Attack::Draw()const
 	if (can_apply_damage == true)
 	{
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, false);
+		//攻撃エフェクトがあるなら
+		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
+		{
+			//描画する
+#ifdef _DEBUG
+			DrawFormatStringF(local_location.x, local_location.y, 0x00ffff, "%d", attack_data.effect_type);
+#endif
+		}
 	}
 }
 

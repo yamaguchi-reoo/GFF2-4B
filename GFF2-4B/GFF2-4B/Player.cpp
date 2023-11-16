@@ -347,7 +347,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 	p_center.y = location.y + (erea.height / 2);
 
 	//‰E‚Ì•Ç‚ÉG‚ê‚½
-	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3))
+	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
 	{
 		location.x = _sub_location.x - erea.width;
 		//‰E‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -356,7 +356,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//¶‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3))
+	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//¶‰Á‘¬“x‚ğ0‚É‚·‚é
@@ -365,7 +365,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		leftwall_flg = true;
 	}
 	//°‚ÉG‚ê‚½
-	else if (location.y + erea.height - 31 < _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4))
+	else if (location.y + erea.height - 31 < _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4 || _type == 8))
 	{
 		//–Ø‚Æ‰_‚Íã‚©‚ç~‚è‚Ä‚«‚½‚Æ‚«‚¾‚¯æ‚ê‚é‚æ‚¤‚É‚·‚é
 		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
@@ -963,6 +963,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].damage = 1;
 	player_attack_data[0].delay = 10;
 	player_attack_data[0].attack_type = MELEE;
+	player_attack_data[0].effect_type = PLAYER_SLASH_ONE;
 	//ˆê’iŠK–Ú@‹­‰»’†
 	player_attack_data[1].shift_x = -erea.width;
 	player_attack_data[1].shift_y = -50;
@@ -975,6 +976,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[1].attack_type = BULLET;
 	player_attack_data[1].angle = 0.0f;
 	player_attack_data[1].speed = 20;
+	player_attack_data[1].effect_type = POWERUP_PLAYER_SLASH_ONE;
 	//“ñ’iŠK–Ú
 	player_attack_data[2].shift_x = -erea.width;
 	player_attack_data[2].shift_y = -70;
@@ -985,6 +987,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[2].damage = 1;
 	player_attack_data[2].delay = 10;
 	player_attack_data[2].attack_type = MELEE;
+	player_attack_data[2].effect_type = PLAYER_SLASH_TWO;
 	//“ñ’iŠK–Ú@‹­‰»’†
 	player_attack_data[3].shift_x = -erea.width;
 	player_attack_data[3].shift_y = -70;
@@ -997,6 +1000,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].attack_type = BULLET;
 	player_attack_data[3].angle = 0.0f;
 	player_attack_data[3].speed = 20;
+	player_attack_data[3].effect_type = POWERUP_PLAYER_SLASH_TWO;
 	//O’iŠK–Ú
 	player_attack_data[4].shift_x = -erea.width;
 	player_attack_data[4].shift_y = 50;
@@ -1007,6 +1011,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[4].damage = 1;
 	player_attack_data[4].delay = 5;
 	player_attack_data[4].attack_type = MELEE;
+	player_attack_data[4].effect_type = PLAYER_SLASH_THREE;
 	//O’iŠK–Ú@‹­‰»’†
 	player_attack_data[5].shift_x = -erea.width;
 	player_attack_data[5].shift_y = 40;
@@ -1019,6 +1024,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].attack_type = BULLET;
 	player_attack_data[5].angle = 0.0f;
 	player_attack_data[5].speed = 15;
+	player_attack_data[5].effect_type = POWERUP_PLAYER_SLASH_THREE;
 	//l’iŠK–Ú
 	player_attack_data[6].shift_x = -erea.width;
 	player_attack_data[6].shift_y = -90;
@@ -1029,6 +1035,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[6].damage = 2;
 	player_attack_data[6].delay = 10;
 	player_attack_data[6].attack_type = MELEE;
+	player_attack_data[6].effect_type = PLAYER_SLASH_FOUR;
 	//l’iŠK–Ú@‹­‰»’†
 	player_attack_data[7].shift_x = -erea.width;
 	player_attack_data[7].shift_y = -90;
@@ -1041,6 +1048,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[7].attack_type = BULLET;
 	player_attack_data[7].angle = 0.0f;
 	player_attack_data[7].speed = 20;
+	player_attack_data[7].effect_type = POWERUP_PLAYER_SLASH_FOUR;
 	//ƒWƒƒƒ“ƒvUŒ‚
 	player_attack_data[8].shift_x = -erea.width;
 	player_attack_data[8].shift_y = 50;
@@ -1051,6 +1059,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].damage = 1;
 	player_attack_data[8].delay = 0;
 	player_attack_data[8].attack_type = MELEE;
+	player_attack_data[8].effect_type = PLAYER_JUMP_SLASH;
 	//ƒWƒƒƒ“ƒvUŒ‚@‹­‰»’†
 	player_attack_data[9].shift_x = 0;
 	player_attack_data[9].shift_y = 50;
@@ -1061,6 +1070,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[9].damage = 1;
 	player_attack_data[9].delay = 0;
 	player_attack_data[9].attack_type = MELEE;
+	player_attack_data[9].effect_type = POWERUP_PLAYER_JUMP_SLASH;
 	//ƒWƒƒƒ“ƒvUŒ‚‚©‚ç‚Ì’…’nUŒ‚
 	player_attack_data[10].shift_x = 0;
 	player_attack_data[10].shift_y = 50;
@@ -1073,6 +1083,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[10].attack_type = BULLET;
 	player_attack_data[10].angle = 0.0f;
 	player_attack_data[10].speed = 20;
+	player_attack_data[10].effect_type = PLAYER_JUMP_SLASH_END;
 	//ƒWƒƒƒ“ƒvUŒ‚‚©‚ç‚Ì’…’nUŒ‚@‹­‰»—p
 	player_attack_data[11].shift_x = 0;
 	player_attack_data[11].shift_y = 50;
@@ -1085,6 +1096,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].attack_type = BULLET;
 	player_attack_data[11].angle = 0.0f;
 	player_attack_data[11].speed = 25;
+	player_attack_data[11].effect_type = POWERUP_PLAYER_JUMP_SLASH_END;
 }
 
 void Player::Respawn(Location _location)
