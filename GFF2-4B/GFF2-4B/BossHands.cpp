@@ -6,83 +6,49 @@
 
 BossHands::BossHands(int _who,Boss* boss) {
 
-
+	//全腕共通の初期化
+	frame = 0;
 	Hands_Img_num = 0;//イルカにしかまだ使ってないので後から
 	Hands_who = 1;
+	erea.height = hands_height[Hands_who];
+	erea.width = hands_width[Hands_who];
+	who = _who;
+	Attack_Num = 0;
+	Death_Anim = 0;
+
+#ifdef _DEBUG
+	hp = 0;
+#else
+	hp = 10;
+#endif // _DEBUG
 
 	switch (Hands_who)
 	{
 	case 0:
-		//マゼンタ
-		location.x = 700;
-		location.y = -500;
-		hi[0] = LoadGraph("resource/images/Boss/Boss.png", true);
-		count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
+		//マゼンタ初期化
+		MagentaInit();
 		break;
 	case 1:
-		//シアン
-		//出現位置
-		dolphin_state = DolphinState::D_WAIT;
-		location.x = SCREEN_WIDTH;
-		location.y = 0;
-		face_angle = 0.6f;
-		iruka_rad = 0;
-		turu_rad = 0;
-		ref_num = 0;
-		LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
-		turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
-		count = 0;	//画像切り替え用
-
+		//シアン初期化
+		CyanInit();
 		break;
 	case 2:
-		//イエロー
-		face_angle = 0;
-		location.x = 1075;
-		location.y = 500;
+		//イエロー初期化
+		YellowInit();
 		break;
 	default:
 		break;
 	}
 
-	erea.height = 190;
-	erea.width = 190;
-	switching = 0;
-	who = _who;
-	Attack_Num=0;
-	hp=10;
-	HitJumpAttack = false;
-	Death_Flg = false;
-	Rock_Once = false;
-	hitflg = false;
-	turu_location = { 0,0 };
-	turu_angle = 0;
-	Death_Anim = 0;
-
 	//強化形態になってるか？
-	if(boss->GetBossForm()==1){
+	if (boss->GetBossForm() == 1) {
 		//強化攻撃出すようになる
 
-		Power_Up=true;
+		Power_Up = true;
 	}
 	else {
 		Power_Up = false;
 	}
-	hp=0;
-
-	//ひまわり
-	sf_state = SunFlowerState::SF_WAIT;
-	pos = false;  
-	sf_speed = 10;
-	angle_width = 0;    
-	angle_height = 0;   
-	move_angle = 0.75f;    
-	bullet_angle = 0;      
-	acceleration = 0;     
-	timer = 20;
-	attack_cd = 30;
-	attack_combo = 10;
-	attack_num = 3;
-	move_count = 0;
 }
 
 BossHands::~BossHands() {
@@ -90,6 +56,10 @@ BossHands::~BossHands() {
 
 void BossHands::Update(GameMain* main) {
 
+	//フレーム測定
+	if (++frame > 1200)frame = 0;
+
+		//手の種類に応じて実行するUpdateを変える
 		switch (Hands_who)
 		{
 		case 0:
@@ -165,6 +135,19 @@ void BossHands::Draw() const {
 #endif // _DEBUG
 
 
+}
+
+void BossHands::MagentaInit()
+{
+	location.x = 700;
+	location.y = -500;
+	hi[0] = LoadGraph("resource/images/Boss/Boss.png", true);
+	count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
+	switching = 0;
+	HitJumpAttack = false;
+	Death_Flg = false;
+	Rock_Once = false;
+	hitflg = false;
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
@@ -292,6 +275,27 @@ void BossHands::HandsMagenta(GameMain* main) {
 			break;
 		};
 	}
+}
+
+void BossHands::YellowInit()
+{
+	//ひまわり
+	sf_state = SunFlowerState::SF_WAIT;
+	location.x = 1075;
+	location.y = 500;
+	pos = false;
+	sf_speed = 10;
+	angle_width = 0;
+	angle_height = 0;
+	move_angle = 0.75f;
+	bullet_angle = 0;
+	acceleration = 0;
+	timer = 20;
+	attack_cd = 30;
+	attack_combo = 10;
+	attack_num = 3;
+	move_count = 0;
+	face_angle = 0;
 }
 
 void BossHands::HandsYellow(GameMain* main)
@@ -447,8 +451,46 @@ void BossHands::HandsYellow(GameMain* main)
 	}
 	else //死んでいるなら
 	{
-	
+	//死亡アニメーション
+	switch (Death_Anim) {
+	case 0:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 1:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 2:
+		main->Hands_Delete_Flg = true;
+		break;
+	default:
+		break;
+	};
 	}
+}
+
+void BossHands::CyanInit()
+{
+	//出現位置
+	dolphin_state = DolphinState::D_WAIT;
+	location.x = SCREEN_WIDTH;
+	location.y = 0;
+	face_angle = 0.6f;
+	iruka_rad = 0;
+	turu_rad = 0;
+	ref_num = 0;
+	LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
+	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
+	count = 0;	//画像切り替え用
+	turu_location = { 0,0 };
+	turu_angle = 0;
+	timer = 30;
+	Death_Flg = false;
+	acceleration = 0;
+
 }
 
 void BossHands::HandsCyan(GameMain* main) {
@@ -460,6 +502,18 @@ void BossHands::HandsCyan(GameMain* main) {
 	turu_location.y = GetCenterLocation().y/2;
 	turu_angle = atan2f(turu_location.y - GetCenterLocation().y, turu_location.x - GetCenterLocation().x);
 	turu_rad =turu_angle*(float)M_PI*2;
+
+	//アニメーション用
+	if (
+		(dolphin_state == DolphinState::D_DASH && frame % 3 == 0 && timer<=0) || 
+		(dolphin_state == DolphinState::D_MOVE && frame % 10 == 0 && timer <= 0)
+		)
+	{
+		if (++Hands_Img_num > 1)
+		{
+			Hands_Img_num = 0;
+		}
+	}
 		//生きているなら
 	if (Death_Flg == false) {
 		//胴体の当たり判定
@@ -505,26 +559,30 @@ void BossHands::HandsCyan(GameMain* main) {
 					location.x = 0;
 					face_angle = GetRandAngle(0);
 					ref_num++;
-					timer = 10;
+					timer = 20;
+					iruka_rad = face_angle * (float)M_PI * 2;
 				}
 				else if (location.x > SCREEN_WIDTH - erea.width)
 				{
 					location.x = SCREEN_WIDTH - erea.width;
 					face_angle = GetRandAngle(1);
 					ref_num++;
-					timer = 10;
+					timer = 20;
+					iruka_rad = face_angle * (float)M_PI * 2;
 				}
 				else if (location.y < 0)
 				{
 					location.y = 0;
 					face_angle = GetRandAngle(2);
 					ref_num++;
-					timer = 10;
+					timer = 20;
+					iruka_rad = face_angle * (float)M_PI * 2;
 				}
 				else if (location.y > SCREEN_HEIGHT - erea.height)
 				{
 					location.y = SCREEN_HEIGHT - erea.height;
 					face_angle = 1 - face_angle;
+					iruka_rad = face_angle * (float)M_PI * 2;
 				}
 			}
 			//5回床以外に反射したら大技
@@ -549,25 +607,21 @@ void BossHands::HandsCyan(GameMain* main) {
 				if (location.x < 0)
 				{
 					location.x = 0;
-					face_angle = GetRandAngle(0);
 					ref_num++;
 				}
 				else if (location.x > SCREEN_WIDTH - erea.width)
 				{
 					location.x = SCREEN_WIDTH - erea.width;
-					face_angle = GetRandAngle(1);
 					ref_num++;
 				}
 				else if (location.y < 0)
 				{
 					location.y = 0;
-					face_angle = GetRandAngle(2);
 					ref_num++;
 				}
 				else if (location.y > SCREEN_HEIGHT - erea.height)
 				{
 					location.y = SCREEN_HEIGHT - erea.height;
-					face_angle = 1 - face_angle;
 					ref_num++;
 				}
 				if (ref_num > 1)
@@ -593,7 +647,24 @@ void BossHands::HandsCyan(GameMain* main) {
 	}
 	else //死んでいるなら
 	{
-
+	//死亡アニメーション
+	switch (Death_Anim) {
+	case 0:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 1:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 2:
+		main->Hands_Delete_Flg = true;
+		break;
+	default:
+		break;
+	};
 	}
 }
 
