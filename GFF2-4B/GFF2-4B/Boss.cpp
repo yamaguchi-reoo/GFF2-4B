@@ -13,10 +13,11 @@ Boss::Boss() {
 	Count_Death = 2;
 	Boss_Form=0;
 	Boss_Check_Playerx = -1;
-	Hand_Num = 1;
+	Hand_Num = 0;
 	New_Hand_Flg = false;
 	Dead = false;
 	Boss_Dead = false;
+	i = 0;
 }
 
 Boss::~Boss() {
@@ -31,14 +32,13 @@ void Boss::Update(GameMain* main) {
 		Boss_Arm_Righty += timer;
 
 
-		if (Count_Death > 0) {
+		if (i<3) {
 
 			if (Dead == true) {
 				Dead = false;
 				timer = 0;
-				Hand_Num = 2;
+				Hand_Num = ++i;
 			}
-
 
 		}
 		else {

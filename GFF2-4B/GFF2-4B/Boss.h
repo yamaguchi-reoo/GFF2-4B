@@ -30,6 +30,7 @@ public:
 
     bool Dead;
     bool Boss_Dead;
+    int i;
 
     Boss();
     ~Boss();
