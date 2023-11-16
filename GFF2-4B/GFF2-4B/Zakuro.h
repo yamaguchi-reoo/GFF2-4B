@@ -1,6 +1,5 @@
 #pragma once
 #include "CharaBase.h"
-#include "Attack.h"
 
 
 enum  class ZakuroState {
