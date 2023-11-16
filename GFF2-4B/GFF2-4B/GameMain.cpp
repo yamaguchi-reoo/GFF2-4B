@@ -365,7 +365,20 @@ AbstractScene* GameMain::Update()
 
 	//ステージクリア
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-		return new Loading();
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//途中でステージの切り替えがあった場合使用
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				boss = new Boss();
+				hands = new BossHands(who++, boss);
+			}
+		}
+		else
+		{
+			return new Loading;
+		}
 	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver();
@@ -408,16 +421,9 @@ AbstractScene* GameMain::Update()
 	}
 
 #endif
-	//ステージクリア
-	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
-	
-		return new Loading;
-	}
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver();
 	}
-
-
 
 	return this;
 }
