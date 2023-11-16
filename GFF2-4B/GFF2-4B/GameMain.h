@@ -19,6 +19,7 @@
 #include "Effect.h"
 #include "LoadingScene.h"
 #include "Score.h"
+#include "SighBoard.h"
 
 class Player;
 
@@ -44,7 +45,7 @@ private:
     int Check_Num;
     Rock* rock[2];//岩
 
-    Bamboo* bamboo[BAMBOO_NUM];
+    Bamboo* bamboo[BAMBOO_MAX];
     SceneScroll* scene_scroll;  //スクロールクラスのオブジェクト
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
@@ -55,6 +56,8 @@ private:
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
     Loading* loading_scene;    //LoadingSceneのオブジェクト
+
+    SighBoard* sighboard[SIGH_BOARD_NUM];      //看板のオブジェクト
 
     int flg;               //
     int count[2];          //実験用
@@ -96,5 +99,9 @@ public:
 
     //カメラ座標を初期地点に戻す
     void ResetCamera();
+
+    //ボスにプレイヤーの座標を渡す用
+    Location GetPlayerLocation();
+
 };
 

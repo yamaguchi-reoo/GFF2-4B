@@ -6,80 +6,49 @@
 
 BossHands::BossHands(int _who,Boss* boss) {
 
-
+	//全腕共通の初期化
+	frame = 0;
 	Hands_Img_num = 0;//イルカにしかまだ使ってないので後から
-	Hands_who = 1;
+	Hands_who = 2;
+	erea.height = hands_height[Hands_who];
+	erea.width = hands_width[Hands_who];
+	who = _who;
+	Attack_Num = 0;
+	Death_Anim = 0;
+
+#ifdef _DEBUG
+	hp = 0;
+#else
+	hp = 10;
+#endif // _DEBUG
 
 	switch (Hands_who)
 	{
 	case 0:
-		//マゼンタ
-		location.x = 700;
-		location.y = -500;
-		hi[0] = LoadGraph("resource/images/Boss/Boss.png", true);
-		count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
+		//マゼンタ初期化
+		MagentaInit();
 		break;
 	case 1:
-		//シアン
-		//出現位置
-		Direction = 0;
-		location.x = 1100;
-		location.y = 500;
-		face_angle = 0.6f;
-		LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
-		turu_img = LoadGraph("resource/images/Boss/LongTuru.png", true);
-		count = 0;	//画像切り替え用
-
+		//シアン初期化
+		CyanInit();
 		break;
 	case 2:
-		//イエロー
-		face_angle = 0;
-		location.x = 1075;
-		location.y = 500;
+		//イエロー初期化
+		YellowInit();
 		break;
 	default:
 		break;
 	}
 
-	erea.height = 190;
-	erea.width = 190;
-	switching = 0;
-	who = _who;
-	Attack_Num=0;
-	hp=10;
-	HitJumpAttack = false;
-	Death_Flg = false;
-	Rock_Once = false;
-	hitflg = false;
-	turu_location = { 0,0 };
-	turu_angle = 0;
-	Death_Anim = 0;
-
 	//強化形態になってるか？
-	if(boss->GetBossForm()==1){
+	if (boss->GetBossForm() == 1) {
 		//強化攻撃出すようになる
 
-		Power_Up=true;
+		Power_Up = true;
 	}
 	else {
 		Power_Up = false;
 	}
-	hp=0;
-
-	//ひまわり
-	sf_state = WAIT;
-	pos = false;  
-	sf_speed = 10;
-	angle_width = 0;    
-	angle_height = 0;   
-	move_angle = 0.75f;    
-	bullet_angle = 0;      
-	acceleration = 0;     
-	timer = 20;
-	attack_cd = 30;
-	attack_combo = 10;
-	attack_num = 3;
-	move_count = 0;
 }
 
 BossHands::~BossHands() {
@@ -87,6 +56,10 @@ BossHands::~BossHands() {
 
 void BossHands::Update(GameMain* main) {
 
+	//フレーム測定
+	if (++frame > 1200)frame = 0;
+
+		//手の種類に応じて実行するUpdateを変える
 		switch (Hands_who)
 		{
 		case 0:
@@ -127,19 +100,19 @@ void BossHands::Draw() const {
 			//else {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
-			DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, turu_img, TRUE, FALSE);
-			if (face_angle > 0.25f && face_angle <0.75f)
+			DrawRotaGraph(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
+			if (face_angle > 0.0f && face_angle <0.7f)
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,FALSE);
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 			}
 			else
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, face_angle, Hands_img[Hands_Img_num], TRUE,TRUE);
+				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
 			}
 			break;
 		case 2:
 			//イエロー
-			if (sf_state != DOWN)
+			if (hima_state != BossHimawariState::SF_DOWN)
 			{
 				DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
 			}
@@ -154,6 +127,7 @@ void BossHands::Draw() const {
 	
 
 #ifdef _DEBUG
+	DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
 	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	//DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
@@ -161,6 +135,19 @@ void BossHands::Draw() const {
 #endif // _DEBUG
 
 
+}
+
+void BossHands::MagentaInit()
+{
+	location.x = 700;
+	location.y = -500;
+	hi[0] = LoadGraph("resource/images/Boss/Boss.png", true);
+	count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
+	switching = 0;
+	HitJumpAttack = false;
+	Death_Flg = false;
+	Rock_Once = false;
+	hitflg = false;
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
@@ -290,6 +277,27 @@ void BossHands::HandsMagenta(GameMain* main) {
 	}
 }
 
+void BossHands::YellowInit()
+{
+	//ひまわり
+	hima_state = BossHimawariState::SF_WAIT;
+	location.x = 1075;
+	location.y = 500;
+	pos = false;
+	sf_speed = 10;
+	angle_width = 0;
+	angle_height = 0;
+	move_angle = 0.75f;
+	bullet_angle = 0;
+	acceleration = 0;
+	timer = 20;
+	attack_cd = 30;
+	attack_combo = 10;
+	attack_num = 3;
+	move_count = 0;
+	face_angle = 0;
+}
+
 void BossHands::HandsYellow(GameMain* main)
 {
 	//生きているなら
@@ -306,10 +314,10 @@ void BossHands::HandsYellow(GameMain* main)
 		face_angle = rad / M_PI / 2;
 
 		//ひまわりの状態に応じて行動を変える
-		switch (sf_state)
+		switch (hima_state)
 		{
 			//待機
-		case WAIT:
+		case BossHimawariState::SF_WAIT:
 			//移動前の立ち位置を保存
 			if (location.x > (SCREEN_WIDTH / 2))
 			{
@@ -325,11 +333,11 @@ void BossHands::HandsYellow(GameMain* main)
 				//加速度リセット
 				acceleration = 0;
 				//移動開始
-				sf_state = MOVE;
+				hima_state = BossHimawariState::SF_MOVE;
 			}
 			break;
 			//移動
-		case MOVE:
+		case BossHimawariState::SF_MOVE:
 			if (location.y <= 500)
 			{
 				if (pos == false)
@@ -401,13 +409,13 @@ void BossHands::HandsYellow(GameMain* main)
 				if (move_count < 3)
 				{
 					timer = 20;
-					sf_state = WAIT;
+					hima_state = BossHimawariState::SF_WAIT;
 				}
 				else
 				{
 					move_count = 0;
 					timer = 200;
-					sf_state = DOWN;
+					hima_state = BossHimawariState::SF_DOWN;
 				}
 			}
 			if (--attack_cd < 0 && location.y < 400)
@@ -418,7 +426,7 @@ void BossHands::HandsYellow(GameMain* main)
 			}
 			break;
 			//やられ
-		case DOWN:
+		case BossHimawariState::SF_DOWN:
 			//移動前の立ち位置を保存
 			if (location.x > (SCREEN_WIDTH / 2))
 			{
@@ -434,7 +442,7 @@ void BossHands::HandsYellow(GameMain* main)
 				//加速度リセット
 				acceleration = 0;
 				//移動開始
-				sf_state = MOVE;
+				hima_state = BossHimawariState::SF_MOVE;
 			}
 			break;
 		default:
@@ -443,52 +451,220 @@ void BossHands::HandsYellow(GameMain* main)
 	}
 	else //死んでいるなら
 	{
-	
+	//死亡アニメーション
+	switch (Death_Anim) {
+	case 0:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 1:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 2:
+		main->Hands_Delete_Flg = true;
+		break;
+	default:
+		break;
+	};
 	}
+}
+
+void BossHands::CyanInit()
+{
+	//出現位置
+	iruka_state = BossIrukaState::D_WAIT;
+	location.x = SCREEN_WIDTH;
+	location.y = 0;
+	face_angle = 0.6f;
+	iruka_rad = 0;
+	turu_rad = 0;
+	ref_num = 0;
+	LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
+	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
+	count = 0;	//画像切り替え用
+	turu_location = { 0,0 };
+	turu_angle = 0;
+	timer = 30;
+	Death_Flg = false;
+	acceleration = 0;
+
 }
 
 void BossHands::HandsCyan(GameMain* main) {
 
 	//仮
 	//つるの描画位置を計算
-	
+
+	turu_location.x = (SCREEN_WIDTH / 2) + GetCenterLocation().x;
+	turu_location.y = GetCenterLocation().y/2;
+	turu_angle = atan2f(turu_location.y - GetCenterLocation().y, turu_location.x - GetCenterLocation().x);
+	turu_rad =turu_angle*(float)M_PI*2;
+
+	//アニメーション用
+	if (
+		(iruka_state == BossIrukaState::D_DASH && frame % 3 == 0 && timer<=0) || 
+		(iruka_state == BossIrukaState::D_MOVE && frame % 10 == 0 && timer <= 0)
+		)
+	{
+		if (++Hands_Img_num > 1)
+		{
+			Hands_Img_num = 0;
+		}
+	}
 		//生きているなら
 	if (Death_Flg == false) {
 		//胴体の当たり判定
 		Attack_Num = 0;
 		BossAttack(main);
-
-		if (acceleration < 60)
+		switch (iruka_state)
 		{
-			acceleration++;
+		case BossIrukaState::D_WAIT:
+			//右上に帰る
+			iruka_rad = atan2f(0 - location.y, SCREEN_WIDTH - location.x);
+			location.x += (120 * 0.22f) * cosf(iruka_rad);
+			location.y += (120 * 0.22f) * sinf(iruka_rad);
+			if (location.x > SCREEN_WIDTH - erea.width)
+			{
+				location.x = SCREEN_WIDTH - erea.width;
+			}
+			if (location.y < 0)
+			{
+				location.y = 0;
+			}
+			if (--timer < 0)
+			{
+				iruka_state = BossIrukaState::D_MOVE;
+			}
+			break;
+		case BossIrukaState::D_MOVE:
+			if (--timer < 0)
+			{
+				//いるかを加速させる
+				if (acceleration < 60)
+				{
+					acceleration++;
+				}
+				//顔の角度が0~1の範囲内から出ないように
+				if (face_angle > 1)face_angle -= 1;
+				//移動距離計算
+				iruka_rad = face_angle * (float)M_PI * 2;
+				location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+				location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+				//壁に反射
+				if (location.x < 0)
+				{
+					location.x = 0;
+					face_angle = GetRandAngle(0);
+					ref_num++;
+					timer = 20;
+					iruka_rad = face_angle * (float)M_PI * 2;
+				}
+				else if (location.x > SCREEN_WIDTH - erea.width)
+				{
+					location.x = SCREEN_WIDTH - erea.width;
+					face_angle = GetRandAngle(1);
+					ref_num++;
+					timer = 20;
+					iruka_rad = face_angle * (float)M_PI * 2;
+				}
+				else if (location.y < 0)
+				{
+					location.y = 0;
+					face_angle = GetRandAngle(2);
+					ref_num++;
+					timer = 20;
+					iruka_rad = face_angle * (float)M_PI * 2;
+				}
+				else if (location.y > SCREEN_HEIGHT - erea.height)
+				{
+					location.y = SCREEN_HEIGHT - erea.height;
+					face_angle = 1 - face_angle;
+					iruka_rad = face_angle * (float)M_PI * 2;
+				}
+			}
+			//5回床以外に反射したら大技
+			if (ref_num > 5)
+			{
+				iruka_state = BossIrukaState::D_DASH;
+				timer = 50;
+				acceleration = 70;
+				ref_num = 0;
+			}
+			break;
+		case BossIrukaState::D_DASH:
+			if (timer > 0)
+			{
+				iruka_rad = atan2f(main->GetPlayerLocation().y - location.y, main->GetPlayerLocation().x - location.x);
+			}
+			if (--timer < 0)
+			{
+				if (face_angle > 1)face_angle -= 1;
+				location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+				location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+				if (location.x < 0)
+				{
+					location.x = 0;
+					ref_num++;
+				}
+				else if (location.x > SCREEN_WIDTH - erea.width)
+				{
+					location.x = SCREEN_WIDTH - erea.width;
+					ref_num++;
+				}
+				else if (location.y < 0)
+				{
+					location.y = 0;
+					ref_num++;
+				}
+				else if (location.y > SCREEN_HEIGHT - erea.height)
+				{
+					location.y = SCREEN_HEIGHT - erea.height;
+					ref_num++;
+				}
+				if (ref_num > 1)
+				{
+					iruka_state = BossIrukaState::D_DOWN;
+					timer = 200;
+					ref_num = 0;
+					acceleration = 0;
+				}
+			}
+			break;
+		case BossIrukaState::D_DOWN:
+			if (--timer < 0)
+			{
+				iruka_state = BossIrukaState::D_WAIT;
+				timer = 50;
+			}
+			break;
+		default:
+			break;
 		}
-		rad = face_angle * (float)M_PI * 2;
-		location.x += (acceleration * 0.22f) * cosf(rad);
-		location.y += (acceleration * 0.22f) * sinf(rad);
-		if (location.x < 0)
-		{
-			location.x = 0;
-			face_angle = GetRandAngle(0);
-		}
-		else if (location.x > SCREEN_WIDTH - erea.width)
-		{
-			location.x = SCREEN_WIDTH - erea.width;
-			face_angle = GetRandAngle(1);
-		}
-		else if (location.y < 0)
-		{
-			location.y = 0;
-			face_angle = GetRandAngle(2);
-		}
-		else if (location.y > SCREEN_HEIGHT - erea.height)
-		{
-			location.y = SCREEN_HEIGHT - erea.height;
-			face_angle = 1 - face_angle;
-		}
+		
 	}
 	else //死んでいるなら
 	{
-
+	//死亡アニメーション
+	switch (Death_Anim) {
+	case 0:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 1:
+		if (count++ > 100) {
+			Death_Anim++;
+		}
+		break;
+	case 2:
+		main->Hands_Delete_Flg = true;
+		break;
+	default:
+		break;
+	};
 	}
 }
 
@@ -521,6 +697,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 3;
 		attack_data.angle = 0.5;
+		attack_data.effect_type = BOSSZAKURO_WAVES;
 
 		attack_data.direction = true;
 		break;
@@ -551,6 +728,7 @@ AttackData BossHands::BossAttactData()
 		attack_data.attack_type = BULLET;
 		attack_data.speed = 7;
 		attack_data.angle = face_angle;
+		attack_data.effect_type = BOSSHIMAWARI_BULLET;
 		break;
 	default:
 		break;
