@@ -3,6 +3,8 @@
 #include "PadInput.h"
 #include "Title.h"
 #include "Score.h"
+#include "SelectStage.h"
+#include "GameMain.h"
 
 //画像読込初期化用関数
 void GameOver::ImageLoad(int& _handle,const char* _file_name)
@@ -21,13 +23,14 @@ void GameOver::ImageLoad(int& _handle,const char* _file_name)
 	}
 }
 
-GameOver::GameOver()
+GameOver::GameOver(int _stage_num)
 {
 	ImageLoad(game_over_image, "resource/font/GameOverFont.png");
 	ImageLoad(game_continue_image, "resource/font/GameContinueFont.png");
 	ImageLoad(player_lose_image, "resource/font/PlayerLoseFont.png");
 	select_count = 0;
 	once_flg = TRUE;
+	stage_num = _stage_num;
 }
 
 GameOver::~GameOver()
@@ -69,9 +72,17 @@ AbstractScene* GameOver::Update()
 #endif
 		)
 	{
+		switch (static_cast<GAME_OVER_MENU>(select_count))
+		{
+		case GAME_OVER_MENU::GAME_MAIN:
+			return new GameMain(stage_num);
+
+		case GAME_OVER_MENU::GAME_SELECT:
+			return new SelectStage;
+
+		}
 		//スコアの初期化
 		Score::ResetScore();
-		return new Title();
 	}
 	return this;
 }

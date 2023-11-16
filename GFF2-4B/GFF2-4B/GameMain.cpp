@@ -364,7 +364,7 @@ AbstractScene* GameMain::Update()
 		return new Loading();
 	}
 	if (player->GetPlayerHP() < 0) {
-		return new GameOver();
+		return new GameOver(now_stage);
 	}
 
 #ifdef _DEBUG
@@ -416,7 +416,7 @@ AbstractScene* GameMain::Update()
 		return new Loading;
 	}
 	if (player->GetPlayerHP() < 0) {
-		return new GameOver();
+		return new GameOver(now_stage);
 	}
 
 
