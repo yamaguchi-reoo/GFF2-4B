@@ -9,7 +9,7 @@ private:
 	int draw_score;  //描画用のスコア
 
 public:
-	
+
 	//コンストラクタ
 	Score();
 
@@ -17,13 +17,13 @@ public:
 	~Score();
 
 	//更新処理
-	void Update(); 
+	void Update();
 
 	//描画処理
-	void Draw()const; 
+	void Draw()const;
 
 	//トータルスコアに加算(引数:加算するスコアの数値)
-	void AddScore(int score); 
+	void AddScore(int score);
 
 	//スコアの値を返す
 	static int GetScore() { return total_score; }
