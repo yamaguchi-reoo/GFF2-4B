@@ -4,12 +4,12 @@
 //コンストラクタ
 PlayerHP::PlayerHP()
 {
-	hpImage[0] = LoadGraph("resource/images/HP.png");
-	hpImage[1] = LoadGraph("resource/images/HP1.png");
-	hpImage[2] = LoadGraph("resource/images/HP2.png");
-	hpImage[3] = LoadGraph("resource/images/HP3.png");
-	hpImage[4] = LoadGraph("resource/images/HP4.png");
-	hpImage[5] = LoadGraph("resource/images/HP5.png");
+	hpImage[0] = LoadGraph("resource/images/UI/HP.png");
+	hpImage[1] = LoadGraph("resource/images/UI/HP1.png");
+	hpImage[2] = LoadGraph("resource/images/UI/HP2.png");
+	hpImage[3] = LoadGraph("resource/images/UI/HP3.png");
+	hpImage[4] = LoadGraph("resource/images/UI/HP4.png");
+	hpImage[5] = LoadGraph("resource/images/UI/HP5.png");
 
 
 
