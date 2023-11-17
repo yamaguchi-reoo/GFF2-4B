@@ -19,7 +19,7 @@ public:
     //d—Í‚ª“­‚­
     void BambooGiveGravity();
     //‰Ÿ‚µo‚·(num = “–‚½‚Á‚Ä‚¢‚é° _sub = “–‚½‚Á‚Ä‚¢‚é°‚Ì¶ãÀ•W)
-    void BambooPush(int num, Location _sub_location, Erea _sub_erea);
+    void Push(int num, Location _sub_location, Erea _sub_erea);
 
     void Update(GameMain* main)override;
     void Draw()const override;
@@ -30,5 +30,6 @@ public:
     int GetSpwanFlg() { return spawn_flg; }
 
     void FalseGravity();
+
 };
 

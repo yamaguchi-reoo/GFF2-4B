@@ -41,7 +41,7 @@ public:
     //d—Í‚ª“­‚­
     void HimawariGiveGravity();
     //‰Ÿ‚µo‚·(num = “–‚½‚Á‚Ä‚¢‚é° _sub = “–‚½‚Á‚Ä‚¢‚é°‚Ì¶ãÀ•W)
-    void HimawariPush(int num, Location _sub_location, Erea _sub_erea);
+    void Push(int num, Location _sub_location, Erea _sub_erea);
 
     AttackData CreateAttactData();
 

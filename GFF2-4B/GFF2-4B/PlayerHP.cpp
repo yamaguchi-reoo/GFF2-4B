@@ -13,7 +13,7 @@ PlayerHP::PlayerHP()
 
 
 
-	player_hp = 5;
+	player_hp = 0;
 	draw_hp = 5;
 	flash_flg = 0;
 	flash_hp = 0;

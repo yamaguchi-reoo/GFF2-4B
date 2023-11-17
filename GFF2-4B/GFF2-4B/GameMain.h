@@ -106,5 +106,11 @@ public:
     //ボスにプレイヤーの座標を渡す用
     Location GetPlayerLocation();
 
+    //エネミーのPushを関数化
+    template <class T>
+    void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
+    //エネミーの攻撃を受ける処理
+    template <class T>
+    void ProcessAttack(Attack* attack, T* character, Effect* effect);
 };
 
