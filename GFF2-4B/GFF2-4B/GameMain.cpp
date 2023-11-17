@@ -349,7 +349,7 @@ AbstractScene* GameMain::Update()
 	{
 		if (sighboard[i] != nullptr)
 		{
-			sighboard[i]->Update(player->GetLocation());
+			sighboard[i]->Update(player->GetLocation(),player->GetLocalLocation());
 			sighboard[i]->SetScreenPosition(camera_location);
 		}
 	}
@@ -432,14 +432,6 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 
-	//ŠÅ”Â‚Ì•`‰æ
-	for (int i = 0; i < SIGH_BOARD_NUM; i++)
-	{
-		if (sighboard[i] != nullptr)
-		{
-			sighboard[i]->Draw();
-		}
-	}
 	//ƒ{ƒX•\Ž¦
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -509,6 +501,14 @@ void GameMain::Draw() const
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Draw();
+	}
+	//ŠÅ”Â‚Ì•`‰æ
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Draw();
+		}
 	}
 }
 
