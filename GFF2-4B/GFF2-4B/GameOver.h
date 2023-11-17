@@ -16,11 +16,12 @@ private:
     int player_lose_image;      //playerが敗北したシーンで表示する画像
     int select_count;           //セレクト用のカーソルの動いた数をカウントする変数
     int once_flg;               //カーソルが動いたかどうかを確認するためのフラグ
+    int stage_num;              //ステージ数の確保
 
 public:
 
     //コンストラクタ
-    GameOver();
+    GameOver(int _stage_num);
     //デストラクタ
     ~GameOver();
 

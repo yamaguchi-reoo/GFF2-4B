@@ -9,11 +9,11 @@
 #include "GameClear.h"
 #include "GameOver.h"
 
-static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
+static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//�J�����̍��W
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
-	//変数の初期化
+	//�ϐ��̏�����
 	now_stage = _stage;
 	who = 1;
 	player = new Player();
@@ -65,8 +65,8 @@ GameMain::~GameMain()
 		delete zakuro[i];
 	}
 #ifdef _DEBUG
-	//エディットモードに移行する時にイルカが地面に刺さっていると、
-	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
+	//�G�f�B�b�g���[�h�Ɉڍs���鎞�ɃC���J���n�ʂɎh�����Ă���ƁA
+	//delete�ŗ�O����������o�O���N�����Ă���̂ŁA�G�f�B�b�g�̏o����f�o�b�O���[�h�ł͎��s���Ȃ��悤��
 #else
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
@@ -90,12 +90,12 @@ GameMain::~GameMain()
 
 AbstractScene* GameMain::Update()
 {
-	//更新
+	//�X�V
 	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
 	{
 		CameraLocation(player->GetLocation());
 	}
-	//ザクロ
+	//�U�N��
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		if (zakuro[i] != nullptr)
@@ -108,7 +108,7 @@ AbstractScene* GameMain::Update()
 			
 		}
 	}
-	//イルカ
+	//�C���J
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
@@ -120,7 +120,7 @@ AbstractScene* GameMain::Update()
 			iruka[i]->Update(this);
 		}
 	}
-	//ひまわり
+	//�Ђ܂��
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
@@ -131,7 +131,7 @@ AbstractScene* GameMain::Update()
 			}
 		}
 	}
-	//竹
+	//�|
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
 		if (bamboo[i] != nullptr)
@@ -141,8 +141,9 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//ボスの腕アップデート
+	//�{�X�̘r�A�b�v�f�[�g
 	if (now_stage == 3) {
+
 
 		if (boss != nullptr) {
 			//if (player->GetLocation().x<= 
@@ -151,12 +152,16 @@ AbstractScene* GameMain::Update()
 			//{
 			//	iruka[i]->SetFallFlg();
 			//}
-
+			boss->Update(this);
+			if (boss->New_Hand_Flg == true) {
+				hands = new BossHands(who++, boss);
+				boss->New_Hand_Flg = false;
+			}
 		}
 
 		if (hands != nullptr) {
 			hands->Update(this);
-			//岩生成
+			//�␶��
 			if (hands->Rock_Once == true) {
 				hands->Rock_Once = false;
 				if (hands->switching == 3) {
@@ -172,7 +177,7 @@ AbstractScene* GameMain::Update()
 
 		}
 		
-		//岩アップデート
+		//��A�b�v�f�[�g
 
 			for (int i = 0; i < 2; i++) {
 				if (rock[i] != nullptr) {
@@ -201,17 +206,17 @@ AbstractScene* GameMain::Update()
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
-		//強化ゲージMAXでXボタンが押されたらプレイヤーを強化状態に
+		//�����Q�[�WMAX��X�{�^���������ꂽ��v���C���[�������Ԃ�
 		player->SetPowerUp();
 	}
 	else if (powergauge->PowerGaugeState() == 2)
 	{
-		//強化状態解除
+		//������ԉ��
 		player->StopPowerUp();
 		powergauge->SetPowerFlg(0);
 	}
 
-	//ひまわり向き
+	//�Ђ܂�����
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
@@ -227,7 +232,7 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//イルカ落下判定
+	//�C���J��������
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
@@ -241,13 +246,13 @@ AbstractScene* GameMain::Update()
 
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		//誰が攻撃したかによって攻撃の判定がついていく対象を変える
+		//�N���U���������ɂ���čU���̔��肪���Ă����Ώۂ�ς���
 		if (attack[i]->GetAttackData().who_attack == player->GetWho())
 		{
 			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
 			attack[i]->SetScreenPosition(camera_location);
 		}
-		//ザクロ
+		//�U�N��
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr) {
@@ -258,7 +263,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
-		//イルカ
+		//�C���J
 		for (int j = 0; j < IRUKA_MAX; j++)
 		{
 			if (iruka[j] != nullptr)
@@ -270,7 +275,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
-		//ひまわり
+		//�Ђ܂��
 		for (int j = 0; j < HIMAWARI_MAX; j++)
 		{
 			if (himawari[j] != nullptr)
@@ -283,7 +288,7 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		////ボスの腕
+		////�{�X�̘r
 		//if (now_stage == 3) {
 		//	//if (hands != nullptr) {
 		//	//	if (attack[i]->GetAttackData().who_attack == hands->GetWho())
@@ -293,18 +298,17 @@ AbstractScene* GameMain::Update()
 		//	//}
 		//}
 
-		//ボスの腕
+		//�{�X�̘r
 		if (now_stage == 3) {
 			if (hands != nullptr) {
 				if (attack[i]->GetAttackData().who_attack == hands->GetWho())
 				{
 					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
 					attack[i]->SetScreenPosition(camera_location);
-
 				}
 
 			}
-				//岩
+				//��
 				for (int j = 0; j < 2; j++) {
 					if (rock[j] != nullptr) {
 						if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
@@ -330,7 +334,7 @@ AbstractScene* GameMain::Update()
 		effect->SetFlg(0);
 	}
 	
-	//床の数だけ繰り返す
+	//���̐������J��Ԃ�
 	for(int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -340,7 +344,7 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//看板の更新
+	//�Ŕ̍X�V
 	for (int i = 0; i < SIGH_BOARD_NUM; i++)
 	{
 		if (sighboard[i] != nullptr)
@@ -349,26 +353,39 @@ AbstractScene* GameMain::Update()
 			sighboard[i]->SetScreenPosition(camera_location);
 		}
 	}
-	//当たり判定関連の処理を行う
+	//�����蔻��֘A�̏�����s��
 	HitCheck();
 
-	//強化ゲージから溢れた分をスコアに加算
+	//�����Q�[�W�����ꂽ����X�R�A�ɉ��Z
 	if (powergauge->GetColorRem() > 0)
 	{
 		score->AddScore(powergauge->GetColorRem());
 		powergauge->SetColorRem();
 	}
 
-	//ステージクリア
+	//�X�e�[�W�N���A
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-		return new Loading();
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				boss = new Boss();
+				hands = new BossHands(who++, boss);
+			}
+		}
+		else
+		{
+			return new Loading;
+		}
 	}
 	if (player->GetPlayerHP() < 0) {
-		return new GameOver();
+		return new GameOver(now_stage);
 	}
 
 #ifdef _DEBUG
-	//ステージ遷移
+	//�X�e�[�W�J��
 	if (KeyInput::OnPresed(KEY_INPUT_0))
 	{
 		SetStage(0);
@@ -386,40 +403,27 @@ AbstractScene* GameMain::Update()
 		SetStage(3);
 	}
 
-	//ステージ選択画面へ遷移
+	//�X�e�[�W�I���ʂ֑J��
 	if (KeyInput::OnPresed(KEY_INPUT_4))
 	{
 		return new SelectStage();
 	}
-	//プレイヤーに強制ダメージ
+	//�v���C���[�ɋ����_���[�W
 	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
 		flg = true;
 		player->ApplyDamage(1);
 	}
-	//ステージをいじるシーンへ遷移
+	//�X�e�[�W�������V�[���֑J��
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
 		return new EditScene(now_stage);
 	}
 
-	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage!=now_stage) {
-		//Hands_Delete_Flg = false;
-		boss = new Boss();
-		hands = new BossHands(who++, boss);
-	}
 #endif
-	//ステージクリア
-	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
-	
-		return new Loading;
-	}
 	if (player->GetPlayerHP() < 0) {
-		return new GameOver();
+		return new GameOver(now_stage);
 	}
-
-
 
 	return this;
 }
@@ -428,7 +432,7 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 
-	//看板の描画
+	//�Ŕ̕`��
 	for (int i = 0; i < SIGH_BOARD_NUM; i++)
 	{
 		if (sighboard[i] != nullptr)
@@ -436,7 +440,7 @@ void GameMain::Draw() const
 			sighboard[i]->Draw();
 		}
 	}
-	//ボス表示
+	//�{�X�\��
 	if (now_stage == 3) {
 		if (boss != nullptr) {
 			boss->Draw();
@@ -456,7 +460,7 @@ void GameMain::Draw() const
 
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
-		//描画
+		//�`��
 	player->Draw();
 
 	for (int i = 0; i < stage_height_num; i++)
@@ -466,8 +470,8 @@ void GameMain::Draw() const
 			stage[i][j]->Draw();
 		}
 	}
-	//エネミーの描画
-	// ザクロ
+	//�G�l�~�[�̕`��
+	// �U�N��
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		if (zakuro[i] != nullptr)
@@ -475,7 +479,7 @@ void GameMain::Draw() const
 			zakuro[i]->Draw();
 		}
 	}
-	// ひまわり
+	// �Ђ܂��
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
@@ -483,7 +487,7 @@ void GameMain::Draw() const
 			himawari[i]->Draw();
 		}
 	}
-	// イルカ
+	// �C���J
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
@@ -491,7 +495,7 @@ void GameMain::Draw() const
 			iruka[i]->Draw();
 		}
 	}
-	//竹
+	//�|
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
 		if (bamboo[i]!= nullptr)
@@ -522,19 +526,19 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 
 void GameMain::HitCheck()
 {
-	//床の数だけ繰り返す
+	//���̐������J��Ԃ�
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			//プレイヤーがステージに触れたなら
+			//�v���C���[���X�e�[�W�ɐG�ꂽ�Ȃ�
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
-				//触れた面に応じて押し出す
+				//�G�ꂽ�ʂɉ����ĉ����o��
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
-			//ボス面のみボスの腕の当たり判定
+			//�{�X�ʂ̂݃{�X�̘r�̓����蔻��
 			if (now_stage == 3) {
 				if (hands != nullptr) {
 					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
@@ -544,36 +548,36 @@ void GameMain::HitCheck()
 				}
 			}
 
-			//ザクロの数だけ繰り返す
+			//�U�N���̐������J��Ԃ�
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
 				ProcessCharacterCollision(zakuro[k], stage[i][j], i);
 			}
-			//イルカの数だけ繰り返す
+			//�C���J�̐������J��Ԃ�
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
 				ProcessCharacterCollision(iruka[k], stage[i][j], i);
 			}
-			//ひまわりの数だけ繰り返す
+			//�Ђ܂��̐������J��Ԃ�
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
 				ProcessCharacterCollision(himawari[k], stage[i][j], i);
 			}
-			//竹の数だけ繰り返す
+			//�|�̐������J��Ԃ�
 			for (int k = 0; k < BAMBOO_MAX; k++)
 			{
 				ProcessCharacterCollision(bamboo[k], stage[i][j], i);
 			}
 		}
 	}
-	//攻撃の数だけ繰り返す
+	//�U���̐������J��Ԃ�
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr)
 			{
-				// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// �U���̔��肪�U�N���Ɣ���Ă��āA���̍U�����v���C���[�ɂ���̂ŁA���̔��肪�_���[�W��^�������ԂȂ�
 				ProcessAttack(attack[i], zakuro[j], effect);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
@@ -581,7 +585,7 @@ void GameMain::HitCheck()
 					{
 						if (zakuro[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
 						{
-							//触れた面に応じて押し出す
+							//�G�ꂽ�ʂɉ����ĉ����o��
 							zakuro[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
 						}
 					}
@@ -592,7 +596,7 @@ void GameMain::HitCheck()
 		{
 			if (iruka[j] != nullptr) 
 			{
-				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// �U���̔��肪�C���J�Ɣ���Ă��āA���̍U�����v���C���[�ɂ���̂ŁA���̔��肪�_���[�W��^�������ԂȂ�
 				ProcessAttack(attack[i], iruka[j], effect);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
@@ -600,7 +604,7 @@ void GameMain::HitCheck()
 					{
 						if (iruka[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
 						{
-							//触れた面に応じて押し出す
+							//�G�ꂽ�ʂɉ����ĉ����o��
 							iruka[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
 						}
 					}
@@ -609,7 +613,7 @@ void GameMain::HitCheck()
 		}
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
-				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// �U���̔��肪	�Ђ܂��Ɣ���Ă��āA���̍U�����v���C���[�ɂ���̂ŁA���̔��肪�_���[�W��^�������ԂȂ�
 				ProcessAttack(attack[i], himawari[j], effect);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
@@ -617,7 +621,7 @@ void GameMain::HitCheck()
 					{
 						if (himawari[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
 						{
-							//触れた面に応じて押し出す
+							//�G�ꂽ�ʂɉ����ĉ����o��
 							himawari[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
 						}
 					}
@@ -628,13 +632,13 @@ void GameMain::HitCheck()
 		{
 			if (bamboo[j] != nullptr) 
 			{
-				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+				// �U���̔��肪	�|����Ă��āA���̍U�����v���C���[�ɂ���̂ŁA���̔��肪�_���[�W��^�������ԂȂ�
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
 				}
-				//プレイヤーと竹の当たり判定
+				//�v���C���[�ƒ|�̓����蔻��
 				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
 				{
 					player->Push(j, bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
@@ -646,10 +650,10 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
 
-					//ボスのダメージ処理
+					//�{�X�̃_���[�W����
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
-					//ジャンプ攻撃多段防止
+					//�W�����v�U�����i�h�~
 					if (player->GetAcs(0) > 0.1) {
 						hands->HitJumpAttack = true;
 					}
@@ -664,28 +668,28 @@ void GameMain::HitCheck()
 
 			}
 		}
-		//攻撃の判定がプレイヤーと被っていて、その攻撃が敵によるもので、その判定がダメージを与えられる状態なら
+		//�U���̔��肪�v���C���[�Ɣ���Ă��āA���̍U�����G�ɂ���̂ŁA���̔��肪�_���[�W��^�������ԂȂ�
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
-			//プレイヤーのダメージ処理
+			//�v���C���[�̃_���[�W����
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
-			//攻撃を消す
+			//�U�������
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で
+		//�U�����v���C���[�ɂ���̂ŁA���̍U�����W�����v�U����
 		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4)
 		{
 			attack[i]->SetDirection(player->GetPlayerDirection());
-			//プレイヤーが床に触れたなら
+			//�v���C���[�����ɐG�ꂽ�Ȃ�
 			if (player->GetOnFloorFlg() == true)
 			{
-				//攻撃を消す
+				//�U�������
 				attack[i]->DeleteAttack();
 			}
 		}
 	}
-	//ザクロ同士で当たったら...
+	//�U�N�����m�œ���������...
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		for (int j = i + 1; j < ZAKURO_MAX; j++)
@@ -701,7 +705,7 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-	//竹同士が当たったら止まる
+	//�|���m������������~�܂�
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
 		for (int j = i + 1; j < BAMBOO_MAX; j++)
@@ -714,12 +718,13 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-	//腕が死んだ場合
+	//�r�����񂾏ꍇ
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
-			
 			boss->Count_Death--;
 			hands = nullptr;
+			boss->Dead = true;
+			Hands_Delete_Flg = false;
 		}
 	}
 }
@@ -744,14 +749,14 @@ void GameMain::LoadStageData(int _stage)
 	}
 
 	std::ifstream file(a);
-	//ファイルが読み込めていたなら
+	//�t�@�C�����ǂݍ��߂Ă����Ȃ�
 	if (file)
 	{
 		file >> stage_width_num;
 		file >> stage_height_num;
 
 		stage_width = stage_width_num * BOX_WIDTH;
-		//ランキングデータ配分列データを読み込む
+		//�����L���O�f�[�^�z����f�[�^��ǂݍ���
 		for (int i = 0; i < stage_height_num; i++)
 		{
 			for (int j = 0; j < stage_width_num; j++)
@@ -764,7 +769,7 @@ void GameMain::LoadStageData(int _stage)
 
 void GameMain::SetStage(int _stage)
 {
-	//敵と攻撃をリセット
+	//�G�ƍU������Z�b�g
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
 	}
@@ -784,19 +789,27 @@ void GameMain::SetStage(int _stage)
 	}
 	old_stage = now_stage;
 	now_stage = _stage;
-	//ファイルの読込
+
+	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+	if (now_stage == 3 && old_stage != now_stage) {
+		//Hands_Delete_Flg = false;
+		boss = new Boss();
+		//hands = new BossHands(who++, boss);
+	}
+
+	//�t�@�C���̓Ǎ�
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			//ステージ内ブロックを生成
+			//�X�e�[�W��u���b�N�𐶐�
 			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			switch (STAGE_DATA[i][j])
 			{
-			//ザクロを生成
+			//�U�N���𐶐�
 			case 5:
-				//空いてる枠に生成
+				//�󂢂Ă�g�ɐ���
 				for (int k = 0; k < ZAKURO_MAX; k++)
 				{
 					if (zakuro[k] == nullptr)
@@ -806,9 +819,9 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
-				//イルカを生成
+				//�C���J�𐶐�
 			case 6:
-				//空いてる枠に生成
+				//�󂢂Ă�g�ɐ���
 				for (int k = 0; k < IRUKA_MAX; k++)
 				{
 					if (iruka[k] == nullptr)
@@ -818,9 +831,9 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
-				//ひまわりを生成
+				//�Ђ܂��𐶐�
 			case 7:
-				//空いてる枠に生成
+				//�󂢂Ă�g�ɐ���
 				for (int k = 0; k < HIMAWARI_MAX; k++)
 				{
 					if (himawari[k] == nullptr)
@@ -840,7 +853,7 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
-				//看板を生成
+				//�Ŕ𐶐�
 			case 9:
 			case 10:
 			case 11:
@@ -859,10 +872,10 @@ void GameMain::SetStage(int _stage)
 			}
 		}
 	}
-	//プレイヤーのリスポーン
+	//�v���C���[�̃��X�|�[��
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
-	//カメラのリセット
+	//�J�����̃��Z�b�g
 	ResetCamera();
 }
 
@@ -885,9 +898,9 @@ Location GameMain::GetPlayerLocation()
 
 template <class T>
 void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int index) {
-	// キャラクターオブジェクトが存在し、ヒットボックスがステージオブジェクトと交差し、かつステージの当たり判定がある場合
+	// �L�����N�^�[�I�u�W�F�N�g�����݂��A�q�b�g�{�b�N�X���X�e�[�W�I�u�W�F�N�g�ƌ�����A���X�e�[�W�̓����蔻�肪����ꍇ
 	if (character != nullptr && character->HitBox(stageObject) == true && stageObject->GetStageCollisionType() != 0) {
-		// キャラクターの押し出し処理
+		// �L�����N�^�[�̉����o������
 		character->Push(index, stageObject->GetLocation(), stageObject->GetErea());
 	}
 }
@@ -899,7 +912,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
-		// しぶき用
+		// ���Ԃ��p
 
 		effect->SetFlg(1);
 		effect->SetGaugeLocation(powergauge->GetCenterLocation());

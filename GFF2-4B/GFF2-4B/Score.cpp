@@ -6,9 +6,9 @@ int Score::total_score = 0;
 //コンストラクタ
 Score::Score()
 {
-	score_img[0] = LoadGraph("resource/images/Score_UI.png");
-	score_img[1] = LoadGraph("resource/images/Tokuten.png");
-	LoadDivGraph("resource/images/ScoreNum.png", 10, 4, 3, 32, 32, num_img);
+	score_img[0] = LoadGraph("resource/images/UI/Score_UI.png");
+	score_img[1] = LoadGraph("resource/images/UI/Tokuten.png");
+	LoadDivGraph("resource/images/UI/ScoreNum.png", 10, 4, 3, 32, 32, num_img);
 	draw_score = 0;
 }
 

@@ -7,16 +7,16 @@
 Result::Result()
 {
 	score = Score::GetScore();
-	img[0] = LoadGraph("resource/images/makimono.png");
+	img[0] = LoadGraph("resource/images/Result/makimono.png");
 	img[1] = LoadGraph("resource/images/Enemy/zakuro.png");
 	img[2] = LoadGraph("resource/images/Enemy/himawari.png");
 	img[3] = LoadGraph("resource/images/Enemy/iruka.png");
-	img[4] = LoadGraph("resource/images/Result1.png");
-	img[5] = LoadGraph("resource/images/Result2.png");
+	img[4] = LoadGraph("resource/images/Result/Result1.png");
+	img[5] = LoadGraph("resource/images/Result/Result2.png");
 
 
 	draw_score = 0;
-	LoadDivGraph("resource/images/ResultNum.png", 10, 4, 3, 73, 73, num_img);
+	LoadDivGraph("resource/images/Result/ResultNum.png", 10, 4, 3, 73, 73, num_img);
 }
 
 //デストラクタ
@@ -67,7 +67,7 @@ void Result::Draw() const
 
 	DrawGraph(97, 30, img[0], TRUE);
 
-	//SetFontSize(30);
+	SetFontSize(30);
 	//DrawFormatString(600, 150, 0x000000, "今回の成果");
 	DrawGraph(535, 140, img[4], TRUE);
 
@@ -86,7 +86,6 @@ void Result::Draw() const
 	DrawGraph(465, 455, img[5], TRUE);
 
 	int a = draw_score;
-
 	int pos_x = 830;
 
 	do

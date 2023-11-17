@@ -13,7 +13,7 @@
 #define DEFAULT_JUMP_POWER 28			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
 #define DEFAULT_ATTACK_INTERVAL	30		//基本攻撃間隔(フレーム)
-#define DEFAULT_INVINCIBLE_TIME	80		//基本無敵時間(攻撃を喰らった後)
+#define DEFAULT_INVINCIBLE_TIME	100		//基本無敵時間(攻撃を喰らった後)
 
 #define PLAYER_IMAGE_SHIFT_X 80			//画像ずらし用
 #define PLAYER_IMAGE_SHIFT_Y 105		//画像ずらし用
@@ -1130,6 +1130,7 @@ void Player::Respawn(Location _location)
 	player_anim = 0;
 	attack_anim = 0;
 	inv_flg = true;
+	inv_time = DEFAULT_INVINCIBLE_TIME;
 	damage_flg = false;
 	hidden_flg = false;
 	death_flg = false;
