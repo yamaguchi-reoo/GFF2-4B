@@ -17,9 +17,9 @@ void GameOver::ImageLoad(int& _handle,const char* _file_name)
 			throw _file_name;
 		}
 	}
-	catch (int& err)
+	catch (const char &err)
 	{
-		printf("%d‚ª‚ ‚è‚Ü‚¹‚ñB", err);
+		printf("%s‚ª‚ ‚è‚Ü‚¹‚ñB", &err);
 	}
 }
 
