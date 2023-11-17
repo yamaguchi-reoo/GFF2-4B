@@ -144,6 +144,7 @@ AbstractScene* GameMain::Update()
 	//ボスの腕アップデート
 	if (now_stage == 3) {
 
+
 		if (boss != nullptr) {
 			//if (player->GetLocation().x<= 
 			// 
@@ -151,7 +152,11 @@ AbstractScene* GameMain::Update()
 			//{
 			//	iruka[i]->SetFallFlg();
 			//}
-
+			boss->Update(this);
+			if (boss->New_Hand_Flg == true) {
+				hands = new BossHands(who++, boss);
+				boss->New_Hand_Flg = false;
+			}
 		}
 
 		if (hands != nullptr) {
@@ -300,7 +305,6 @@ AbstractScene* GameMain::Update()
 				{
 					attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
 					attack[i]->SetScreenPosition(camera_location);
-
 				}
 
 			}
@@ -741,9 +745,10 @@ void GameMain::HitCheck()
 	//腕が死んだ場合
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
-			
 			boss->Count_Death--;
 			hands = nullptr;
+			boss->Dead = true;
+			Hands_Delete_Flg = false;
 		}
 	}
 }
@@ -808,6 +813,14 @@ void GameMain::SetStage(int _stage)
 	}
 	old_stage = now_stage;
 	now_stage = _stage;
+
+	//途中でステージの切り替えがあった場合使用
+	if (now_stage == 3 && old_stage != now_stage) {
+		//Hands_Delete_Flg = false;
+		boss = new Boss();
+		//hands = new BossHands(who++, boss);
+	}
+
 	//ファイルの読込
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
