@@ -64,7 +64,7 @@ GameMain::~GameMain()
 	{
 		delete zakuro[i];
 	}
-#ifdef DEBUG
+#ifdef _DEBUG
 	//エディットモードに移行する時にイルカが地面に刺さっていると、
 	//deleteで例外が発生するバグが起こっているので、エディットの出来るデバッグモードでは実行しないように
 #else
