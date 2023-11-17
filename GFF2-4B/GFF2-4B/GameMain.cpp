@@ -43,6 +43,8 @@ GameMain::GameMain(int _stage)
 	onfloor_flg = false;
 
 	Hands_Delete_Flg = false;
+
+	lock_flg = 0;
 }
 
 GameMain::~GameMain()
@@ -92,7 +94,7 @@ GameMain::~GameMain()
 AbstractScene* GameMain::Update()
 {
 	//更新
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
+	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && lock_flg != 1)
 	{
 		CameraLocation(player->GetLocation());
 	}
@@ -354,6 +356,12 @@ AbstractScene* GameMain::Update()
 			sighboard[i]->SetScreenPosition(camera_location);
 		}
 	}
+
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10000)
+	{
+		lock_flg = 1;
+	}
+
 	//当たり判定関連の処理を行う
 	HitCheck();
 
