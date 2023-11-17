@@ -44,6 +44,8 @@ GameMain::GameMain(int _stage)
 	onfloor_flg = false;
 
 	Hands_Delete_Flg = false;
+
+	lock_flg = 0;
 }
 
 GameMain::~GameMain()
@@ -91,7 +93,7 @@ GameMain::~GameMain()
 AbstractScene* GameMain::Update()
 {
 	//更新
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
+	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && lock_flg != 1)
 	{
 		CameraLocation(player->GetLocation());
 	}
@@ -353,6 +355,14 @@ AbstractScene* GameMain::Update()
 			sighboard[i]->SetScreenPosition(camera_location);
 		}
 	}
+
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x  >= 10000)
+	{
+		lock_flg = 1;
+	}
+
+	
+
 	//当たり判定関連の処理を行う
 	HitCheck();
 
@@ -418,6 +428,12 @@ AbstractScene* GameMain::Update()
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
 		return new EditScene(now_stage);
+	}
+
+	//強制戦闘時にカメラ固定解除
+	if (KeyInput::OnPresed(KEY_INPUT_6))
+	{
+		lock_flg = 2;
 	}
 
 #endif
@@ -510,6 +526,14 @@ void GameMain::Draw() const
 	{
 		attack[i]->Draw();
 	}
+
+#ifdef _DEBUG
+
+	DrawFormatString(1000, 10, 0x000000,"%f", player->GetLocation().x);
+	
+
+#endif // !_DEBUG
+
 }
 
 void GameMain::SpawnAttack(AttackData _attackdata)
@@ -887,6 +911,7 @@ void GameMain::SetStage(int _stage)
 					if (sighboard[k] == nullptr)
 					{
 						sighboard[k] = new SighBoard(j * BOX_WIDTH, i * BOX_HEIGHT, STAGE_DATA[i][j]);
+
 						break;
 					}
 				}

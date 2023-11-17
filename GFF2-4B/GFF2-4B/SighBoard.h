@@ -16,6 +16,9 @@ public:
     ~SighBoard();
     void Update(Location _player_location);
     void Draw()const;
+    // 
+    bool GetSighFlg() { return disp_flg; }
+    int GetSighTypeFlg() { return disp_type; }
 };
 
 

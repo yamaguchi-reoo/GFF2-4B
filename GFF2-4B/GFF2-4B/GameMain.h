@@ -68,6 +68,9 @@ private:
     int stage_height_num;   //ステージブロックの縦数
 
     int stage_width;        //ステージ横幅
+
+    int lock_flg; //強制戦闘ゾーン用フラグ(0:プレイヤーが看板の前にいる状態 1:プレイヤーが閉じ込められている状態 2:プレイヤーが解放された状態)
+
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 
