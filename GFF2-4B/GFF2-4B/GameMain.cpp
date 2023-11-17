@@ -427,12 +427,7 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who++, boss);
 	}
 #endif
-	//ステージクリア
-	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
-	
-		return new Loading;
-	}
-//#endif
+
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver(now_stage);
 	}
@@ -921,7 +916,7 @@ void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int i
 template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
 {
-	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage()) {
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() && character->GetSpwanFlg() == false) {
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
