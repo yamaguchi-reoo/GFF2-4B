@@ -146,8 +146,8 @@ AttackData Himawari::CreateAttactData()
 	attack_data.who_attack = who;
 	attack_data.direction = himawari_direction;
 	//’e‚Ì‘å‚«‚³
-	attack_data.width = 12;
-	attack_data.height = 12;
+	attack_data.width = 40;
+	attack_data.height = 30;
 	//UŒ‚‚ÉŠÖ‚·‚éî•ñ
 	attack_data.attack_time = 60;
 	attack_data.damage = 1;

@@ -20,10 +20,9 @@ GameMain::GameMain(int _stage)
 	scene_scroll = new SceneScroll();
 
 	if (now_stage == 3) {
-		hands = new BossHands(who++,boss);
 		boss = new Boss();
-
 	}
+
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
 	{
