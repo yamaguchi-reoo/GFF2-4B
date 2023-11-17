@@ -85,6 +85,8 @@ GameMain::~GameMain()
 	delete score;
 	delete effect;
 	delete loading_scene;
+	delete boss;
+	delete hands;
 }
 
 AbstractScene* GameMain::Update()
