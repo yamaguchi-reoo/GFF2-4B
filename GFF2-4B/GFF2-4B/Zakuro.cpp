@@ -180,7 +180,7 @@ void Zakuro::ZakuroGiveGravity()
 	location.y += ZAKURO_GRAVITY;
 }
 
-void Zakuro::ZakuroPush(int num, Location _sub_location, Erea _sub_erea)
+void Zakuro::Push(int num, Location _sub_location, Erea _sub_erea)
 {
 	Location z_center = { 0 };
 	z_center.x = location.x + (erea.width / 2);

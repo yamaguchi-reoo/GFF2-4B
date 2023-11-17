@@ -1,4 +1,4 @@
-#include "GameMain.h"
+ï»¿#include "GameMain.h"
 #include "Dxlib.h"
 #include "PadInput.h"
 #include "common.h"
@@ -9,11 +9,11 @@
 #include "GameClear.h"
 #include "GameOver.h"
 
-static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//ƒJƒƒ‰‚ÌÀ•W
+static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//ã‚«ãƒ¡ãƒ©ã®åº§æ¨™
 static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
-	//•Ï”‚Ì‰Šú‰»
+	//å¤‰æ•°ã®åˆæœŸåŒ–
 	now_stage = _stage;
 	who = 1;
 	player = new Player();
@@ -65,8 +65,8 @@ GameMain::~GameMain()
 		delete zakuro[i];
 	}
 #ifdef _DEBUG
-	//ƒGƒfƒBƒbƒgƒ‚[ƒh‚ÉˆÚs‚·‚é‚ÉƒCƒ‹ƒJ‚ª’n–Ê‚Éh‚³‚Á‚Ä‚¢‚é‚ÆA
-	//delete‚Å—áŠO‚ª”­¶‚·‚éƒoƒO‚ª‹N‚±‚Á‚Ä‚¢‚é‚Ì‚ÅAƒGƒfƒBƒbƒg‚Ìo—ˆ‚éƒfƒoƒbƒOƒ‚[ƒh‚Å‚ÍÀs‚µ‚È‚¢‚æ‚¤‚É
+	//ã‚¨ãƒ‡ã‚£ãƒƒãƒˆãƒ¢ãƒ¼ãƒ‰ã«ç§»è¡Œã™ã‚‹æ™‚ã«ã‚¤ãƒ«ã‚«ãŒåœ°é¢ã«åˆºã•ã£ã¦ã„ã‚‹ã¨ã€
+	//deleteã§ä¾‹å¤–ãŒç™ºç”Ÿã™ã‚‹ãƒã‚°ãŒèµ·ã“ã£ã¦ã„ã‚‹ã®ã§ã€ã‚¨ãƒ‡ã‚£ãƒƒãƒˆã®å‡ºæ¥ã‚‹ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰ã§ã¯å®Ÿè¡Œã—ãªã„ã‚ˆã†ã«
 #else
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
@@ -90,12 +90,12 @@ GameMain::~GameMain()
 
 AbstractScene* GameMain::Update()
 {
-	//XV
+	//æ›´æ–°
 	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
 	{
 		CameraLocation(player->GetLocation());
 	}
-	//ƒUƒNƒ
+	//ã‚¶ã‚¯ãƒ­
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		if (zakuro[i] != nullptr)
@@ -108,7 +108,7 @@ AbstractScene* GameMain::Update()
 			
 		}
 	}
-	//ƒCƒ‹ƒJ
+	//ã‚¤ãƒ«ã‚«
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
@@ -120,7 +120,7 @@ AbstractScene* GameMain::Update()
 			iruka[i]->Update(this);
 		}
 	}
-	//‚Ğ‚Ü‚í‚è
+	//ã²ã¾ã‚ã‚Š
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
@@ -131,7 +131,7 @@ AbstractScene* GameMain::Update()
 			}
 		}
 	}
-	//’|
+	//ç«¹
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
 		if (bamboo[i] != nullptr)
@@ -141,7 +141,7 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//ƒ{ƒX‚Ì˜rƒAƒbƒvƒf[ƒg
+	//ãƒœã‚¹ã®è…•ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
 	if (now_stage == 3) {
 
 		if (boss != nullptr) {
@@ -156,7 +156,7 @@ AbstractScene* GameMain::Update()
 
 		if (hands != nullptr) {
 			hands->Update(this);
-			//Šâ¶¬
+			//å²©ç”Ÿæˆ
 			if (hands->Rock_Once == true) {
 				hands->Rock_Once = false;
 				if (hands->switching == 3) {
@@ -172,7 +172,7 @@ AbstractScene* GameMain::Update()
 
 		}
 		
-		//ŠâƒAƒbƒvƒf[ƒg
+		//å²©ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆ
 
 			for (int i = 0; i < 2; i++) {
 				if (rock[i] != nullptr) {
@@ -201,17 +201,17 @@ AbstractScene* GameMain::Update()
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
-		//‹­‰»ƒQ[ƒWMAX‚ÅXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½‚çƒvƒŒƒCƒ„[‚ğ‹­‰»ó‘Ô‚É
+		//å¼·åŒ–ã‚²ãƒ¼ã‚¸MAXã§Xãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å¼·åŒ–çŠ¶æ…‹ã«
 		player->SetPowerUp();
 	}
 	else if (powergauge->PowerGaugeState() == 2)
 	{
-		//‹­‰»ó‘Ô‰ğœ
+		//å¼·åŒ–çŠ¶æ…‹è§£é™¤
 		player->StopPowerUp();
 		powergauge->SetPowerFlg(0);
 	}
 
-	//‚Ğ‚Ü‚í‚èŒü‚«
+	//ã²ã¾ã‚ã‚Šå‘ã
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
@@ -227,7 +227,7 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//ƒCƒ‹ƒJ—‰º”»’è
+	//ã‚¤ãƒ«ã‚«è½ä¸‹åˆ¤å®š
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
@@ -241,13 +241,13 @@ AbstractScene* GameMain::Update()
 
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		//’N‚ªUŒ‚‚µ‚½‚©‚É‚æ‚Á‚ÄUŒ‚‚Ì”»’è‚ª‚Â‚¢‚Ä‚¢‚­‘ÎÛ‚ğ•Ï‚¦‚é
+		//èª°ãŒæ”»æ’ƒã—ãŸã‹ã«ã‚ˆã£ã¦æ”»æ’ƒã®åˆ¤å®šãŒã¤ã„ã¦ã„ãå¯¾è±¡ã‚’å¤‰ãˆã‚‹
 		if (attack[i]->GetAttackData().who_attack == player->GetWho())
 		{
 			attack[i]->Update(player->GetCenterLocation(), player->GetErea());
 			attack[i]->SetScreenPosition(camera_location);
 		}
-		//ƒUƒNƒ
+		//ã‚¶ã‚¯ãƒ­
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[j] != nullptr) {
@@ -258,7 +258,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
-		//ƒCƒ‹ƒJ
+		//ã‚¤ãƒ«ã‚«
 		for (int j = 0; j < IRUKA_MAX; j++)
 		{
 			if (iruka[j] != nullptr)
@@ -270,7 +270,7 @@ AbstractScene* GameMain::Update()
 				}
 			}
 		}
-		//‚Ğ‚Ü‚í‚è
+		//ã²ã¾ã‚ã‚Š
 		for (int j = 0; j < HIMAWARI_MAX; j++)
 		{
 			if (himawari[j] != nullptr)
@@ -283,7 +283,7 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		////ƒ{ƒX‚Ì˜r
+		////ãƒœã‚¹ã®è…•
 		//if (now_stage == 3) {
 		//	//if (hands != nullptr) {
 		//	//	if (attack[i]->GetAttackData().who_attack == hands->GetWho())
@@ -293,7 +293,7 @@ AbstractScene* GameMain::Update()
 		//	//}
 		//}
 
-		//ƒ{ƒX‚Ì˜r
+		//ãƒœã‚¹ã®è…•
 		if (now_stage == 3) {
 			if (hands != nullptr) {
 				if (attack[i]->GetAttackData().who_attack == hands->GetWho())
@@ -304,7 +304,7 @@ AbstractScene* GameMain::Update()
 				}
 
 			}
-				//Šâ
+				//å²©
 				for (int j = 0; j < 2; j++) {
 					if (rock[j] != nullptr) {
 						if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
@@ -330,7 +330,7 @@ AbstractScene* GameMain::Update()
 		effect->SetFlg(0);
 	}
 	
-	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+	//åºŠã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 	for(int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -340,7 +340,7 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//ŠÅ”Â‚ÌXV
+	//çœ‹æ¿ã®æ›´æ–°
 	for (int i = 0; i < SIGH_BOARD_NUM; i++)
 	{
 		if (sighboard[i] != nullptr)
@@ -349,17 +349,17 @@ AbstractScene* GameMain::Update()
 			sighboard[i]->SetScreenPosition(camera_location);
 		}
 	}
-	//“–‚½‚è”»’èŠÖ˜A‚Ìˆ—‚ğs‚¤
+	//å½“ãŸã‚Šåˆ¤å®šé–¢é€£ã®å‡¦ç†ã‚’è¡Œã†
 	HitCheck();
 
-	//‹­‰»ƒQ[ƒW‚©‚çˆì‚ê‚½•ª‚ğƒXƒRƒA‚É‰ÁZ
+	//å¼·åŒ–ã‚²ãƒ¼ã‚¸ã‹ã‚‰æº¢ã‚ŒãŸåˆ†ã‚’ã‚¹ã‚³ã‚¢ã«åŠ ç®—
 	if (powergauge->GetColorRem() > 0)
 	{
 		score->AddScore(powergauge->GetColorRem());
 		powergauge->SetColorRem();
 	}
 
-	//ƒXƒe[ƒWƒNƒŠƒA
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢
 	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
 		return new Loading();
 	}
@@ -368,7 +368,7 @@ AbstractScene* GameMain::Update()
 	}
 
 #ifdef _DEBUG
-	//ƒXƒe[ƒW‘JˆÚ
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é·ç§»
 	if (KeyInput::OnPresed(KEY_INPUT_0))
 	{
 		SetStage(0);
@@ -386,31 +386,31 @@ AbstractScene* GameMain::Update()
 		SetStage(3);
 	}
 
-	//ƒXƒe[ƒW‘I‘ğ‰æ–Ê‚Ö‘JˆÚ
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠç”»é¢ã¸é·ç§»
 	if (KeyInput::OnPresed(KEY_INPUT_4))
 	{
 		return new SelectStage();
 	}
-	//ƒvƒŒƒCƒ„[‚É‹­§ƒ_ƒ[ƒW
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å¼·åˆ¶ãƒ€ãƒ¡ãƒ¼ã‚¸
 	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
 		flg = true;
 		player->ApplyDamage(1);
 	}
-	//ƒXƒe[ƒW‚ğ‚¢‚¶‚éƒV[ƒ“‚Ö‘JˆÚ
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’ã„ã˜ã‚‹ã‚·ãƒ¼ãƒ³ã¸é·ç§»
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
 		return new EditScene(now_stage);
 	}
 
-	//“r’†‚ÅƒXƒe[ƒW‚ÌØ‚è‘Ö‚¦‚ª‚ ‚Á‚½ê‡g—p
+	//é€”ä¸­ã§ã‚¹ãƒ†ãƒ¼ã‚¸ã®åˆ‡ã‚Šæ›¿ãˆãŒã‚ã£ãŸå ´åˆä½¿ç”¨
 	if (now_stage == 3 && old_stage!=now_stage) {
 		//Hands_Delete_Flg = false;
 		boss = new Boss();
 		hands = new BossHands(who++, boss);
 	}
 #endif
-	//ƒXƒe[ƒWƒNƒŠƒA
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢
 	if (player->GetLocation().x > stage_width - (stage_width*STAGE_GOAL)) {
 	
 		return new Loading;
@@ -428,7 +428,7 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 
-	//ŠÅ”Â‚Ì•`‰æ
+	//çœ‹æ¿ã®æç”»
 	for (int i = 0; i < SIGH_BOARD_NUM; i++)
 	{
 		if (sighboard[i] != nullptr)
@@ -436,7 +436,7 @@ void GameMain::Draw() const
 			sighboard[i]->Draw();
 		}
 	}
-	//ƒ{ƒX•\¦
+	//ãƒœã‚¹è¡¨ç¤º
 	if (now_stage == 3) {
 		if (boss != nullptr) {
 			boss->Draw();
@@ -456,7 +456,7 @@ void GameMain::Draw() const
 
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
-		//•`‰æ
+		//æç”»
 	player->Draw();
 
 	for (int i = 0; i < stage_height_num; i++)
@@ -466,8 +466,8 @@ void GameMain::Draw() const
 			stage[i][j]->Draw();
 		}
 	}
-	//ƒGƒlƒ~[‚Ì•`‰æ
-	// ƒUƒNƒ
+	//ã‚¨ãƒãƒŸãƒ¼ã®æç”»
+	// ã‚¶ã‚¯ãƒ­
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		if (zakuro[i] != nullptr)
@@ -475,7 +475,7 @@ void GameMain::Draw() const
 			zakuro[i]->Draw();
 		}
 	}
-	// ‚Ğ‚Ü‚í‚è
+	// ã²ã¾ã‚ã‚Š
 	for (int i = 0; i < HIMAWARI_MAX; i++)
 	{
 		if (himawari[i] != nullptr)
@@ -483,7 +483,7 @@ void GameMain::Draw() const
 			himawari[i]->Draw();
 		}
 	}
-	// ƒCƒ‹ƒJ
+	// ã‚¤ãƒ«ã‚«
 	for (int i = 0; i < IRUKA_MAX; i++)
 	{
 		if (iruka[i] != nullptr)
@@ -491,7 +491,7 @@ void GameMain::Draw() const
 			iruka[i]->Draw();
 		}
 	}
-	//’|
+	//ç«¹
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
 		if (bamboo[i]!= nullptr)
@@ -522,19 +522,19 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 
 void GameMain::HitCheck()
 {
-	//°‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+	//åºŠã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			//ƒvƒŒƒCƒ„[‚ªƒXƒe[ƒW‚ÉG‚ê‚½‚È‚ç
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒã‚¹ãƒ†ãƒ¼ã‚¸ã«è§¦ã‚ŒãŸãªã‚‰
 			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
-				//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
+				//è§¦ã‚ŒãŸé¢ã«å¿œã˜ã¦æŠ¼ã—å‡ºã™
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
-			//ƒ{ƒX–Ê‚Ì‚İƒ{ƒX‚Ì˜r‚Ì“–‚½‚è”»’è
+			//ãƒœã‚¹é¢ã®ã¿ãƒœã‚¹ã®è…•ã®å½“ãŸã‚Šåˆ¤å®š
 			if (now_stage == 3) {
 				if (hands != nullptr) {
 					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
@@ -544,110 +544,64 @@ void GameMain::HitCheck()
 				}
 			}
 
-			//ƒUƒNƒ‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+			//ã‚¶ã‚¯ãƒ­ã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
-				if (zakuro[k] != nullptr) {
-					if (zakuro[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-					{
-						//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-						zakuro[k]->ZakuroPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
-					}
-				}
+				ProcessCharacterCollision(zakuro[k], stage[i][j], i);
 			}
-			//ƒCƒ‹ƒJ‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+			//ã‚¤ãƒ«ã‚«ã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
-				if (iruka[k] != nullptr) {
-					if (iruka[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-					{
-						//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-						iruka[k]->IrukaPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
-					}
-				}
+				ProcessCharacterCollision(iruka[k], stage[i][j], i);
 			}
-			//‚Ğ‚Ü‚í‚è‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+			//ã²ã¾ã‚ã‚Šã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
-				if (himawari[k] != nullptr) {
-					if (himawari[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-					{
-						//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-						himawari[k]->HimawariPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
-					}
-				}
+				ProcessCharacterCollision(himawari[k], stage[i][j], i);
 			}
-			//’|‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+			//ç«¹ã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 			for (int k = 0; k < BAMBOO_MAX; k++)
 			{
-				if (bamboo[k] != nullptr) {
-					if (bamboo[k]->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-					{
-						//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-						bamboo[k]->BambooPush(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea());
-					}
-				}
+				ProcessCharacterCollision(bamboo[k], stage[i][j], i);
 			}
 		}
 	}
-	//UŒ‚‚Ì”‚¾‚¯ŒJ‚è•Ô‚·
+	//æ”»æ’ƒã®æ•°ã ã‘ç¹°ã‚Šè¿”ã™
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		for (int j = 0; j < ZAKURO_MAX; j++)
 		{
-			if (zakuro[j] != nullptr) {
-				//UŒ‚‚Ì”»’è‚ªƒUƒNƒ‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ªƒvƒŒƒCƒ„[‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
-				if (attack[i]->HitBox(zakuro[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && zakuro[j]->GetSpwanFlg() == false)
+			if (zakuro[j] != nullptr)
+			{
+				// æ”»æ’ƒã®åˆ¤å®šãŒã‚¶ã‚¯ãƒ­ã¨è¢«ã£ã¦ã„ã¦ã€ãã®æ”»æ’ƒãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚ˆã‚‹ã‚‚ã®ã§ã€ãã®åˆ¤å®šãŒãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‰ã‚Œã‚‹çŠ¶æ…‹ãªã‚‰
+				ProcessAttack(attack[i], zakuro[j], effect);
+				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
-					//ƒUƒNƒ‚Ìƒ_ƒ[ƒWˆ—
-					zakuro[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					attack[i]->DeleteAttack();
-
-					//‚µ‚Ô‚«—p
-					effect->SetFlg(1);
-					effect->SetGaugeLocation(powergauge->GetCenterLocation());
-					effect->SetLocation(zakuro[j]->GetLocalLocation());
-					effect->SetSplashColor(zakuro[j]->GetColorDate());
-				}
-				for (int k = 0; k < BAMBOO_MAX; k++) 
-				{
-					if (bamboo[k] != nullptr) 
+					if (bamboo[k] != nullptr)
 					{
 						if (zakuro[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
 						{
-							//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-							zakuro[j]->ZakuroPush(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
+							//è§¦ã‚ŒãŸé¢ã«å¿œã˜ã¦æŠ¼ã—å‡ºã™
+							zakuro[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
 						}
 					}
 				}
 			}
 		}
-		for (int j = 0; j < IRUKA_MAX; j++) {
-			if (iruka[j] != nullptr) {
-				// UŒ‚‚Ì”»’è‚ªƒCƒ‹ƒJ‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ªƒvƒŒƒCƒ„[‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
-				if (attack[i]->HitBox(iruka[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && iruka[j]->GetSpwanFlg() == false)
-				{
-					//‚µ‚Ô‚«—p
-					effect->SetFlg(1);
-					effect->SetGaugeLocation(powergauge->GetCenterLocation());
-					effect->SetLocation(iruka[j]->GetLocalLocation());
-					effect->SetSplashColor(iruka[j]->GetColorDate());
-
-					//ƒCƒ‹ƒJ‚Ìƒ_ƒ[ƒWˆ—
-					iruka[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					/*if (iruka[j]->GetHp() < 1) {
-						powergauge->SetVolume(iruka[j]->GetColorDate());
-					}*/
-					attack[i]->DeleteAttack();
-				}
+		for (int j = 0; j < IRUKA_MAX; j++) 
+		{
+			if (iruka[j] != nullptr) 
+			{
+				// æ”»æ’ƒã®åˆ¤å®šãŒã‚¤ãƒ«ã‚«ã¨è¢«ã£ã¦ã„ã¦ã€ãã®æ”»æ’ƒãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚ˆã‚‹ã‚‚ã®ã§ã€ãã®åˆ¤å®šãŒãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‰ã‚Œã‚‹çŠ¶æ…‹ãªã‚‰
+				ProcessAttack(attack[i], iruka[j], effect);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
 					{
 						if (iruka[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
 						{
-							//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-							iruka[j]->IrukaPush(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
+							//è§¦ã‚ŒãŸé¢ã«å¿œã˜ã¦æŠ¼ã—å‡ºã™
+							iruka[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
 						}
 					}
 				}
@@ -655,30 +609,16 @@ void GameMain::HitCheck()
 		}
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
-				// UŒ‚‚Ì”»’è‚ª	‚Ğ‚Ü‚í‚è‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ªƒvƒŒƒCƒ„[‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
-				if (attack[i]->HitBox(himawari[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && himawari[j]->GetSpwanFlg() == false)
-				{
-					//‚µ‚Ô‚«—p
-					effect->SetFlg(1);
-					effect->SetGaugeLocation(powergauge->GetCenterLocation());
-					effect->SetLocation(himawari[j]->GetLocalLocation());
-					effect->SetSplashColor(himawari[j]->GetColorDate());
-
-					//‚Ğ‚Ü‚í‚è‚Ìƒ_ƒ[ƒWˆ—
-					himawari[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					//if (himawari[j]->GetHp() < 1) {
-					//powergauge->SetVolume(himawari[j]->GetColorDate());
-					//}
-					attack[i]->DeleteAttack();
-				}
+				// æ”»æ’ƒã®åˆ¤å®šãŒ	ã²ã¾ã‚ã‚Šã¨è¢«ã£ã¦ã„ã¦ã€ãã®æ”»æ’ƒãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚ˆã‚‹ã‚‚ã®ã§ã€ãã®åˆ¤å®šãŒãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‰ã‚Œã‚‹çŠ¶æ…‹ãªã‚‰
+				ProcessAttack(attack[i], himawari[j], effect);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
 					{
 						if (himawari[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
 						{
-							//G‚ê‚½–Ê‚É‰‚¶‚Ä‰Ÿ‚µo‚·
-							himawari[j]->HimawariPush(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
+							//è§¦ã‚ŒãŸé¢ã«å¿œã˜ã¦æŠ¼ã—å‡ºã™
+							himawari[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
 						}
 					}
 				}
@@ -688,13 +628,13 @@ void GameMain::HitCheck()
 		{
 			if (bamboo[j] != nullptr) 
 			{
-				// UŒ‚‚Ì”»’è‚ª	’|”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ªƒvƒŒƒCƒ„[‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
+				// æ”»æ’ƒã®åˆ¤å®šãŒ	ç«¹è¢«ã£ã¦ã„ã¦ã€ãã®æ”»æ’ƒãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚ˆã‚‹ã‚‚ã®ã§ã€ãã®åˆ¤å®šãŒãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‰ã‚Œã‚‹çŠ¶æ…‹ãªã‚‰
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
 				}
-				//ƒvƒŒƒCƒ„[‚Æ’|‚Ì“–‚½‚è”»’è
+				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨ç«¹ã®å½“ãŸã‚Šåˆ¤å®š
 				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
 				{
 					player->Push(j, bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
@@ -706,10 +646,10 @@ void GameMain::HitCheck()
 				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
 
-					//ƒ{ƒX‚Ìƒ_ƒ[ƒWˆ—
+					//ãƒœã‚¹ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
-					//ƒWƒƒƒ“ƒvUŒ‚‘½’i–h~
+					//ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒå¤šæ®µé˜²æ­¢
 					if (player->GetAcs(0) > 0.1) {
 						hands->HitJumpAttack = true;
 					}
@@ -724,28 +664,28 @@ void GameMain::HitCheck()
 
 			}
 		}
-		//UŒ‚‚Ì”»’è‚ªƒvƒŒƒCƒ„[‚Æ”í‚Á‚Ä‚¢‚ÄA‚»‚ÌUŒ‚‚ª“G‚É‚æ‚é‚à‚Ì‚ÅA‚»‚Ì”»’è‚ªƒ_ƒ[ƒW‚ğ—^‚¦‚ç‚ê‚éó‘Ô‚È‚ç
+		//æ”»æ’ƒã®åˆ¤å®šãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨è¢«ã£ã¦ã„ã¦ã€ãã®æ”»æ’ƒãŒæ•µã«ã‚ˆã‚‹ã‚‚ã®ã§ã€ãã®åˆ¤å®šãŒãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‰ã‚Œã‚‹çŠ¶æ…‹ãªã‚‰
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
-			//ƒvƒŒƒCƒ„[‚Ìƒ_ƒ[ƒWˆ—
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†
 			player->ApplyDamage(attack[i]->GetAttackData().damage);
-			//UŒ‚‚ğÁ‚·
+			//æ”»æ’ƒã‚’æ¶ˆã™
 			attack[i]->DeleteAttack();
 			//zakuro->Stop_Attack();
 		}
-		//UŒ‚‚ªƒvƒŒƒCƒ„[‚É‚æ‚é‚à‚Ì‚ÅA‚»‚ÌUŒ‚‚ªƒWƒƒƒ“ƒvUŒ‚‚Å
+		//æ”»æ’ƒãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚ˆã‚‹ã‚‚ã®ã§ã€ãã®æ”»æ’ƒãŒã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒã§
 		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4)
 		{
 			attack[i]->SetDirection(player->GetPlayerDirection());
-			//ƒvƒŒƒCƒ„[‚ª°‚ÉG‚ê‚½‚È‚ç
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒåºŠã«è§¦ã‚ŒãŸãªã‚‰
 			if (player->GetOnFloorFlg() == true)
 			{
-				//UŒ‚‚ğÁ‚·
+				//æ”»æ’ƒã‚’æ¶ˆã™
 				attack[i]->DeleteAttack();
 			}
 		}
 	}
-	//ƒUƒNƒ“¯m‚Å“–‚½‚Á‚½‚ç...
+	//ã‚¶ã‚¯ãƒ­åŒå£«ã§å½“ãŸã£ãŸã‚‰...
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		for (int j = i + 1; j < ZAKURO_MAX; j++)
@@ -761,7 +701,7 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-	//’|“¯m‚ª“–‚½‚Á‚½‚ç~‚Ü‚é
+	//ç«¹åŒå£«ãŒå½“ãŸã£ãŸã‚‰æ­¢ã¾ã‚‹
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
 		for (int j = i + 1; j < BAMBOO_MAX; j++)
@@ -774,7 +714,7 @@ void GameMain::HitCheck()
 			}
 		}
 	}
-	//˜r‚ª€‚ñ‚¾ê‡
+	//è…•ãŒæ­»ã‚“ã å ´åˆ
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
 			
@@ -804,14 +744,14 @@ void GameMain::LoadStageData(int _stage)
 	}
 
 	std::ifstream file(a);
-	//ƒtƒ@ƒCƒ‹‚ª“Ç‚İ‚ß‚Ä‚¢‚½‚È‚ç
+	//ãƒ•ã‚¡ã‚¤ãƒ«ãŒèª­ã¿è¾¼ã‚ã¦ã„ãŸãªã‚‰
 	if (file)
 	{
 		file >> stage_width_num;
 		file >> stage_height_num;
 
 		stage_width = stage_width_num * BOX_WIDTH;
-		//ƒ‰ƒ“ƒLƒ“ƒOƒf[ƒ^”z•ª—ñƒf[ƒ^‚ğ“Ç‚İ‚Ş
+		//ãƒ©ãƒ³ã‚­ãƒ³ã‚°ãƒ‡ãƒ¼ã‚¿é…åˆ†åˆ—ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
 		for (int i = 0; i < stage_height_num; i++)
 		{
 			for (int j = 0; j < stage_width_num; j++)
@@ -824,7 +764,7 @@ void GameMain::LoadStageData(int _stage)
 
 void GameMain::SetStage(int _stage)
 {
-	//“G‚ÆUŒ‚‚ğƒŠƒZƒbƒg
+	//æ•µã¨æ”»æ’ƒã‚’ãƒªã‚»ãƒƒãƒˆ
 	for (int i = 0; i < ZAKURO_MAX; i++) {
 		zakuro[i] = nullptr;
 	}
@@ -844,19 +784,19 @@ void GameMain::SetStage(int _stage)
 	}
 	old_stage = now_stage;
 	now_stage = _stage;
-	//ƒtƒ@ƒCƒ‹‚Ì“Ç
+	//ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­è¾¼
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			//ƒXƒe[ƒW“àƒuƒƒbƒN‚ğ¶¬
+			//ã‚¹ãƒ†ãƒ¼ã‚¸å†…ãƒ–ãƒ­ãƒƒã‚¯ã‚’ç”Ÿæˆ
 			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			switch (STAGE_DATA[i][j])
 			{
-			//ƒUƒNƒ‚ğ¶¬
+			//ã‚¶ã‚¯ãƒ­ã‚’ç”Ÿæˆ
 			case 5:
-				//‹ó‚¢‚Ä‚é˜g‚É¶¬
+				//ç©ºã„ã¦ã‚‹æ ã«ç”Ÿæˆ
 				for (int k = 0; k < ZAKURO_MAX; k++)
 				{
 					if (zakuro[k] == nullptr)
@@ -866,9 +806,9 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
-				//ƒCƒ‹ƒJ‚ğ¶¬
+				//ã‚¤ãƒ«ã‚«ã‚’ç”Ÿæˆ
 			case 6:
-				//‹ó‚¢‚Ä‚é˜g‚É¶¬
+				//ç©ºã„ã¦ã‚‹æ ã«ç”Ÿæˆ
 				for (int k = 0; k < IRUKA_MAX; k++)
 				{
 					if (iruka[k] == nullptr)
@@ -878,9 +818,9 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
-				//‚Ğ‚Ü‚í‚è‚ğ¶¬
+				//ã²ã¾ã‚ã‚Šã‚’ç”Ÿæˆ
 			case 7:
-				//‹ó‚¢‚Ä‚é˜g‚É¶¬
+				//ç©ºã„ã¦ã‚‹æ ã«ç”Ÿæˆ
 				for (int k = 0; k < HIMAWARI_MAX; k++)
 				{
 					if (himawari[k] == nullptr)
@@ -900,7 +840,7 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
-				//ŠÅ”Â‚ğ¶¬
+				//çœ‹æ¿ã‚’ç”Ÿæˆ
 			case 9:
 			case 10:
 			case 11:
@@ -919,10 +859,10 @@ void GameMain::SetStage(int _stage)
 			}
 		}
 	}
-	//ƒvƒŒƒCƒ„[‚ÌƒŠƒXƒ|[ƒ“
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒªã‚¹ãƒãƒ¼ãƒ³
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
-	//ƒJƒƒ‰‚ÌƒŠƒZƒbƒg
+	//ã‚«ãƒ¡ãƒ©ã®ãƒªã‚»ãƒƒãƒˆ
 	ResetCamera();
 }
 
@@ -941,4 +881,29 @@ void GameMain::ResetCamera()
 Location GameMain::GetPlayerLocation()
 {
 	return player->GetLocation();
+}
+
+template <class T>
+void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int index) {
+	// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå­˜åœ¨ã—ã€ãƒ’ãƒƒãƒˆãƒœãƒƒã‚¯ã‚¹ãŒã‚¹ãƒ†ãƒ¼ã‚¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨äº¤å·®ã—ã€ã‹ã¤ã‚¹ãƒ†ãƒ¼ã‚¸ã®å½“ãŸã‚Šåˆ¤å®šãŒã‚ã‚‹å ´åˆ
+	if (character != nullptr && character->HitBox(stageObject) == true && stageObject->GetStageCollisionType() != 0) {
+		// ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®æŠ¼ã—å‡ºã—å‡¦ç†
+		character->Push(index, stageObject->GetLocation(), stageObject->GetErea());
+	}
+}
+
+template<class T>
+void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
+{
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage()) {
+		character->ApplyDamage(attack->GetAttackData().damage);
+		attack->DeleteAttack();
+
+		// ã—ã¶ãç”¨
+
+		effect->SetFlg(1);
+		effect->SetGaugeLocation(powergauge->GetCenterLocation());
+		effect->SetLocation(character->GetLocalLocation());
+		effect->SetSplashColor(character->GetColorDate());
+	}
 }

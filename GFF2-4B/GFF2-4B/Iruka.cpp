@@ -222,7 +222,7 @@ void Iruka::IrukaOnFloor(int num, Location _sub)
 	
 }
 
-void Iruka::IrukaPush(int num, Location _sub_location, Erea _sub_erea)
+void Iruka::Push(int num, Location _sub_location, Erea _sub_erea)
 {
 	Location i_center = { 0 };
 	i_center.x = location.x + (erea.width / 2);
