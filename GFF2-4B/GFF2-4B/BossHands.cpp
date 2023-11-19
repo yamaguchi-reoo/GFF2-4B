@@ -8,7 +8,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 
 	//全腕共通の初期化
 	frame = 0;
-	Hands_Img_num = 0;//イルカにしかまだ使ってないので後から
+	Hands_Img_num = 0;//イルカ
 	//Hands_who = 2;
 	Hands_who = boss->Hand_Num;
 	erea.height = hands_height[Hands_who];
@@ -91,7 +91,8 @@ void BossHands::Draw() const {
 		{
 		case 0:
 			//マゼンタ
-			DrawGraphF(location.x, location.y, hi[0], TRUE);
+				DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
+		
 			break;
 		case 1:
 			//シアン
@@ -128,11 +129,13 @@ void BossHands::Draw() const {
 	
 
 #ifdef _DEBUG
-	DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
-	DrawFormatString(100, 400, 0xffffff, "switching%d", switching);
+	//DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
 	DrawFormatString(159, 0, 0xff00ff, "HP%d", hp);
 	//DrawFormatString(400, 0, 0xff00ff, "hitjump%d", HitJumpAttack);
 	
+	DrawFormatString(100, 400, 0xffffff, "location.y%f",location.y);
+	DrawFormatString(100, 450, 0xffffff, "zakuro_state%d",zakuro_state);
+	DrawFormatString(100, 470, 0xffffff, "hitflg%d",hitflg);
 #endif // _DEBUG
 
 
@@ -140,24 +143,33 @@ void BossHands::Draw() const {
 
 void BossHands::MagentaInit()
 {
+	zakuro_state = BossZakuroState::Z_ANIM_UP;
+	Zakuro_Direction = 0;
+	Zakuro_Imgnum = 0;
 	location.x = 700;
-	location.y = -500;
-	hi[0] = LoadGraph("resource/images/Boss/Boss.png", true);
+	location.y = 700;
+	Set_Zakuro_x = 0;
+	Set_Zakuro_y = 0;
+	g = 9.8;
+	sita = 45;
+	V_zero = 50;
+	time = 0;
+	LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 	count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
 	switching = 0;
 	HitJumpAttack = false;
 	Death_Flg = false;
 	Rock_Once = false;
 	hitflg = false;
+	onceflg = true;
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
-		/*if (switching > 2) {
-			down_hand = true;
-		}*/
+
 	
 	if (Death_Flg == false) {
 
+		/*
 		//ボスの拳の攻撃判定
 		if (switching != 3) {
 			Attack_Num = 0;
@@ -255,6 +267,83 @@ void BossHands::HandsMagenta(GameMain* main) {
 		default:
 			break;
 		}
+		*/
+
+		switch (zakuro_state) {
+		case BossZakuroState::Z_ANIM_UP:
+			Zakuro_Imgnum = 1;
+			if (location.y < -500) {
+				zakuro_state = BossZakuroState::Z_FALLING;
+			}
+			else {
+				location.y -= 10;
+			}
+			break;
+		case BossZakuroState::Z_ANIM_FALLING:
+			//最初の落ちてくるときはダメージありがいいか
+			break;
+		case BossZakuroState::Z_MOVE:
+			Zakuro_Imgnum = 0;
+
+			Attack_Num = 4;
+			BossAttack(main);
+
+			
+			if (location.x > 1000) {
+				Zakuro_Direction = 1;
+			}
+			else if (location.x < 100) {
+				Zakuro_Direction = 0;
+			}
+
+			if (Zakuro_Direction == 1) {
+				location.x-=5;
+			}
+			else {
+				location.x += 5;
+			}
+
+			if (0 + rand() % 100 == 0) {
+				//ジャンプはいる前に色々初期化しないと二回目からえらいことになる
+				g = 9.8;
+				sita = 45;
+				V_zero = 50;
+				time = 0;
+				Set_Zakuro_x = location.x;
+				Set_Zakuro_y = location.y;
+				zakuro_state = BossZakuroState::Z_JUMP;
+				onceflg = false;
+			
+			}
+
+			break;
+		case BossZakuroState::Z_JUMP:
+			time+=0.3;
+			Zakuro_Movex = V_zero * (cosf(sita) * time);
+			Zakuro_Movey = (V_zero * (sinf(sita) * time)) - ((g * (time * time)) / 2);
+			//Set-Moveで左にSet+Moveで右に行く
+			//Set-Moveで上にSet+Moveで↓に行く
+			location.x = Set_Zakuro_x - Zakuro_Movex;
+			location.y = Set_Zakuro_y - Zakuro_Movey;
+
+			if (location.y > 300) {
+				zakuro_state = BossZakuroState::Z_MOVE;
+			}
+
+			break;
+		case BossZakuroState::Z_FALLING:
+			Zakuro_Imgnum = 2;
+			Attack_Num = 4;
+			BossAttack(main);
+			if (location.y>290) {
+				zakuro_state = BossZakuroState::Z_MOVE;
+			}
+				location.y += 10;
+			break;
+		default:
+			break;
+		}
+
 	}
 	else if(Death_Flg==true) {
 		//死亡アニメーション
@@ -276,6 +365,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			break;
 		};
 	}
+
 }
 
 void BossHands::YellowInit()
@@ -730,6 +820,17 @@ AttackData BossHands::BossAttactData()
 		attack_data.speed = 7;
 		attack_data.angle = face_angle;
 		attack_data.effect_type = BOSSHIMAWARI_BULLET;
+		break;
+	case 4:
+		attack_data.shift_x = -erea.width - 3;
+		attack_data.shift_y = -100;
+		attack_data.width = erea.width;
+		attack_data.height = erea.height - 20;
+		attack_data.who_attack = who;
+		attack_data.attack_time = 3;
+		attack_data.delay = 0;
+		attack_data.damage = 1;
+		attack_data.attack_type = MELEE;
 		break;
 	default:
 		break;

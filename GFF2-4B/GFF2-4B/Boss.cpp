@@ -10,6 +10,9 @@ Boss::Boss() {
 	Boss_Arm_Rightx=800;
 	Boss_Arm_Righty=0;
 
+	Boss_Body_X = 440;
+	Boss_Body_Y = 0;
+
 	Count_Death = 2;
 	Boss_Form=0;
 	Boss_Check_Playerx = -1;
@@ -29,8 +32,8 @@ void Boss::Update(GameMain* main) {
 		if (timer++ == 100) {
 			New_Hand_Flg = true;
 		}
-		Boss_Arm_Righty += timer;
-
+		//Boss_Arm_Righty += timer;
+		Boss_Body_Y += timer/2;
 
 		if (i<3) {
 
@@ -50,7 +53,7 @@ void Boss::Update(GameMain* main) {
 void Boss::Draw() const {
 	if (Boss_Dead != true) {
 
-		DrawGraph(440, 0, Boss_MainBody[0], TRUE);
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[0], TRUE);
 		//DrawGraph(380, 0, Explosion[0], TRUE);
 		//DrawGraph(380, 0, Explosion[1], TRUE);
 		//DrawGraph(440, 0, Boss_MainBody[0], TRUE);

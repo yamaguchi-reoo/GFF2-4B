@@ -25,6 +25,9 @@ public:
     int Boss_Arm_Rightx; //右腕X座標
     int Boss_Arm_Righty; //右腕Y座標
 
+    int Boss_Body_X; //本体X座標
+    int Boss_Body_Y; //本体Y座標
+
     int Hand_Num;
     bool New_Hand_Flg;//ボスの手を発生させる用
 

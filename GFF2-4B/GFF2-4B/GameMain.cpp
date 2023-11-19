@@ -537,15 +537,15 @@ void GameMain::HitCheck()
 				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
 			}
 
-			//ボス面のみボスの腕の当たり判定
-			if (now_stage == 3) {
-				if (hands != nullptr) {
-					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-					{
-						hands->hitflg = true;
-					}
-				}
-			}
+			////ボス面のみボスの腕の当たり判定
+			//if (now_stage == 3) {
+			//	if (hands != nullptr) {
+			//		if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+			//		{
+			//			hands->hitflg = true;
+			//		}
+			//	}
+			//}
 
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
