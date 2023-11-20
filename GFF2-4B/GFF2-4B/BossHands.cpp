@@ -59,7 +59,6 @@ void BossHands::Update(GameMain* main) {
 
 	//フレーム測定
 	if (++frame > 1200)frame = 0;
-
 		//手の種類に応じて実行するUpdateを変える
 		switch (Hands_who)
 		{
@@ -85,13 +84,13 @@ void BossHands::Draw() const {
 
 	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
 	
-
+	
 
 		switch (Hands_who)
 		{
 		case 0:
 			//マゼンタ
-				DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
+				DrawGraphF(location.x, location.y, Zakuro_img[0], TRUE);
 		
 			break;
 		case 1:

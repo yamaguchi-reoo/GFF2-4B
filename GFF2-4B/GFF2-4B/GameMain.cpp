@@ -21,6 +21,7 @@ GameMain::GameMain(int _stage)
 
 	if (now_stage == 3) {
 		boss = new Boss();
+		hands = nullptr;
 	}
 
 	SetStage(now_stage);
@@ -147,14 +148,8 @@ AbstractScene* GameMain::Update()
 
 
 		if (boss != nullptr) {
-			//if (player->GetLocation().x<= 
-			// 
-			// && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
-			//{
-			//	iruka[i]->SetFallFlg();
-			//}
 			boss->Update(this);
-			if (boss->New_Hand_Flg == true) {
+			if (boss->New_Hand_Flg ==true) {
 				hands = new BossHands(who++, boss);
 				boss->New_Hand_Flg = false;
 			}
@@ -372,8 +367,8 @@ AbstractScene* GameMain::Update()
 			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
 			if (now_stage == 3 && old_stage != now_stage) {
 				//Hands_Delete_Flg = false;
-				boss = new Boss();
-				hands = new BossHands(who++, boss);
+				//boss = new Boss();
+				//hands = new BossHands(who++, boss);
 			}
 		}
 		else
@@ -424,8 +419,8 @@ AbstractScene* GameMain::Update()
 	//途中でステージの切り替えがあった場合使用
 	if (now_stage == 3 && old_stage!=now_stage) {
 		//Hands_Delete_Flg = false;
-		boss = new Boss();
-		hands = new BossHands(who++, boss);
+		//boss = new Boss();
+		//hands = new BossHands(who++, boss);
 	}
 #endif
 
@@ -731,7 +726,6 @@ void GameMain::HitCheck()
 		if (Hands_Delete_Flg==true) {
 			boss->Count_Death--;
 			hands = nullptr;
-			boss->Dead = true;
 			Hands_Delete_Flg = false;
 		}
 	}
@@ -799,12 +793,6 @@ void GameMain::SetStage(int _stage)
 	now_stage = _stage;
 	//ファイルの読込
 
-	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
-	if (now_stage == 3 && old_stage != now_stage) {
-		//Hands_Delete_Flg = false;
-		boss = new Boss();
-		//hands = new BossHands(who++, boss);
-	}
 
 	//�t�@�C���̓Ǎ�
 	LoadStageData(now_stage);
@@ -881,6 +869,15 @@ void GameMain::SetStage(int _stage)
 			}
 		}
 	}
+
+
+	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+	if (now_stage == 3 && old_stage != now_stage) {
+		//Hands_Delete_Flg = false;
+		boss = new Boss();
+		//hands = new BossHands(who++, boss);
+	}
+
 	//プレイヤーのリスポーン
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
