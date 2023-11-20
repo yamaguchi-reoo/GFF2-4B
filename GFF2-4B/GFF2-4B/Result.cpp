@@ -24,6 +24,10 @@ Result::Result()
 
 	draw_score = 0;
 	LoadDivGraph("resource/images/Result/ResultNum.png", 10, 4, 3, 73, 73, num_img);
+
+	zakuro_num = Score::GetAttackEnemyNum(0);
+	iruka_num = Score::GetAttackEnemyNum(1);
+	himawari_num = Score::GetAttackEnemyNum(2);
 }
 
 //デストラクタ
@@ -44,7 +48,7 @@ AbstractScene* Result::Update()
 		//スコアを少しずつ増やす(画面表示)
 		if (score > draw_score)
 		{
-			draw_score += 1;
+			draw_score += 110;
 		}
 		else if (score < draw_score)
 		{
@@ -85,18 +89,25 @@ void Result::Draw() const
 	//DrawFormatString(600, 150, 0x000000, "今回の成果");
 	DrawGraph(515, 140 + 10, img[4], TRUE);
 
-	DrawGraph(330, 250 + 10, img[2], TRUE);
-	DrawFormatString(430, 295 + 10, 0x000000, "×");
-	DrawGraph(460, 280 + 10, num_img[0], TRUE);
+	//ヒマワリ
+	DrawGraph(330 - 30, 250 + 10, img[2], TRUE);
+	DrawFormatString(430 - 30, 295 + 10, 0x000000, "×");
+	DrawGraph(460 - 40, 280 + 10, num_img[himawari_num / 10], TRUE);
+	DrawGraph(460 + 40 - 33, 280 + 10, num_img[himawari_num % 10], TRUE);
 
+	//イルカ
 	DrawGraph(555, 300 + 10, img[3], TRUE);
 	DrawFormatString(665, 295 + 10, 0x000000, "×");
-	DrawGraph(695, 280 + 10, num_img[0], TRUE);
+	DrawGraph(695 - 15, 280 + 10, num_img[iruka_num / 10], TRUE);
+	DrawGraph(695 + 40 - 10, 280 + 10, num_img[iruka_num % 10], TRUE);
 
+	//ザクロ
 	DrawGraph(815, 290 + 10, img[1], TRUE);
 	DrawFormatString(900, 295 + 10, 0x000000, "×");
-	DrawGraph(930, 280 + 10, num_img[0], TRUE);
+	DrawGraph(930 - 15, 280 + 10, num_img[zakuro_num / 10], TRUE);
+	DrawGraph(930 + 40 - 10, 280 + 10, num_img[zakuro_num % 10], TRUE);
 
+	//得点
 	DrawGraph(425, 455 + 10, img[5], TRUE);
 
 	int a = draw_score;
@@ -109,6 +120,7 @@ void Result::Draw() const
 		pos_x -= 40;
 	} while (a > 0);
 
+	//巻物
 	DrawGraph(x1, 0, img[7], TRUE);
 	DrawGraph(x2, 0, img[0], TRUE);
 

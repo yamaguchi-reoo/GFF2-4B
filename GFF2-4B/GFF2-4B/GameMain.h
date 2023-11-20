@@ -21,6 +21,7 @@
 #include "Score.h"
 #include "SighBoard.h"
 #include "HealItem.h"
+#include "Koban.h"
 
 class Player;
 
@@ -52,6 +53,7 @@ private:
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
     HealItem* heal;     //回復アイテム
+    Koban* koban; //小判
     Score* score; //スコアUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
@@ -73,6 +75,16 @@ private:
     int impact_timer;               //画面揺れ演出
 
     int item_rand;
+
+    int lock_flg; //強制戦闘時のフラグ
+    int vine_y;   //蔓のY座標
+    int vine_x1;  //左の草のX座標
+    int vine_x2;  //右の草のX座標
+    int vine_img[2]; //蔓、草の画像
+    int venemy_cnt;  //敵の生成時間カウント
+    int venemy_num1; //強制戦闘時に生成した敵の数
+    int venemy_num2; //強制戦闘時に斬った敵の数
+
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 
@@ -119,8 +131,11 @@ public:
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect,HealItem* heal);
+    void ProcessAttack(Attack* attack, T* character, Effect* effect,HealItem* heal, Koban* koban);
     //アイテムのランダム出現
     void ItemSpwanRand();
+
+    //蔓内での敵生成処理
+    void VineEnemy(void);
 };
 

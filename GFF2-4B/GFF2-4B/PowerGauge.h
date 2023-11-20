@@ -79,7 +79,7 @@ public:
 	int GetColorRem() { return remainder; } 
 
 	//強化ゲージから溢れた分を0にリセット
-	void SetColorRem(); 
+	void ResetColorRem(); 
 
 	// マゼンタゲージの量を取得
 	float GetMagentaVolume() const {

@@ -29,17 +29,18 @@ GameMain::GameMain(int _stage)
 	{
 		count[i] = 0;
 	}
-
-
+	
 	powergauge = new PowerGauge();
 
 	playerhp = new PlayerHP();
 
 	score = new Score();
-	
+
 	effect = new Effect();
 
 	heal = new HealItem();
+
+	koban = new Koban();
 
 	loading_scene = new Loading();
 
@@ -49,6 +50,17 @@ GameMain::GameMain(int _stage)
 	Hands_Delete_Flg = false;
 
 	impact_timer = 0;   
+
+	lock_flg = 0;
+	vine_x1 = -650;
+	vine_x2 = 1290;
+	vine_y = 730;
+	venemy_cnt = 0;
+	venemy_num1 = 0;
+	venemy_num2 = 0;
+	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
+	vine_img[1] = LoadGraph("resource/images/kusa.png");
+
 }
 
 GameMain::~GameMain()
@@ -93,12 +105,13 @@ GameMain::~GameMain()
 	delete loading_scene;
 	delete boss;
 	delete hands;
+	delete koban;
 }
 
 AbstractScene* GameMain::Update()
 {
 	//カメラ更新
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
+	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
 	{
 		CameraLocation(player->GetLocation());
 	}
@@ -205,9 +218,11 @@ AbstractScene* GameMain::Update()
 	playerhp->Update(player->GetPlayerHP());
 
 	heal->SetScreenPosition(camera_location);
+	koban->SetScreenPosition(camera_location);
 
 	score->Update();
 
+	koban->Update();
 
 	effect->Update(this);
 	effect->SetScreenPosition(camera_location);
@@ -350,6 +365,78 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	/**プレイヤーを閉じ込めるここから*/
+	//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10285)
+	{
+		lock_flg = 1;
+	}
+
+	//蔓を下からはやす
+	if (lock_flg == 1 && vine_y > 70)
+	{
+		vine_y -= 35;
+	}
+
+	if (lock_flg == 1 && vine_y <= 70)
+	{
+		lock_flg = 2;
+	}
+
+	//草を横からはやす
+	if (lock_flg == 2 && vine_x1 < 0)
+	{
+		vine_x1 += 35;
+		vine_x2 -= 35;
+	}
+
+	if (lock_flg == 2 && vine_x1 >= 0)
+	{
+		lock_flg = 3;
+	}
+
+	//ザクロを15匹生成
+	if (lock_flg == 3 && venemy_num1 < 15)
+	{
+		venemy_cnt++;
+		if (venemy_cnt >= 60)
+		{
+			VineEnemy();
+			venemy_cnt = 0;
+		}
+	}
+	
+	//ザクロを15匹倒したら蔓から解放
+	if (lock_flg == 3 && venemy_num2 >= 15)
+	{
+		lock_flg = 4;
+	}
+
+	//草を解除
+	if (lock_flg == 4 && vine_x2 < 1280)
+	{
+		vine_x1 -= 35;
+		vine_x2 += 35;
+	}
+
+	if (lock_flg == 4 && vine_x2 >= 1280)
+	{
+		lock_flg = 5;
+	}
+
+	//蔓を解除
+	if (lock_flg == 5 && vine_y < 730)
+	{
+		vine_y += 35;
+	}
+
+	if (lock_flg == 5 && vine_y >= 730)
+	{
+		lock_flg = 6;
+	}
+
+	/**プレイヤーを閉じ込めるここまで*/
+
 	//当たり判定関連の処理を行う
 	HitCheck(this);
 
@@ -357,7 +444,7 @@ AbstractScene* GameMain::Update()
 	if (powergauge->GetColorRem() > 0)
 	{
 		score->AddScore(powergauge->GetColorRem());
-		powergauge->SetColorRem();
+		powergauge->ResetColorRem();
 	}
 
 	//ステージクリア
@@ -413,6 +500,13 @@ AbstractScene* GameMain::Update()
 		flg = true;
 		player->ApplyDamage(this,1);
 	}
+
+	//蔓から解放
+	if (KeyInput::OnKey(KEY_INPUT_7))
+	{
+		lock_flg = 6;
+	}
+
 	//ステージをいじるシーンへ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
@@ -501,9 +595,10 @@ void GameMain::Draw() const
 
 	heal->Draw();
 
-	powergauge->Draw();
-	playerhp->Draw();
-	score->Draw();
+	//小判の描画
+	koban->Draw();
+
+	
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		attack[i]->Draw();
@@ -516,6 +611,19 @@ void GameMain::Draw() const
 			sighboard[i]->Draw();
 		}
 	}
+
+	//プレイヤーを閉じ込める蔓の描画
+	if (lock_flg > 0 || lock_flg < 6)
+	{
+		DrawGraph(-10, vine_y, vine_img[0], TRUE);
+		DrawGraph(1170, vine_y, vine_img[0], TRUE);
+		DrawGraph(vine_x1, -5, vine_img[1], TRUE);
+		DrawGraph(vine_x2, -5, vine_img[1], TRUE);
+	}
+
+	powergauge->Draw();
+	playerhp->Draw();
+	score->Draw();
 }
 
 void GameMain::SpawnAttack(AttackData _attackdata)
@@ -580,7 +688,10 @@ void GameMain::HitCheck(GameMain* main)
 			if (zakuro[j] != nullptr)
 			{
 				// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], zakuro[j], effect, heal);
+				ProcessAttack(attack[i], zakuro[j], effect, heal,koban);
+
+				
+
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -599,7 +710,7 @@ void GameMain::HitCheck(GameMain* main)
 			if (iruka[j] != nullptr) 
 			{
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], iruka[j], effect , heal);
+				ProcessAttack(attack[i], iruka[j], effect , heal,koban);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -616,7 +727,7 @@ void GameMain::HitCheck(GameMain* main)
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], himawari[j], effect, heal);
+				ProcessAttack(attack[i], himawari[j], effect, heal,koban);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -747,8 +858,21 @@ void GameMain::HitCheck(GameMain* main)
 
 	if (player->HitBox(heal) == true && heal->GetSpawnFlg() == true)
 	{
+		if (player->GetPlayerHP() >= 7)
+		{
+			score->AddScore(100);
+		}
+
 		player->AddPlayerHp();
 		heal->SetSpawnFlg(false);
+	}
+
+	if (player->HitBox(koban) == true && koban->GetSpawnFlg() == true)
+	{
+		score->AddScore(300);
+		koban->SetScoreLocation();
+		koban->SetSpawnFlg(false);
+		koban->SetScoreFlg(true);
 	}
 }
 
@@ -951,7 +1075,7 @@ void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int i
 }
 
 template<class T>
-void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect, HealItem* heal)
+void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect, HealItem* heal, Koban* koban)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
 	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() && character->GetSpwanFlg() == false) {
@@ -962,7 +1086,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect, HealI
 
 		//hpが0なら
 		if (character->GetHp() <= 0)
-		{
+		{	
 			// しぶき用
 			effect->SetFlg(1);
 			effect->SetGaugeLocation(powergauge->GetCenterLocation());
@@ -974,8 +1098,15 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect, HealI
 			{
 				// アイテムの位置を設定
 				heal->SetLocation(character->GetLocation());
+				koban->SetLocation(character->GetLocation());
 				// アイテムのスポーン処理
 				ItemSpwanRand();
+			}
+
+			//蔓内で斬った敵の数をカウント
+			if (lock_flg == 3 && venemy_num2 < 15)
+			{
+				venemy_num2++;
 			}
 		}
 	}
@@ -999,9 +1130,22 @@ void GameMain::ItemSpwanRand()
 	// コインのスポーン
 	else if (85 <= item_rand && item_rand < 100)  // 85から99までがコインの範囲
 	{
-		// コインのスポーン処理を追加
+		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+	}
+}
 
-
+//蔓内での敵生成処理
+void GameMain::VineEnemy(void)
+{
+	//空いてる枠にザクロ生成
+	for (int k = 0; k < ZAKURO_MAX; k++)
+	{
+		if (zakuro[k] == nullptr)
+		{
+			zakuro[k] = new Zakuro(10300, 200, true, who++);
+			venemy_num1++;
+			break;
+		}
 	}
 }
 

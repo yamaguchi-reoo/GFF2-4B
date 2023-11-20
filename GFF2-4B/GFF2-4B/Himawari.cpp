@@ -194,6 +194,8 @@ void Himawari::ApplyDamage(int num)
 	hp -= num;
 	if (hp <= 0) {
 		spawn_flg = true;
+		//プレイヤーが斬った敵の数をカウント
+		Score::SetAttackEnemyNum(2);
 	}
 }
 

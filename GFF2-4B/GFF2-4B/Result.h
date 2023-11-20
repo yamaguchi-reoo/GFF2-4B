@@ -11,6 +11,9 @@ private:
 	int num_img[10]; //数字画像用変数
 	int x1,x2; //巻物アニメーション用
 	int anim_flg; //巻物アニメーション用
+	int zakuro_num; //斬ったザクロの数
+	int iruka_num;  //斬ったイルカの数
+	int himawari_num; //斬ったヒマワリの数
 
 public:
 	//コンストラクタ
@@ -27,4 +30,6 @@ public:
 
 	//巻物のアニメーション
 	void AnimMakimono(void);
+
+	
 };
