@@ -534,17 +534,13 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 
 void GameMain::HitCheck()
 {
+	//プレイヤーと床の当たり判定
+	PlayerFloorHitCheck();
 	//床の数だけ繰り返す
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			//プレイヤーがステージに触れたなら
-			if (player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-			{
-				//触れた面に応じて押し出す
-				player->Push(i, stage[i][j]->GetLocation(), stage[i][j]->GetErea(),stage[i][j]->GetStageCollisionType());
-			}
 
 			//ボス面のみボスの腕の当たり判定
 			if (now_stage == 3) {
@@ -649,7 +645,7 @@ void GameMain::HitCheck()
 				//プレイヤーと竹の当たり判定
 				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
 				{
-					player->Push(j, bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
+					player->Push(bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
 				}
 			}
 		}
@@ -696,6 +692,20 @@ void GameMain::HitCheck()
 				attack[i]->DeleteAttack();
 			}
 		}
+		for (int j = i + 1; j < ATTACK_NUM; j++)
+		{
+
+			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
+			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[i]->GetAttackData().who_attack == PLAYER && (attack[j]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[j]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
+			{
+				attack[j]->DeleteAttack();
+			}
+			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
+			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[j]->GetAttackData().who_attack == PLAYER && (attack[i]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[i]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
+			{
+				attack[i]->DeleteAttack();
+			}
+		}
 	}
 	//ザクロ同士で当たったら...
 	for (int i = 0; i < ZAKURO_MAX; i++)
@@ -733,6 +743,22 @@ void GameMain::HitCheck()
 			hands = nullptr;
 			boss->Dead = true;
 			Hands_Delete_Flg = false;
+		}
+	}
+}
+
+void GameMain::PlayerFloorHitCheck()
+{
+	for (int i = 0; i < stage_height_num; i++)
+	{
+		for (int j = player->GetPlayerNowErea() - 2; j < player->GetPlayerNowErea() + 2; j++)
+		{
+			//プレイヤーがステージに触れたなら
+			if (j >= 0 && player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+			{
+				//触れた面に応じて押し出す
+				player->Push(stage[i][j]->GetLocation(), stage[i][j]->GetErea(), stage[i][j]->GetStageCollisionType());
+			}
 		}
 	}
 }
