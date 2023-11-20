@@ -602,7 +602,7 @@ void Player::Attack(GameMain* main)
 			//攻撃間隔の測定を開始
 			attack_interval_count = attack_interval;
 			//プレイヤーが移動できない時間
-			attack_time_count = attack_time;
+			attack_time_count = attack_time - 10;
 		}
 		break;
 	case 5:
@@ -959,9 +959,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].width = erea.width + 100;
 	player_attack_data[0].height = 200;
 	player_attack_data[0].who_attack = 0;
-	player_attack_data[0].attack_time = 10;
+	player_attack_data[0].attack_time = 15;
 	player_attack_data[0].damage = 1;
-	player_attack_data[0].delay = 10;
+	player_attack_data[0].delay = 5;
 	player_attack_data[0].attack_type = MELEE;
 	player_attack_data[0].effect_type = PLAYER_SLASH_ONE;
 	//一段階目　強化中
@@ -970,9 +970,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[1].width = erea.width + 110;
 	player_attack_data[1].height = 220;
 	player_attack_data[1].who_attack = 0;
-	player_attack_data[1].attack_time = 5;
+	player_attack_data[1].attack_time = 7;
 	player_attack_data[1].damage = 3;
-	player_attack_data[1].delay = 5;
+	player_attack_data[1].delay = 2;
 	player_attack_data[1].attack_type = BULLET;
 	player_attack_data[1].angle = 0.0f;
 	player_attack_data[1].speed = 20;
@@ -983,9 +983,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[2].width = erea.width + 100;
 	player_attack_data[2].height = 210;
 	player_attack_data[2].who_attack = 0;
-	player_attack_data[2].attack_time = 10;
+	player_attack_data[2].attack_time = 15;
 	player_attack_data[2].damage = 1;
-	player_attack_data[2].delay = 10;
+	player_attack_data[2].delay = 5;
 	player_attack_data[2].attack_type = MELEE;
 	player_attack_data[2].effect_type = PLAYER_SLASH_TWO;
 	//二段階目　強化中
@@ -994,9 +994,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].width = erea.width + 120;
 	player_attack_data[3].height = 230;
 	player_attack_data[3].who_attack = 0;
-	player_attack_data[3].attack_time = 5;
+	player_attack_data[3].attack_time = 7;
 	player_attack_data[3].damage = 2;
-	player_attack_data[3].delay = 5;
+	player_attack_data[3].delay = 2;
 	player_attack_data[3].attack_type = BULLET;
 	player_attack_data[3].angle = 0.0f;
 	player_attack_data[3].speed = 20;
@@ -1007,7 +1007,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[4].width = erea.width + 170;
 	player_attack_data[4].height = 100;
 	player_attack_data[4].who_attack = 0;
-	player_attack_data[4].attack_time = 10;
+	player_attack_data[4].attack_time = 15;
 	player_attack_data[4].damage = 1;
 	player_attack_data[4].delay = 5;
 	player_attack_data[4].attack_type = MELEE;
@@ -1018,9 +1018,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].width = erea.width + 250;
 	player_attack_data[5].height = 110;
 	player_attack_data[5].who_attack = 0;
-	player_attack_data[5].attack_time = 10;
+	player_attack_data[5].attack_time = 13;
 	player_attack_data[5].damage = 2;
-	player_attack_data[5].delay = 5;
+	player_attack_data[5].delay = 2;
 	player_attack_data[5].attack_type = BULLET;
 	player_attack_data[5].angle = 0.0f;
 	player_attack_data[5].speed = 15;
@@ -1031,9 +1031,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[6].width = erea.width + 150;
 	player_attack_data[6].height = 200;
 	player_attack_data[6].who_attack = 0;
-	player_attack_data[6].attack_time = 10;
+	player_attack_data[6].attack_time = 15;
 	player_attack_data[6].damage = 2;
-	player_attack_data[6].delay = 10;
+	player_attack_data[6].delay = 5;
 	player_attack_data[6].attack_type = MELEE;
 	player_attack_data[6].effect_type = PLAYER_SLASH_FOUR;
 	//四段階目　強化中
@@ -1042,9 +1042,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[7].width = erea.width + 200;
 	player_attack_data[7].height = 200;
 	player_attack_data[7].who_attack = 0;
-	player_attack_data[7].attack_time = 10;
+	player_attack_data[7].attack_time = 15;
 	player_attack_data[7].damage = 3;
-	player_attack_data[7].delay = 10;
+	player_attack_data[7].delay = 5;
 	player_attack_data[7].attack_type = BULLET;
 	player_attack_data[7].angle = 0.0f;
 	player_attack_data[7].speed = 20;
@@ -1055,7 +1055,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].width = erea.width+100;
 	player_attack_data[8].height = 100;
 	player_attack_data[8].who_attack = 0;
-	player_attack_data[8].attack_time = 200;
+	player_attack_data[8].attack_time = 300;
 	player_attack_data[8].damage = 1;
 	player_attack_data[8].delay = 0;
 	player_attack_data[8].attack_type = MELEE;
@@ -1066,7 +1066,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[9].width = 100;
 	player_attack_data[9].height = 150;
 	player_attack_data[9].who_attack = 0;
-	player_attack_data[9].attack_time = 200;
+	player_attack_data[9].attack_time = 300;
 	player_attack_data[9].damage = 1;
 	player_attack_data[9].delay = 0;
 	player_attack_data[9].attack_type = MELEE;
@@ -1077,12 +1077,12 @@ void Player::SetPlayerAttackData()
 	player_attack_data[10].width = 100;
 	player_attack_data[10].height = 100;
 	player_attack_data[10].who_attack = 0;
-	player_attack_data[10].attack_time = 5;
+	player_attack_data[10].attack_time = 10;
 	player_attack_data[10].damage = 2;
 	player_attack_data[10].delay = 0;
 	player_attack_data[10].attack_type = BULLET;
 	player_attack_data[10].angle = 0.0f;
-	player_attack_data[10].speed = 20;
+	player_attack_data[10].speed = 10;
 	player_attack_data[10].effect_type = PLAYER_JUMP_SLASH_END;
 	//ジャンプ攻撃からの着地攻撃　強化用
 	player_attack_data[11].shift_x = 0;
@@ -1090,12 +1090,12 @@ void Player::SetPlayerAttackData()
 	player_attack_data[11].width = 250;
 	player_attack_data[11].height = 100;
 	player_attack_data[11].who_attack = 0;
-	player_attack_data[11].attack_time = 5;
+	player_attack_data[11].attack_time = 10;
 	player_attack_data[11].damage = 2;
 	player_attack_data[11].delay = 0;
 	player_attack_data[11].attack_type = BULLET;
 	player_attack_data[11].angle = 0.0f;
-	player_attack_data[11].speed = 25;
+	player_attack_data[11].speed = 12;
 	player_attack_data[11].effect_type = POWERUP_PLAYER_JUMP_SLASH_END;
 }
 

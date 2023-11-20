@@ -87,6 +87,7 @@ void Attack::Update(Location _location, Erea _erea)
 
 void Attack::Draw()const
 {
+#ifdef _DEBUG
 	if (can_apply_damage == true)
 	{
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, false);
@@ -94,9 +95,25 @@ void Attack::Draw()const
 		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
 		{
 			//•`‰æ‚·‚é
-#ifdef _DEBUG
 			DrawFormatStringF(local_location.x, local_location.y, 0x00ffff, "%d", attack_data.effect_type);
+		}
+	}
 #endif
+	if (can_apply_damage == true)
+	{
+		//‰¼•`‰æiŒ©‚Ã‚ç‚³–h~j
+		if (attack_data.effect_type == HIMAWARI_BULLET || attack_data.effect_type == BOSSHIMAWARI_BULLET)
+		{
+			DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
+		}
+		else
+		{
+			DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, false);
+		}
+		//UŒ‚ƒGƒtƒFƒNƒg‚ª‚ ‚é‚È‚ç
+		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
+		{
+			//•`‰æ‚·‚é
 		}
 	}
 }

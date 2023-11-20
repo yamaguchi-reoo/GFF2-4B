@@ -51,7 +51,7 @@ public:
     void SetFallFlg() { fall_flg = true; }
 
     //押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
-    void IrukaPush(int num, Location _sub_location, Erea _sub_erea);
+    void Push(int num, Location _sub_location, Erea _sub_erea);
     //床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
     void IrukaOnFloor(int num, Location _sub);
 

@@ -22,7 +22,7 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
     // タイトル シーンオブジェクト作成
     SceneManager* sceneMng = new SceneManager((AbstractScene*) new Title());
 
-
+    //fps制御
     FpsController* FPSC= new FpsController(FRAMERATE, 800);
 
     // ゲームループし、シーンマネジャーでシーンの更新

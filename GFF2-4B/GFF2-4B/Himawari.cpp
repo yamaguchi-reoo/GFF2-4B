@@ -100,7 +100,7 @@ void Himawari::HimawariGiveGravity()
 	location.y += HIMAWARI_GRAVITY;
 }
 
-void Himawari::HimawariPush(int num, Location _sub_location, Erea _sub_erea)
+void Himawari::Push(int num, Location _sub_location, Erea _sub_erea)
 {
 	Location h_center = { 0 };
 	h_center.x = location.x + (erea.width / 2);

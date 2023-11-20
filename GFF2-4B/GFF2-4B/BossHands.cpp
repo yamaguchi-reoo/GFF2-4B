@@ -877,4 +877,6 @@ float BossHands::GetRandAngle(int _wall)
 		return (GetRand(40) * 0.01f) + 0.05f;
 		break;
 	}
+
+	return 0;
 }

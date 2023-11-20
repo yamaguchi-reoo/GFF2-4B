@@ -7,7 +7,7 @@ Loading::Loading()
 {
 	try
 	{
-		loading_image = LoadGraph("resource/images/LoadImage.png");
+		loading_image = LoadGraph("resource/font/LoadingFont.png");
 		if(loading_image == -1)
 		{
 			throw "resource/images/LoadImage.png";
@@ -34,5 +34,8 @@ AbstractScene* Loading::Update()
 }
 void Loading::Draw()const
 {
-	DrawGraph(0, 0, loading_image, FALSE);
+	DrawGraph(950, 620, loading_image, FALSE);
+	DrawCircle(1170, 655, 5, 0xffffff, TRUE);
+	DrawCircle(1195, 655, 5, 0xffffff, TRUE);
+	DrawCircle(1220, 655, 5, 0xffffff, TRUE);
 }
