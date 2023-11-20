@@ -20,7 +20,7 @@ Boss::Boss() {
 	Bossbody_ImgNum = 1;
 	Hand_Num = 0;
 	New_Hand_Flg = false;
-	Boss_state = 0;
+	Boss_state = 2;
 
 }
 
@@ -29,9 +29,23 @@ Boss::~Boss() {
 }
 
 void Boss::Update(GameMain* main) {
-	BossImgChange(main);
 
-	switch()
+	if (Boss_state!= BossState::Boss_M) {
+		BossImgChange(main);
+	}
+	switch (Boss_state) {
+	case BossState::Boss_M:
+		//ボスの顔沈めてザクロの顔だけ出す
+		break;
+	case BossState::Boss_C:
+		//右腕横にやってボス出現
+		break;
+	case BossState::Boss_Y:
+		//左腕うえにやって
+		New_Hand_Flg = true;
+		Hand_Num = 2;
+		break;
+	}
 
 	/*
 	if (Dead == false) {
