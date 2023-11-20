@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -738,6 +739,12 @@ void Player::Move(GameMain* main)
 	}
 	next_location.y = location.y - acs[UP] + acs[DOWN];
 	MoveLocation(main, next_location.x - old_location.x, next_location.y - old_location.y);
+
+	//•às‰¹‚ðÄ¶‚·‚é
+	if (next_location.x != old_location.x && onfloor_flg == true)
+	{
+		SoundManager::StartSound(0);
+	}
 
 	//YÀ•W‚ªˆê’è‚ðã‰ñ‚Á‚½‚çŽ€
 	if (location.y > SCREEN_HEIGHT * 1.5f)

@@ -91,7 +91,7 @@ GameMain::~GameMain()
 
 AbstractScene* GameMain::Update()
 {
-	//更新
+	//カメラ更新
 	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
 	{
 		CameraLocation(player->GetLocation());
@@ -289,16 +289,6 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		////ボスの腕
-		//if (now_stage == 3) {
-		//	//if (hands != nullptr) {
-		//	//	if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-		//	//	{
-		//	//		attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-		//	//	}
-		//	//}
-		//}
-
 		//ボスの腕
 		if (now_stage == 3) {
 			if (hands != nullptr) {
@@ -309,24 +299,22 @@ AbstractScene* GameMain::Update()
 				}
 
 			}
-				//岩
-				for (int j = 0; j < 2; j++) {
-					if (rock[j] != nullptr) {
-						if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
-						{
-							attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
-							attack[i]->SetScreenPosition(camera_location);
-							if (hands->Death_Flg == true) {
-								//boss->Count_Death--;
-								attack[i]->DeleteAttack();
-								//hands = nullptr;
-							}
+			//岩
+			for (int j = 0; j < 2; j++) {
+				if (rock[j] != nullptr) {
+					if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
+					{
+						attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
+						attack[i]->SetScreenPosition(camera_location);
+						if (hands->Death_Flg == true) {
+							//boss->Count_Death--;
+							attack[i]->DeleteAttack();
+							//hands = nullptr;
 						}
 					}
 				}
-			
+			}
 		}
-
 	}
 
 	if (effect->GetFlg() == 2)
@@ -354,6 +342,7 @@ AbstractScene* GameMain::Update()
 			sighboard[i]->SetScreenPosition(camera_location);
 		}
 	}
+
 	//当たり判定関連の処理を行う
 	HitCheck();
 
@@ -381,6 +370,8 @@ AbstractScene* GameMain::Update()
 			return new Loading;
 		}
 	}
+
+	//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバー
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver(now_stage);
 	}
@@ -428,10 +419,6 @@ AbstractScene* GameMain::Update()
 		hands = new BossHands(who++, boss);
 	}
 #endif
-
-	if (player->GetPlayerHP() < 0) {
-		return new GameOver(now_stage);
-	}
 
 	return this;
 }
