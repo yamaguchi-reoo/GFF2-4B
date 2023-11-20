@@ -70,6 +70,14 @@ private:
     int stage_width;        //ステージ横幅
 
     int lock_flg; //強制戦闘ゾーン用フラグ(0:プレイヤーが看板の前にいる状態 1:プレイヤーが閉じ込められている状態 2:プレイヤーが解放された状態)
+    float vine_y; //プレイヤーを閉じ込める蔓のY座標
+    float vine_x1; //プレイヤーを閉じ込める蔓のX座標
+    float vine_x2; //プレイヤーを閉じ込める蔓のX座標
+    int vine_img[2]; //プレイヤーを閉じ込める蔓の画像
+    int venemy_cnt; //プレイヤーを閉じ込めた後の敵生成
+    int venemy_num1; //プレイヤーを閉じ込めた後の敵生成した数
+    int venemy_num2; //プレイヤーを閉じ込めた後の敵生成した数
+
 
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
@@ -112,5 +120,8 @@ public:
     //エネミーの攻撃を受ける処理
     template <class T>
     void ProcessAttack(Attack* attack, T* character, Effect* effect);
+
+    //つるでプレイヤーを閉じ込める処理
+    void VineEnemy(void);
 };
 
