@@ -36,7 +36,7 @@
 #define STAGE_GOAL 0.05
 #define SIGH_BOARD_NUM 5				//看板の数
 //エネミーの数
-#define ZAKURO_MAX 20	//ザクロの最大数
+#define ZAKURO_MAX 50	//ザクロの最大数
 #define IRUKA_MAX 20		//イルカの最大数
 #define HIMAWARI_MAX 20	//ひまわりの最大数
 

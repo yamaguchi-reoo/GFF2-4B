@@ -50,7 +50,7 @@ GameMain::GameMain(int _stage)
 	vine_y = 730.0f;
 	venemy_cnt = 0;
 	venemy_num1 = 0;
-	venemy_num2 = 0;
+	venemy_num2 = 15;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
 
@@ -405,10 +405,8 @@ AbstractScene* GameMain::Update()
 			venemy_cnt = 0;
 		}
 	}
-	
-	if (lock_flg == 3 && venemy_num1 >= 15)
+	else if (lock_flg == 3 && venemy_num2 <= 0)
 	{
-		venemy_num2 = venemy_num1;
 		lock_flg = 4;
 	}
 
@@ -621,7 +619,7 @@ void GameMain::Draw() const
 	}
 
 #ifdef _DEBUG
-	DrawFormatString(1000, 10, 0x000000, "%d", lock_flg);
+	DrawFormatString(1000, 10, 0x000000, "%d", venemy_num1);
 
 #endif // !_DEBUG
 }
@@ -1075,7 +1073,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(640 * BOX_WIDTH, 10 * BOX_HEIGHT, true, who++);
+			zakuro[k] = new Zakuro(10300, 10, true, who++);
 			venemy_num1++;
 		}
 	}
