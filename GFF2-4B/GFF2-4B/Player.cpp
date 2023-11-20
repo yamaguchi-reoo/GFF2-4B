@@ -35,6 +35,7 @@ Player::Player()
 #endif
 	frame = 0;
 	old_location = { 0 };
+	next_location = { 0 };
 	location.x = 100;
 	location.y = 400;
 	erea.height = PLAYER_HEIGHT;
@@ -82,6 +83,7 @@ Player::Player()
 	hidden_flg = false;
 	death_flg = false;
 	death_time = 120;
+	player_now_erea = GetCenterLocation().x / BOX_WIDTH;
 }
 
 Player::~Player() 
@@ -99,6 +101,7 @@ void Player::Update(GameMain* main)
 	}
 #endif
 	frame++;
+	player_now_erea = GetCenterLocation().x / BOX_WIDTH;
 	//生きているなら重力、ダメージ、攻撃関連の処理を行う
 	if (death_flg == false)
 	{
@@ -141,11 +144,17 @@ void Player::Update(GameMain* main)
 	}
 
 	//移動処理
-	Move();
+	Move(main);
 
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
-
+	//床に触れていないなら
+	if (onfloor_flg == false)
+	{
+		//重力を与える
+		GiveGravity();
+		jump_flg = true;
+	}
 	//各移動用変数をリセット
 	Reset();
 
@@ -308,6 +317,7 @@ void Player::Draw()const
 	}
 	DrawFormatString(0, 380, 0xffffff, "状態:%s", player_state_char[player_state]);
 	DrawFormatString(110, 200, 0xffffff, "Q=デバッグ用無敵:%d", d_inv_flg);
+	DrawFormatString(110, 230, 0xffffff, "jump_flg=%d", jump_flg);
 	SetFontSize(old_size);
 #endif // DEBUG
 }
@@ -335,19 +345,15 @@ void Player::DecAcs(int num)
 void Player::OnFloor()
 {
 	acs[DOWN] = 0;
-	acs[UP] = 0.05f;
+	acs[UP] = 0;
 	onfloor_flg = true;
 	jump_flg = false;
 }
 
-void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
+void Player::Push(Location _sub_location, Erea _sub_erea ,int _type)
 {
-	Location p_center = { 0 };
-	p_center.x = location.x + (erea.width / 2);
-	p_center.y = location.y + (erea.height / 2);
-
 	//右の壁に触れた時
-	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
+	if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 12 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
 	{
 		location.x = _sub_location.x - erea.width;
 		//右加速度を0にする
@@ -356,7 +362,7 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 10 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
+	else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 12> _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
 	{
 		location.x = _sub_location.x + _sub_erea.width;
 		//左加速度を0にする
@@ -365,12 +371,12 @@ void Player::Push(int num,Location _sub_location, Erea _sub_erea ,int _type)
 		leftwall_flg = true;
 	}
 	//床に触れた時
-	else if (location.y + erea.height - 31 < _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4 || _type == 8))
+	else if (location.y + erea.height -30< _sub_location.y && (_type == 1 || _type == 2 ||_type == 3 || _type == 4 || _type == 8))
 	{
 		//木と雲は上から降りてきたときだけ乗れるようにする
 		if ((_type != 2 && acs[DOWN] - acs[UP] >= 0) || (_type != 4 && acs[DOWN] - acs[UP] >= 0))
 		{
-			location.y = _sub_location.y - erea.height + 0.1f;
+			location.y = _sub_location.y - erea.height+0.1f;
 			OnFloor();
 		}
 	}
@@ -620,16 +626,8 @@ void Player::Attack(GameMain* main)
 	}
 }
 
-void Player::Move()
+void Player::Move(GameMain* main)
 {
-	//床に触れていないなら
-	if (onfloor_flg == false)
-	{
-		//重力を与える
-		GiveGravity();
-		jump_flg = true;
-	}
-
 	//いずれかの攻撃が発生しているか、ダメージを受けている途中か、死んでいる途中なら
 	if ((PlayAnyAttack() == true && attack_motion_flg[4] == false) || damage_flg == true || death_flg == true)
 	{
@@ -697,6 +695,7 @@ void Player::Move()
 		{
 			DecAcs(RIGHT);
 		}
+
 	//ジャンプ
 	if (
 #ifdef _DEBUG
@@ -704,7 +703,7 @@ void Player::Move()
 #else
 		PadInput::OnButton(XINPUT_BUTTON_A) == true
 #endif
-		&& jump_flg == false && move_flg == true)   
+		&& jump_flg == false && move_flg == true)
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;
@@ -732,12 +731,13 @@ void Player::Move()
 	//1フレーム前の座標を保存
 	old_location = location;
 	//移動処理
-	location.x = location.x - acs[LEFT] + acs[RIGHT] - external_move[LEFT] + external_move[RIGHT];
-	if (location.x < 0)
+	next_location.x = location.x - acs[LEFT] + acs[RIGHT];
+	if (next_location.x < 0)
 	{
-		location.x = old_location.x;
+		next_location.x = old_location.x;
 	}
-	location.y = location.y - acs[UP] + acs[DOWN] - external_move[UP] + external_move[DOWN];
+	next_location.y = location.y - acs[UP] + acs[DOWN];
+	MoveLocation(main, next_location.x - old_location.x, next_location.y - old_location.y);
 
 	//Y座標が一定を上回ったら死
 	if (location.y > SCREEN_HEIGHT * 1.5f)
@@ -1136,4 +1136,34 @@ void Player::Respawn(Location _location)
 	death_flg = false;
 	death_time = 120;
 	damage_time = 0;
+}
+
+void Player::MoveLocation(GameMain* main, float _x, float _y)
+{
+	for (int i = 0; i < (int)(fabsf(_y) * 10); i++)
+	{
+		if (_y > 0)
+		{
+			main->PlayerFloorHitCheck();
+			if (onfloor_flg == false)location.y += 0.1f;
+		}
+		else if (_y < 0)
+		{
+			main->PlayerFloorHitCheck();
+			location.y -= 0.1f;
+		}
+	}
+	for (int i = 0; i < (int)(fabsf(_x)*10); i++)
+	{
+		if (_x > 0)
+		{
+			main->PlayerFloorHitCheck();
+			location.x+=0.1f;
+		}
+		else if(_x < 0)
+		{
+			main->PlayerFloorHitCheck();
+			location.x-=0.1f;
+		}
+	}
 }
