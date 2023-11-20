@@ -66,8 +66,9 @@ private:
 
     int stage_width_num;    //ステージブロックの横数
     int stage_height_num;   //ステージブロックの縦数
-
     int stage_width;        //ステージ横幅
+
+    int impact_timer;               //画面揺れ演出
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 
@@ -86,7 +87,7 @@ public:
     void SpawnAttack(AttackData _attackdata);
 
     //各当たり判定(プレイヤーと床以外)の処理
-    void HitCheck();
+    void HitCheck(GameMain* main);
 
     //プレイヤーと床の当たり判定処理
     void PlayerFloorHitCheck();
@@ -105,6 +106,9 @@ public:
 
     //ボスにプレイヤーの座標を渡す用
     Location GetPlayerLocation();
+
+    //カメラを揺らす用の変数を設定する(_power = 揺れている時間と強度)
+    void ImpactCamera(int _power);
 
     //エネミーのPushを関数化
     template <class T>
