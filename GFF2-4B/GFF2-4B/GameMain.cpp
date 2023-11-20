@@ -726,6 +726,7 @@ void GameMain::HitCheck()
 		if (Hands_Delete_Flg==true) {
 			boss->Count_Death--;
 			hands = nullptr;
+			boss->Once_Flg = true;
 			Hands_Delete_Flg = false;
 		}
 	}

@@ -37,6 +37,8 @@ public:
     int Hand_Num;
     bool New_Hand_Flg;//ƒ{ƒX‚Ìè‚ğ”­¶‚³‚¹‚é—p
     int Boss_state;
+    int Boss_step;
+    bool Once_Flg;
 
     Boss();
     ~Boss();
@@ -47,6 +49,6 @@ public:
     void Draw()const override;
     int GetBossForm() { return Boss_Form; };
     void BossImgChange(GameMain* main);
-
+    void Boss_MakeHand();
 };
 

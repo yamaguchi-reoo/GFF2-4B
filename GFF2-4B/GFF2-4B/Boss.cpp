@@ -7,7 +7,6 @@ Boss::Boss() {
 
 	timer = 0;
 
-	BossState::Boss_C;
 
 	Boss_Arm_Rightx=800;
 	Boss_Arm_Righty=0;
@@ -21,7 +20,8 @@ Boss::Boss() {
 	Hand_Num = 0;
 	New_Hand_Flg = false;
 	Boss_state = 2;
-
+	Once_Flg = true;
+	Boss_step = 0;
 }
 
 Boss::~Boss() {
@@ -30,9 +30,14 @@ Boss::~Boss() {
 
 void Boss::Update(GameMain* main) {
 
+
+
 	if (Boss_state!= BossState::Boss_M) {
 		BossImgChange(main);
 	}
+
+	Boss_MakeHand();
+
 	switch (Boss_state) {
 	case BossState::Boss_M:
 		//ボスの顔沈めてザクロの顔だけ出す
@@ -42,8 +47,6 @@ void Boss::Update(GameMain* main) {
 		break;
 	case BossState::Boss_Y:
 		//左腕うえにやって
-		New_Hand_Flg = true;
-		Hand_Num = 2;
 		break;
 	}
 
@@ -69,6 +72,7 @@ void Boss::Update(GameMain* main) {
 		}
 	}
 	*/
+
 }
 
 void Boss::Draw() const {
@@ -97,4 +101,41 @@ void Boss::BossImgChange(GameMain* main) {
 	else {
 		Bossbody_ImgNum = 2;
 	}
+}
+
+void Boss::Boss_MakeHand() {
+
+	if(Once_Flg==true){
+		if (timer++ > 200) {
+			switch (Boss_step) {
+			case 0:
+				Boss_state = Boss_Y;
+				Boss_step++;
+				break;
+			case 1:
+				Boss_state = Boss_M;
+				Boss_step++;
+				break;
+			case 2:
+				Boss_state = Boss_C;
+				Boss_step++;
+				break;
+			case 3:
+				Boss_state = Boss_M;
+				Boss_step++;
+
+				break;
+			case 4:
+				
+				break;
+			}
+			
+
+			New_Hand_Flg = true;
+			Hand_Num = Boss_state;
+			timer = 0;
+			Once_Flg = false;
+		}
+	}
+
 }
