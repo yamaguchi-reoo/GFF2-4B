@@ -20,6 +20,7 @@
 #include "LoadingScene.h"
 #include "Score.h"
 #include "SighBoard.h"
+#include "HealItem.h"
 
 class Player;
 
@@ -50,6 +51,7 @@ private:
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
+    HealItem* heal;     //回復アイテム
     Score* score; //スコアUIのオブジェクト
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
@@ -68,6 +70,8 @@ private:
     int stage_height_num;   //ステージブロックの縦数
 
     int stage_width;        //ステージ横幅
+
+    int item_rand;
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 
@@ -109,5 +113,7 @@ public:
     //エネミーの攻撃を受ける処理
     template <class T>
     void ProcessAttack(Attack* attack, T* character, Effect* effect);
+    //アイテムのランダム出現
+    void ItemSpwanRand();
 };
 

@@ -99,7 +99,7 @@ float Effect::SetGaugeLocation(Location _location)
 void Effect::SetSplashColor(ColorDate color)
 {
 	color_date.magenta = color.magenta;
-	color_date.syan = color.syan;
+	color_date.cyan = color.cyan;
 	color_date.yellow = color.yellow;
 
 }

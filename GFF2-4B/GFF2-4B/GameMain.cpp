@@ -18,6 +18,7 @@ GameMain::GameMain(int _stage)
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
+	item_rand = 0;
 
 	if (now_stage == 3) {
 		boss = new Boss();
@@ -28,13 +29,15 @@ GameMain::GameMain(int _stage)
 	{
 		count[i] = 0;
 	}
+	
+	heal = new HealItem();
 
 	powergauge = new PowerGauge();
 
 	playerhp = new PlayerHP();
 
 	score = new Score();
-
+	
 	effect = new Effect();
 
 	loading_scene = new Loading();
@@ -144,8 +147,6 @@ AbstractScene* GameMain::Update()
 
 	//ボスの腕アップデート
 	if (now_stage == 3) {
-
-
 		if (boss != nullptr) {
 			//if (player->GetLocation().x<= 
 			// 
@@ -172,24 +173,17 @@ AbstractScene* GameMain::Update()
 				else {
 					rock[0] = new Rock(who++, hands->switching);
 				}
-
 			}
-
-
-		}
-		
-		//岩アップデート
-
-			for (int i = 0; i < 2; i++) {
-				if (rock[i] != nullptr) {
-					rock[i]->Update(this);
-					if (rock[i]->Rock_Delete == true) {
-						rock[i] = nullptr;
-					}
+		}	
+	//岩アップデート
+		for (int i = 0; i < 2; i++) {
+			if (rock[i] != nullptr) {
+				rock[i]->Update(this);
+				if (rock[i]->Rock_Delete == true) {
+					rock[i] = nullptr;
 				}
 			}
-		
-
+		}
 	}
 
 	player->Update(this);
@@ -200,7 +194,10 @@ AbstractScene* GameMain::Update()
 
 	playerhp->Update(player->GetPlayerHP());
 
+	heal->SetScreenPosition(camera_location);
+
 	score->Update();
+
 
 	effect->Update(this);
 	effect->SetScreenPosition(camera_location);
@@ -432,13 +429,13 @@ AbstractScene* GameMain::Update()
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver(now_stage);
 	}
-
 	return this;
 }
 
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示
 	if (now_stage == 3) {
@@ -503,6 +500,9 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+
+	//heal->Draw();
+
 	powergauge->Draw();
 	playerhp->Draw();
 	score->Draw();
@@ -917,15 +917,44 @@ void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int i
 template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
 {
+	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
 	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() && character->GetSpwanFlg() == false) {
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
 		// しぶき用
-
 		effect->SetFlg(1);
 		effect->SetGaugeLocation(powergauge->GetCenterLocation());
 		effect->SetLocation(character->GetLocalLocation());
 		effect->SetSplashColor(character->GetColorDate());
+
+		// アイテムの位置を設定
+		heal->SetLocation(character->GetLocalLocation());
+		// アイテムのスポーン処理
+		ItemSpwanRand();
+		
 	}
 }
+
+// アイテムスポーンのランダムな処理
+void GameMain::ItemSpwanRand()
+{
+	item_rand = GetRand(99);  // 0から99のランダムな値を取得
+
+	// 回復アイテムのスポーン
+	if (item_rand < 60)  // 0から59までが回復アイテムの範囲
+	{
+		heal->SetSpawnFlg(true);  // 回復アイテムをスポーンさせるフラグを設定
+	}
+	// スポーン無し
+	else if (60 <= item_rand && item_rand < 85)  // 60から84までがスポーン無しの範囲
+	{
+		// 何もしないか、必要に応じて処理を追加
+	}
+	// コインのスポーン
+	else if (85 <= item_rand && item_rand < 100)  // 85から99までがコインの範囲
+	{
+		// コインのスポーン処理を追加
+	}
+}
+

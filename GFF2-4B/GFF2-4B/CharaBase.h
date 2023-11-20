@@ -6,7 +6,7 @@ class GameMain;
 
 struct ColorDate {
 	float magenta;
-	float syan;
+	float cyan;
 	float yellow;
 };
 

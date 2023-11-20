@@ -14,6 +14,7 @@
 #define SCREEN_LEFT_END 0
 #define FLOOR_NUM	3	//床の数
 
+//竹
 #define BAMBOO_NUM 3 //竹の積まれている数
 #define BAMBOO_MAX 15 //竹の最大数
 
@@ -42,6 +43,9 @@
 
 //エフェクト
 #define SPLASH_MAX 50
+
+//アイテム
+#define HEAL_ITEM_MAX 10 //回復アイテムの最大数
 
 #define PLAYER_SLASH_ONE 0
 #define PLAYER_SLASH_TWO 1
