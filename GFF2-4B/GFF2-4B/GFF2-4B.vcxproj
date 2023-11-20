@@ -171,6 +171,7 @@
     <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="SelectStage.cpp" />
     <ClCompile Include="SighBoard.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StageData.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Zakuro.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="SelectStage.h" />
     <ClInclude Include="SighBoard.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StageData.h" />
     <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PowerGauge.h" />

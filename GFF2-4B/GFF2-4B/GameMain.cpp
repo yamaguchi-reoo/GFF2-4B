@@ -43,17 +43,6 @@ GameMain::GameMain(int _stage)
 	onfloor_flg = false;
 
 	Hands_Delete_Flg = false;
-
-	lock_flg = 0;
-	vine_x1 = -650.0f;
-	vine_x2 = 1280.5f;
-	vine_y = 730.0f;
-	venemy_cnt = 0;
-	venemy_num1 = 0;
-	venemy_num2 = 15;
-	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
-	vine_img[1] = LoadGraph("resource/images/kusa.png");
-
 }
 
 GameMain::~GameMain()
@@ -102,8 +91,8 @@ GameMain::~GameMain()
 
 AbstractScene* GameMain::Update()
 {
-	//更新
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 7))
+	//カメラ更新
+	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3)
 	{
 		CameraLocation(player->GetLocation());
 	}
@@ -300,16 +289,6 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		////ボスの腕
-		//if (now_stage == 3) {
-		//	//if (hands != nullptr) {
-		//	//	if (attack[i]->GetAttackData().who_attack == hands->GetWho())
-		//	//	{
-		//	//		attack[i]->Update(hands->GetCenterLocation(), hands->GetErea());
-		//	//	}
-		//	//}
-		//}
-
 		//ボスの腕
 		if (now_stage == 3) {
 			if (hands != nullptr) {
@@ -320,24 +299,22 @@ AbstractScene* GameMain::Update()
 				}
 
 			}
-				//岩
-				for (int j = 0; j < 2; j++) {
-					if (rock[j] != nullptr) {
-						if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
-						{
-							attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
-							attack[i]->SetScreenPosition(camera_location);
-							if (hands->Death_Flg == true) {
-								//boss->Count_Death--;
-								attack[i]->DeleteAttack();
-								//hands = nullptr;
-							}
+			//岩
+			for (int j = 0; j < 2; j++) {
+				if (rock[j] != nullptr) {
+					if (attack[i]->GetAttackData().who_attack == rock[j]->GetWho())
+					{
+						attack[i]->Update(rock[j]->GetCenterLocation(), rock[j]->GetErea());
+						attack[i]->SetScreenPosition(camera_location);
+						if (hands->Death_Flg == true) {
+							//boss->Count_Death--;
+							attack[i]->DeleteAttack();
+							//hands = nullptr;
 						}
 					}
 				}
-			
+			}
 		}
-
 	}
 
 	if (effect->GetFlg() == 2)
@@ -366,79 +343,6 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	/**プレイヤーを閉じ込めるここから*/
-
-	//プレイヤーが強化ゲージの看板がある座標に来たら
-	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10285)
-	{
-		lock_flg = 1;
-	}
-	
-	if (lock_flg == 1 && vine_y > 70.0f)
-	{//蔓を下からはやす
-		vine_y -= 35.0f;
-	}
-	
-	if (lock_flg == 1 && vine_y <= 70.0f)
-	{
-		lock_flg = 2;
-	}
-
-
-	if(lock_flg == 2 && vine_x1 < 0)
-	{//草を横からはやす
-		vine_x1 += 35.0f;
-		vine_x2 -= 35.0f;
-	}
-	
-	if (lock_flg == 2 && vine_x1 >= 0)
-	{
-		lock_flg = 3;
-	}
-	
-	if(lock_flg == 3 && venemy_num1 < 15)
-	{//ザクロを15匹生成
-		venemy_cnt++;
-		if (venemy_cnt <= 120)
-		{
-			VineEnemy();
-			venemy_cnt = 0;
-		}
-	}
-	else if (lock_flg == 3 && venemy_num2 <= 0)
-	{
-		lock_flg = 4;
-	}
-
-
-	if (lock_flg == 4 && venemy_num2 <= 0)
-	{//ザクロを15匹倒したら解放
-		lock_flg = 5;
-	}
-	
-	if (lock_flg == 5 && vine_x1 > -2.0f)
-	{
-		vine_x1 -= 35.0f;
-		vine_x2 += 35.0f;
-	}
-	
-	if (lock_flg == 5 && vine_x1 <= -2.0f)
-	{
-		lock_flg = 6;
-	}
-
-	if(lock_flg == 6 && vine_y < 730.0f)
-	{//蔓をひっこめる
-		vine_y += 35.0f;
-	}
-	
-	if(lock_flg == 6 && vine_y >= 730.0f)
-	{
-		lock_flg = 7;
-	}
-	
-	/**プレイヤーを閉じ込めるここまで*/
-
 	//当たり判定関連の処理を行う
 	HitCheck();
 
@@ -466,6 +370,8 @@ AbstractScene* GameMain::Update()
 			return new Loading;
 		}
 	}
+
+	//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバー
 	if (player->GetPlayerHP() < 0) {
 		return new GameOver(now_stage);
 	}
@@ -512,16 +418,7 @@ AbstractScene* GameMain::Update()
 		boss = new Boss();
 		hands = new BossHands(who++, boss);
 	}
-
-	if (KeyInput::OnPresed(KEY_INPUT_8))
-	{
-		lock_flg == 3;
-	}
 #endif
-
-	if (player->GetPlayerHP() < 0) {
-		return new GameOver(now_stage);
-	}
 
 	return this;
 }
@@ -608,20 +505,6 @@ void GameMain::Draw() const
 			sighboard[i]->Draw();
 		}
 	}
-
-	//プレイヤーを閉じ込める蔓の描画
-	if (lock_flg > 0 || lock_flg < 7)
-	{
-		DrawGraphF(-10, vine_y, vine_img[0], TRUE);
-		DrawGraphF(1170, vine_y, vine_img[0], TRUE);
-		DrawGraphF(vine_x1, -5, vine_img[1], TRUE);
-		DrawGraphF(vine_x2, -5, vine_img[1], TRUE);
-	}
-
-#ifdef _DEBUG
-	DrawFormatString(1000, 10, 0x000000, "%d", venemy_num1);
-
-#endif // !_DEBUG
 }
 
 void GameMain::SpawnAttack(AttackData _attackdata)
@@ -695,11 +578,6 @@ void GameMain::HitCheck()
 						{
 							//触れた面に応じて押し出す
 							zakuro[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
-
-							if (venemy_num2 > 0)
-							{
-								venemy_num2--;
-							}
 						}
 					}
 				}
@@ -1062,19 +940,5 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
 		effect->SetGaugeLocation(powergauge->GetCenterLocation());
 		effect->SetLocation(character->GetLocalLocation());
 		effect->SetSplashColor(character->GetColorDate());
-	}
-}
-
-//つるでプレイヤーを閉じ込める処理
-void GameMain::VineEnemy(void)
-{
-	//空いてる枠にザクロ生成
-	for (int k = 0; k < ZAKURO_MAX; k++)
-	{
-		if (zakuro[k] == nullptr)
-		{
-			zakuro[k] = new Zakuro(10300, 10, true, who++);
-			venemy_num1++;
-		}
 	}
 }
