@@ -6,6 +6,7 @@ class Loading :public AbstractScene
 private:
 	int loading_image;		//読込用画像
 	int loading_time;		//読込時間用変数
+	int loading_mark_time;	//・(中黒点)待ち時間用変数
 	//int load_mark_image;	//読込中記号表示用変数
 
 public:

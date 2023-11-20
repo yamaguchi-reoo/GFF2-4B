@@ -50,6 +50,8 @@ public:
     //落下フラグをセット
     void SetFallFlg() { fall_flg = true; }
 
+    int  GetReturnFlg() { return return_flg; }
+
     //押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
     void Push(int num, Location _sub_location, Erea _sub_erea);
     //床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)

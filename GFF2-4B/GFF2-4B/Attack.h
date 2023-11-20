@@ -24,7 +24,7 @@ public:
 	//ダメージを与えられるか判断
 	bool GetCanApplyDamage() { return can_apply_damage; }
 	//攻撃を消す
-	void DeleteAttack() { attack_flg = false; }
+	void DeleteAttack();
 	//攻撃をプレイヤーの顔側に移動させる
 	void SetDirection(bool _dir) { attack_data.direction = _dir; }
 };

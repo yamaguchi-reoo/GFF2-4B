@@ -78,6 +78,7 @@ private:
 
 	//移動関連
 	Location old_location;			//1フレーム前の座標
+	Location next_location;			//1フレーム後の座標
 	float move_speed;				//移動速度(左右)
 	float jump_power;				//跳躍力
 	float acs[4];					//加速度 0=下方向 1=上方向 2=右方向 3=左方向
@@ -86,6 +87,7 @@ private:
 	bool move_flg;					//動ける状態か
 	float external_move[4];			//外部から加わるプレイヤーを移動させる力 0=下方向 1=上方向 2=右方向 3=左方向
 	bool jump_flg;					//ジャンプ中か
+	int player_now_erea;			//自分の座標の周囲にあるステージブロックからしか当たり判定を取らないようにする
 
 	//攻撃関連
 	AttackData player_attack_data[ATTACK_NUM * 2];	//プレイヤーの攻撃段階と状態に応じたデータをまとめて格納しておく
@@ -139,8 +141,8 @@ public:
 	//床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
 	void OnFloor();
 
-	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標 _type = 当たった床の種類)
-	void Push(int num,Location _sub_location, Erea _sub_erea, int _type);
+	//押し出す( _sub = 当たっている床の左上座標 _type = 当たった床の種類)
+	void Push(Location _sub_location, Erea _sub_erea, int _type);
 
 	//各判定をリセット
 	void Reset();
@@ -167,7 +169,7 @@ public:
 	void Attack(GameMain* main);
 
 	//移動関連の処理
-	void Move();
+	void Move(GameMain* main);
 
 	//描画関連の変数を動かす処理
 	void Anim();
@@ -201,5 +203,11 @@ public:
 
 	//プレイヤーの顔の向き
 	bool GetPlayerDirection() { return direction; }
+
+	//プレイヤーが今居るエリアを取得
+	int GetPlayerNowErea() { return player_now_erea; }
+
+	//１マス移動毎に床との当たり判定をチェックする
+	void MoveLocation(GameMain* main,float _x, float _y);
 };
 
