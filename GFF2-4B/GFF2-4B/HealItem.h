@@ -7,6 +7,7 @@ class HealItem :
 {
 private:
 	bool spawn_flg;
+	int heal_image;
 public:
 
 	HealItem(/*float pos_x, float pos_y*/);
@@ -21,6 +22,6 @@ public:
 
 	int GetSpawnFlg() { return spawn_flg; }
 
-	float SetLocation(Location _location);
+	void SetLocation(Location _location);
 };
 

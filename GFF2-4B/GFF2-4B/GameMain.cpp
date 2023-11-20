@@ -29,8 +29,7 @@ GameMain::GameMain(int _stage)
 	{
 		count[i] = 0;
 	}
-	
-	heal = new HealItem();
+
 
 	powergauge = new PowerGauge();
 
@@ -39,6 +38,8 @@ GameMain::GameMain(int _stage)
 	score = new Score();
 	
 	effect = new Effect();
+
+	heal = new HealItem();
 
 	loading_scene = new Loading();
 
@@ -501,7 +502,7 @@ void GameMain::Draw() const
 		}
 	}
 
-	//heal->Draw();
+	heal->Draw();
 
 	powergauge->Draw();
 	playerhp->Draw();
@@ -582,7 +583,7 @@ void GameMain::HitCheck()
 			if (zakuro[j] != nullptr)
 			{
 				// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], zakuro[j], effect);
+				ProcessAttack(attack[i], zakuro[j], effect, heal);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -601,7 +602,7 @@ void GameMain::HitCheck()
 			if (iruka[j] != nullptr) 
 			{
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], iruka[j], effect);
+				ProcessAttack(attack[i], iruka[j], effect , heal);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -618,7 +619,7 @@ void GameMain::HitCheck()
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], himawari[j], effect);
+				ProcessAttack(attack[i], himawari[j], effect, heal);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -744,6 +745,11 @@ void GameMain::HitCheck()
 			boss->Dead = true;
 			Hands_Delete_Flg = false;
 		}
+	}
+
+	if (player->HitBox(heal) == true)
+	{
+		heal->SetSpawnFlg(false);
 	}
 }
 
@@ -941,24 +947,31 @@ void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int i
 }
 
 template<class T>
-void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
+void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect, HealItem* heal)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
 	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() && character->GetSpwanFlg() == false) {
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
-		// しぶき用
-		effect->SetFlg(1);
-		effect->SetGaugeLocation(powergauge->GetCenterLocation());
-		effect->SetLocation(character->GetLocalLocation());
-		effect->SetSplashColor(character->GetColorDate());
-
-		// アイテムの位置を設定
-		heal->SetLocation(character->GetLocalLocation());
-		// アイテムのスポーン処理
-		ItemSpwanRand();
-		
+		//hpが0なら
+		if (character->GetHp() <= 0)
+		{
+			// しぶき用
+			effect->SetFlg(1);
+			effect->SetGaugeLocation(powergauge->GetCenterLocation());
+			effect->SetLocation(character->GetLocalLocation());
+			effect->SetSplashColor(character->GetColorDate());
+			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 50.0f) ||
+				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f)||
+				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
+			{
+				// アイテムの位置を設定
+				heal->SetLocation(character->GetLocation());
+				// アイテムのスポーン処理
+				ItemSpwanRand();
+			}
+		}
 	}
 }
 

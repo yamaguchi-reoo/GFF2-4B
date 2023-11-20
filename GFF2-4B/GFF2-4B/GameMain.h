@@ -115,7 +115,7 @@ public:
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect);
+    void ProcessAttack(Attack* attack, T* character, Effect* effect,HealItem* heal);
     //アイテムのランダム出現
     void ItemSpwanRand();
 };

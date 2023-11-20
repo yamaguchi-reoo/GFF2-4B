@@ -192,7 +192,9 @@ void Himawari::Attack(GameMain* main)
 void Himawari::ApplyDamage(int num)
 {
 	hp -= num;
-	spawn_flg = true;
+	if (hp <= 0) {
+		spawn_flg = true;
+	}
 }
 
 void Himawari::ReverseDirection()
