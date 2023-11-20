@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -430,7 +431,7 @@ void Player::ForciblyMovePlayer(ScrollData _scroll)
 	}
 }
 
-void Player::ApplyDamage(int num)
+void Player::ApplyDamage(GameMain* main,int num)
 {
 	//–³“Gó‘Ô‚Å‚È‚¢•Ž€‚ñ‚Å‚¢‚éó‘Ô‚Å‚È‚¢AƒfƒoƒbƒO—p‚Ì–³“Gó‘Ô‚Å‚È‚¢‚È‚ç
 	if (inv_flg == false && death_flg == false 
@@ -453,6 +454,8 @@ void Player::ApplyDamage(int num)
 		}
 		//ƒ_ƒ[ƒWŒã‚Ì–³“Gó‘Ô‚É“ü‚é
 		inv_flg = true;
+		//ƒJƒƒ‰‚ð—h‚ç‚·
+		main->ImpactCamera(num * 10);
 	}
 }
 
@@ -548,8 +551,8 @@ void Player::Attack(GameMain* main)
 			//UŒ‚‚ð¶¬‚·‚é
 			main->SpawnAttack(CreateAttactData(attack_step));
 		}
-		//‹ó’†‚É‚¢‚é‚È‚ç
-		else
+		//‹ó’†‚É‚¢‚ÄA—Ž‰ºUŒ‚’†‚Å‚È‚¢‚È‚ç
+		else if (attack_step != 4)
 		{
 			//—Ž‰ºUŒ‚‚ðs‚¤
 			attack_step = 4;
@@ -738,6 +741,12 @@ void Player::Move(GameMain* main)
 	}
 	next_location.y = location.y - acs[UP] + acs[DOWN];
 	MoveLocation(main, next_location.x - old_location.x, next_location.y - old_location.y);
+
+	//•às‰¹‚ðÄ¶‚·‚é
+	if (next_location.x != old_location.x && onfloor_flg == true)
+	{
+		SoundManager::StartSound(0);
+	}
 
 	//YÀ•W‚ªˆê’è‚ðã‰ñ‚Á‚½‚çŽ€
 	if (location.y > SCREEN_HEIGHT * 1.5f)
