@@ -745,8 +745,9 @@ void GameMain::HitCheck(GameMain* main)
 		}
 	}
 
-	if (player->HitBox(heal) == true)
+	if (player->HitBox(heal) == true && heal->GetSpawnFlg() == true)
 	{
+		player->AddPlayerHp();
 		heal->SetSpawnFlg(false);
 	}
 }

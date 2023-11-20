@@ -101,5 +101,4 @@ void PlayerHP::AnimHP(void)
 	default:
 		break;
 	}
-	
 }
