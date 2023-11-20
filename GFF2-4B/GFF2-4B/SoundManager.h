@@ -5,7 +5,7 @@
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
 static char sound_filepath[SOUND_NUM][256] =
 {
-	"",
+	"resource/sounds/打撃4.mp3",
 };
 
 struct Sound {
@@ -38,15 +38,21 @@ public :
 	static void UpdateSound() {
 		for (int i = 0; i < SOUND_NUM; i++)
 		{
+			//再生するなら
 			if (sound_data[i].play_flg == true)
 			{
-				//仮で音が重なってもそのまま再生する
+				//その音が再生中でないなら
+				if (CheckSoundMem(sound_data[i].dat) == false)
+				{
+					//再生する
+					PlaySoundMem(sound_data[i].dat, DX_PLAYTYPE_BACK);
+				}
+				sound_data[i].play_flg = false;
 			}
 		}
 	}
 	static void StartSound(int _num)
 	{
-		PlaySoundMem(sound_data[_num].dat, DX_PLAYTYPE_BACK);
 		sound_data[_num].play_flg = true;
 	}
 };
