@@ -85,8 +85,11 @@ public:
     //攻撃を発生させる(_location = 攻撃したプレイヤーor敵の中心座標  _direction = 攻撃する方向(0=右 1=左))
     void SpawnAttack(AttackData _attackdata);
 
-    //各当たり判定の処理
+    //各当たり判定(プレイヤーと床以外)の処理
     void HitCheck();
+
+    //プレイヤーと床の当たり判定処理
+    void PlayerFloorHitCheck();
 
     //ステージファイルを読み込む
     void LoadStageData(int _stage);
