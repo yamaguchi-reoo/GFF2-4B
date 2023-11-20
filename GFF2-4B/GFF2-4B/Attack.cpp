@@ -126,3 +126,8 @@ void Attack::SpawnAttack(AttackData _attackdata)
 	erea.height = attack_data.height;
 	once = false;
 }
+
+void Attack::DeleteAttack() 
+{
+	attack_flg = false; 
+}
