@@ -754,7 +754,7 @@ void GameMain::PlayerFloorHitCheck()
 		for (int j = player->GetPlayerNowErea() - 2; j < player->GetPlayerNowErea() + 2; j++)
 		{
 			//プレイヤーがステージに触れたなら
-			if (j > 0 && player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+			if (j >= 0 && player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
 				//触れた面に応じて押し出す
 				player->Push(stage[i][j]->GetLocation(), stage[i][j]->GetErea(), stage[i][j]->GetStageCollisionType());
