@@ -284,7 +284,7 @@ void PowerGauge::SetVolume(ColorDate color)
 	//シアン
 	if (cyan.maxFlg == 0)
 	{
-		cyan.volume += color.syan;
+		cyan.volume += color.cyan;
 	}
 	
 	//イエロー

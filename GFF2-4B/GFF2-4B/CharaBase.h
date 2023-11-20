@@ -6,7 +6,7 @@ class GameMain;
 
 struct ColorDate {
 	float magenta;
-	float syan;
+	float cyan;
 	float yellow;
 };
 
@@ -22,4 +22,5 @@ public:
 	virtual void Update(GameMain* main) = 0;
 	virtual void Draw()const = 0;
 	//virtual void EnemyPush(int num, Location _sub_location, Erea _sub_erea) = 0;
+
 };

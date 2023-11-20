@@ -431,7 +431,7 @@ void Player::ForciblyMovePlayer(ScrollData _scroll)
 	}
 }
 
-void Player::ApplyDamage(int num)
+void Player::ApplyDamage(GameMain* main,int num)
 {
 	//無敵状態でない＆死んでいる状態でない、デバッグ用の無敵状態でないなら
 	if (inv_flg == false && death_flg == false 
@@ -454,6 +454,8 @@ void Player::ApplyDamage(int num)
 		}
 		//ダメージ後の無敵状態に入る
 		inv_flg = true;
+		//カメラを揺らす
+		main->ImpactCamera(num * 10);
 	}
 }
 
@@ -549,8 +551,8 @@ void Player::Attack(GameMain* main)
 			//攻撃を生成する
 			main->SpawnAttack(CreateAttactData(attack_step));
 		}
-		//空中にいるなら
-		else
+		//空中にいて、落下攻撃中でないなら
+		else if (attack_step != 4)
 		{
 			//落下攻撃を行う
 			attack_step = 4;

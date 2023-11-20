@@ -154,7 +154,7 @@ public:
 	void ForciblyMovePlayer(ScrollData _scroll);
 
 	//ダメージを受けた時の処理(num = ダメージ量)
-	void ApplyDamage(int num);
+	void ApplyDamage(GameMain* main,int num);
 
 	//攻撃をスポーンさせるのに必要な情報をまとめる(i = どの攻撃か)
 	AttackData CreateAttactData(int i);
@@ -209,5 +209,7 @@ public:
 
 	//１マス移動毎に床との当たり判定をチェックする
 	void MoveLocation(GameMain* main,float _x, float _y);
+
+	void AddPlayerHp() { hp += 1; }
 };
 

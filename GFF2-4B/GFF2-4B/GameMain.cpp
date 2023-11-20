@@ -18,6 +18,7 @@ GameMain::GameMain(int _stage)
 	who = 1;
 	player = new Player();
 	scene_scroll = new SceneScroll();
+	item_rand = 0;
 
 	if (now_stage == 3) {
 		boss = new Boss();
@@ -29,13 +30,16 @@ GameMain::GameMain(int _stage)
 		count[i] = 0;
 	}
 
+
 	powergauge = new PowerGauge();
 
 	playerhp = new PlayerHP();
 
 	score = new Score();
-
+	
 	effect = new Effect();
+
+	heal = new HealItem();
 
 	loading_scene = new Loading();
 
@@ -43,6 +47,8 @@ GameMain::GameMain(int _stage)
 	onfloor_flg = false;
 
 	Hands_Delete_Flg = false;
+
+	impact_timer = 0;   
 }
 
 GameMain::~GameMain()
@@ -96,6 +102,13 @@ AbstractScene* GameMain::Update()
 	{
 		CameraLocation(player->GetLocation());
 	}
+	
+	//揺れ処理
+	if (--impact_timer > 0)
+	{
+		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
+		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
+	}
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
@@ -144,8 +157,6 @@ AbstractScene* GameMain::Update()
 
 	//ボスの腕アップデート
 	if (now_stage == 3) {
-
-
 		if (boss != nullptr) {
 			//if (player->GetLocation().x<= 
 			// 
@@ -172,24 +183,17 @@ AbstractScene* GameMain::Update()
 				else {
 					rock[0] = new Rock(who++, hands->switching);
 				}
-
 			}
-
-
-		}
-		
-		//岩アップデート
-
-			for (int i = 0; i < 2; i++) {
-				if (rock[i] != nullptr) {
-					rock[i]->Update(this);
-					if (rock[i]->Rock_Delete == true) {
-						rock[i] = nullptr;
-					}
+		}	
+	//岩アップデート
+		for (int i = 0; i < 2; i++) {
+			if (rock[i] != nullptr) {
+				rock[i]->Update(this);
+				if (rock[i]->Rock_Delete == true) {
+					rock[i] = nullptr;
 				}
 			}
-		
-
+		}
 	}
 
 	player->Update(this);
@@ -200,7 +204,10 @@ AbstractScene* GameMain::Update()
 
 	playerhp->Update(player->GetPlayerHP());
 
+	heal->SetScreenPosition(camera_location);
+
 	score->Update();
+
 
 	effect->Update(this);
 	effect->SetScreenPosition(camera_location);
@@ -344,7 +351,7 @@ AbstractScene* GameMain::Update()
 	}
 
 	//当たり判定関連の処理を行う
-	HitCheck();
+	HitCheck(this);
 
 	//強化ゲージから溢れた分をスコアに加算
 	if (powergauge->GetColorRem() > 0)
@@ -404,7 +411,7 @@ AbstractScene* GameMain::Update()
 	if (KeyInput::OnKey(KEY_INPUT_S))
 	{
 		flg = true;
-		player->ApplyDamage(1);
+		player->ApplyDamage(this,1);
 	}
 	//ステージをいじるシーンへ遷移
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
@@ -426,6 +433,7 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示
 	if (now_stage == 3) {
@@ -490,6 +498,9 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+
+	heal->Draw();
+
 	powergauge->Draw();
 	playerhp->Draw();
 	score->Draw();
@@ -519,7 +530,7 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 	}
 }
 
-void GameMain::HitCheck()
+void GameMain::HitCheck(GameMain* main)
 {
 	//プレイヤーと床の当たり判定
 	PlayerFloorHitCheck();
@@ -569,7 +580,7 @@ void GameMain::HitCheck()
 			if (zakuro[j] != nullptr)
 			{
 				// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], zakuro[j], effect);
+				ProcessAttack(attack[i], zakuro[j], effect, heal);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -588,7 +599,7 @@ void GameMain::HitCheck()
 			if (iruka[j] != nullptr) 
 			{
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], iruka[j], effect);
+				ProcessAttack(attack[i], iruka[j], effect , heal);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -605,7 +616,7 @@ void GameMain::HitCheck()
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], himawari[j], effect);
+				ProcessAttack(attack[i], himawari[j], effect, heal);
 				for (int k = 0; k < BAMBOO_MAX; k++)
 				{
 					if (bamboo[k] != nullptr)
@@ -626,6 +637,8 @@ void GameMain::HitCheck()
 				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
+					//ダメージ量に応じた画面揺れ
+					ImpactCamera(10 * attack[i]->GetAttackData().damage);
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
 				}
@@ -663,10 +676,9 @@ void GameMain::HitCheck()
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
 			//プレイヤーのダメージ処理
-			player->ApplyDamage(attack[i]->GetAttackData().damage);
+			player->ApplyDamage(main,attack[i]->GetAttackData().damage);
 			//攻撃を消す
 			attack[i]->DeleteAttack();
-			//zakuro->Stop_Attack();
 		}
 		//攻撃がプレイヤーによるもので、その攻撃がジャンプ攻撃で
 		if (attack[i]->GetAttackData().who_attack == PLAYER && player->GetAttackStep() == 4)
@@ -731,6 +743,12 @@ void GameMain::HitCheck()
 			boss->Dead = true;
 			Hands_Delete_Flg = false;
 		}
+	}
+
+	if (player->HitBox(heal) == true && heal->GetSpawnFlg() == true)
+	{
+		player->AddPlayerHp();
+		heal->SetSpawnFlg(false);
 	}
 }
 
@@ -918,6 +936,11 @@ Location GameMain::GetPlayerLocation()
 	return player->GetLocation();
 }
 
+void GameMain::ImpactCamera(int _power)
+{
+	impact_timer = _power;
+}
+
 template <class T>
 void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int index) {
 	// キャラクターオブジェクトが存在し、ヒットボックスがステージオブジェクトと交差し、かつステージの当たり判定がある場合
@@ -928,17 +951,57 @@ void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int i
 }
 
 template<class T>
-void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect)
+void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect, HealItem* heal)
 {
+	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
 	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() && character->GetSpwanFlg() == false) {
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
+		//ダメージ量に応じた画面揺れ
+		impact_timer = (10 * attack->GetAttackData().damage);
 
-		// しぶき用
-
-		effect->SetFlg(1);
-		effect->SetGaugeLocation(powergauge->GetCenterLocation());
-		effect->SetLocation(character->GetLocalLocation());
-		effect->SetSplashColor(character->GetColorDate());
+		//hpが0なら
+		if (character->GetHp() <= 0)
+		{
+			// しぶき用
+			effect->SetFlg(1);
+			effect->SetGaugeLocation(powergauge->GetCenterLocation());
+			effect->SetLocation(character->GetLocalLocation());
+			effect->SetSplashColor(character->GetColorDate());
+			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 50.0f) ||
+				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f)||
+				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
+			{
+				// アイテムの位置を設定
+				heal->SetLocation(character->GetLocation());
+				// アイテムのスポーン処理
+				ItemSpwanRand();
+			}
+		}
 	}
 }
+
+// アイテムスポーンのランダムな処理
+void GameMain::ItemSpwanRand()
+{
+	item_rand = GetRand(99);  // 0から99のランダムな値を取得
+
+	// 回復アイテムのスポーン
+	if (item_rand < 60)  // 0から59までが回復アイテムの範囲
+	{
+		heal->SetSpawnFlg(true);  // 回復アイテムをスポーンさせるフラグを設定
+	}
+	// スポーン無し
+	else if (60 <= item_rand && item_rand < 85)  // 60から84までがスポーン無しの範囲
+	{
+		// 何もしないか、必要に応じて処理を追加
+	}
+	// コインのスポーン
+	else if (85 <= item_rand && item_rand < 100)  // 85から99までがコインの範囲
+	{
+		// コインのスポーン処理を追加
+
+
+	}
+}
+
