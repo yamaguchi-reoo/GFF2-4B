@@ -238,7 +238,7 @@ AbstractScene* GameMain::Update()
 	{
 		if (iruka[i] != nullptr)
 		{
-			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
+			if (iruka[i]->GetLocation().x <= player->GetLocation().x + 30 && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x && iruka[i]->GetReturnFlg() == false)
 			{
 				iruka[i]->SetFallFlg();
 			}

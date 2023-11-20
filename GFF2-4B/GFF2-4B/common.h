@@ -15,7 +15,7 @@
 #define FLOOR_NUM	3	//床の数
 
 #define BAMBOO_NUM 3 //竹の積まれている数
-#define BAMBOO_MAX 30 //竹の最大数
+#define BAMBOO_MAX 15 //竹の最大数
 
 #define ATTACK_NUM 1000   //画面に存在できる最大の攻撃数
 #define ATTACK_SUB_NUM 100   //forする際の存在できる最大の攻撃数
@@ -36,9 +36,9 @@
 #define STAGE_GOAL 0.05
 #define SIGH_BOARD_NUM 5				//看板の数
 //エネミーの数
-#define ZAKURO_MAX 30	//ザクロの最大数
-#define IRUKA_MAX 30		//イルカの最大数
-#define HIMAWARI_MAX 30	//ひまわりの最大数
+#define ZAKURO_MAX 20	//ザクロの最大数
+#define IRUKA_MAX 20		//イルカの最大数
+#define HIMAWARI_MAX 20	//ひまわりの最大数
 
 //エフェクト
 #define SPLASH_MAX 50
