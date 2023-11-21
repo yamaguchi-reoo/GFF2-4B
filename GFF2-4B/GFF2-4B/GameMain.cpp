@@ -136,10 +136,6 @@ AbstractScene* GameMain::Update()
 		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
 		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
 	}
-	if (impact_timer == -1)
-	{
-		CameraLocation(screen_origin);
-	}
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
@@ -741,7 +737,7 @@ void GameMain::HitCheck(GameMain* main)
 			if (bamboo[j] != nullptr) 
 			{
 				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
+				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetCanApplyDamage() == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
 				{
 					//ダメージ量に応じた画面揺れ
 					ImpactCamera(10 * attack[i]->GetAttackData().damage);
@@ -1084,7 +1080,7 @@ template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect/*, HealItem* heal, Koban* koban*/)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
-	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() && character->GetSpwanFlg() == false) {
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwanFlg() == false) {		
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 		//ダメージ量に応じた画面揺れ
