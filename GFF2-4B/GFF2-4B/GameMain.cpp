@@ -713,20 +713,8 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				ProcessAttack(attack[i], zakuro[j], effect/*, heal,koban*/);
-
-				
-
-				for (int k = 0; k < BAMBOO_MAX; k++)
-				{
-					if (bamboo[k] != nullptr)
-					{
-						if (zakuro[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
-						{
-							//触れた面に応じて押し出す
-							zakuro[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
-						}
-					}
-				}
+				//竹とエネミーの当たり判定
+				HitBamboo(zakuro[j]);
 			}
 		}
 		for (int j = 0; j < IRUKA_MAX; j++) 
@@ -735,34 +723,16 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				ProcessAttack(attack[i], iruka[j], effect /*, heal,koban*/);
-				for (int k = 0; k < BAMBOO_MAX; k++)
-				{
-					if (bamboo[k] != nullptr)
-					{
-						if (iruka[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
-						{
-							//触れた面に応じて押し出す
-							iruka[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
-						}
-					}
-				}
+				//竹とエネミーの当たり判定
+				HitBamboo(iruka[j]);
 			}
 		}
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				ProcessAttack(attack[i], himawari[j], effect/*, heal,koban*/);
-				for (int k = 0; k < BAMBOO_MAX; k++)
-				{
-					if (bamboo[k] != nullptr)
-					{
-						if (himawari[j]->HitBox(bamboo[k]) == true && bamboo[k]->GetSpwanFlg() == false)
-						{
-							//触れた面に応じて押し出す
-							himawari[j]->Push(k, bamboo[k]->GetLocation(), bamboo[k]->GetErea());
-						}
-					}
-				}
+				//竹とエネミーの当たり判定
+				HitBamboo(himawari[j]);
 			}
 		}
 		for (int j = 0; j < BAMBOO_MAX; j++) 
@@ -884,14 +854,16 @@ void GameMain::HitCheck(GameMain* main)
 	{
 		if (heal[i] != nullptr)
 		{
+			//プレイヤーとアイテムが当たった&回復アイテムがスポーンしている時
 			if (player->HitBox(heal[i]) == true && heal[i]->GetSpawnFlg() == true)
 			{
 				if (player->GetPlayerHP() >= 7)
 				{
 					score->AddScore(100);
 				}
-
+				//プレイヤーのHPを増やす
 				player->AddPlayerHp();
+				//フラグをflaseにする
 				heal[i]->SetSpawnFlg(false);
 			}
 		}
@@ -1127,7 +1099,6 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect/*, Hea
 				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
 			{
 				// アイテムの位置を設定
-				/*heal->SetLocation(character->GetLocation());*/
 				koban->SetLocation(character->GetLocation());
 				// アイテムのスポーン処理
 				ItemSpwanRand(character);
@@ -1142,9 +1113,25 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect/*, Hea
 	}
 }
 
+template<class T>
+void GameMain::HitBamboo(T* character)
+{
+	if (character != nullptr)
+	{
+		for (int i = 0; i < BAMBOO_MAX; i++)
+		{
+			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwanFlg() == false)
+			{
+				//触れた面に応じて押し出す
+				character->Push(i, bamboo[i]->GetLocation(), bamboo[i]->GetErea());
+			}
+		}
+	}
+}
+
 // アイテムスポーンのランダムな処理
 template<class T>
-void GameMain::ItemSpwanRand(T* enemy)
+void GameMain::ItemSpwanRand(T* character)
 {
 	item_rand = GetRand(99);  // 0から99のランダムな値を取得
 
@@ -1158,7 +1145,7 @@ void GameMain::ItemSpwanRand(T* enemy)
 			{
 				heal[i] = new HealItem();
 				//座標をセット
-				heal[i]->SetLocation(enemy->GetLocation());
+				heal[i]->SetLocation(character->GetLocation());
 				// 回復アイテムをスポーンさせるフラグを設定
 				heal[i]->SetSpawnFlg(true);  
 				break;

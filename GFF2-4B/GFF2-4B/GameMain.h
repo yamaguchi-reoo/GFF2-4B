@@ -129,12 +129,16 @@ public:
     //エネミーのPushを関数化
     template <class T>
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
+    //竹とエネミーの当たり判定
+    template <class T>
+    void HitBamboo(T* character);
     //エネミーの攻撃を受ける処理
     template <class T>
     void ProcessAttack(Attack* attack, T* character, Effect* effect/*,HealItem* heal, Koban* koban*/);
     //アイテムのランダム出現
     template<class T>
-    void ItemSpwanRand(T* enemy);
+    void ItemSpwanRand(T* character);
+
 
     //蔓内での敵生成処理
     void VineEnemy(void);
