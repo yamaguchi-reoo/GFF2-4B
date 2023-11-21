@@ -540,7 +540,7 @@ AbstractScene* GameMain::Update()
 	}
 
 	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage!=now_stage) {
+	if (now_stage == 3 && old_stage != now_stage) {
 		//Hands_Delete_Flg = false;
 		//boss = new Boss();
 		//hands = new BossHands(who++, boss);
@@ -613,16 +613,25 @@ void GameMain::Draw() const
 	//竹
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
-		if (bamboo[i]!= nullptr)
+		if (bamboo[i] != nullptr)
 		{
 			bamboo[i]->Draw();
 		}
 	}
+	//回復アイテム
 	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		if (heal[i] != nullptr)
 		{
 			heal[i]->Draw();
+		}
+	}
+	//壺
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		if (jar[i] != nullptr)
+		{
+			jar[i]->Draw();
 		}
 	}
 
@@ -1034,6 +1043,15 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+			case 13:
+				for (int k = 0; k < JAR_MAX; k++)
+				{
+					if (jar[k] == nullptr)
+					{
+						jar[k] = new Jar(j * BOX_WIDTH, i * BOX_HEIGHT);
+						break;
+					}
+				}
 			default:
 				break;
 			}

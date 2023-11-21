@@ -7,7 +7,7 @@ Jar::Jar(float pos_x, float pos_y)
 	erea.height = 40;
 	erea.width = 40;
 
-	spawn_flg = false;
+	spawn_flg = true;
 }
 
 Jar::~Jar()
@@ -20,8 +20,8 @@ void Jar::Update()
 
 void Jar::Draw() const
 {
-	if (spawn_flg == true)
-	{
+	/*if (spawn_flg == true)
+	{*/
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, TRUE);
-	}	
+	//}	
 }
