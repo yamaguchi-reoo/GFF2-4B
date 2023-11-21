@@ -102,6 +102,9 @@ void Score::AddScore(int score)
 void Score::ResetScore()
 {
 	total_score = 0;
+	zakuro_num = 0;
+	iruka_num = 0;
+	himawari_num = 0;
 }
 
 //プレイヤーが斬った敵の数をカウント(0:ザクロ 1:イルカ 2:ヒマワリ)

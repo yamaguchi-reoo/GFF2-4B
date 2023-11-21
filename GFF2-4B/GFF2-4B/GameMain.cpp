@@ -1041,6 +1041,8 @@ void GameMain::SetStage(int _stage)
 	player->Respawn(res_location);
 	//カメラのリセット
 	ResetCamera();
+	//スコアリセット
+	score->ResetScore();
 }
 
 void GameMain::CameraLocation(Location _location)
@@ -1137,12 +1139,16 @@ void GameMain::ItemSpwanRand()
 //蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
+	int num = 0;
+
+	num = GetRand(5);
+
 	//空いてる枠にザクロ生成
 	for (int k = 0; k < ZAKURO_MAX; k++)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(10300, 200, true, who++);
+			zakuro[k] = new Zakuro(9900 + (200 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}
