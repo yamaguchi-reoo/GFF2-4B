@@ -53,7 +53,7 @@ GameMain::GameMain(int _stage)
 
 	Hands_Delete_Flg = false;
 
-	impact_timer = 0;   
+	impact_timer = -2;   
 
 	lock_flg = 0;
 	vine_x1 = -650;
@@ -64,7 +64,6 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
-
 }
 
 GameMain::~GameMain()
@@ -130,12 +129,23 @@ AbstractScene* GameMain::Update()
 		CameraLocation(player->GetLocation());
 	}
 	
-	//揺れ処理
-	if (--impact_timer > 0)
-	{
-		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
-		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
-	}
+	////揺れ処理
+	//if (--impact_timer > 0)
+	//{
+	//	camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
+	//	camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
+	//}
+	//else if (impact_timer==-1)
+	//{
+	//	if (now_stage != 3 || player->GetLocation().x > (SCREEN_WIDTH / 2))
+	//	{
+	//		CameraLocation(player->GetLocation());
+	//	}
+	//	else
+	//	{
+	//		CameraLocation(screen_origin);
+	//	}
+	//}
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{

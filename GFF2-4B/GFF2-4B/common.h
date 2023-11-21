@@ -45,7 +45,7 @@
 #define SPLASH_MAX 50
 
 //アイテム
-#define ITEM_MAX 3 //画面に出現できるアイテムの最大数
+#define ITEM_MAX 10 //画面に出現できるアイテムの最大数
 #define JAR_MAX 7  //壺の最大数
 
 #define PLAYER_SLASH_ONE 0
