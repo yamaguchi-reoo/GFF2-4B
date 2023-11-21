@@ -91,7 +91,7 @@ void BossHands::Draw() const {
 		{
 		case 0:
 			//マゼンタ
-			DrawGraphF(location.x, location.y, hi[0], TRUE);
+			DrawGraphF(local_location.x, local_location.y, hi[0], TRUE);
 			break;
 		case 1:
 			//シアン
@@ -104,22 +104,22 @@ void BossHands::Draw() const {
 			DrawRotaGraph(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
 			if (face_angle > 0.0f && face_angle <0.7f)
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
+				DrawRotaGraph(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 			}
 			else
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
+				DrawRotaGraph(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
 			}
 			break;
 		case 2:
 			//イエロー
 			if (hima_state != BossHimawariState::SF_DOWN)
 			{
-				DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
+				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
 			}
 			else
 			{
-				DrawBoxAA(location.x + GetRand(10), location.y + GetRand(10), location.x + erea.width + GetRand(10), location.y + erea.height + GetRand(10), 0xffff00, true);
+				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
 			}
 			break;
 		default:
@@ -509,9 +509,9 @@ void BossHands::HandsCyan(GameMain* main) {
 	//仮
 	//つるの描画位置を計算
 
-	turu_location.x = (SCREEN_WIDTH / 2) + GetCenterLocation().x;
-	turu_location.y = GetCenterLocation().y/2;
-	turu_angle = atan2f(turu_location.y - GetCenterLocation().y, turu_location.x - GetCenterLocation().x);
+	turu_location.x = (SCREEN_WIDTH / 2) + (local_location.x + (erea.width / 2));
+	turu_location.y = local_location.y + (erea.height / 2);
+	turu_angle = atan2f(turu_location.y - (local_location.y+(erea.height/2)), turu_location.x - (local_location.x + (erea.width / 2)));
 	turu_rad =turu_angle*(float)M_PI*2;
 
 	//アニメーション用
