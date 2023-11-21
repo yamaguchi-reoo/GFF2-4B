@@ -42,54 +42,57 @@ GameOver::~GameOver()
 
 AbstractScene* GameOver::Update()
 {
-	//Lスティック上入力
-	//左スティックの傾き具合がY座標に0.8以上かつ
-	if (PadInput::TipLeftLStick(STICKL_Y) > 0.8f &&
-		PadInput::TipLeftLStick(STICKL_Y) < 1.0f &&
-		once_flg == TRUE)
+	if (200 <= alpha)
 	{
-		once_flg = FALSE;
-		select_count--;
-		if (select_count < 0)select_count = 1;
-	}
-	//Lスティック上入力
-	if (PadInput::TipLeftLStick(STICKL_Y) > -1.0f &&
-		PadInput::TipLeftLStick(STICKL_Y) < -0.8f &&
-		once_flg == TRUE)
-	{
-		once_flg = FALSE;
-		select_count--;
-		if (select_count < 0)select_count = 1;
-	}
-	//Lスティックが元に戻されたらOnceをリセット
-	if (once_flg == FALSE &&
-		PadInput::TipLeftLStick(STICKL_Y) <= 0.1f &&
-		PadInput::TipLeftLStick(STICKL_Y) >= -0.1f)
-	{
-		once_flg = TRUE;
-}
-	if (
-#ifdef _DEBUG
-		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
-#else
-		PadInput::OnButton(XINPUT_BUTTON_A)
-#endif
-		)
-	{
-		switch (static_cast<GAME_OVER_MENU>(select_count))
+		//Lスティック上入力
+		//左スティックの傾き具合がY座標に0.8以上かつ
+		if (PadInput::TipLeftLStick(STICKL_Y) > 0.8f &&
+			PadInput::TipLeftLStick(STICKL_Y) < 1.0f &&
+			once_flg == TRUE)
 		{
-		case GAME_OVER_MENU::GAME_MAIN:
-			//スコアの初期化
-			Score::ResetScore();
-			return new GameMain(stage_num);
+			once_flg = FALSE;
+			select_count--;
+			if (select_count < 0)select_count = 1;
+		}
+		//Lスティック上入力
+		if (PadInput::TipLeftLStick(STICKL_Y) > -1.0f &&
+			PadInput::TipLeftLStick(STICKL_Y) < -0.8f &&
+			once_flg == TRUE)
+		{
+			once_flg = FALSE;
+			select_count--;
+			if (select_count < 0)select_count = 1;
+		}
+		//Lスティックが元に戻されたらOnceをリセット
+		if (once_flg == FALSE &&
+			PadInput::TipLeftLStick(STICKL_Y) <= 0.1f &&
+			PadInput::TipLeftLStick(STICKL_Y) >= -0.1f)
+		{
+			once_flg = TRUE;
+		}
+		if (
+#ifdef _DEBUG
+			PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+			PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+			)
+		{
+			switch (static_cast<GAME_OVER_MENU>(select_count))
+			{
+			case GAME_OVER_MENU::GAME_MAIN:
+				//スコアの初期化
+				Score::ResetScore();
+				return new GameMain(stage_num);
 
-		case GAME_OVER_MENU::GAME_SELECT:
-			//スコアの初期化
-			Score::ResetScore();
-			return new SelectStage;
+			case GAME_OVER_MENU::GAME_SELECT:
+				//スコアの初期化
+				Score::ResetScore();
+				return new SelectStage;
+
+			}
 
 		}
-		
 	}
 	alpha += 0.5f;
 	return this;

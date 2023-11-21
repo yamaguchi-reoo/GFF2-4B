@@ -4,7 +4,6 @@
 enum class TITLE_MENU
 {
     GAME_START = 0,
-    GAME_HELP,
     GAME_END
 };
 class Title :

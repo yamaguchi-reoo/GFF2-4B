@@ -87,10 +87,8 @@ AbstractScene* Title::Update()
 			return new SelectStage();
 			//ƒGƒ“ƒh‰æ–Ê‚Ö
 		case TITLE_MENU::GAME_END:
-
-			//return new End();
-			//StopSoundMem(TitleBGM);
-			break;
+			
+			return nullptr;
 		default:
 			break;
 		}
