@@ -7,7 +7,9 @@ private:
 	static int stage_num;
 	static int goal_flg[3]; //どこまでクリアしたか
 	bool botton_flg;
-	int img[7];
+	int img[11];
+	int x1, x2; //巻物アニメーション用
+	int anim_flg; //巻物アニメーション用
 
 public:
 	//コンストラクタ
@@ -24,5 +26,8 @@ public:
 
 	//クリアしたステージを保存
 	void SetGoalFlg(int stage_num);
+
+	//巻物のアニメーション
+	void AnimMakimono(void);
 };
 

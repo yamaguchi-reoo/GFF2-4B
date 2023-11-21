@@ -1043,6 +1043,8 @@ void GameMain::SetStage(int _stage)
 	player->Respawn(res_location);
 	//カメラのリセット
 	ResetCamera();
+	//スコアリセット
+	score->ResetScore();
 }
 
 void GameMain::CameraLocation(Location _location)
@@ -1094,7 +1096,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect/*, Hea
 			effect->SetGaugeLocation(powergauge->GetCenterLocation());
 			effect->SetLocation(character->GetLocalLocation());
 			effect->SetSplashColor(character->GetColorDate());
-			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 50.0f) ||
+			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 15.0f) ||
 				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f) ||
 				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
 			{
@@ -1167,12 +1169,16 @@ void GameMain::ItemSpwanRand(T* character)
 //蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
+	int num = 0;
+
+	num = GetRand(4);
+
 	//空いてる枠にザクロ生成
 	for (int k = 0; k < ZAKURO_MAX; k++)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(10300, 200, true, who++);
+			zakuro[k] = new Zakuro(9900 + (200 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}
