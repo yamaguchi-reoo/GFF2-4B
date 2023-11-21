@@ -1,7 +1,6 @@
 #pragma once
 #include "CharaBase.h"
 
-
 enum  class ZakuroState {
 	IDLE = 0,
 	IDLE_RIGHT,

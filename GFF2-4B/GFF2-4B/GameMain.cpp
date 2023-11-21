@@ -22,6 +22,7 @@ GameMain::GameMain(int _stage)
 
 	if (now_stage == 3) {
 		boss = new Boss();
+		hands = nullptr;
 	}
 
 	SetStage(now_stage);
@@ -194,12 +195,6 @@ AbstractScene* GameMain::Update()
 	//ボスの腕アップデート
 	if (now_stage == 3) {
 		if (boss != nullptr) {
-			//if (player->GetLocation().x<= 
-			// 
-			// && iruka[i]->GetLocation().x + 30 >= player->GetLocation().x)
-			//{
-			//	iruka[i]->SetFallFlg();
-			//}
 			boss->Update(this);
 			boss->SetScreenPosition(camera_location);
 			if (boss->New_Hand_Flg == true) {
@@ -486,8 +481,8 @@ AbstractScene* GameMain::Update()
 			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
 			if (now_stage == 3 && old_stage != now_stage) {
 				//Hands_Delete_Flg = false;
-				boss = new Boss();
-				hands = new BossHands(who++, boss);
+				//boss = new Boss();
+				//hands = new BossHands(who++, boss);
 			}
 		}
 		else
@@ -547,8 +542,8 @@ AbstractScene* GameMain::Update()
 	//途中でステージの切り替えがあった場合使用
 	if (now_stage == 3 && old_stage!=now_stage) {
 		//Hands_Delete_Flg = false;
-		boss = new Boss();
-		hands = new BossHands(who++, boss);
+		//boss = new Boss();
+		//hands = new BossHands(who++, boss);
 	}
 #endif
 
@@ -685,14 +680,14 @@ void GameMain::HitCheck(GameMain* main)
 		{
 
 			//ボス面のみボスの腕の当たり判定
-			if (now_stage == 3) {
-				if (hands != nullptr) {
-					if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
-					{
-						hands->hitflg = true;
-					}
-				}
-			}
+			//if (now_stage == 3) {
+			//	if (hands != nullptr) {
+			//		if (hands->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+			//		{
+			//			hands->hitflg = true;
+			//		}
+			//	}
+			//}
 
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
@@ -857,7 +852,7 @@ void GameMain::HitCheck(GameMain* main)
 		if (Hands_Delete_Flg==true) {
 			boss->Count_Death--;
 			hands = nullptr;
-			boss->Dead = true;
+			boss->Once_Flg = true;
 			Hands_Delete_Flg = false;
 		}
 	}
@@ -968,12 +963,6 @@ void GameMain::SetStage(int _stage)
 	now_stage = _stage;
 	//ファイルの読込
 
-	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
-	if (now_stage == 3 && old_stage != now_stage) {
-		//Hands_Delete_Flg = false;
-		boss = new Boss();
-		//hands = new BossHands(who++, boss);
-	}
 
 	//�t�@�C���̓Ǎ�
 	LoadStageData(now_stage);
@@ -1050,11 +1039,22 @@ void GameMain::SetStage(int _stage)
 			}
 		}
 	}
+
+
+	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+	if (now_stage == 3 && old_stage != now_stage) {
+		//Hands_Delete_Flg = false;
+		boss = new Boss();
+		//hands = new BossHands(who++, boss);
+	}
+
 	//プレイヤーのリスポーン
 	Location res_location = { 100,100 };
 	player->Respawn(res_location);
 	//カメラのリセット
 	ResetCamera();
+	//スコアリセット
+	score->ResetScore();
 }
 
 void GameMain::CameraLocation(Location _location)
@@ -1179,12 +1179,16 @@ void GameMain::ItemSpwanRand(T* character)
 //蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
+	int num = 0;
+
+	num = GetRand(4);
+
 	//空いてる枠にザクロ生成
 	for (int k = 0; k < ZAKURO_MAX; k++)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(10300, 200, true, who++);
+			zakuro[k] = new Zakuro(9900 + (200 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}

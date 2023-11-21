@@ -20,6 +20,17 @@ enum BossIrukaState {
     D_DOWN
 };
 
+//ザクロの状態
+enum BossZakuroState {
+    Z_ANIM_UP=0,
+    Z_ANIM_FALLING,
+    Z_ANIM_DEAD,
+    Z_MOVE,
+    Z_JUMP_RIGHT,
+    Z_JUMP_LEFT,
+    Z_FALLING
+};
+
 class BossHands :
     public CharaBase
 {
@@ -37,18 +48,35 @@ public:
     bool HitJumpAttack = false;     //ジャンプ攻撃多段ヒット防止
     bool Power_Up;                  //強化状態か？
     int Hands_Img_num;              //画像切り替え用
+
     /*ザクロ拳*/
     //受け取った値によってCMYのサイズ変更用
-    int hands_height[3] = { 190,190,190 };
-    int hands_width[3] = { 190,190,190 };
+    BossZakuroState zakuro_state;
+    int hands_height[3] = { 360,190,190 };
+    int hands_width[3] = { 360,190,190 };
     int Hands_img[IMGMAX];
-    int hi[3];
+    int Zakuro_img[IMGMAX];
+
+    int Zakuro_Imgnum;//ザクロの画像切り替え用
+    int Zakuro_Direction;//ザクロの向き　右:0 左:1
     float Magentax[10] = { 1000,100,500 };    //Mの拳が降りてくるX座標
     int switching;                  //拳出現位置セット用
     bool hitflg=false;
     bool onceflg=true;
     int count;
     bool Rock_Once;                 //岩出現位置一度だけ格納する用
+
+    //ザクロジャンプ用
+    float Zakuro_Movex;    //移動したザクロｘ
+    float Zakuro_Movey;    //移動したザクロｙ
+    float Set_Zakuro_x;   //ザクロジャンプ開始位置格納用
+    float Set_Zakuro_y;   //ザクロジャンプ開始位置格納用
+    float time;
+    float g;//重力加速度
+    float sita; //角度θ
+    float V_zero; //初速度ｖ０
+    float pi = 3.1415;
+    
 
     //いるか
     BossIrukaState iruka_state;     //いるかの状態
