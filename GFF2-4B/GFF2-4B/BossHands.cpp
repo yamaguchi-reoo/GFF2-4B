@@ -5,6 +5,7 @@
 //デグリーからラジアンに変換
 #define DEGREE_RADIAN(_deg)	(M_PI*(_deg)/180.0f)
 
+float checkabs=0;
 
 BossHands::BossHands(int _who,Boss* boss) {
 
@@ -137,9 +138,8 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 400, 0xffffff, "location.y%f",location.y);
 	DrawFormatString(100, 450, 0xffffff, "zakuro_state%d",zakuro_state);
 	DrawFormatString(100, 470, 0xffffff, "hitflg%d",hitflg);
+	DrawFormatString(100, 500, 0xffffff, "ABS%f", checkabs);
 #endif // _DEBUG
-
-
 }
 
 void BossHands::MagentaInit()
@@ -164,6 +164,17 @@ void BossHands::MagentaInit()
 	Rock_Once = false;
 	hitflg = false;
 	onceflg = true;
+}
+
+void BossHands::JumpInit() {
+	g = 980;
+	sita = 70;
+	V_zero = 700;
+	rad = sita * pi / 180;//ラジアンに変換
+	time = 0.0167;
+	Set_Zakuro_x = location.x;
+	Set_Zakuro_y = location.y;
+
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
@@ -289,7 +300,6 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 			Attack_Num = 4;
 			BossAttack(main);
-
 			
 			if (location.x > 1000) {
 				Zakuro_Direction = 1;
@@ -300,31 +310,40 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 			if (Zakuro_Direction == 1) {
 				location.x-=5;
+
 			}
 			else {
 				location.x += 5;
 			}
 
-			if (0 + rand() % 200 == 0) {
-				//ジャンプはいる前に色々初期化しないと二回目からえらいことになる
-				g = 980;
-				sita = 60;
-				V_zero = 700;
-				rad = sita * pi / 180;//ラジアンに変換
-				time = 0.0167;
-				Set_Zakuro_x = location.x;
-				Set_Zakuro_y = location.y;
-				onceflg = false;
-			
-				if (Zakuro_Direction == 1) {
-					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+			if (0 + rand()%100 == 0) {
+				//プレイヤーにある程度近づいたらジャンプ
+				//onceflg = true;
+			}
 
+			//float a = main->GetPlayerLocation().x - location.x;
+			checkabs = fabsf(main->GetPlayerLocation().x - location.x);
+
+			if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
+				checkabs = fabsf(main->GetPlayerLocation().x - location.x+100);
+				onceflg = true;
+
+			}
+
+
+			if (onceflg == true) {
+				onceflg = false;
+				//ジャンプはいる前に初期化
+				JumpInit();
+				if (main->GetPlayerLocation().x < 426) {
+					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+				}
+				else if (main->GetPlayerLocation().x < 852) {
+					zakuro_state = BossZakuroState::Z_JUMP_LEFT;
 				}
 				else {
-					zakuro_state = BossZakuroState::Z_JUMP_LEFT;
-
+					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
 				}
-
 			}
 
 			break;

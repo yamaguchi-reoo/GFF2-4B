@@ -14,6 +14,7 @@ static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
+	//Back_Img = LoadGraph("resource/images/Backimg.png");
 	now_stage = _stage;
 	who = 1;
 	player = new Player();
@@ -543,6 +544,7 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+	//DrawGraph(0, 0, Back_Img, TRUE);
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示

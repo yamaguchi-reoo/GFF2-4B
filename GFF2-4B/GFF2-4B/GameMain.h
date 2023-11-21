@@ -75,6 +75,8 @@ private:
     int stage_height_num;   //ステージブロックの縦数
     int stage_width;        //ステージ横幅
 
+    //int Back_Img;//ステージ背景
+
     int impact_timer;               //画面揺れ演出
 
     int item_rand;

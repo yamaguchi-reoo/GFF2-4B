@@ -121,6 +121,7 @@ public:
 
     //マゼンタ（ザクロ）用関数
     void MagentaInit();                     //マゼンタ（ザクロ）で使う変数初期化
+    void JumpInit();
     void HandsMagenta(GameMain* main);      //マゼンタ（ザクロ）の更新
 
     //シアン（イルカ）用関数
