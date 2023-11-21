@@ -91,7 +91,7 @@ void BossHands::Draw() const {
 		{
 		case 0:
 			//マゼンタ
-			DrawGraphF(location.x, location.y, hi[0], TRUE);
+			DrawGraphF(local_location.x, local_location.y, hi[0], TRUE);
 			break;
 		case 1:
 			//シアン
@@ -104,22 +104,22 @@ void BossHands::Draw() const {
 			DrawRotaGraph(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
 			if (face_angle > 0.0f && face_angle <0.7f)
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
+				DrawRotaGraph(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 			}
 			else
 			{
-				DrawRotaGraph(location.x + 75, location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
+				DrawRotaGraph(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
 			}
 			break;
 		case 2:
 			//イエロー
 			if (hima_state != BossHimawariState::SF_DOWN)
 			{
-				DrawBoxAA(location.x, location.y, location.x + erea.width, location.y + erea.height, 0xffff00, true);
+				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
 			}
 			else
 			{
-				DrawBoxAA(location.x + GetRand(10), location.y + GetRand(10), location.x + erea.width + GetRand(10), location.y + erea.height + GetRand(10), 0xffff00, true);
+				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
 			}
 			break;
 		default:
@@ -475,11 +475,22 @@ void BossHands::HandsYellow(GameMain* main)
 
 void BossHands::CyanInit()
 {
+	//1%の確率で没イルカ挙動
+	if (GetRand(99) == 0)
+	{
+		rare_flg = true;
+		timer = 30;
+	}
+	else
+	{
+		rare_flg = false;
+		timer = 0;
+	}		
 	//出現位置
 	iruka_state = BossIrukaState::D_WAIT;
-	location.x = SCREEN_WIDTH;
-	location.y = 0;
-	face_angle = 0.6f;
+	location.x = SCREEN_WIDTH - erea.width + 10;
+	location.y = 50;
+	face_angle = 0.5f;
 	iruka_rad = 0;
 	turu_rad = 0;
 	ref_num = 0;
@@ -488,10 +499,9 @@ void BossHands::CyanInit()
 	count = 0;	//画像切り替え用
 	turu_location = { 0,0 };
 	turu_angle = 0;
-	timer = 30;
 	Death_Flg = false;
 	acceleration = 0;
-
+	tackle_num = 0;
 }
 
 void BossHands::HandsCyan(GameMain* main) {
@@ -499,15 +509,17 @@ void BossHands::HandsCyan(GameMain* main) {
 	//仮
 	//つるの描画位置を計算
 
-	turu_location.x = (SCREEN_WIDTH / 2) + GetCenterLocation().x;
-	turu_location.y = GetCenterLocation().y/2;
-	turu_angle = atan2f(turu_location.y - GetCenterLocation().y, turu_location.x - GetCenterLocation().x);
+	turu_location.x = (SCREEN_WIDTH / 2) + (local_location.x + (erea.width / 2));
+	turu_location.y = local_location.y + (erea.height / 2);
+	turu_angle = atan2f(turu_location.y - (local_location.y+(erea.height/2)), turu_location.x - (local_location.x + (erea.width / 2)));
 	turu_rad =turu_angle*(float)M_PI*2;
 
 	//アニメーション用
 	if (
-		(iruka_state == BossIrukaState::D_DASH && frame % 3 == 0 && timer<=0) || 
-		(iruka_state == BossIrukaState::D_MOVE && frame % 10 == 0 && timer <= 0)
+		(iruka_state == BossIrukaState::D_WAIT && frame % 12 == 0 && timer <= 0 && rare_flg==false) ||
+		(iruka_state == BossIrukaState::D_DASH && frame % 3 == 0 && timer <= 0) || 
+		(iruka_state == BossIrukaState::D_MOVE && frame % 10 == 0 && timer <= 0) ||
+		(iruka_state == BossIrukaState::D_RISE && frame % 10 == 0 && timer <= 0)
 		)
 	{
 		if (++Hands_Img_num > 1)
@@ -523,25 +535,26 @@ void BossHands::HandsCyan(GameMain* main) {
 		switch (iruka_state)
 		{
 		case BossIrukaState::D_WAIT:
-			//右上に帰る
-			iruka_rad = atan2f(0 - location.y, SCREEN_WIDTH - location.x);
-			location.x += (120 * 0.22f) * cosf(iruka_rad);
-			location.y += (120 * 0.22f) * sinf(iruka_rad);
-			if (location.x > SCREEN_WIDTH - erea.width)
+			if (rare_flg == true)
 			{
-				location.x = SCREEN_WIDTH - erea.width;
+				//右上に帰る
+				iruka_rad = atan2f(0 - location.y, SCREEN_WIDTH - location.x);
+				location.x += (120 * 0.22f) * cosf(iruka_rad);
+				location.y += (120 * 0.22f) * sinf(iruka_rad);
+				if (location.x > SCREEN_WIDTH - erea.width)
+				{
+					location.x = SCREEN_WIDTH - erea.width;
+				}
+				if (location.y < 0)
+				{
+					location.y = 0;
+				}
+				if (--timer < 0)
+				{
+					iruka_state = BossIrukaState::D_MOVE;
+				}
 			}
-			if (location.y < 0)
-			{
-				location.y = 0;
-			}
-			if (--timer < 0)
-			{
-				iruka_state = BossIrukaState::D_MOVE;
-			}
-			break;
-		case BossIrukaState::D_MOVE:
-			if (--timer < 0)
+			else
 			{
 				//いるかを加速させる
 				if (acceleration < 60)
@@ -550,49 +563,182 @@ void BossHands::HandsCyan(GameMain* main) {
 				}
 				//顔の角度が0~1の範囲内から出ないように
 				if (face_angle > 1)face_angle -= 1;
+				if (face_angle < 0)face_angle += 1;
 				//移動距離計算
 				iruka_rad = face_angle * (float)M_PI * 2;
 				location.x += (acceleration * 0.22f) * cosf(iruka_rad);
 				location.y += (acceleration * 0.22f) * sinf(iruka_rad);
-				//壁に反射
+				if (location.x > SCREEN_WIDTH - erea.width)
+				{
+					location.x = SCREEN_WIDTH - erea.width;
+					face_angle = face_angle - 0.5f;
+					ref_num++;
+				}
 				if (location.x < 0)
 				{
 					location.x = 0;
-					face_angle = GetRandAngle(0);
+					face_angle = face_angle - 0.5f;
 					ref_num++;
-					timer = 20;
-					iruka_rad = face_angle * (float)M_PI * 2;
 				}
-				else if (location.x > SCREEN_WIDTH - erea.width)
+				if (main->GetPlayerLocation().x > location.x - 10 && main->GetPlayerLocation().x < location.x + 10 && ref_num>0 && GetRand(1) == 0)
 				{
-					location.x = SCREEN_WIDTH - erea.width;
-					face_angle = GetRandAngle(1);
-					ref_num++;
-					timer = 20;
-					iruka_rad = face_angle * (float)M_PI * 2;
+					if (tackle_num > 2)
+					{
+						tackle_num = 0;
+						ref_num = 0;
+						iruka_state = BossIrukaState::D_DASH;
+						timer = 100;
+						acceleration = 90;
+					}
+					else
+					{
+						ref_num = 0;
+						iruka_state = BossIrukaState::D_MOVE;
+						timer = 50;
+						acceleration = 70;
+					}
 				}
-				else if (location.y < 0)
+
+			}
+			break;
+		case BossIrukaState::D_MOVE:
+			if (rare_flg == true)
+			{
+				if (--timer < 0)
 				{
-					location.y = 0;
-					face_angle = GetRandAngle(2);
-					ref_num++;
-					timer = 20;
+					//いるかを加速させる
+					if (acceleration < 60)
+					{
+						acceleration++;
+					}
+					//顔の角度が0~1の範囲内から出ないように
+					if (face_angle > 1)face_angle -= 1;
+					//移動距離計算
 					iruka_rad = face_angle * (float)M_PI * 2;
+					location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+					location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+					//壁に反射
+					if (location.x < 0)
+					{
+						location.x = 0;
+						face_angle = GetRandAngle(0);
+						ref_num++;
+						timer = 20;
+						iruka_rad = face_angle * (float)M_PI * 2;
+					}
+					else if (location.x > SCREEN_WIDTH - erea.width)
+					{
+						location.x = SCREEN_WIDTH - erea.width;
+						face_angle = GetRandAngle(1);
+						ref_num++;
+						timer = 20;
+						iruka_rad = face_angle * (float)M_PI * 2;
+					}
+					else if (location.y < 0)
+					{
+						location.y = 0;
+						face_angle = GetRandAngle(2);
+						ref_num++;
+						timer = 20;
+						iruka_rad = face_angle * (float)M_PI * 2;
+					}
+					else if (location.y > SCREEN_HEIGHT - erea.height)
+					{
+						location.y = SCREEN_HEIGHT - erea.height;
+						face_angle = 1 - face_angle;
+						iruka_rad = face_angle * (float)M_PI * 2;
+					}
 				}
-				else if (location.y > SCREEN_HEIGHT - erea.height)
+				//5回床以外に反射したら大技
+				if (ref_num > 5)
 				{
-					location.y = SCREEN_HEIGHT - erea.height;
-					face_angle = 1 - face_angle;
-					iruka_rad = face_angle * (float)M_PI * 2;
+					iruka_state = BossIrukaState::D_DASH;
+					timer = 50;
+					acceleration = 70;
+					ref_num = 0;
 				}
 			}
-			//5回床以外に反射したら大技
-			if (ref_num > 5)
+			else
 			{
-				iruka_state = BossIrukaState::D_DASH;
-				timer = 50;
-				acceleration = 70;
-				ref_num = 0;
+				if (--timer > 0)
+				{
+					if (face_angle < 0.24f)
+					{
+						face_angle += 0.01f;
+						iruka_rad = face_angle * (float)M_PI * 2;
+					}
+					else if (face_angle > 0.26f)
+					{
+						face_angle -= 0.01f;
+						iruka_rad = face_angle * (float)M_PI * 2;
+					}
+					else
+					{
+						face_angle = 0.25f;
+					}
+				}
+				else
+				{
+					//顔の角度が0~1の範囲内から出ないように
+					if (face_angle > 1)face_angle -= 1;
+					//移動距離計算
+					iruka_rad = face_angle * (float)M_PI * 2;
+					location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+					location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+					if (location.y > SCREEN_HEIGHT - erea.height)
+					{
+						tackle_num++;
+						location.y = SCREEN_HEIGHT - erea.height;
+						acceleration = 70;
+						iruka_state = BossIrukaState::D_RISE;
+						timer = 70;
+					}
+				}
+			}
+			break;
+		case BossIrukaState::D_RISE:
+			if (--timer > 0)
+			{
+				if (face_angle < 0.5f)
+				{
+					face_angle += 0.02f;
+				}
+				else if (face_angle < 0.74f)
+				{
+					face_angle += 0.01f;
+				}
+				else if (face_angle > 0.76f)
+				{
+					face_angle -= 0.01f;
+				}
+				else
+				{
+					face_angle = 0.75f;
+				}
+				iruka_rad = face_angle * (float)M_PI * 2;
+			}
+			else
+			{
+				//顔の角度が0~1の範囲内から出ないように
+				if (face_angle > 1)face_angle -= 1;
+				//移動距離計算
+				iruka_rad = face_angle * (float)M_PI * 2;
+				location.x += (acceleration * 0.22f) * cosf(iruka_rad);
+				location.y += (acceleration * 0.22f) * sinf(iruka_rad);
+				if (location.y < 50)
+				{
+					location.y = 50;
+					if (GetRand(1) == 0)
+					{
+						face_angle = 0.5f;
+					}
+					else
+					{
+						face_angle = 0;
+					}
+					acceleration = 0;
+					iruka_state = BossIrukaState::D_WAIT;
+				}
 			}
 			break;
 		case BossIrukaState::D_DASH:
@@ -637,8 +783,17 @@ void BossHands::HandsCyan(GameMain* main) {
 		case BossIrukaState::D_DOWN:
 			if (--timer < 0)
 			{
-				iruka_state = BossIrukaState::D_WAIT;
-				timer = 50;
+				if (rare_flg == false)
+				{
+					acceleration = 70;
+					iruka_state = BossIrukaState::D_RISE;
+					timer = 70;
+				}
+				else
+				{
+					iruka_state = BossIrukaState::D_WAIT;
+					timer = 50;
+				}
 			}
 			break;
 		default:

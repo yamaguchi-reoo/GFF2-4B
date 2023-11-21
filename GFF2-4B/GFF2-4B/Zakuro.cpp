@@ -35,7 +35,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 
 	hp = 1;
 
-	Date.magenta = 50.0f;
+	Date.magenta = 15.0f;
 	Date.cyan = 5.0f;
 	Date.yellow = 5.0f;
 }

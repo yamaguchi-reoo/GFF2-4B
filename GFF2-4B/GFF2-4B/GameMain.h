@@ -22,6 +22,7 @@
 #include "SighBoard.h"
 #include "HealItem.h"
 #include "Koban.h"
+#include "Jar.h"
 
 class Player;
 
@@ -52,9 +53,11 @@ private:
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
-    HealItem* heal;     //回復アイテム
+    HealItem* heal[ITEM_MAX];     //回復アイテム
     Koban* koban; //小判
     Score* score; //スコアUIのオブジェクト
+
+    Jar* jar[JAR_MAX]; //壺
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
@@ -129,11 +132,16 @@ public:
     //エネミーのPushを関数化
     template <class T>
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
+    //竹とエネミーの当たり判定
+    template <class T>
+    void HitBamboo(T* character);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect,HealItem* heal, Koban* koban);
+    void ProcessAttack(Attack* attack, T* character, Effect* effect/*,HealItem* heal, Koban* koban*/);
     //アイテムのランダム出現
-    void ItemSpwanRand();
+    template<class T>
+    void ItemSpwanRand(T* character);
+
 
     //蔓内での敵生成処理
     void VineEnemy(void);
