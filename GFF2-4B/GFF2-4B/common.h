@@ -45,7 +45,7 @@
 #define SPLASH_MAX 50
 
 //アイテム
-#define HEAL_ITEM_MAX 10 //回復アイテムの最大数
+#define ITEM_MAX 3 //画面に出現できるアイテムの最大数
 
 #define PLAYER_SLASH_ONE 0
 #define PLAYER_SLASH_TWO 1
