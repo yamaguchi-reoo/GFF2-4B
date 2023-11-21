@@ -162,6 +162,7 @@
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="HealItem.cpp" />
+    <ClCompile Include="Jar.cpp" />
     <ClCompile Include="Koban.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="PlayerHP.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="HealItem.h" />
+    <ClInclude Include="Jar.h" />
     <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="Result.h" />

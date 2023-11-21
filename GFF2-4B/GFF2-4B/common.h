@@ -46,6 +46,7 @@
 
 //アイテム
 #define ITEM_MAX 3 //画面に出現できるアイテムの最大数
+#define JAR_MAX 7  //壺の最大数
 
 #define PLAYER_SLASH_ONE 0
 #define PLAYER_SLASH_TWO 1

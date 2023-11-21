@@ -22,6 +22,7 @@
 #include "SighBoard.h"
 #include "HealItem.h"
 #include "Koban.h"
+#include "Jar.h"
 
 class Player;
 
@@ -55,6 +56,8 @@ private:
     HealItem* heal[ITEM_MAX];     //回復アイテム
     Koban* koban; //小判
     Score* score; //スコアUIのオブジェクト
+
+    Jar* jar[JAR_MAX]; //壺
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
