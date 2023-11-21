@@ -25,7 +25,8 @@ enum BossZakuroState {
     Z_ANIM_FALLING,
     Z_ANIM_DEAD,
     Z_MOVE,
-    Z_JUMP,
+    Z_JUMP_RIGHT,
+    Z_JUMP_LEFT,
     Z_FALLING
 };
 
@@ -73,7 +74,8 @@ public:
     float g;//重力加速度
     float sita; //角度θ
     float V_zero; //初速度ｖ０
-
+    float pi = 3.1415;
+    
 
     //いるか
     BossIrukaState iruka_state;     //いるかの状態

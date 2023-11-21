@@ -2,6 +2,8 @@
 #include"GameMain.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+//デグリーからラジアンに変換
+#define DEGREE_RADIAN(_deg)	(M_PI*(_deg)/180.0f)
 
 
 BossHands::BossHands(int _who,Boss* boss) {
@@ -90,7 +92,7 @@ void BossHands::Draw() const {
 		{
 		case 0:
 			//マゼンタ
-				DrawGraphF(location.x, location.y, Zakuro_img[0], TRUE);
+				DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
 		
 			break;
 		case 1:
@@ -150,9 +152,10 @@ void BossHands::MagentaInit()
 	Set_Zakuro_x = 0;
 	Set_Zakuro_y = 0;
 	g = 9.8;
-	sita = 45;
-	V_zero = 50;
+	sita = 60;
+	V_zero = 200;
 	time = 0;
+	rad=sita*pi/180;//ラジアンに変換
 	LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 	count = STOPBOSS;	//振り下ろした腕が上にあがるまでとめる
 	switching = 0;
@@ -275,7 +278,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				zakuro_state = BossZakuroState::Z_FALLING;
 			}
 			else {
-				location.y -= 10;
+				location.y -= 15;
 			}
 			break;
 		case BossZakuroState::Z_ANIM_FALLING:
@@ -291,7 +294,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			if (location.x > 1000) {
 				Zakuro_Direction = 1;
 			}
-			else if (location.x < 100) {
+			else if (location.x < 0) {
 				Zakuro_Direction = 0;
 			}
 
@@ -302,31 +305,54 @@ void BossHands::HandsMagenta(GameMain* main) {
 				location.x += 5;
 			}
 
-			if (0 + rand() % 100 == 0) {
+			if (0 + rand() % 200 == 0) {
 				//ジャンプはいる前に色々初期化しないと二回目からえらいことになる
-				g = 9.8;
-				sita = 45;
-				V_zero = 50;
-				time = 0;
+				g = 980;
+				sita = 60;
+				V_zero = 700;
+				rad = sita * pi / 180;//ラジアンに変換
+				time = 0.0167;
 				Set_Zakuro_x = location.x;
 				Set_Zakuro_y = location.y;
-				zakuro_state = BossZakuroState::Z_JUMP;
 				onceflg = false;
 			
+				if (Zakuro_Direction == 1) {
+					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+
+				}
+				else {
+					zakuro_state = BossZakuroState::Z_JUMP_LEFT;
+
+				}
+
 			}
 
 			break;
-		case BossZakuroState::Z_JUMP:
-			time+=0.3;
-			Zakuro_Movex = V_zero * (cosf(sita) * time);
-			Zakuro_Movey = (V_zero * (sinf(sita) * time)) - ((g * (time * time)) / 2);
-			//Set-Moveで左にSet+Moveで右に行く
-			//Set-Moveで上にSet+Moveで↓に行く
-			location.x = Set_Zakuro_x - Zakuro_Movex;
-			location.y = Set_Zakuro_y - Zakuro_Movey;
+		case BossZakuroState::Z_JUMP_RIGHT:
+			//右ジャンプ
+			Zakuro_Movex = V_zero * cosf(rad) * time;
+			Zakuro_Movey = -V_zero * sinf(rad) * time +( g * time * time) / 2;
+			if(location.x>1200)location.x = Set_Zakuro_x + Zakuro_Movex;
+			if (location.y <320)location.y = Set_Zakuro_y + Zakuro_Movey;
 
-			if (location.y > 300) {
+			time += 0.01;
+
+			if (location.y > 320) {
 				zakuro_state = BossZakuroState::Z_MOVE;
+				location.y = 310;
+			}
+
+			break;
+		case BossZakuroState::Z_JUMP_LEFT:
+			Zakuro_Movex = V_zero * cosf(rad) * time;
+			Zakuro_Movey = -V_zero * sinf(rad) * time + (g * time * time) / 2;
+			if (location.x > 0)location.x = Set_Zakuro_x - Zakuro_Movex;
+			if (location.y < 320)location.y = Set_Zakuro_y + Zakuro_Movey;
+
+			time += 0.01;
+			if (location.y>320) {
+				zakuro_state = BossZakuroState::Z_MOVE;
+				location.y = 310;
 			}
 
 			break;
@@ -849,7 +875,9 @@ void BossHands::BossAttack(GameMain* main)
 void BossHands::ApplyDamage(int num) {
 	//攻撃がヒットした回数で倒れる
 	if (HitJumpAttack!=true) {
-		hp--;
+		if (zakuro_state != Z_ANIM_UP) {
+			hp--;
+		}
 	}
 	
 	if (hp <= 0) {

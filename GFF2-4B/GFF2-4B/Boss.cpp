@@ -113,20 +113,22 @@ void Boss::Boss_MakeHand() {
 				Boss_step++;
 				break;
 			case 1:
-				Boss_state = Boss_M;
-				Boss_step++;
+					Boss_Body_Y += 400;
+					Boss_state = Boss_M;
+					Boss_step++;
 				break;
 			case 2:
+				Boss_Body_Y += -400;
 				Boss_state = Boss_C;
 				Boss_step++;
 				break;
 			case 3:
+				Boss_Body_Y += 400;
 				Boss_state = Boss_M;
 				Boss_step++;
-
 				break;
 			case 4:
-				
+				//ƒNƒŠƒAˆ—
 				break;
 			}
 			
