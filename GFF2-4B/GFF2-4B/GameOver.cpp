@@ -27,10 +27,13 @@ GameOver::GameOver(int _stage_num)
 {
 	ImageLoad(game_over_image, "resource/font/GameOverFont.png");
 	ImageLoad(game_continue_image, "resource/font/GameContinueFont.png");
-	ImageLoad(player_lose_image, "resource/font/PlayerLoseFont.png");
+	ImageLoad(goal_lose_image, "resource/font/StageLoseFont.png");
+	ImageLoad(boss_stage_lose_image, "resource/font/PlayerLoseFont.png");
+	ImageLoad(back_death_image, "resource/images/BackDeathImage.png");
 	select_count = 0;
 	once_flg = TRUE;
 	stage_num = _stage_num;
+	alpha = 0.0f;
 }
 
 GameOver::~GameOver()
@@ -40,6 +43,7 @@ GameOver::~GameOver()
 AbstractScene* GameOver::Update()
 {
 	//Lスティック上入力
+	//左スティックの傾き具合がY座標に0.8以上かつ
 	if (PadInput::TipLeftLStick(STICKL_Y) > 0.8f &&
 		PadInput::TipLeftLStick(STICKL_Y) < 1.0f &&
 		once_flg == TRUE)
@@ -84,13 +88,26 @@ AbstractScene* GameOver::Update()
 		//スコアの初期化
 		Score::ResetScore();
 	}
+	alpha += 0.5f;
 	return this;
 }
 
 void GameOver::Draw() const
 {
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	DrawGraph(0, 0, back_death_image, TRUE);
 	DrawTriangle(460, 380 + (select_count * 80), 460, 430 + (select_count * 80), 500, 405 + (select_count * 80), 0x000ff0, TRUE);
-	DrawGraph(530, 460, game_over_image, FALSE);
-	DrawGraph(530, 360, game_continue_image, FALSE);
-	DrawGraph(400, 50, player_lose_image, FALSE);
+	DrawGraph(530, 350, game_continue_image, TRUE);
+	DrawGraph(530, 450, game_over_image, TRUE);
+	//stage(１～３)で死亡した場合の画像を表示
+	if (stage_num != 3)
+	{
+		DrawGraph(250, 50, goal_lose_image, TRUE);
+	}
+	//stage(Boss)で死亡した場合の画像を表示
+	if (stage_num == 3)
+	{
+		DrawGraph(250, 50, boss_stage_lose_image, TRUE);
+	}
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
