@@ -36,7 +36,7 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	bullet_num = BULLET_NUM_MAX ;
 
 	Date.magenta = 5.0f;
-	Date.syan = 5.0f;
+	Date.cyan = 5.0f;
 	Date.yellow = 15.0f;
 }
 
@@ -192,7 +192,11 @@ void Himawari::Attack(GameMain* main)
 void Himawari::ApplyDamage(int num)
 {
 	hp -= num;
-	spawn_flg = true;
+	if (hp <= 0) {
+		spawn_flg = true;
+		//プレイヤーが斬った敵の数をカウント
+		Score::SetAttackEnemyNum(2);
+	}
 }
 
 void Himawari::ReverseDirection()

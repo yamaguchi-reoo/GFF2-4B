@@ -2,6 +2,9 @@
 #include "PadInput.h"
 
 int Score::total_score = 0;
+int Score::zakuro_num = 0;
+int Score::iruka_num = 0;
+int Score::himawari_num = 0;
 
 //コンストラクタ
 Score::Score()
@@ -95,9 +98,54 @@ void Score::AddScore(int score)
 	total_score += score;
 }
 
+//スコアを0にリセット
 void Score::ResetScore()
 {
 	total_score = 0;
 }
 
+//プレイヤーが斬った敵の数をカウント(0:ザクロ 1:イルカ 2:ヒマワリ)
+void Score::SetAttackEnemyNum(int num)
+{
+	switch (num)
+	{
+	case 0:
+		zakuro_num++;
+		break;
+
+	case 1:
+		iruka_num++;
+		break;
+
+	case 2:
+		himawari_num++;
+		break;
+
+	default:
+		break;
+	}
+}
+
+//プレイヤーが斬った敵の数を返す(0:ザクロ 1:イルカ 2:ヒマワリ)
+int Score::GetAttackEnemyNum(int num)
+{
+	switch (num)
+	{
+	case 0:
+		return zakuro_num;
+		break;
+
+	case 1:
+		return iruka_num;
+		break;
+
+	case 2:
+		return himawari_num;
+		break;
+
+	default:
+		return -1;
+		break;
+	}
+}
 

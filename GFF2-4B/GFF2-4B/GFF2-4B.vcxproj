@@ -161,6 +161,8 @@
     <ClCompile Include="FpsController.cpp" />
     <ClCompile Include="GameClear.cpp" />
     <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="HealItem.cpp" />
+    <ClCompile Include="Jar.cpp" />
     <ClCompile Include="Koban.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="PlayerHP.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="Scroll.cpp" />
     <ClCompile Include="SelectStage.cpp" />
     <ClCompile Include="SighBoard.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StageData.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Zakuro.cpp" />
@@ -198,6 +201,8 @@
     <ClInclude Include="FpsController.h" />
     <ClInclude Include="GameClear.h" />
     <ClInclude Include="GameOver.h" />
+    <ClInclude Include="HealItem.h" />
+    <ClInclude Include="Jar.h" />
     <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="Result.h" />
@@ -205,6 +210,7 @@
     <ClInclude Include="Score.h" />
     <ClInclude Include="SelectStage.h" />
     <ClInclude Include="SighBoard.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="StageData.h" />
     <ClInclude Include="PlayerHP.h" />
     <ClInclude Include="PowerGauge.h" />

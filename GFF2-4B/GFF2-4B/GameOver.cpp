@@ -79,14 +79,17 @@ AbstractScene* GameOver::Update()
 		switch (static_cast<GAME_OVER_MENU>(select_count))
 		{
 		case GAME_OVER_MENU::GAME_MAIN:
+			//スコアの初期化
+			Score::ResetScore();
 			return new GameMain(stage_num);
 
 		case GAME_OVER_MENU::GAME_SELECT:
+			//スコアの初期化
+			Score::ResetScore();
 			return new SelectStage;
 
 		}
-		//スコアの初期化
-		Score::ResetScore();
+		
 	}
 	alpha += 0.5f;
 	return this;

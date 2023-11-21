@@ -20,6 +20,9 @@
 #include "LoadingScene.h"
 #include "Score.h"
 #include "SighBoard.h"
+#include "HealItem.h"
+#include "Koban.h"
+#include "Jar.h"
 
 class Player;
 
@@ -50,7 +53,11 @@ private:
 
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
+    HealItem* heal[ITEM_MAX];     //回復アイテム
+    Koban* koban; //小判
     Score* score; //スコアUIのオブジェクト
+
+    Jar* jar[JAR_MAX]; //壺
 
     Effect* effect;     //しぶきエフェクトのオブジェクト
 
@@ -66,8 +73,21 @@ private:
 
     int stage_width_num;    //ステージブロックの横数
     int stage_height_num;   //ステージブロックの縦数
-
     int stage_width;        //ステージ横幅
+
+    int impact_timer;               //画面揺れ演出
+
+    int item_rand;
+
+    int lock_flg; //強制戦闘時のフラグ
+    int vine_y;   //蔓のY座標
+    int vine_x1;  //左の草のX座標
+    int vine_x2;  //右の草のX座標
+    int vine_img[2]; //蔓、草の画像
+    int venemy_cnt;  //敵の生成時間カウント
+    int venemy_num1; //強制戦闘時に生成した敵の数
+    int venemy_num2; //強制戦闘時に斬った敵の数
+
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 
@@ -85,8 +105,11 @@ public:
     //攻撃を発生させる(_location = 攻撃したプレイヤーor敵の中心座標  _direction = 攻撃する方向(0=右 1=左))
     void SpawnAttack(AttackData _attackdata);
 
-    //各当たり判定の処理
-    void HitCheck();
+    //各当たり判定(プレイヤーと床以外)の処理
+    void HitCheck(GameMain* main);
+
+    //プレイヤーと床の当たり判定処理
+    void PlayerFloorHitCheck();
 
     //ステージファイルを読み込む
     void LoadStageData(int _stage);
@@ -103,11 +126,24 @@ public:
     //ボスにプレイヤーの座標を渡す用
     Location GetPlayerLocation();
 
+    //カメラを揺らす用の変数を設定する(_power = 揺れている時間と強度)
+    void ImpactCamera(int _power);
+
     //エネミーのPushを関数化
     template <class T>
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
+    //竹とエネミーの当たり判定
+    template <class T>
+    void HitBamboo(T* character);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect);
+    void ProcessAttack(Attack* attack, T* character, Effect* effect/*,HealItem* heal, Koban* koban*/);
+    //アイテムのランダム出現
+    template<class T>
+    void ItemSpwanRand(T* character);
+
+
+    //蔓内での敵生成処理
+    void VineEnemy(void);
 };
 
