@@ -43,7 +43,7 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 	leftwall_flg = false;
 
 	Date.magenta = 5.0f;
-	Date.syan = 15.0f;
+	Date.cyan = 15.0f;
 	Date.yellow = 5.0f;
 }
 
@@ -310,6 +310,8 @@ void Iruka::ApplyDamage(int num)
 	hp -= num;
 	if (hp <= 0) {
 		spawn_flg = true;
+		//プレイヤーが斬った敵の数をカウント
+		Score::SetAttackEnemyNum(1);
 	}
 }
 

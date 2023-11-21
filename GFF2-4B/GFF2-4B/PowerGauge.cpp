@@ -123,7 +123,7 @@ void PowerGauge::Draw() const
 #ifdef _DEBUG
 
 	//デバック表示
-	//DrawFormatString(400, 10, 0xffffff, "%d", remainder);
+	DrawFormatString(400, 10, 0xffffff, "%d", remainder);
 
 #endif // _DEBUG
 	
@@ -284,7 +284,7 @@ void PowerGauge::SetVolume(ColorDate color)
 	//シアン
 	if (cyan.maxFlg == 0)
 	{
-		cyan.volume += color.syan;
+		cyan.volume += color.cyan;
 	}
 	
 	//イエロー
@@ -364,7 +364,7 @@ void PowerGauge::InitGauge()
 	j = 0;
 }
 
-void PowerGauge::SetColorRem()
+void PowerGauge::ResetColorRem()
 {
 	remainder = 0;
 }

@@ -2,6 +2,7 @@
 #include "SceneManager.h"
 #include "FpsController.h"
 #include "PadInput.h"
+#include "SoundManager.h"
 #include "common.h"
 #include "Title.h"
 
@@ -19,6 +20,9 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     SetDrawScreen(DX_SCREEN_BACK);                 // 描画先画面を裏にする（ダブルバッファリング）
 
+    //音声データ読み込み
+    SoundManager::LoadSound();
+
     // タイトル シーンオブジェクト作成
     SceneManager* sceneMng = new SceneManager((AbstractScene*) new Title());
 
@@ -32,6 +36,7 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
         PadInput::UpdateKey();//パッドの入力処理
         KeyInput::UpdateKey();//キーボードの入力処理
+        SoundManager::UpdateSound();    //音声データの更新処理
 
         // シーンマネジャーでシーンの描画開始
         sceneMng->Draw();
@@ -48,6 +53,7 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 
     };
 
+    SoundManager::DeleteSound(); //音声データの削除
     DxLib_End(); // DXライブラリ使用の終了処理
     return 0;    // プログラムの終了
 };

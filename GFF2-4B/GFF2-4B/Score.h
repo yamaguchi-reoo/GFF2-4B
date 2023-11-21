@@ -7,6 +7,9 @@ private:
 	int num_img[10]; //数字画像用変数
 	static int total_score; //トータルスコア
 	int draw_score;  //描画用のスコア
+	static int zakuro_num; //斬ったザクロの数
+	static int iruka_num;  //斬ったイルカの数
+	static int himawari_num; //斬ったヒマワリの数
 
 public:
 
@@ -30,4 +33,10 @@ public:
 
 	//スコアを0に初期化
 	static void ResetScore();
+
+	//プレイヤーが斬った敵の数をカウント(0:ザクロ 1:イルカ 2:ヒマワリ)
+	static void SetAttackEnemyNum(int num);
+
+	//プレイヤーが斬った敵の数を返す(0:ザクロ 1:イルカ 2:ヒマワリ)
+	static int GetAttackEnemyNum(int num);
 };

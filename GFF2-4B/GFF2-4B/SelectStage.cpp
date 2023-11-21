@@ -1,4 +1,5 @@
 #include "SelectStage.h"
+#include "Title.h"
 #include "GameMain.h"
 #include "PadInput.h"
 
@@ -105,6 +106,18 @@ AbstractScene* SelectStage::Update()
 		)
 	{
 		return new GameMain(stage_num);
+	}
+
+	//Bボタンが押されたらタイトルに遷移
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_B) || KeyInput::OnKey(KEY_INPUT_SPACE)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_B)
+#endif
+		)
+	{
+		return new Title();
 	}
 
 	return this;

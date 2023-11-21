@@ -33,10 +33,10 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	leftwall_flg = false;
 	apply_gravity = true;
 
-
+	hp = 1;
 
 	Date.magenta = 15.0f;
-	Date.syan = 5.0f;
+	Date.cyan = 5.0f;
 	Date.yellow = 5.0f;
 }
 Zakuro::~Zakuro()
@@ -259,7 +259,11 @@ void Zakuro::Attack(GameMain* main)
 void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
-	spawn_flg = true;
+	if (hp <= 0) {
+		spawn_flg = true;
+		//プレイヤーが斬った敵の数をカウント
+		Score::SetAttackEnemyNum(0);
+	}
 }
 
 void Zakuro::HitZakuro()

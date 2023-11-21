@@ -53,6 +53,8 @@ public:
 
 	void HitZakuro();
 
+
+	int GetHp() { return hp; }
 	//スポーンフラグの取得
 	int GetSpwanFlg() { return spawn_flg; }
 	ColorDate GetColorDate();
