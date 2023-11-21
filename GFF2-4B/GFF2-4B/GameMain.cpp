@@ -135,10 +135,6 @@ AbstractScene* GameMain::Update()
 		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
 		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
 	}
-	if (impact_timer == -1)
-	{
-		CameraLocation(screen_origin);
-	}
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
