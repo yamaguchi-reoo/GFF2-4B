@@ -135,6 +135,10 @@ AbstractScene* GameMain::Update()
 		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
 		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
 	}
+	if (impact_timer == -1)
+	{
+		CameraLocation(screen_origin);
+	}
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
@@ -191,6 +195,7 @@ AbstractScene* GameMain::Update()
 			//	iruka[i]->SetFallFlg();
 			//}
 			boss->Update(this);
+			boss->SetScreenPosition(camera_location);
 			if (boss->New_Hand_Flg == true) {
 				hands = new BossHands(who++, boss);
 				boss->New_Hand_Flg = false;
@@ -199,6 +204,7 @@ AbstractScene* GameMain::Update()
 
 		if (hands != nullptr) {
 			hands->Update(this);
+			hands->SetScreenPosition(camera_location);
 			//岩生成
 			if (hands->Rock_Once == true) {
 				hands->Rock_Once = false;

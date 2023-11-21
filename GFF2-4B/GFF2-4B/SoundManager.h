@@ -1,6 +1,9 @@
 #pragma once
 #include"DxLib.h"
+
 #define SOUND_NUM 1		//音源の数
+
+#define PLAYER_WALK  0    //プレイヤーの足音
 
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
 static char sound_filepath[SOUND_NUM][256] =
@@ -50,6 +53,8 @@ public :
 				sound_data[i].play_flg = false;
 			}
 		}
+		//優先度が高い音が再生されたなら他の音の音量は下げる
+
 	}
 	static void StartSound(int _num)
 	{
