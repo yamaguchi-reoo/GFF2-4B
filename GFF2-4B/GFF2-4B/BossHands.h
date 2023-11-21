@@ -15,6 +15,7 @@ enum BossHimawariState {
 enum BossIrukaState {
     D_WAIT = 0,
     D_MOVE,
+    D_RISE,
     D_DASH,
     D_DOWN
 };
@@ -52,11 +53,13 @@ public:
     //‚¢‚é‚©
     BossIrukaState iruka_state;     //‚¢‚é‚©‚Ìó‘Ô
     Location turu_location;         //‚Â‚é•`‰æˆÊ’u
+    bool rare_flg;                  //–v‹““®‚ğ’áŠm—¦‚Å‚·‚é
     float iruka_rad;                //‚¢‚é‚©‚ÌŠp“xŒvZ—p
     float turu_angle;               //‚Â‚éŠp“x
     float turu_rad;                 //‚Â‚é‚Ì•`‰æŠp“xŒvZ—p
     int turu_img;                   //‚Â‚é‰æ‘œ—p
     int ref_num;                    //‚¢‚é‚©‚ª•Ç‚É’µ‚Ë•Ô‚Á‚½‰ñ”
+    int tackle_num;                 //‚¢‚é‚©‚ªUŒ‚‚µ‚½‰ñ”
 
     //‚Ğ‚Ü‚í‚è
     BossHimawariState hima_state;        //‚Ğ‚Ü‚í‚è‚Ìó‘Ô
