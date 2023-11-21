@@ -1177,7 +1177,7 @@ void GameMain::VineEnemy(void)
 {
 	int num = 0;
 
-	num = GetRand(5);
+	num = GetRand(4);
 
 	//空いてる枠にザクロ生成
 	for (int k = 0; k < ZAKURO_MAX; k++)
