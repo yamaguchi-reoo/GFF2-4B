@@ -72,17 +72,18 @@ Player::Player()
 	powerup_flg = false;
 	move_flg = true;
 	attack_anim_flg = false;
+	inv_flg = false;
+	damage_flg = false;
+	hidden_flg = false;
+	death_flg = false;
+
 	SetPlayerAttackData();
 	LoadDivGraph("resource/images/PlayerAnimation.png", 18, 6, 3, 256, 256, player_image);
 	player_anim = 0;
 	attack_anim = 0;
 	player_anim_speed = PLAYER_ANIM;
-	inv_flg = false;
-	damage_flg = false;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
 	damage_time = DEFAULT_INVINCIBLE_TIME / 2;
-	hidden_flg = false;
-	death_flg = false;
 	death_time = 120;
 	player_now_erea = GetCenterLocation().x / BOX_WIDTH;
 }
@@ -745,7 +746,7 @@ void Player::Move(GameMain* main)
 	//•às‰¹‚ğÄ¶‚·‚é
 	if (next_location.x != old_location.x && onfloor_flg == true)
 	{
-		SoundManager::StartSound(0);
+		SoundManager::StartSound(PLAYER_WALK);
 	}
 
 	//YÀ•W‚ªˆê’è‚ğã‰ñ‚Á‚½‚ç€
