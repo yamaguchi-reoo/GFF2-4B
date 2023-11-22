@@ -124,37 +124,8 @@ GameMain::~GameMain()
 
 AbstractScene* GameMain::Update()
 {
-	//カメラ更新
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
-	{
-		camera_lock_flg = false;
-		lock_pos_set_once = false;
-	}
-	else
-	{
-		camera_lock_flg = true;
-		if (lock_pos_set_once == false)
-		{
-			lock_pos = player->GetLocation();
-			lock_pos_set_once = true;
-		}
-	}
-	
-	if (camera_lock_flg == false)
-	{
-		CameraLocation(player->GetLocation());
-	}
-	else
-	{
-		CameraLocation(lock_pos);
-	}
-
-	//揺れ処理
-	if (--impact_timer > 0)
-	{
-		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
-		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
-	}
+	//カメラの更新
+	UpdateCamera();
 
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
@@ -908,7 +879,7 @@ void GameMain::PlayerFloorHitCheck()
 		for (int j = player->GetPlayerNowErea() - 2; j < player->GetPlayerNowErea() + 2; j++)
 		{
 			//プレイヤーがステージに触れたなら
-			if (j >= 0 && player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
+			if (j >= 0 && j<stage_width_num && player->HitBox(stage[i][j]) == true && stage[i][j]->GetStageCollisionType() != 0)
 			{
 				//触れた面に応じて押し出す
 				player->Push(stage[i][j]->GetLocation(), stage[i][j]->GetErea(), stage[i][j]->GetStageCollisionType());
@@ -1095,6 +1066,40 @@ Location GameMain::GetPlayerLocation()
 void GameMain::ImpactCamera(int _power)
 {
 	impact_timer = _power;
+}
+
+void GameMain::UpdateCamera()
+{
+	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
+	{
+		camera_lock_flg = false;
+		lock_pos_set_once = false;
+	}
+	else
+	{
+		camera_lock_flg = true;
+		if (lock_pos_set_once == false)
+		{
+			lock_pos = player->GetLocation();
+			lock_pos_set_once = true;
+		}
+	}
+
+	if (camera_lock_flg == false)
+	{
+		CameraLocation(player->GetLocation());
+	}
+	else
+	{
+		CameraLocation(lock_pos);
+	}
+
+	//揺れ処理
+	if (--impact_timer > 0)
+	{
+		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
+		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
+	}
 }
 
 template <class T>

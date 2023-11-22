@@ -131,6 +131,9 @@ public:
     //カメラを揺らす用の変数を設定する(_power = 揺れている時間と強度)
     void ImpactCamera(int _power);
 
+    //カメラの更新＆カメラを揺らす
+    void UpdateCamera();
+
     //ゲームオーバーのフラグを立てる
     void SetGameOver() { game_over_flg = true; }
     //エネミーのPushを関数化
