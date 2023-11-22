@@ -393,7 +393,7 @@ AbstractScene* GameMain::Update()
 
 	/**プレイヤーを閉じ込めるここから*/
 	//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10285)
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 11600)
 	{
 		lock_flg = 1;
 	}
@@ -474,7 +474,7 @@ AbstractScene* GameMain::Update()
 	}
 
 	//ステージクリア
-	if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
 		if (now_stage == 2)
 		{
 			SetStage(3);
@@ -1188,7 +1188,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(9900 + (200 * num), 200, true, who++);
+			zakuro[k] = new Zakuro(11500 + (150 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}
