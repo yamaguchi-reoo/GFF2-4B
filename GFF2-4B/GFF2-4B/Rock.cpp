@@ -38,7 +38,7 @@ void Rock::Update(GameMain* main) {
 		//Set-Moveで上にSet+Moveで↓に行く
 		location.x = Set_Rock_x - Rock_Movex;
 		location.y = Set_Rock_y - Rock_Movey;
-		timer += 0.05;
+		timer += 0.05f;
 		break;
 	case 1:
 		Rock_Movex = V_zero * (cosf(sita) * timer);
@@ -47,7 +47,7 @@ void Rock::Update(GameMain* main) {
 		//Set-Moveで上にSet+Moveで↓に行く
 		location.x = Set_Rock_x + Rock_Movex;
 		location.y = Set_Rock_y - Rock_Movey;
-		timer += 0.05;
+		timer += 0.05f;
 		break;
 	case 2:
 		//放物線
@@ -57,7 +57,7 @@ void Rock::Update(GameMain* main) {
 		//Set-Moveで上にSet+Moveで↓に行く
 		location.x = Set_Rock_x - Rock_Movex;
 		location.y = Set_Rock_y - Rock_Movey;
-		timer += 0.05;
+		timer += 0.05f;
 		break;
 	case 3:
 		Rock_Movex = V_zero * (cosf(sita) * timer);
@@ -66,7 +66,7 @@ void Rock::Update(GameMain* main) {
 		//Set-Moveで上にSet+Moveで↓に行く
 		location.x = Set_Rock_x + Rock_Movex;
 		location.y = Set_Rock_y - Rock_Movey;
-		timer += 0.05;
+		timer += 0.05f;
 		break;
 	default:
 		break;

@@ -25,7 +25,7 @@ public:
 	void SetScoreFlg(bool _flg) { score_flg = _flg; }
 
 	//スポーンフラグを返す
-	int GetSpawnFlg() { return spawn_flg; }
+	bool GetSpawnFlg() { return spawn_flg; }
 
 	//表示位置を設定
 	void SetLocation(Location _location);

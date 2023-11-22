@@ -3,7 +3,7 @@
 
 #define SOUND_NUM 1		//音源の数
 
-#define PLAYER_WALK  0    //プレイヤーの足音
+#define PLAYER_WALK_SOUND  0    //プレイヤーの足音
 
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
 static char sound_filepath[SOUND_NUM][256] =
