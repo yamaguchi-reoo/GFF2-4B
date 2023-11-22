@@ -14,7 +14,6 @@ private:
     int sb_img[4];     //看板画像格納用
     int disp_time;  //表示時間
     bool disp_once; //看板付近にずっといたら表示が消えるように
-    bool damage_once;
 public:
     //コンストラクタ
     SighBoard(float pos_x, float pos_y,int type);
@@ -22,16 +21,11 @@ public:
     ~SighBoard();
     void Update(Location _player_location,Location _player_local_location);
     void Draw()const;
-
-    //被弾(_num = ダメージ数)
-    void ApplyDamage(int _num) { hp -= _num; }
-    //一回だけ被弾するようにする
-    bool GetDamageOnce() { return damage_once; }
-    void SetDamageOnce(bool _flg) { damage_once = _flg; }
-    //hp取得
-    int GetSighBoardHp() { return hp; }
+    void SetDispOnce(bool _flg) { disp_once = _flg; }
+    bool GetDispOnce() { return disp_once; }
     // 
-    bool GetSighFlg() { return tuto_disp_flg; }
+    bool GetDispFlg() { return tuto_disp_flg; }
+    void SetDispFlg(bool _flg) { tuto_disp_flg = _flg; }
     int GetSighTypeFlg() { return disp_type; }
 };
 
