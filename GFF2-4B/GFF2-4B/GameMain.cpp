@@ -9,8 +9,8 @@
 #include "GameClear.h"
 #include "GameOver.h"
 
-static Location camera_location = { (SCREEN_WIDTH / 2),(SCREEN_HEIGHT / 2) };	//カメラの座標
-static Location screen_origin =	{(SCREEN_WIDTH / 2),0};
+static Location camera_location = { (SCREEN_WIDTH / 2),0};	//カメラの座標
+static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
@@ -49,12 +49,13 @@ GameMain::GameMain(int _stage)
 	loading_scene = new Loading();
 
 	flg = false;
-	onfloor_flg = false;
 
 	Hands_Delete_Flg = false;
 
-	impact_timer = -2;   
-
+	impact_timer = 0;   
+	camera_lock_flg = true;
+	lock_pos = camera_location;
+	lock_pos_set_once = true;
 	lock_flg = 0;
 	vine_x1 = -650;
 	vine_x2 = 1290;
@@ -126,26 +127,35 @@ AbstractScene* GameMain::Update()
 	//カメラ更新
 	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
 	{
-		CameraLocation(player->GetLocation());
+		camera_lock_flg = false;
+		lock_pos_set_once = false;
+	}
+	else
+	{
+		camera_lock_flg = true;
+		if (lock_pos_set_once == false)
+		{
+			lock_pos = player->GetLocation();
+			lock_pos_set_once = true;
+		}
 	}
 	
-	////揺れ処理
-	//if (--impact_timer > 0)
-	//{
-	//	camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
-	//	camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
-	//}
-	//else if (impact_timer==-1)
-	//{
-	//	if (now_stage != 3 || player->GetLocation().x > (SCREEN_WIDTH / 2))
-	//	{
-	//		CameraLocation(player->GetLocation());
-	//	}
-	//	else
-	//	{
-	//		CameraLocation(screen_origin);
-	//	}
-	//}
+	if (camera_lock_flg == false)
+	{
+		CameraLocation(player->GetLocation());
+	}
+	else
+	{
+		CameraLocation(lock_pos);
+	}
+
+	//揺れ処理
+	if (--impact_timer > 0)
+	{
+		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
+		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
+	}
+
 	//ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
@@ -751,6 +761,7 @@ void GameMain::HitCheck(GameMain* main)
 				{
 					//ダメージ量に応じた画面揺れ
 					ImpactCamera(10 * attack[i]->GetAttackData().damage);
+
 					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
 				}
@@ -765,7 +776,7 @@ void GameMain::HitCheck(GameMain* main)
 			if (hands != nullptr) {
 				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
-
+					ImpactCamera(10 * attack[i]->GetAttackData().damage);
 					//ボスのダメージ処理
 					hands->ApplyDamage(attack[i]->GetAttackData().damage);
 					attack[i]->DeleteAttack();
@@ -1053,6 +1064,8 @@ void GameMain::SetStage(int _stage)
 	player->Respawn(res_location);
 	//カメラのリセット
 	ResetCamera();
+	//カメラの位置がプレイヤーの位置にならないように
+	lock_pos_set_once = true;
 	//スコアリセット
 	score->ResetScore();
 }
@@ -1065,7 +1078,7 @@ void GameMain::CameraLocation(Location _location)
 
 void GameMain::ResetCamera()
 {
-	camera_location.x = screen_origin.x - (SCREEN_WIDTH / 2);
+	camera_location.x = screen_origin.x;
 	camera_location.y = screen_origin.y;
 }
 
