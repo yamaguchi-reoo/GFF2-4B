@@ -23,6 +23,8 @@
 #include "HealItem.h"
 #include "Koban.h"
 #include "Jar.h"
+#include "Vine.h"
+#include "LockPlayer.h"
 
 class Player;
 
@@ -66,6 +68,9 @@ private:
     Loading* loading_scene;    //LoadingSceneのオブジェクト
 
     SighBoard* sighboard[SIGH_BOARD_NUM];      //看板のオブジェクト
+
+    Vine* vine[2]; //蔓のオブジェクト
+    LockPlayer* lockplayer; //強制戦闘ゾーンのオブジェクト
 
     int flg;               //
     int count[2];          //実験用
@@ -150,7 +155,7 @@ public:
     void ItemSpwanRand(T* character);
 
     
-    //蔓内での敵生成処理
-    void VineEnemy(void);
+    //蔓内での敵生成処理(0:ザクロ 1:イルカ 2:ヒマワリ)
+    void VineEnemy(int enemy);
 };
 

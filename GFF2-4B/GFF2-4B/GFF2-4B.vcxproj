@@ -165,6 +165,7 @@
     <ClCompile Include="Jar.cpp" />
     <ClCompile Include="Koban.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
+    <ClCompile Include="LockPlayer.cpp" />
     <ClCompile Include="PlayerHP.cpp" />
     <ClCompile Include="PowerGauge.cpp" />
     <ClCompile Include="Result.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="StageData.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Vine.cpp" />
     <ClCompile Include="Zakuro.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="Himawari.cpp" />
@@ -205,6 +207,7 @@
     <ClInclude Include="Jar.h" />
     <ClInclude Include="Koban.h" />
     <ClInclude Include="LoadingScene.h" />
+    <ClInclude Include="LockPlayer.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Rock.h" />
     <ClInclude Include="Score.h" />
@@ -216,6 +219,7 @@
     <ClInclude Include="PowerGauge.h" />
     <ClInclude Include="Scroll.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Vine.h" />
     <ClInclude Include="Zakuro.h" />
     <ClInclude Include="fps.h" />
     <ClInclude Include="GameMain.h" />
