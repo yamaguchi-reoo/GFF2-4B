@@ -325,7 +325,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			checkabs = fabsf(main->GetPlayerLocation().x - location.x);
 
 			if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
-				checkabs = fabsf(main->GetPlayerLocation().x - location.x+100);
+				checkabs = fabsf(main->GetPlayerLocation().x - location.x+180);
 				onceflg = true;
 
 			}
