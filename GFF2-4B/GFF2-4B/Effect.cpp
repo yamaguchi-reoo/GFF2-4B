@@ -75,7 +75,7 @@ void Effect::Draw() const
 {
 	if (Flg == 1)
 	{
-		DrawCircle(location.x, location.y, 15, 0xffffff, TRUE);
+		DrawCircleAA(location.x, location.y, 15, 0xffffff, TRUE);
 	}
 
 }

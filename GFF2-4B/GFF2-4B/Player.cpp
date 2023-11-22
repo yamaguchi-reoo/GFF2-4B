@@ -85,7 +85,7 @@ Player::Player()
 	inv_time = DEFAULT_INVINCIBLE_TIME;
 	damage_time = DEFAULT_INVINCIBLE_TIME / 2;
 	death_time = 120;
-	player_now_erea = GetCenterLocation().x / BOX_WIDTH;
+	player_now_erea = (int)GetCenterLocation().x / BOX_WIDTH;
 }
 
 Player::~Player() 
@@ -103,7 +103,7 @@ void Player::Update(GameMain* main)
 	}
 #endif
 	frame++;
-	player_now_erea = GetCenterLocation().x / BOX_WIDTH;
+	player_now_erea = (int)GetCenterLocation().x / BOX_WIDTH;
 	//生きているなら重力、ダメージ、攻撃関連の処理を行う
 	if (death_flg == false)
 	{
@@ -742,7 +742,7 @@ void Player::Move(GameMain* main)
 	//歩行音を再生する
 	if (next_location.x != old_location.x && onfloor_flg == true)
 	{
-		SoundManager::StartSound(PLAYER_WALK);
+		SoundManager::StartSound(PLAYER_WALK_SOUND);
 	}
 
 	//Y座標が一定を上回ったら死

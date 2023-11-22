@@ -9,8 +9,12 @@ SighBoard::SighBoard(float pos_x, float pos_y, int type)
 	erea.width = 5;
 	erea.height = BOX_HEIGHT;
 	disp_type = type;
-	disp_flg = false;
+	tuto_disp_flg = false;
 	disp_time = 0;
+	disp_once = false;
+	hp = 1;
+	disp_flg = true;
+	damage_once = false;
 	LoadDivGraph("resource/images/Tutorialimg/Tutorial.png", 4, 4, 1, 320, 320, sb_img);
 }
 
@@ -21,24 +25,39 @@ SighBoard::~SighBoard()
 
 void SighBoard::Update(Location _player_location, Location _player_local_location)
 {
-	disp_location = _player_local_location;
-	if (location.x - 100 < _player_location.x && location.x + erea.width + 100 > _player_location.x)
+	//hpが０以下なら現在表示されているチュートリアルが消えた後表示されないように
+	if (hp > 0)
 	{
-		disp_flg = true;
-		disp_time = 0;
+		if (location.x - 200 < _player_location.x && location.x + erea.width + 200 > _player_location.x)
+		{
+			if (tuto_disp_flg == false && disp_once == false)
+			{
+				tuto_disp_flg = true;
+				disp_once = true;
+				disp_time = 0;
+			}
+		}
+		else
+		{
+			disp_once = false;
+		}
 	}
+	disp_location = _player_local_location;
 	if (++disp_time > 240)
 	{
-		disp_flg = false;
+		tuto_disp_flg = false;
 	}
 }
 
 void SighBoard::Draw()const
 {
-	DrawBox(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xBFA46F, true);
-	DrawTriangleAA(local_location.x + (erea.width / 2), local_location.y - 45, local_location.x - 25, local_location.y - 20, local_location.x + erea.width + 25, local_location.y - 20, 0xBFA46F, true);
-	DrawBox(local_location.x-15, local_location.y-30, local_location.x + erea.width+15, local_location.y, 0xBFA46F, true);
-	if (disp_flg == true)
+	if (hp > 0)
+	{
+		DrawBox(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xBFA46F, true);
+		DrawTriangleAA(local_location.x + (erea.width / 2), local_location.y - 45, local_location.x - 25, local_location.y - 20, local_location.x + erea.width + 25, local_location.y - 20, 0xBFA46F, true);
+		DrawBox(local_location.x - 15, local_location.y - 30, local_location.x + erea.width + 15, local_location.y, 0xBFA46F, true);
+	}
+	if (tuto_disp_flg == true)
 	{
 		if (disp_location.y > 200)
 		{

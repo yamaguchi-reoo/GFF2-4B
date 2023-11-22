@@ -13,8 +13,8 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Hands_Img_num = 0;//イルカ
 	//Hands_who = 2;
 	Hands_who = boss->Hand_Num;
-	erea.height = hands_height[Hands_who];
-	erea.width = hands_width[Hands_who];
+	erea.height = (float)hands_height[Hands_who];
+	erea.width = (float)hands_width[Hands_who];
 	who = _who;
 	Attack_Num = 0;
 	Death_Anim = 0;
@@ -103,14 +103,14 @@ void BossHands::Draw() const {
 			//else {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
-			DrawRotaGraph(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
+			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
 			if (face_angle > 0.0f && face_angle <0.7f)
 			{
-				DrawRotaGraph(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
+				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 			}
 			else
 			{
-				DrawRotaGraph(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
+				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
 			}
 			break;
 		case 2:
@@ -151,7 +151,7 @@ void BossHands::MagentaInit()
 	location.y = 700;
 	Set_Zakuro_x = 0;
 	Set_Zakuro_y = 0;
-	g = 9.8;
+	g = 9.8f;
 	sita = 60;
 	V_zero = 200;
 	time = 0;
@@ -311,7 +311,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				sita = 60;
 				V_zero = 700;
 				rad = sita * pi / 180;//ラジアンに変換
-				time = 0.0167;
+				time = 0.0167f;
 				Set_Zakuro_x = location.x;
 				Set_Zakuro_y = location.y;
 				onceflg = false;
@@ -335,7 +335,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			if(location.x>1200)location.x = Set_Zakuro_x + Zakuro_Movex;
 			if (location.y <320)location.y = Set_Zakuro_y + Zakuro_Movey;
 
-			time += 0.01;
+			time += 0.01f;
 
 			if (location.y > 320) {
 				zakuro_state = BossZakuroState::Z_MOVE;
@@ -349,7 +349,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			if (location.x > 0)location.x = Set_Zakuro_x - Zakuro_Movex;
 			if (location.y < 320)location.y = Set_Zakuro_y + Zakuro_Movey;
 
-			time += 0.01;
+			time += 0.01f;
 			if (location.y>320) {
 				zakuro_state = BossZakuroState::Z_MOVE;
 				location.y = 310;
@@ -427,7 +427,7 @@ void BossHands::HandsYellow(GameMain* main)
 		angle_width = (SCREEN_WIDTH / 2) - location.x;
 		angle_height = (SCREEN_HEIGHT-erea.height) - location.y;
 		rad = atan2f(angle_height, angle_width);
-		face_angle = rad / M_PI / 2;
+		face_angle = (float)(rad / M_PI / 2);
 
 		//ひまわりの状態に応じて行動を変える
 		switch (hima_state)
@@ -1048,7 +1048,7 @@ float BossHands::GetRandAngle(int _wall)
 		//左壁
 	case 0:
 		//0から0.2、0.8から1の中からランダムな値を返す
-		return fabs(GetRand(1) - (GetRand(20) * 0.01f));
+		return fabsf(GetRand(1) - (GetRand(20) * 0.01f));
 		//右壁
 	case 1:
 		//0.3から0.7の中からランダムな値を返す

@@ -274,6 +274,7 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
+	//攻撃の更新
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
 		//誰が攻撃したかによって攻撃の判定がついていく対象を変える
@@ -476,6 +477,7 @@ AbstractScene* GameMain::Update()
 	if (player->GetPlayerHP() < 0) {
 		game_over_flg = true;
 	}
+
 	//フラグが立っていたらゲームオーバー
 	if (game_over_flg == true)
 	{
@@ -523,13 +525,6 @@ AbstractScene* GameMain::Update()
 	if (KeyInput::OnPresed(KEY_INPUT_E) && KeyInput::OnPresed(KEY_INPUT_D))
 	{
 		return new EditScene(now_stage);
-	}
-
-	//途中でステージの切り替えがあった場合使用
-	if (now_stage == 3 && old_stage!=now_stage) {
-		//Hands_Delete_Flg = false;
-		//boss = new Boss();
-		//hands = new BossHands(who++, boss);
 	}
 #endif
 
@@ -710,9 +705,9 @@ void GameMain::HitCheck(GameMain* main)
 				HitBamboo(zakuro[j]);
 			}
 		}
-		for (int j = 0; j < IRUKA_MAX; j++) 
+		for (int j = 0; j < IRUKA_MAX; j++)
 		{
-			if (iruka[j] != nullptr) 
+			if (iruka[j] != nullptr)
 			{
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				ProcessAttack(attack[i], iruka[j], effect /*, heal,koban*/);
@@ -728,9 +723,9 @@ void GameMain::HitCheck(GameMain* main)
 				HitBamboo(himawari[j]);
 			}
 		}
-		for (int j = 0; j < BAMBOO_MAX; j++) 
+		for (int j = 0; j < BAMBOO_MAX; j++)
 		{
-			if (bamboo[j] != nullptr) 
+			if (bamboo[j] != nullptr)
 			{
 				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
 				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetCanApplyDamage() == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
@@ -775,7 +770,7 @@ void GameMain::HitCheck(GameMain* main)
 		if (attack[i]->HitBox(player) == true && attack[i]->GetAttackData().who_attack != PLAYER && attack[i]->GetCanApplyDamage() == true)
 		{
 			//プレイヤーのダメージ処理
-			player->ApplyDamage(main,attack[i]->GetAttackData().damage);
+			player->ApplyDamage(main, attack[i]->GetAttackData().damage);
 			//攻撃を消す
 			attack[i]->DeleteAttack();
 		}
@@ -792,7 +787,6 @@ void GameMain::HitCheck(GameMain* main)
 		}
 		for (int j = i + 1; j < ATTACK_NUM; j++)
 		{
-
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[i]->GetAttackData().who_attack == PLAYER && (attack[j]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[j]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
@@ -802,6 +796,17 @@ void GameMain::HitCheck(GameMain* main)
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[j]->GetAttackData().who_attack == PLAYER && (attack[i]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[i]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
 				attack[i]->DeleteAttack();
+			}
+		}
+		for (int j = 0; j < SIGH_BOARD_NUM; j++)
+		{
+			if (sighboard[j] != nullptr)
+			{
+				if (attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->HitBox(sighboard[j]) == true && sighboard[j]->GetSighBoardHp() > 0)
+				{
+					sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage);
+					ImpactCamera(10 * attack[i]->GetAttackData().damage);
+				}
 			}
 		}
 	}
@@ -862,7 +867,6 @@ void GameMain::HitCheck(GameMain* main)
 			}
 		}
 	}
-
 	if (player->HitBox(koban) == true && koban->GetSpawnFlg() == true)
 	{
 		score->AddScore(300);
@@ -958,7 +962,7 @@ void GameMain::SetStage(int _stage)
 		for (int j = 0; j < stage_width_num; j++)
 		{
 			//ステージ内ブロックを生成
-			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
+			stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, STAGE_DATA[i][j]);
 			switch (STAGE_DATA[i][j])
 			{
 			//ザクロを生成
@@ -968,7 +972,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
+						zakuro[k] = new Zakuro((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), true, who++);
 						break;
 					}
 				}
@@ -980,7 +984,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (iruka[k] == nullptr)
 					{
-						iruka[k] = new Iruka(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
+						iruka[k] = new Iruka((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), true, who++);
 						break;
 					}
 				}
@@ -992,7 +996,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (himawari[k] == nullptr)
 					{
-						himawari[k] = new Himawari(j * BOX_WIDTH, i * BOX_HEIGHT, true, who++);
+						himawari[k] = new Himawari((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), true, who++);
 						break;
 					}
 				}
@@ -1002,7 +1006,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (bamboo[k] == nullptr)
 					{
-						bamboo[k] = new Bamboo(j * BOX_WIDTH, i * BOX_HEIGHT);
+						bamboo[k] = new Bamboo((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT));
 						break;
 					}
 				}
@@ -1016,7 +1020,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (sighboard[k] == nullptr)
 					{
-						sighboard[k] = new SighBoard(j * BOX_WIDTH, i * BOX_HEIGHT, STAGE_DATA[i][j]);
+						sighboard[k] = new SighBoard((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), STAGE_DATA[i][j]);
 						break;
 					}
 				}
@@ -1211,7 +1215,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(9900 + (200 * num), 200, true, who++);
+			zakuro[k] = new Zakuro((float)(9900 + (200 * num)), (float)(200), true, who++);
 			venemy_num1++;
 			break;
 		}
