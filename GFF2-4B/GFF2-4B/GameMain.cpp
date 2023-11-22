@@ -37,8 +37,6 @@ GameMain::GameMain(int _stage)
 
 	score = new Score();
 
-	effect = new Effect();
-
 	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		heal[i] = nullptr;
@@ -112,10 +110,14 @@ GameMain::~GameMain()
 		delete heal[i];
 		heal[i] = nullptr;
 	}
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		delete effect[i];
+		effect[i] = nullptr;
+	}
 	delete powergauge;
 	delete playerhp;
 	delete score;
-	delete effect;
 	delete loading_scene;
 	delete boss;
 	delete hands;
@@ -231,8 +233,15 @@ AbstractScene* GameMain::Update()
 
 	koban->Update();
 
-	effect->Update(this);
-	effect->SetScreenPosition(camera_location);
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		if (effect[i] != nullptr)
+		{
+			effect[i]->Update(this);
+			effect[i]->SetScreenPosition(camera_location);
+
+		}
+	}
 
 	if (powergauge->PowerGaugeState() == 1)
 	{
@@ -347,11 +356,21 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	if (effect->GetFlg() == 2)
+	for (int i = 0; i < SPLASH_MAX; i++)
 	{
-		powergauge->SetVolume(effect->GetSplashColor());
-		effect->SetFlg(0);
+		if (effect[i] != nullptr)
+		{
+			//しぶきが移動し終わったら
+			if (effect[i]->GetFlg() == 2)
+			{
+				//ゲージを増加させる
+				powergauge->SetVolume(effect[i]->GetSplashColor());
+				//移動フラグを待機中に戻す
+				effect[i]->SetFlg(0);
+			}
+		}
 	}
+
 	
 	//床の数だけ繰り返す
 	for(int i = 0; i < stage_height_num; i++)
@@ -552,7 +571,13 @@ void GameMain::Draw() const
 		}
 	}
 
-	effect->Draw();
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		if (effect[i] != nullptr)
+		{
+			effect[i]->Draw();
+		}
+	}
 
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
@@ -700,7 +725,7 @@ void GameMain::HitCheck(GameMain* main)
 			if (zakuro[j] != nullptr)
 			{
 				// 攻撃の判定がザクロと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], zakuro[j], effect/*, heal,koban*/);
+				ProcessAttack(attack[i], zakuro[j]/*, effect, heal, koban */ );
 				//竹とエネミーの当たり判定
 				HitBamboo(zakuro[j]);
 			}
@@ -710,7 +735,7 @@ void GameMain::HitCheck(GameMain* main)
 			if (iruka[j] != nullptr)
 			{
 				// 攻撃の判定がイルカと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], iruka[j], effect /*, heal,koban*/);
+				ProcessAttack(attack[i], iruka[j]/*,effect , heal,koban*/);
 				//竹とエネミーの当たり判定
 				HitBamboo(iruka[j]);
 			}
@@ -718,7 +743,7 @@ void GameMain::HitCheck(GameMain* main)
 		for (int j = 0; j < HIMAWARI_MAX; j++) {
 			if (himawari[j] != nullptr) {
 				// 攻撃の判定が	ひまわりと被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				ProcessAttack(attack[i], himawari[j], effect/*, heal,koban*/);
+				ProcessAttack(attack[i], himawari[j]/*, effect, heal,koban*/);
 				//竹とエネミーの当たり判定
 				HitBamboo(himawari[j]);
 			}
@@ -1116,23 +1141,22 @@ void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int i
 }
 
 template<class T>
-void GameMain::ProcessAttack(Attack* attack, T* character, Effect* effect/*, HealItem* heal, Koban* koban*/)
+void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, HealItem* heal, Koban* koban*/)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
 	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwanFlg() == false) {		
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
+
+		// しぶきのスポーン処理
+		SpawnEffect(character);
+
 		//ダメージ量に応じた画面揺れ
 		impact_timer = (10 * attack->GetAttackData().damage);
 
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
-			// しぶき用
-			effect->SetFlg(1);
-			effect->SetGaugeLocation(powergauge->GetCenterLocation());
-			effect->SetLocation(character->GetLocalLocation());
-			effect->SetSplashColor(character->GetColorDate());
 			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 15.0f) ||
 				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f) ||
 				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
@@ -1200,6 +1224,31 @@ void GameMain::ItemSpwanRand(T* character)
 	else if (85 <= item_rand && item_rand < 100)  // 85から99までがコインの範囲
 	{
 		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+	}
+}
+
+//しぶきの生成
+template<class T>
+void  GameMain::SpawnEffect(T* character)
+{
+	for (int i = 0; i < SPLASH_MAX; i++)
+	{
+		if (effect[i] == nullptr)
+		{
+			effect[i] = new Effect();
+
+			//敵のローカル座標を取得、しぶきのスタート位置にセット
+			effect[i]->SetLocation(character->GetLocalLocation());
+			//ゲージの中心座標を取得、しぶきのゴール位置にセット
+			effect[i]->SetGaugeLocation(powergauge->GetCenterLocation());
+		
+			//倒したキャラクターの色情報を取得、しぶきに色情報をセット
+			effect[i]->SetSplashColor(character->GetColorDate());
+			//しぶきを移動させるフラグを設定
+			effect[i]->SetFlg(1);
+		
+			break;
+		}
 	}
 }
 
