@@ -20,7 +20,7 @@ public:
 	void SetSpawnFlg(bool _flg) { spawn_flg = _flg; }
 	void SetReturnFlg() { spawn_flg = false; }
 
-	int GetSpawnFlg() { return spawn_flg; }
+	bool GetSpawnFlg() { return spawn_flg; }
 
 	void SetLocation(Location _location);
 };

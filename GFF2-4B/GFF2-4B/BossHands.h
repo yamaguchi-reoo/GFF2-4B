@@ -75,7 +75,7 @@ public:
     float g;//重力加速度
     float sita; //角度θ
     float V_zero; //初速度ｖ０
-    float pi = 3.1415;
+    float pi = 3.1415f;
     
 
     //いるか
