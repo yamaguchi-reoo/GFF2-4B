@@ -14,9 +14,11 @@ Effect::Effect()
 	//移動量
 	v = 20;
 
-	test_x = 0;
-	test_y = 0;
+	//発生個所からゲージまでの差
+	diff_x = 0;
+	diff_y = 0;
 
+	//Flg(0:待機　1:移動中　2:ゲージに到達)
 	Flg = 0;
 
 }
@@ -33,28 +35,28 @@ void Effect::Update(GameMain* main)
 	if (Flg == 1)
 	{
 		//しぶきの座標とゲージの座標の差
-		test_x = gauge_x - location.x;
-		test_y = gauge_y - location.y;
+		diff_x = gauge_x - location.x;
+		diff_y = gauge_y - location.y;
 
 		//ゲージの中心より右の敵を倒したら
 		if (gauge_x < location.x)
 		{
-			location.x -= fabsf(test_x) / 20;
-			location.y -= fabsf(test_y) / v;
+			location.x -= fabsf(diff_x) / 20;
+			location.y -= fabsf(diff_y) / v;
 		}
 		//ゲージの中心より左の敵を倒したら
 		else if (gauge_x > location.x)
 		{
-			location.x += fabsf(test_x) / 20;
-			location.y -= fabsf(test_y) / v;
+			location.x += fabsf(diff_x) / 20;
+			location.y -= fabsf(diff_y) / v;
 		}
 
 
-		if (location.y < (int)test_y / 2)
+		if (location.y < (int)diff_y / 2)
 		{
 			v = 15;
 
-			if (location.x < (int)test_x / 3)
+			if (location.x < (int)diff_x / 3)
 			{
 				location.y -= 12;
 			}

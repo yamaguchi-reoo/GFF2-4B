@@ -59,7 +59,7 @@ private:
 
     Jar* jar[JAR_MAX]; //壺
 
-    Effect* effect;     //しぶきエフェクトのオブジェクト
+    Effect* effect[SPLASH_MAX];     //しぶきエフェクトのオブジェクト
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
     Loading* loading_scene;    //LoadingSceneのオブジェクト
@@ -137,10 +137,14 @@ public:
     void HitBamboo(T* character);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect/*,HealItem* heal, Koban* koban*/);
+    void ProcessAttack(Attack* attack, T* character /*,Effect* effect/*,HealItem* heal, Koban* koban*/);
     //アイテムのランダム出現
     template<class T>
     void ItemSpwanRand(T* character);
+
+    //エフェクトの出現
+    template<class T>
+    void SpawnEffect(T* character);
 
 
     //蔓内での敵生成処理
