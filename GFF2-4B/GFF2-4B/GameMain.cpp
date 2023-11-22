@@ -501,8 +501,13 @@ AbstractScene* GameMain::Update()
 		}
 	}
 
-	//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバー
+	//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバーフラグを立てる
 	if (player->GetPlayerHP() < 0) {
+		game_over_flg = true;
+	}
+	//フラグが立っていたらゲームオーバー
+	if (game_over_flg == true)
+	{
 		return new GameOver(now_stage);
 	}
 

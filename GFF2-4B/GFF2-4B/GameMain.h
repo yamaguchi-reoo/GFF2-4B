@@ -33,6 +33,7 @@ private:
     int old_stage;//前のステージ数　デバック用
 
     int now_stage;      //現在のステージ数
+    bool game_over_flg;     //ゲームオーバーの条件を満たしたらフラグを立てる
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
@@ -130,6 +131,8 @@ public:
     //カメラを揺らす用の変数を設定する(_power = 揺れている時間と強度)
     void ImpactCamera(int _power);
 
+    //ゲームオーバーのフラグを立てる
+    void SetGameOver() { game_over_flg = true; }
     //エネミーのPushを関数化
     template <class T>
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
@@ -143,7 +146,7 @@ public:
     template<class T>
     void ItemSpwanRand(T* character);
 
-
+    
     //蔓内での敵生成処理
     void VineEnemy(void);
 };
