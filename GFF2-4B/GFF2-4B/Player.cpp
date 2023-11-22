@@ -513,6 +513,7 @@ void Player::Attack(GameMain* main)
 		&& attack_interval_count <= 0)
 	{
 		//‹ó’†‚É‹‚È‚¢‚È‚ç
+		SoundManager::StartSound(PLAYER_ATTACK_SOUND);
 		if (acs[DOWN] == 0)
 		{
 			//UŒ‚ŠÔŠu‚Ì‘ª’è‚ðŠJŽn
@@ -743,7 +744,7 @@ void Player::Move(GameMain* main)
 	//•às‰¹‚ðÄ¶‚·‚é
 	if (next_location.x != old_location.x && onfloor_flg == true)
 	{
-		/*SoundManager::StartSound(PLAYER_WALK_SOUND);*/
+		SoundManager::StartSound(PLAYER_WALK_SOUND);
 	}
 
 	//YÀ•W‚ªˆê’è‚ðã‰ñ‚Á‚½‚çŽ€
