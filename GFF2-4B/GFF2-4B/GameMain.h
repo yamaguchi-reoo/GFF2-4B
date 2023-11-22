@@ -68,13 +68,14 @@ private:
 
     int flg;               //
     int count[2];          //実験用
-    bool onfloor_flg;      //実験用
     int who;                //誰が攻撃したか判断する用
-
+    
     int stage_width_num;    //ステージブロックの横数
     int stage_height_num;   //ステージブロックの縦数
     int stage_width;        //ステージ横幅
-
+    bool camera_lock_flg;   //カメラが動けるか判断(強制戦闘時以外)
+    bool lock_pos_set_once; //カメラのロック位置設定用
+    Location lock_pos;      //カメラが動けない時に画面揺れが発生した時、カメラの位置が戻る場所
     int impact_timer;               //画面揺れ演出
 
     int item_rand;
