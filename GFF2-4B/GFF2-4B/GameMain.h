@@ -30,8 +30,9 @@ class GameMain :
     public AbstractScene
 {
 private:
+    bool tuto_flg; //チュートリアル表示中か
     int old_stage;//前のステージ数　デバック用
-
+    int now_tuto;   //現在表示されているチュートリアル
     int now_stage;      //現在のステージ数
     bool game_over_flg;     //ゲームオーバーの条件を満たしたらフラグを立てる
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];

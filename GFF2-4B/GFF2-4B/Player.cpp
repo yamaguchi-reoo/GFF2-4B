@@ -742,7 +742,7 @@ void Player::Move(GameMain* main)
 	//•às‰¹‚ğÄ¶‚·‚é
 	if (next_location.x != old_location.x && onfloor_flg == true)
 	{
-		SoundManager::StartSound(PLAYER_WALK_SOUND);
+		/*SoundManager::StartSound(PLAYER_WALK_SOUND);*/
 	}
 
 	//YÀ•W‚ªˆê’è‚ğã‰ñ‚Á‚½‚ç€
