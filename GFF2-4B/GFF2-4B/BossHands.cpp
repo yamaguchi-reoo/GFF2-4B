@@ -138,7 +138,7 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 400, 0xffffff, "location.y%f",location.y);
 	DrawFormatString(100, 450, 0xffffff, "zakuro_state%d",zakuro_state);
 	DrawFormatString(100, 470, 0xffffff, "hitflg%d",hitflg);
-	DrawFormatString(100, 500, 0xffffff, "ABS%f", checkabs);
+	DrawFormatString(100, 500, 0xffffff, "location.x%f", location.x);
 #endif // _DEBUG
 }
 
@@ -174,7 +174,7 @@ void BossHands::JumpInit() {
 	time = 0.0167;
 	Set_Zakuro_x = location.x;
 	Set_Zakuro_y = location.y;
-
+	Jump_Count = 0;
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
@@ -316,35 +316,44 @@ void BossHands::HandsMagenta(GameMain* main) {
 				location.x += 5;
 			}
 
-			if (0 + rand()%100 == 0) {
-				//プレイヤーにある程度近づいたらジャンプ
-				//onceflg = true;
-			}
 
 			//float a = main->GetPlayerLocation().x - location.x;
 			checkabs = fabsf(main->GetPlayerLocation().x - location.x);
 
-			if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
-				checkabs = fabsf(main->GetPlayerLocation().x - location.x+180);
+			//if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
+			//	checkabs = fabsf(main->GetPlayerLocation().x - location.x+180);
+
+			//}
+
+			if (location.x > 426 && location.x < 752) {
+
+				if (0 + rand() % 100 == 0) {
 				onceflg = true;
+				}
+				if (onceflg == true) {
+					//ジャンプはいる前に初期化
+					JumpInit();
+						zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+						Jump_Count++;
+						onceflg = false;
+				}
+
+				if (Jump_Count == 0) {
+					JumpInit();
+					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+					Jump_Count++;
+
+				}
 
 			}
-
-
-			if (onceflg == true) {
+			else {
 				onceflg = false;
-				//ジャンプはいる前に初期化
-				JumpInit();
-				if (main->GetPlayerLocation().x < 426) {
-					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
-				}
-				else if (main->GetPlayerLocation().x < 852) {
-					zakuro_state = BossZakuroState::Z_JUMP_LEFT;
-				}
-				else {
-					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
-				}
+				Jump_Count=0;
+
 			}
+
+
+
 
 			break;
 		case BossZakuroState::Z_JUMP_RIGHT:
@@ -1049,9 +1058,7 @@ void BossHands::BossAttack(GameMain* main)
 void BossHands::ApplyDamage(int num) {
 	//攻撃がヒットした回数で倒れる
 	if (HitJumpAttack!=true) {
-		if (zakuro_state != Z_ANIM_UP) {
 			hp--;
-		}
 	}
 	
 	if (hp <= 0) {

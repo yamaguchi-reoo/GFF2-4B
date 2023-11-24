@@ -797,7 +797,9 @@ void GameMain::HitCheck(GameMain* main)
 				{
 					ImpactCamera(10 * attack[i]->GetAttackData().damage);
 					//ボスのダメージ処理
-					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					if (hands->zakuro_state != 0) {
+						hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					}
 					attack[i]->DeleteAttack();
 					//ジャンプ攻撃多段防止
 					if (player->GetAcs(0) > 0.1) {

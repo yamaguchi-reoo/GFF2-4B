@@ -65,6 +65,7 @@ public:
     bool onceflg=true;
     int count;
     bool Rock_Once;                 //岩出現位置一度だけ格納する用
+    int Jump_Count;//ザクロが何回ジャンプしたか
 
     //ザクロジャンプ用
     float Zakuro_Movex;    //移動したザクロｘ
