@@ -116,11 +116,18 @@ private:
 	int damage_time;				//モーション再生時間
 	bool death_flg;					//死亡したかどうか
 	int death_time;					//死亡演出中時間
+
 	//描画関連
-	int player_image[18];					//プレイヤー画像
+	int player_image[35];					//プレイヤー画像
 	PlayerState player_state;				//プレイヤーの状態格納
-	int walk_anim_num[4] = { 0,1,2,1 };		//歩くアニメーション画像の描画の順番
-	int attack_anim_num[4] = { 0,1,2,2 };	//攻撃アニメーション画像の描画の順番
+	//攻撃アニメーション画像の描画の順番
+	int attack_anim_num[5][12] = { 
+		{ 0,0,1,1,2,2,3,4,4,5,5,5} ,
+		{ 0,0,1,1,2,2,3,3,4,4,5,5} ,
+		{ 0,0,1,1,2,3,4,4,5,5,6,6} ,
+		{ 0,0,0,1,1,2,3,4,5,5,5,5} ,
+		{ 0,0,0,0,1,-6,-6,-6,-6,-6,-6,-6} ,
+		};	
 	int player_anim;						//プレイヤー画像アニメーション用
 	int attack_anim;						//プレイヤー攻撃アニメーション用
 	int player_anim_speed;					//プレイヤーのアニメーション速度

@@ -18,16 +18,17 @@
 
 #define PLAYER_IMAGE_SHIFT_X 80			//画像ずらし用
 #define PLAYER_IMAGE_SHIFT_Y 105		//画像ずらし用
-#define PLAYER_IDOL 0					//立ち姿アニメーション開始地点
-#define PLAYER_WALK 1					//移動アニメーション開始地点
-#define PLAYER_JUMP 4					//ジャンプアニメーション開始地点
-#define PLAYER_ATTACK_ONE 5				//攻撃１段目アニメーション開始地点
-#define PLAYER_ATTACK_TWO 8				//攻撃２段目アニメーション開始地点
-#define PLAYER_ATTACK_THREE 11			//攻撃３段目アニメーション開始地点
-#define PLAYER_ATTACK_FOUR 14			//攻撃４段目アニメーション開始地点
-#define PLAYER_JUMP_ATTACK 12			//ジャンプ攻撃アニメーション開始地点
-#define PLAYER_JUMP_ATTACK_END 16		//ジャンプ攻撃（着地）アニメーション開始地点
-#define PLAYER_ANIM 10					//次の画像に切り替えるまでの時間（フレーム）
+#define PLAYER_IDOL 34					//立ち姿アニメーション開始地点
+#define PLAYER_WALK 28					//移動アニメーション開始地点
+#define PLAYER_JUMP 27					//ジャンプアニメーション開始地点
+#define PLAYER_ATTACK_ONE 0				//攻撃１段目アニメーション開始地点
+#define PLAYER_ATTACK_TWO 6				//攻撃２段目アニメーション開始地点
+#define PLAYER_ATTACK_THREE 13			//攻撃３段目アニメーション開始地点
+#define PLAYER_ATTACK_FOUR 20			//攻撃４段目アニメーション開始地点
+#define PLAYER_JUMP_ATTACK 15			//ジャンプ攻撃アニメーション開始地点
+#define PLAYER_JUMP_ATTACK_END 25		//ジャンプ攻撃（着地）アニメーション開始地点
+#define PLAYER_DAMAGE 26				//ジャンプ攻撃（着地）アニメーション開始地点
+#define PLAYER_ANIM 5					//次の画像に切り替えるまでの時間（フレーム）
 
 Player::Player()
 {
@@ -78,7 +79,7 @@ Player::Player()
 	death_flg = false;
 
 	SetPlayerAttackData();
-	LoadDivGraph("resource/images/PlayerAnimation.png", 18, 6, 3, 256, 256, player_image);
+	LoadDivGraph("resource/images/Player_Animation.png", 35, 10, 4, 256, 256, player_image);
 	player_anim = 0;
 	attack_anim = 0;
 	player_anim_speed = PLAYER_ANIM;
@@ -174,10 +175,10 @@ void Player::Draw()const
 			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_IDOL], true);
 			break;
 		case MOVE_RIGHT:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + player_anim], true);
 			break;
 		case MOVE_LEFT:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + walk_anim_num[player_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK +player_anim], true);
 			break;
 		case JUMP_RIGHT:
 			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
@@ -192,52 +193,52 @@ void Player::Draw()const
 			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);
 			break;
 		case ATTACK_RIGHT_ONE:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_TWO:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_THREE:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_RIGHT_FOUR:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_LEFT_ONE:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_ONE + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_LEFT_TWO:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_TWO + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_LEFT_THREE:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_THREE + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case ATTACK_LEFT_FOUR:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_anim]], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_ATTACK_FOUR + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case JUMP_ATTACK_RIGHT:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case JUMP_ATTACK_RIGHT_END:
 			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case JUMP_ATTACK_LEFT:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK + attack_anim_num[attack_step][attack_anim]], true);
 			break;
 		case JUMP_ATTACK_LEFT_END:
 			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP_ATTACK_END], true);
 			break;
 		case DAMAGE_RIGHT:
-			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_DAMAGE], true);
 			break;
 		case DAMAGE_LEFT:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[17], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_DAMAGE], true);
 			break;
 		case DEATH_RIGHT:
-			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[PLAYER_DAMAGE], true);
 			break;
 		case DEATH_LEFT:
-			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[17], true);
+			DrawRotaGraphF(local_location.x + PLAYER_IMAGE_SHIFT_X, local_location.y + PLAYER_IMAGE_SHIFT_Y * 1.5f , 1, M_PI / 2, player_image[PLAYER_DAMAGE], true);
 			break;
 		default:
 			DrawStringF(local_location.x, local_location.y, "no image", 0xff0000);
@@ -756,9 +757,9 @@ void Player::Move(GameMain* main)
 void Player::Anim()
 {
 	//アニメーション用変数を回す
-	if (frame % player_anim_speed == 0)
+	if (frame % (PLAYER_ANIM-(int)powerup_flg) == 0)
 	{
-		if (++player_anim > 3)
+		if (++player_anim > 5)
 		{
 			player_anim = 0;
 		}
@@ -766,7 +767,7 @@ void Player::Anim()
 	//攻撃アニメーション用変数を回す
 	if (PlayAnyAttack() == true)
 	{
-		if (frame % player_anim_speed == 0 && attack_anim < 3)
+		if (frame % (player_anim_speed/2) == 0 && attack_anim < 11)
 		{
 			attack_anim++;
 		}
@@ -961,32 +962,32 @@ void Player::SetPlayerAttackData()
 {
 	//一段階目　
 	player_attack_data[0].shift_x = -erea.width;
-	player_attack_data[0].shift_y = -50;
-	player_attack_data[0].width = erea.width + 100;
-	player_attack_data[0].height = 200;
+	player_attack_data[0].shift_y = -100;
+	player_attack_data[0].width = erea.width + 120;
+	player_attack_data[0].height = 220;
 	player_attack_data[0].who_attack = 0;
 	player_attack_data[0].attack_time = 15;
 	player_attack_data[0].damage = 1;
-	player_attack_data[0].delay = 5;
+	player_attack_data[0].delay = 10;
 	player_attack_data[0].attack_type = MELEE;
 	player_attack_data[0].effect_type = PLAYER_SLASH_ONE;
 	//一段階目　強化中
 	player_attack_data[1].shift_x = -erea.width;
-	player_attack_data[1].shift_y = -50;
+	player_attack_data[1].shift_y = -110;
 	player_attack_data[1].width = erea.width + 110;
-	player_attack_data[1].height = 220;
+	player_attack_data[1].height = 350;
 	player_attack_data[1].who_attack = 0;
 	player_attack_data[1].attack_time = 7;
 	player_attack_data[1].damage = 3;
-	player_attack_data[1].delay = 2;
+	player_attack_data[1].delay = 5;
 	player_attack_data[1].attack_type = BULLET;
 	player_attack_data[1].angle = 0.0f;
 	player_attack_data[1].speed = 20;
 	player_attack_data[1].effect_type = POWERUP_PLAYER_SLASH_ONE;
 	//二段階目
-	player_attack_data[2].shift_x = -erea.width;
-	player_attack_data[2].shift_y = -70;
-	player_attack_data[2].width = erea.width + 100;
+	player_attack_data[2].shift_x = -20;
+	player_attack_data[2].shift_y = -120;
+	player_attack_data[2].width = 150;
 	player_attack_data[2].height = 210;
 	player_attack_data[2].who_attack = 0;
 	player_attack_data[2].attack_time = 15;
@@ -1009,9 +1010,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].effect_type = POWERUP_PLAYER_SLASH_TWO;
 	//三段階目
 	player_attack_data[4].shift_x = -erea.width;
-	player_attack_data[4].shift_y = 50;
-	player_attack_data[4].width = erea.width + 170;
-	player_attack_data[4].height = 100;
+	player_attack_data[4].shift_y = -100;
+	player_attack_data[4].width = erea.width + 190;
+	player_attack_data[4].height = 250;
 	player_attack_data[4].who_attack = 0;
 	player_attack_data[4].attack_time = 15;
 	player_attack_data[4].damage = 1;
@@ -1020,9 +1021,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[4].effect_type = PLAYER_SLASH_THREE;
 	//三段階目　強化中
 	player_attack_data[5].shift_x = -erea.width;
-	player_attack_data[5].shift_y = 40;
-	player_attack_data[5].width = erea.width + 250;
-	player_attack_data[5].height = 110;
+	player_attack_data[5].shift_y = -100;
+	player_attack_data[5].width = erea.width + 190;
+	player_attack_data[5].height = 250;
 	player_attack_data[5].who_attack = 0;
 	player_attack_data[5].attack_time = 13;
 	player_attack_data[5].damage = 2;
@@ -1033,9 +1034,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[5].effect_type = POWERUP_PLAYER_SLASH_THREE;
 	//四段階目
 	player_attack_data[6].shift_x = -erea.width;
-	player_attack_data[6].shift_y = -90;
-	player_attack_data[6].width = erea.width + 150;
-	player_attack_data[6].height = 200;
+	player_attack_data[6].shift_y = -120;
+	player_attack_data[6].width = erea.width + 250;
+	player_attack_data[6].height = 260;
 	player_attack_data[6].who_attack = 0;
 	player_attack_data[6].attack_time = 15;
 	player_attack_data[6].damage = 2;
@@ -1044,26 +1045,26 @@ void Player::SetPlayerAttackData()
 	player_attack_data[6].effect_type = PLAYER_SLASH_FOUR;
 	//四段階目　強化中
 	player_attack_data[7].shift_x = -erea.width;
-	player_attack_data[7].shift_y = -90;
-	player_attack_data[7].width = erea.width + 200;
-	player_attack_data[7].height = 200;
+	player_attack_data[7].shift_y = -120;
+	player_attack_data[7].width = erea.width + 250;
+	player_attack_data[7].height = 260;
 	player_attack_data[7].who_attack = 0;
 	player_attack_data[7].attack_time = 15;
 	player_attack_data[7].damage = 3;
-	player_attack_data[7].delay = 5;
+	player_attack_data[7].delay = 2;
 	player_attack_data[7].attack_type = BULLET;
 	player_attack_data[7].angle = 0.0f;
 	player_attack_data[7].speed = 20;
 	player_attack_data[7].effect_type = POWERUP_PLAYER_SLASH_FOUR;
 	//ジャンプ攻撃
 	player_attack_data[8].shift_x = -erea.width;
-	player_attack_data[8].shift_y = 50;
-	player_attack_data[8].width = erea.width+100;
-	player_attack_data[8].height = 100;
+	player_attack_data[8].shift_y = 0;
+	player_attack_data[8].width = erea.width+120;
+	player_attack_data[8].height = 150;
 	player_attack_data[8].who_attack = 0;
 	player_attack_data[8].attack_time = 300;
 	player_attack_data[8].damage = 1;
-	player_attack_data[8].delay = 0;
+	player_attack_data[8].delay = 5;
 	player_attack_data[8].attack_type = MELEE;
 	player_attack_data[8].effect_type = PLAYER_JUMP_SLASH;
 	//ジャンプ攻撃　強化中
