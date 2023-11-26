@@ -23,8 +23,6 @@
 #include "HealItem.h"
 #include "Koban.h"
 #include "Jar.h"
-#include "Vine.h"
-#include "LockPlayer.h"
 
 class Player;
 
@@ -32,8 +30,9 @@ class GameMain :
     public AbstractScene
 {
 private:
+    bool tuto_flg; //チュートリアル表示中か
     int old_stage;//前のステージ数　デバック用
-
+    int now_tuto;   //現在表示されているチュートリアル
     int now_stage;      //現在のステージ数
     bool game_over_flg;     //ゲームオーバーの条件を満たしたらフラグを立てる
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
@@ -62,15 +61,12 @@ private:
 
     Jar* jar[JAR_MAX]; //壺
 
-    Effect* effect;     //しぶきエフェクトのオブジェクト
+    Effect* effect[SPLASH_MAX];     //しぶきエフェクトのオブジェクト
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
     Loading* loading_scene;    //LoadingSceneのオブジェクト
 
     SighBoard* sighboard[SIGH_BOARD_NUM];      //看板のオブジェクト
-
-    Vine* vine[2]; //蔓のオブジェクト
-    LockPlayer* lockplayer; //強制戦闘ゾーンのオブジェクト
 
     int flg;               //
     int count[2];          //実験用
@@ -149,13 +145,17 @@ public:
     void HitBamboo(T* character);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect/*,HealItem* heal, Koban* koban*/);
+    void ProcessAttack(Attack* attack, T* character /*,Effect* effect/*,HealItem* heal, Koban* koban*/);
     //アイテムのランダム出現
     template<class T>
     void ItemSpwanRand(T* character);
 
-    
-    //蔓内での敵生成処理(0:ザクロ 1:イルカ 2:ヒマワリ)
-    void VineEnemy(int enemy);
+    //エフェクトの出現
+    template<class T>
+    void SpawnEffect(T* character);
+
+
+    //蔓内での敵生成処理
+    void VineEnemy(void);
 };
 

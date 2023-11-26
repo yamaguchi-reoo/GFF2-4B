@@ -24,7 +24,7 @@ EditScene::EditScene(int _stage)
 	{
 		for (int j = 0; j < stage_width_num; j++)
 		{
-			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
+			stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
 			stage[i][j]->SetDebugFlg();
 			select_data[i][j] = false;
 		}
@@ -433,7 +433,7 @@ void EditScene::UpdateStageWidth(int _width)
 			{
 				stage_data[i][j] = 0;
 			}
-			stage[i][j] = new Stage(j * BOX_WIDTH, i * BOX_HEIGHT, BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
+			stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
 			stage[i][j]->SetDebugFlg();
 			select_data[i][j] = false;
 		}
