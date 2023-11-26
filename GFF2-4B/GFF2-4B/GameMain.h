@@ -23,6 +23,8 @@
 #include "HealItem.h"
 #include "Koban.h"
 #include "Jar.h"
+#include "Vine.h"
+#include "LockPlayer.h"
 
 class Player;
 
@@ -91,6 +93,9 @@ private:
     int venemy_num1; //強制戦闘時に生成した敵の数
     int venemy_num2; //強制戦闘時に斬った敵の数
 
+    Vine* vine[2]; //強制戦闘ゾーンの蔓のオブジェクト
+    LockPlayer* lockplayer; //強制戦闘ゾーンの草のオブジェクト
+
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
 
@@ -154,6 +159,8 @@ public:
     template<class T>
     void SpawnEffect(T* character);
 
+    //蔓内での敵生成処理
+    void VineEnemy(int enemy);
 
     //蔓内での敵生成処理
     void VineEnemy(void);

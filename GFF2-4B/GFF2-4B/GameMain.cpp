@@ -65,6 +65,10 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
+
+	vine[0] = new Vine(0);
+	vine[1] = new Vine(1160);
+	lockplayer = new LockPlayer();
 }
 
 GameMain::~GameMain()
@@ -124,6 +128,9 @@ GameMain::~GameMain()
 	delete boss;
 	delete hands;
 	delete koban;
+	delete vine[0];
+	delete vine[1];
+	delete lockplayer;
 }
 
 AbstractScene* GameMain::Update()
@@ -405,43 +412,39 @@ AbstractScene* GameMain::Update()
 
 		/**プレイヤーを閉じ込めるここから*/
 		//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-		if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10285)
+		if (lockplayer->GetLockFlg() == false && now_stage == 0 && player->GetLocation().x >= 10285)
 		{
-			lock_flg = 1;
+			lockplayer->SetLockFlg(true);
 		}
 
 		//蔓を下からはやす
-		if (lock_flg == 1 && vine_y > 70)
+		if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == false && vine[1]->GetVineFlg() == false)
 		{
-			vine_y -= 35;
+			vine[0]->VineAnimStart();
+			vine[1]->VineAnimStart();
 		}
-
-		if (lock_flg == 1 && vine_y <= 70)
+		else if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == true && vine[1]->GetVineFlg() == true)
 		{
-			lock_flg = 2;
-		}
-
-		//草を横からはやす
-		if (lock_flg == 2 && vine_x1 < 0)
-		{
-			vine_x1 += 35;
-			vine_x2 -= 35;
-		}
-
-		if (lock_flg == 2 && vine_x1 >= 0)
-		{
-			lock_flg = 3;
+			lockplayer->GrassAnim();
 		}
 
 		//ザクロを15匹生成
-		if (lock_flg == 3 && venemy_num1 < 15)
+		if (lockplayer->GetLockFlg() == true && lockplayer->GetGrassFlg() == true)
 		{
 			venemy_cnt++;
 			if (venemy_cnt >= 60)
-			{
-				VineEnemy();
-				venemy_cnt = 0;
-			}
+				if (lock_flg == 1 && vine_y <= 70)
+				{
+					VineEnemy(0);
+					venemy_cnt = 0;
+					lock_flg = 2;
+				}
+		}
+
+		//ザクロを15匹倒したら蔓から解放
+		if (lockplayer->GetLockFlg() == true && venemy_num2 >= 15)
+		{
+			lock_flg = 4;
 		}
 
 		//ザクロを15匹倒したら蔓から解放
