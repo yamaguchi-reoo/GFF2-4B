@@ -11,6 +11,7 @@
 
 static Location camera_location = { (SCREEN_WIDTH / 2),0};	//カメラの座標
 static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
+
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
