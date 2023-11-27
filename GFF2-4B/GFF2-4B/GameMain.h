@@ -30,9 +30,11 @@ class GameMain :
     public AbstractScene
 {
 private:
+    bool tuto_flg; //チュートリアル表示中か
     int old_stage;//前のステージ数　デバック用
-
+    int now_tuto;   //現在表示されているチュートリアル
     int now_stage;      //現在のステージ数
+    bool game_over_flg;     //ゲームオーバーの条件を満たしたらフラグを立てる
     int STAGE_DATA[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];
     Player* player;                     //プレイヤーのオブジェクト
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];   //床のオブジェクト
@@ -59,7 +61,7 @@ private:
 
     Jar* jar[JAR_MAX]; //壺
 
-    Effect* effect;     //しぶきエフェクトのオブジェクト
+    Effect* effect[SPLASH_MAX];     //しぶきエフェクトのオブジェクト
 
     SelectStage* select_stage; //ステージ選択画面のオブジェクト
     Loading* loading_scene;    //LoadingSceneのオブジェクト
@@ -68,13 +70,14 @@ private:
 
     int flg;               //
     int count[2];          //実験用
-    bool onfloor_flg;      //実験用
     int who;                //誰が攻撃したか判断する用
-
+    
     int stage_width_num;    //ステージブロックの横数
     int stage_height_num;   //ステージブロックの縦数
     int stage_width;        //ステージ横幅
-
+    bool camera_lock_flg;   //カメラが動けるか判断(強制戦闘時以外)
+    bool lock_pos_set_once; //カメラのロック位置設定用
+    Location lock_pos;      //カメラが動けない時に画面揺れが発生した時、カメラの位置が戻る場所
     int impact_timer;               //画面揺れ演出
 
     int item_rand;
@@ -129,6 +132,11 @@ public:
     //カメラを揺らす用の変数を設定する(_power = 揺れている時間と強度)
     void ImpactCamera(int _power);
 
+    //カメラの更新＆カメラを揺らす
+    void UpdateCamera();
+
+    //ゲームオーバーのフラグを立てる
+    void SetGameOver() { game_over_flg = true; }
     //エネミーのPushを関数化
     template <class T>
     void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
@@ -137,10 +145,14 @@ public:
     void HitBamboo(T* character);
     //エネミーの攻撃を受ける処理
     template <class T>
-    void ProcessAttack(Attack* attack, T* character, Effect* effect/*,HealItem* heal, Koban* koban*/);
+    void ProcessAttack(Attack* attack, T* character /*,Effect* effect/*,HealItem* heal, Koban* koban*/);
     //アイテムのランダム出現
     template<class T>
     void ItemSpwanRand(T* character);
+
+    //エフェクトの出現
+    template<class T>
+    void SpawnEffect(T* character);
 
 
     //蔓内での敵生成処理

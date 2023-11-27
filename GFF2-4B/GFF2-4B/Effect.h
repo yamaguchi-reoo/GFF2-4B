@@ -16,7 +16,7 @@ private:
 	float v;
 
 	float gauge_x, gauge_y;
-	float test_x, test_y;
+	float diff_x, diff_y;
 
 	int Flg;
 
@@ -26,6 +26,7 @@ public:
 
 	void Update(GameMain* main);
 	void Draw()const;
+
 
 	float SetLocation(Location _location);
 	float SetGaugeLocation(Location _location);
