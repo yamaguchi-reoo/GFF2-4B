@@ -6,7 +6,7 @@
 
 #define G_POWER			1	//重力の強さ
 #define PLAYER_WIDTH  75	//プレイヤーの幅
-#define PLAYER_HEIGHT 150	//プレイヤーの高さ
+#define PLAYER_HEIGHT 160	//プレイヤーの高さ
 
 //スクロール関連
 #define LEFT_END	300

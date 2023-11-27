@@ -16,8 +16,8 @@
 #define DEFAULT_ATTACK_INTERVAL	30		//基本攻撃間隔(フレーム)
 #define DEFAULT_INVINCIBLE_TIME	100		//基本無敵時間(攻撃を喰らった後)
 
-#define PLAYER_IMAGE_SHIFT_X 80			//画像ずらし用
-#define PLAYER_IMAGE_SHIFT_Y 105		//画像ずらし用
+#define PLAYER_IMAGE_SHIFT_X 100			//画像ずらし用
+#define PLAYER_IMAGE_SHIFT_Y 95		//画像ずらし用
 #define PLAYER_IDOL 34					//立ち姿アニメーション開始地点
 #define PLAYER_WALK 28					//移動アニメーション開始地点
 #define PLAYER_JUMP 27					//ジャンプアニメーション開始地点
@@ -513,6 +513,7 @@ void Player::Attack(GameMain* main)
 		&& attack_interval_count <= 0)
 	{
 		//空中に居ないなら
+		SoundManager::StartSound(PLAYER_ATTACK_SOUND);
 		if (acs[DOWN] == 0)
 		{
 			//攻撃間隔の測定を開始
@@ -743,7 +744,7 @@ void Player::Move(GameMain* main)
 	//歩行音を再生する
 	if (next_location.x != old_location.x && onfloor_flg == true)
 	{
-		/*SoundManager::StartSound(PLAYER_WALK_SOUND);*/
+		SoundManager::StartSound(PLAYER_WALK_SOUND);
 	}
 
 	//Y座標が一定を上回ったら死
