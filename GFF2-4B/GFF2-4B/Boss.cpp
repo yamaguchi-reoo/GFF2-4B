@@ -22,6 +22,7 @@ Boss::Boss() {
 	Boss_state = 2;
 	Once_Flg = true;
 	Boss_step = 0;
+	Boss_Handmove=0;
 }
 
 Boss::~Boss() {
@@ -36,7 +37,74 @@ void Boss::Update(GameMain* main) {
 		BossImgChange(main);
 	}
 
-	Boss_MakeHand();
+	switch (Boss_Handmove)
+	{
+	case 0:
+		//ÉqÉ}ÉèÉäèoåª
+		if (Boss_Arm_Righty >-400 ) {
+			Boss_Arm_Righty -= 10;
+		}
+		else {
+			Boss_MakeHand();
+		}
+		break;
+	case 1:
+		//Ç‚ÇÁÇÍÇΩÇÁ
+		//ç∂âEÇ…óhÇÍÇÈ
+		//âEòrÇ™
+
+		Boss_Arm_Rightx += 10;
+		Boss_Arm_Rightx -= 20;
+		//îöî≠Ç‡Ç∑ÇÈ
+		// 
+		//è¡Ç¶ÇÈòr
+		//Boss_Handmove++
+		break;
+	case 2:
+		//ì™â∫Ç™ÇÈ
+		if (Boss_Arm_Righty > -400) {
+			Boss_Arm_Righty -= 10;
+		}
+		else {
+			Boss_MakeHand();
+		}
+		break;
+	case 3:
+		//êgëÃè„Ç™Ç¡ÇƒÇ≠ÇÈ
+		//Boss_Handmove++
+		break;
+	case 4:
+		//ç∂éËè„Ç™ÇÈ
+		if (Boss_Arm_Righty > -400) {
+			Boss_Arm_Righty -= 10;
+		}
+		else {
+			Boss_MakeHand();
+		}
+		break;
+	case 5:
+		//ç∂âEÇ…óhÇÍÇÈ
+		//âEòrÇ™
+
+		Boss_Arm_Rightx += 10;
+		Boss_Arm_Rightx -= 20;
+		//îöî≠Ç‡Ç∑ÇÈ
+		// 
+		//è¡Ç¶ÇÈòr
+		//Boss_Handmove++
+		break;
+	case 6:
+		//ì™â∫Ç™ÇÈ
+		if (Boss_Arm_Righty > -400) {
+			Boss_Arm_Righty -= 10;
+		}
+		else {
+			Boss_MakeHand();
+		}
+		break;
+	default:
+		break;
+	}
 
 	switch (Boss_state) {
 	case BossState::Boss_M:
@@ -77,17 +145,42 @@ void Boss::Update(GameMain* main) {
 
 void Boss::Draw() const {
 	
-
+	switch (Boss_Handmove)
+	{
+	case 0:
 		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
 		//DrawGraph(380, 0, Explosion[0], TRUE);
 		//DrawGraph(380, 0, Explosion[1], TRUE);
 		//DrawGraph(440, 0, Boss_MainBody[0], TRUE);
 
+		//ç∂éË
 		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+
+		//âEéË
 		DrawGraph(Boss_Arm_Rightx, Boss_Arm_Righty, Boss_MainArm[1], TRUE);
 		//DrawFormatString(400, 40, 0xff00ff, "Newhandsflg%d",New_Hand_Flg);
 		//DrawFormatString(400, 80, 0xff00ff, "%d", timer);
-	
+		break;
+	case 1:
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+		//DrawGraph(380, 0, Explosion[0], TRUE);
+		//DrawGraph(380, 0, Explosion[1], TRUE);
+		//DrawGraph(440, 0, Boss_MainBody[0], TRUE);
+
+		//ç∂éË
+		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+
+		//âEéË
+		DrawGraph(Boss_Arm_Rightx, Boss_Arm_Righty, Boss_MainArm[1], TRUE);
+		//DrawFormatString(400, 40, 0xff00ff, "Newhandsflg%d",New_Hand_Flg);
+		//DrawFormatString(400, 80, 0xff00ff, "%d", timer);
+
+		break;
+	case 3:
+		break;
+	default:
+		break;
+	}
 }
 
 void Boss::BossImgChange(GameMain* main) {

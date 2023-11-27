@@ -62,10 +62,12 @@ public:
     float Magentax[10] = { 1000,100,500 };    //Mの拳が降りてくるX座標
     int switching;                  //拳出現位置セット用
     bool hitflg=false;
-    bool onceflg=true;
     int count;
     bool Rock_Once;                 //岩出現位置一度だけ格納する用
-    int Jump_Count;//ザクロが何回ジャンプしたか
+    int Jump_Num;//どこでジャンプするのか用
+    bool Jump_Flg;//範囲に来たらジャンプする用
+    bool Jump_Once;//ジャンプ一回だけする用
+    float Old_Zakuroy;//前のザクロのY座標格納用
 
     //ザクロジャンプ用
     float Zakuro_Movex;    //移動したザクロｘ

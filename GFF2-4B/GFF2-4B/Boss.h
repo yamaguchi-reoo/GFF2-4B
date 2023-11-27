@@ -39,6 +39,7 @@ public:
     int Boss_state;
     int Boss_step;
     bool Once_Flg;
+    int Boss_Handmove;//ƒ{ƒX‚Ìè‚ğì‚é‚Æ‚«‚Ì“®‚«—p
 
     Boss();
     ~Boss();

@@ -139,6 +139,7 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 450, 0xffffff, "zakuro_state%d",zakuro_state);
 	DrawFormatString(100, 470, 0xffffff, "hitflg%d",hitflg);
 	DrawFormatString(100, 500, 0xffffff, "location.x%f", location.x);
+	DrawFormatString(400, 550, 0xffffff, "Zakuroy%f", Old_Zakuroy-location.y);
 #endif // _DEBUG
 }
 
@@ -163,7 +164,9 @@ void BossHands::MagentaInit()
 	Death_Flg = false;
 	Rock_Once = false;
 	hitflg = false;
-	onceflg = true;
+	Jump_Num = -1;
+	Jump_Once = true;
+	Jump_Flg = false;
 }
 
 void BossHands::JumpInit() {
@@ -174,7 +177,8 @@ void BossHands::JumpInit() {
 	time = 0.0167;
 	Set_Zakuro_x = location.x;
 	Set_Zakuro_y = location.y;
-	Jump_Count = 0;
+
+	Old_Zakuroy = 0;
 }
 
 void BossHands::HandsMagenta(GameMain* main) {
@@ -303,9 +307,15 @@ void BossHands::HandsMagenta(GameMain* main) {
 			
 			if (location.x > 1000) {
 				Zakuro_Direction = 1;
+				Jump_Once = true;
+				//Jump_Num = 0 + rand() % 3;
+
 			}
 			else if (location.x < 0) {
 				Zakuro_Direction = 0;
+				Jump_Once = true;
+				//Jump_Num = 0 + rand() % 3;
+
 			}
 
 			if (Zakuro_Direction == 1) {
@@ -325,31 +335,68 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 			//}
 
-			if (location.x > 426 && location.x < 752) {
+			if (Jump_Once == true) {
+				if (location.x > 426 && location.x < 752) {
 
-				if (0 + rand() % 100 == 0) {
-				onceflg = true;
+					//if (0 + rand() % 100 == 0) {
+					//onceflg = true;
+					//}
+					//if (onceflg == true) {
+					//	//ジャンプはいる前に初期化
+					//	JumpInit();
+					//		zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+					//		Jump_Count++;
+					//		onceflg = false;
+					//}
+					//
+					//if (Jump_Count == 0) {
+					//	JumpInit();
+					//	zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+					//	Jump_Count++;
+					//
+					//}
+
+					//Jump_Once = false;
+					////Jump_Num = 0 + rand() % 3;
+					Jump_Num = 2;
+					//zakuro_state = Z_JUMP_RIGHT;
+					//プレイヤーとの距離いくらかに入り込んで来たら
+					//そっから区分分けしてジャンプする
+
+					switch (Jump_Num) {
+					case 0:
+						if (location.x >= 426 && location.x <= 507) {
+							Jump_Once = false;
+							JumpInit();
+							zakuro_state = Z_JUMP_RIGHT;
+						}
+						break;
+					case 1:
+						if (location.x > 557 && location.x <= 589) {
+							Jump_Once = false;
+							JumpInit();
+							zakuro_state = Z_JUMP_RIGHT;
+						}
+						break;
+					case 2:
+						if (location.x > 600 && location.x <= 670) {
+							Jump_Once = false;
+							JumpInit();
+							zakuro_state = Z_JUMP_RIGHT;
+						}
+						break;
+					case 3:
+						if (location.x > 700 && location.x <= 752) {
+							Jump_Once = false;
+							JumpInit();
+							zakuro_state = Z_JUMP_RIGHT;
+						}
+						break;
+					default:
+						break;
+					}
+
 				}
-				if (onceflg == true) {
-					//ジャンプはいる前に初期化
-					JumpInit();
-						zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
-						Jump_Count++;
-						onceflg = false;
-				}
-
-				if (Jump_Count == 0) {
-					JumpInit();
-					zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
-					Jump_Count++;
-
-				}
-
-			}
-			else {
-				onceflg = false;
-				Jump_Count=0;
-
 			}
 
 
@@ -357,20 +404,37 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 			break;
 		case BossZakuroState::Z_JUMP_RIGHT:
+
+
+			Old_Zakuroy = location.y;
+
+
 			//右ジャンプ
-			Zakuro_Movex = V_zero * cosf(rad) * time;
-			Zakuro_Movey = -V_zero * sinf(rad) * time +( g * time * time) / 2;
-			if(location.x>1200)location.x = Set_Zakuro_x + Zakuro_Movex;
-			if (location.y <320)location.y = Set_Zakuro_y + Zakuro_Movey;
+				Zakuro_Movex = V_zero * cosf(rad) * time;
+				Zakuro_Movey = -V_zero * sinf(rad) * time + (g * time * time) / 2;
+				if (location.x > 1200)location.x = Set_Zakuro_x + Zakuro_Movex;
+				if (location.y < 320)location.y = Set_Zakuro_y + Zakuro_Movey;
 
-			time += 0.01f;
 
-			if (location.y > 320) {
-				zakuro_state = BossZakuroState::Z_MOVE;
-				location.y = 310;
-			}
+				time += 0.01f;
+
+				if (location.y > 320) {
+					zakuro_state = BossZakuroState::Z_MOVE;
+					Jump_Flg = false;
+					location.y = 310;
+				}
+
+				//ザクロジャンプ画像切り替え
+				if (Old_Zakuroy - location.y > 0) {
+					Zakuro_Imgnum = 1;
+				}
+				else {
+					Zakuro_Imgnum = 2;
+				}
+
 
 			break;
+
 		case BossZakuroState::Z_JUMP_LEFT:
 			Zakuro_Movex = V_zero * cosf(rad) * time;
 			Zakuro_Movey = -V_zero * sinf(rad) * time + (g * time * time) / 2;
