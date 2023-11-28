@@ -14,6 +14,9 @@ Boss::Boss() {
 	Boss_Body_X = 440;
 	Boss_Body_Y = 0;
 
+	Boss_Arm_Leftx = 100;
+	Boss_Arm_Lefty = 0;
+
 	Count_Death = 2;
 	Boss_Form=0;
 	Bossbody_ImgNum = 1;
@@ -23,6 +26,11 @@ Boss::Boss() {
 	Once_Flg = true;
 	Boss_step = 0;
 	Boss_Handmove=0;
+	Explosion_ImgNum = 0;
+	Expl_count = 0;
+
+	Explosion_X = Boss_Arm_Rightx;
+	Explosion_Y = 0;
 }
 
 Boss::~Boss() {
@@ -52,18 +60,22 @@ void Boss::Update(GameMain* main) {
 		//Ç‚ÇÁÇÍÇΩÇÁ
 		//ç∂âEÇ…óhÇÍÇÈ
 		//âEòrÇ™
+		if (timer++ < 1) {
+			Boss_Arm_Rightx += 10;
+		}
+		else {
+			Boss_Arm_Rightx -= 10;
+			timer = 0;
+		}
 
-		Boss_Arm_Rightx += 10;
-		Boss_Arm_Rightx -= 20;
 		//îöî≠Ç‡Ç∑ÇÈ
 		// 
-		//è¡Ç¶ÇÈòr
-		//Boss_Handmove++
+		ExplosionAnim();
 		break;
 	case 2:
 		//ì™â∫Ç™ÇÈ
-		if (Boss_Arm_Righty > -400) {
-			Boss_Arm_Righty -= 10;
+		if (Boss_Body_Y <700) {
+			Boss_Body_Y += 10;
 		}
 		else {
 			Boss_MakeHand();
@@ -71,12 +83,29 @@ void Boss::Update(GameMain* main) {
 		break;
 	case 3:
 		//êgëÃè„Ç™Ç¡ÇƒÇ≠ÇÈ
-		//Boss_Handmove++
+		
+		if (Boss_Body_Y > 0) {
+			Boss_Body_Y -= 10;
+			if (timer++ < 1) {
+				Boss_Body_X += 10;
+			}
+			else {
+				Boss_Body_X -= 10;
+				timer = 0;
+			}
+
+		}
+		else {
+			Boss_Body_Y = 0;
+			Boss_Body_X = 440;
+			Boss_Handmove++;
+		}
+
 		break;
 	case 4:
 		//ç∂éËè„Ç™ÇÈ
-		if (Boss_Arm_Righty > -400) {
-			Boss_Arm_Righty -= 10;
+		if (Boss_Arm_Lefty > -400) {
+			Boss_Arm_Lefty -= 10;
 		}
 		else {
 			Boss_MakeHand();
@@ -86,8 +115,8 @@ void Boss::Update(GameMain* main) {
 		//ç∂âEÇ…óhÇÍÇÈ
 		//âEòrÇ™
 
-		Boss_Arm_Rightx += 10;
-		Boss_Arm_Rightx -= 20;
+		Boss_Arm_Leftx += 10;
+		Boss_Arm_Leftx -= 20;
 		//îöî≠Ç‡Ç∑ÇÈ
 		// 
 		//è¡Ç¶ÇÈòr
@@ -163,7 +192,7 @@ void Boss::Draw() const {
 		break;
 	case 1:
 		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
-		//DrawGraph(380, 0, Explosion[0], TRUE);
+		DrawGraph(Explosion_X, Explosion_Y, Explosion[Explosion_ImgNum], TRUE);
 		//DrawGraph(380, 0, Explosion[1], TRUE);
 		//DrawGraph(440, 0, Boss_MainBody[0], TRUE);
 
@@ -176,11 +205,39 @@ void Boss::Draw() const {
 		//DrawFormatString(400, 80, 0xff00ff, "%d", timer);
 
 		break;
+	case 2:
+		//ç∂éË
+		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+
+		//ñ{ëÃ
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+
+		break;
 	case 3:
+		//ç∂éË
+
+		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+
+		//ñ{ëÃ
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+		break;
+	case 4:
+		//ç∂éË
+		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+
+		//ñ{ëÃ
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+
 		break;
 	default:
 		break;
 	}
+
+#ifdef _DEBUG
+	//DrawFormatString(100, 500, 0xffffff, "ÉCÉãÉJÇÃrad = %f", iruka_rad);
+	DrawFormatString(300, 300, 0xff00ff, "Boss_Body_Y%f",Boss_Body_Y);
+
+#endif // _DEBUG
 }
 
 void Boss::BossImgChange(GameMain* main) {
@@ -206,17 +263,17 @@ void Boss::Boss_MakeHand() {
 				Boss_step++;
 				break;
 			case 1:
-					Boss_Body_Y += 400;
+					//Boss_Body_Y += 400;
 					Boss_state = Boss_M;
 					Boss_step++;
 				break;
 			case 2:
-				Boss_Body_Y += -400;
+				//Boss_Body_Y += -400;
 				Boss_state = Boss_C;
 				Boss_step++;
 				break;
 			case 3:
-				Boss_Body_Y += 400;
+				//Boss_Body_Y += 400;
 				Boss_state = Boss_M;
 				Boss_step++;
 				break;
@@ -231,6 +288,32 @@ void Boss::Boss_MakeHand() {
 			timer = 0;
 			Once_Flg = false;
 		}
+	}
+
+}
+
+void Boss::ExplosionAnim() {
+
+	Expl_count++;
+
+	switch (Expl_count)
+	{
+	case 30:
+		Explosion_ImgNum = 1;
+		break;
+	case 40:
+		Explosion_ImgNum = 0;
+		//Expl_count = 0;
+		Explosion_X -= 20;
+		Explosion_Y += 60;
+		break;
+	case 50:
+		Explosion_ImgNum = 1;
+		Expl_count = 0;
+		Boss_Handmove++;
+		break;
+	default:
+		break;
 	}
 
 }

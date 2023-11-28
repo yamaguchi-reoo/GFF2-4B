@@ -885,6 +885,7 @@ void GameMain::HitCheck(GameMain* main)
 			boss->Count_Death--;
 			hands = nullptr;
 			boss->Once_Flg = true;
+			boss->Boss_Handmove++;
 			Hands_Delete_Flg = false;
 		}
 	}

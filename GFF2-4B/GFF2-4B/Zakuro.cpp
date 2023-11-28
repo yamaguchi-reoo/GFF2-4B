@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "common.h"
 
-#define MOVE_SPEED  3	//速度
+#define MOVE_SPEED  1	//速度
 #define ZAKURO_GRAVITY  5//重力
 
 #define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
@@ -19,7 +19,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	erea.width = 50;
 	speed = MOVE_SPEED;
 	who = _who;
-	hp = 1;
+	//hp = 1;
 
 	image = LoadGraph("resource/images/Enemy/zakuro.png");
 
@@ -33,7 +33,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	leftwall_flg = false;
 	apply_gravity = true;
 
-	hp = 1;
+	hp = 2;
 
 	Date.magenta = 15.0f;
 	Date.cyan = 5.0f;

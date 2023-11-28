@@ -27,12 +27,19 @@ public:
     int Bossbody_ImgNum;//プレイヤーが今どこ側に居るか 0:右側 1:中央側 2:左側
 
     int timer;  //各モーションの時間
+    int Explosion_ImgNum;//爆発画像切り替え用
+    int Expl_count;//
 
-    int Boss_Arm_Rightx; //右腕X座標
-    int Boss_Arm_Righty; //右腕Y座標
+    float Boss_Arm_Rightx; //右腕X座標
+    float Boss_Arm_Righty; //右腕Y座標
+    float Boss_Arm_Leftx; //左腕X座標
+    float Boss_Arm_Lefty; //左腕Y座標
 
-    int Boss_Body_X; //本体X座標
-    int Boss_Body_Y; //本体Y座標
+    float Boss_Body_X; //本体X座標
+    float Boss_Body_Y; //本体Y座標
+
+    float Explosion_X;
+    float Explosion_Y;
 
     int Hand_Num;
     bool New_Hand_Flg;//ボスの手を発生させる用
@@ -51,5 +58,5 @@ public:
     int GetBossForm() { return Boss_Form; };
     void BossImgChange(GameMain* main);
     void Boss_MakeHand();
+    void ExplosionAnim();
 };
-
