@@ -22,6 +22,6 @@ void Jar::Draw() const
 {
 	/*if (spawn_flg == true)
 	{*/
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, TRUE);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xf000ff, TRUE);
 	//}	
 }

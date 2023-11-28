@@ -5,7 +5,6 @@ class Jar:
 {
 private:
 	bool spawn_flg;
-	int heal_image;
 public:
 
 	Jar(float pos_x, float pos_y);

@@ -179,6 +179,13 @@ AbstractScene* GameMain::Update()
 				bamboo[i]->Update(this);
 			}
 		}
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr)
+			{
+				jar[i]->SetScreenPosition(camera_location);
+			}
+		}
 
 		//ボスの腕アップデート
 		if (now_stage == 3) {
@@ -645,11 +652,20 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+	//回復アイテム
 	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		if (heal[i] != nullptr)
 		{
 			heal[i]->Draw();
+		}
+	}
+	//壺
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		if (jar[i] != nullptr)
+		{
+			jar[i]->Draw();
 		}
 	}
 
@@ -1060,6 +1076,15 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+			case 13:
+				for (int k = 0; k < JAR_MAX; k++)
+				{
+					if (jar[k] == nullptr)
+					{
+						jar[k] = new Jar((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT));
+						break;
+					}
+				}
 			default:
 				break;
 			}
