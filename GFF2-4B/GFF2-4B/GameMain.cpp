@@ -11,6 +11,7 @@
 
 static Location camera_location = { (SCREEN_WIDTH / 2),0};	//カメラの座標
 static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
+
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
@@ -21,6 +22,7 @@ GameMain::GameMain(int _stage)
 	player = new Player();
 	scene_scroll = new SceneScroll();
 	item_rand = 0;
+	distinguish = 0;
 
 	if (now_stage == 3) {
 		boss = new Boss();
@@ -117,6 +119,11 @@ GameMain::~GameMain()
 		delete effect[i];
 		effect[i] = nullptr;
 	}
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		delete jar[i];
+		jar[i] = nullptr;
+	}
 	delete powergauge;
 	delete playerhp;
 	delete score;
@@ -177,6 +184,15 @@ AbstractScene* GameMain::Update()
 			{
 				bamboo[i]->SetScreenPosition(camera_location);
 				bamboo[i]->Update(this);
+			}
+		}
+		//壺
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr)
+			{
+				jar[i]->SetScreenPosition(camera_location);
+				jar[i]->Update();
 			}
 		}
 
@@ -645,11 +661,20 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+	//回復アイテム
 	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		if (heal[i] != nullptr)
 		{
 			heal[i]->Draw();
+		}
+	}
+	//壺
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		if (jar[i] != nullptr)
+		{
+			jar[i]->Draw();
 		}
 	}
 
@@ -736,6 +761,11 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				ProcessCharacterCollision(bamboo[k], stage[i][j], i);
 			}
+			//竹の数だけ繰り返す
+			for (int k = 0; k < JAR_MAX; k++)
+			{
+				ProcessCharacterCollision(jar[k], stage[i][j], i);
+			}
 		}
 	}
 	//攻撃の数だけ繰り返す
@@ -773,20 +803,22 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[j] != nullptr)
 			{
-				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetCanApplyDamage() == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
+				//プレイヤーと竹が触れたとき
+				HitPlayer(attack[i], bamboo[j]);
+			}
+		}
+		for (int j = 0; j < JAR_MAX; j++)
+		{
+			if (jar[j] != nullptr)
+			{
+				//プレイヤーと壺が触れたとき
+				HitPlayer(attack[i], jar[j]);
+				if (jar[j]->GetHp() <= 0)
 				{
-					//ダメージ量に応じた画面揺れ
-					ImpactCamera(10 * attack[i]->GetAttackData().damage);
+					// アイテムの位置を設定
+					koban->SetLocation(jar[j]->GetLocation());
+				}
 
-					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					attack[i]->DeleteAttack();
-				}
-				//プレイヤーと竹の当たり判定
-				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
-				{
-					player->Push(bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
-				}
 			}
 		}
 		if (now_stage == 3) {
@@ -868,7 +900,7 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwanFlg() == false && bamboo[j]->GetSpwanFlg() == false) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == false && bamboo[j]->GetSpwnFlg() == true) {
 					bamboo[i]->FalseGravity();
 				}
 			}
@@ -1060,6 +1092,15 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+			case 13:
+				for (int k = 0; k < JAR_MAX; k++)
+				{
+					if (jar[k] == nullptr)
+					{
+						jar[k] = new Jar((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT));
+						break;
+					}
+				}
 			default:
 				break;
 			}
@@ -1154,7 +1195,7 @@ template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, HealItem* heal, Koban* koban*/)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
-	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwanFlg() == false) {		
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwnFlg() == false) {		
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
@@ -1191,12 +1232,22 @@ void GameMain::HitBamboo(T* character)
 {
 	if (character != nullptr)
 	{
+		//竹とエネミーの当たり判定
 		for (int i = 0; i < BAMBOO_MAX; i++)
 		{
-			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwanFlg() == false)
+			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwnFlg() == true)
 			{
 				//触れた面に応じて押し出す
 				character->Push(i, bamboo[i]->GetLocation(), bamboo[i]->GetErea());
+			}
+		}
+		//壺とエネミーの当たり判定
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr && character->HitBox(jar[i]) == true && jar[i]->GetSpwnFlg() == true)
+			{
+				//触れた面に応じて押し出す
+				character->Push(i, jar[i]->GetLocation(), jar[i]->GetErea());
 			}
 		}
 	}
@@ -1259,6 +1310,26 @@ void  GameMain::SpawnEffect(T* character)
 		
 			break;
 		}
+	}
+}
+
+template<class T>
+void GameMain::HitPlayer(Attack* attack , T* object)
+{
+	// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+	if (attack->HitBox(object) == true && attack->GetCanApplyDamage() == true && attack->GetAttackData().who_attack == PLAYER && object->GetSpwnFlg() == true)
+	{
+		//ダメージ量に応じた画面揺れ
+		ImpactCamera(10 * attack->GetAttackData().damage);
+
+		object->ApplyDamage(attack->GetAttackData().damage);
+		attack->DeleteAttack();
+		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+	}
+	//プレイヤーと竹の当たり判定
+	if (player->HitBox(object) == true && object->GetSpwnFlg() == true)
+	{
+		player->Push(object->GetLocation(), object->GetErea(), 8);
 	}
 }
 
