@@ -27,7 +27,9 @@ public:
     //ダメージを受ける処理
     void ApplyDamage(int num);
     //スポーンフラグ取得
-    int GetSpwanFlg() { return spawn_flg; }
+    int GetSpwnFlg() { return spawn_flg; }
+
+    int GetHp() { return hp; }
 
     void FalseGravity();
 

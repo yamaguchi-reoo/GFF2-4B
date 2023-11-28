@@ -80,6 +80,7 @@ private:
     Location lock_pos;      //カメラが動けない時に画面揺れが発生した時、カメラの位置が戻る場所
     int impact_timer;               //画面揺れ演出
 
+    int distinguish;        // 竹と壺を見分ける
     int item_rand;
 
     int lock_flg; //強制戦闘時のフラグ
@@ -153,7 +154,9 @@ public:
     //エフェクトの出現
     template<class T>
     void SpawnEffect(T* character);
-
+    //プレイヤーと竹か壺の当たり判定
+    template<class T>
+    void HitPlayer(Attack* attack, T* object);
 
     //蔓内での敵生成処理
     void VineEnemy(void);
