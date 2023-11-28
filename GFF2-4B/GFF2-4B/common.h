@@ -34,7 +34,7 @@
 #define BOX_WIDTH	48					//ステージのブロック一つ当たりの幅
 #define MAX_STAGE_HEIGHT 60				//ステージのブロックの縦の最大個数
 #define MAX_STAGE_WIDTH  3000			//ステージのブロックの横の最大個数
-#define STAGE_GOAL 0.05
+#define STAGE_GOAL (BOX_WIDTH*5)		//ステージでゴールとなる座標
 #define SIGH_BOARD_NUM 5				//看板の数
 //エネミーの数
 #define ZAKURO_MAX 35	//ザクロの最大数

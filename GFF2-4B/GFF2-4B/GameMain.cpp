@@ -419,12 +419,12 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		/**プレイヤーを閉じ込めるここから*/
-		//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-		if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10285)
-		{
-			lock_flg = 1;
-		}
+	/**プレイヤーを閉じ込めるここから*/
+	//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 11600)
+	{
+		lock_flg = 1;
+	}
 
 		//蔓を下からはやす
 		if (lock_flg == 1 && vine_y > 70)
@@ -501,23 +501,23 @@ AbstractScene* GameMain::Update()
 			powergauge->ResetColorRem();
 		}
 
-		//ステージクリア
-		if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-			if (now_stage == 2)
-			{
-				SetStage(3);
-				//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
-				if (now_stage == 3 && old_stage != now_stage) {
-					//Hands_Delete_Flg = false;
-					//boss = new Boss();
-					//hands = new BossHands(who++, boss);
-				}
-			}
-			else
-			{
-				return new Loading;
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				//boss = new Boss();
+				//hands = new BossHands(who++, boss);
 			}
 		}
+		else
+		{
+			return new Loading;
+		}
+	}
 
 		//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバーフラグを立てる
 		if (player->GetPlayerHP() < 0) {
@@ -1380,7 +1380,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro((float)(9900 + (200 * num)), (float)(200), true, who++);
+			zakuro[k] = new Zakuro(11500 + (150 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}
