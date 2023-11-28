@@ -19,9 +19,13 @@ BossHands::BossHands(int _who,Boss* boss) {
 	who = _who;
 	Attack_Num = 0;
 	Death_Anim = 0;
+	
+	//Hands_HPimg=
+	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,50,50,Hands_HPimg);
+	//LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 
 #ifdef _DEBUG
-	hp = 0;
+	hp = 4;
 #else
 	hp = 5;
 #endif // _DEBUG
@@ -94,7 +98,9 @@ void BossHands::Draw() const {
 		case 0:
 			//マゼンタ
 				DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
-		
+				for (int i = 0; i < hp; i++) {
+					DrawGraphF(500*i, 500, Hands_HPimg[0], TRUE);
+				}
 			break;
 		case 1:
 			//シアン
@@ -124,6 +130,11 @@ void BossHands::Draw() const {
 			{
 				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
 			}
+
+			for (int i = 0; i < hp; i++) {
+				DrawGraph(500+i*50, 650, Hands_HPimg[2], TRUE);
+			}
+
 			break;
 		default:
 			break;

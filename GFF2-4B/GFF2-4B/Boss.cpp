@@ -82,7 +82,7 @@ void Boss::Update(GameMain* main) {
 		}
 		break;
 	case 3:
-		//身体上がってくる
+		//本体上がってくる
 		
 		if (Boss_Body_Y > 0) {
 			Boss_Body_Y -= 10;
@@ -112,14 +112,22 @@ void Boss::Update(GameMain* main) {
 		}
 		break;
 	case 5:
+		//やられたら
 		//左右に揺れる
-		//右腕が
+		//左腕が
+		if (timer++ < 1) {
+			Boss_Arm_Leftx += 10;
+		}
+		else {
+			Boss_Arm_Leftx -= 10;
+			timer = 0;
+		}
 
-		Boss_Arm_Leftx += 10;
-		Boss_Arm_Leftx -= 20;
 		//爆発もする
 		// 
-		//消える腕
+
+		ExplosionAnim();
+
 		//Boss_Handmove++
 		break;
 	case 6:
@@ -223,11 +231,19 @@ void Boss::Draw() const {
 		break;
 	case 4:
 		//左手
-		DrawGraph(100, 0, Boss_MainArm[0], TRUE);
+		DrawGraph(Boss_Arm_Leftx, Boss_Arm_Lefty, Boss_MainArm[0], TRUE);
 
 		//本体
 		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
-
+		break;
+	case 5:
+		//左手
+		DrawGraph(Boss_Arm_Leftx, Boss_Arm_Lefty, Boss_MainArm[0], TRUE);
+		
+		//爆発
+		DrawGraph(Explosion_X, Explosion_Y, Explosion[Explosion_ImgNum], TRUE);
+		//本体
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
 		break;
 	default:
 		break;
@@ -311,6 +327,8 @@ void Boss::ExplosionAnim() {
 		Explosion_ImgNum = 1;
 		Expl_count = 0;
 		Boss_Handmove++;
+		Explosion_X = Boss_Arm_Rightx;
+		Explosion_Y = 0;
 		break;
 	default:
 		break;

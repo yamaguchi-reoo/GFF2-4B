@@ -69,6 +69,10 @@ public:
     bool Jump_Once;//ジャンプ一回だけする用
     float Old_Zakuroy;//前のザクロのY座標格納用
 
+    //手のHP用
+    int Hands_HPimg[10];
+    int hands_hp;
+
     //ザクロジャンプ用
     float Zakuro_Movex;    //移動したザクロｘ
     float Zakuro_Movey;    //移動したザクロｙ
