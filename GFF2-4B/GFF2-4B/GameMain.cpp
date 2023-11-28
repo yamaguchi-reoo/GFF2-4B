@@ -561,7 +561,22 @@ AbstractScene* GameMain::Update()
 	}
 	else
 	{
-		if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
+	//看板の更新
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+			sighboard[i]->SetScreenPosition(camera_location);
+		}
+	}
+		if (
+#ifdef _DEBUG
+		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
+#else
+	PadInput::OnButton(XINPUT_BUTTON_B) == true
+#endif
+			)
 		{
 			tuto_flg = false;
 			sighboard[now_tuto]->SetDispFlg(false);
@@ -689,7 +704,7 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 {
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		if (attack[i]->GetAttackFlg() == false)
+		if (attack[i]->GetAttackFlg() == false && attack[i]->GetCutFlg() == false)
 		{
 			attack[i]->SpawnAttack(_attackdata);
 			break;
@@ -837,12 +852,32 @@ void GameMain::HitCheck(GameMain* main)
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[i]->GetAttackData().who_attack == PLAYER && (attack[j]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[j]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[j]->DeleteAttack();
+				attack[j]->SetCutFlg();
 			}
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[j]->GetAttackData().who_attack == PLAYER && (attack[i]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[i]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[i]->DeleteAttack();
+				attack[i]->SetCutFlg();
+			}
+		}
+		//看板を切り続けたら看板が吹っ飛ぶ
+		for (int j = 0; j < SIGH_BOARD_NUM; j++)
+		{
+			if (sighboard[j] != nullptr)
+			{
+				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
+				{
+					ImpactCamera(3);
+					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0)
+					{
+						if (sighboard[j]->GetBreakFlg() == false)
+						{
+							sighboard[j]->SetBreak(player->GetPlayerDirection());
+							SpawnEffect(sighboard[j]);						// しぶきのスポーン処理
+							ImpactCamera(10 * attack[i]->GetAttackData().damage);
+						}
+					}
+				}
 			}
 		}
 	}

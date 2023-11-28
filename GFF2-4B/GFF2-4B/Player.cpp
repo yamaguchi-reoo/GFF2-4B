@@ -967,9 +967,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[0].width = erea.width + 120;
 	player_attack_data[0].height = 220;
 	player_attack_data[0].who_attack = 0;
-	player_attack_data[0].attack_time = 15;
+	player_attack_data[0].attack_time = 17;
 	player_attack_data[0].damage = 1;
-	player_attack_data[0].delay = 10;
+	player_attack_data[0].delay = 8;
 	player_attack_data[0].attack_type = MELEE;
 	player_attack_data[0].effect_type = PLAYER_SLASH_ONE;
 	//一段階目　強化中
@@ -978,9 +978,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[1].width = erea.width + 110;
 	player_attack_data[1].height = 350;
 	player_attack_data[1].who_attack = 0;
-	player_attack_data[1].attack_time = 7;
+	player_attack_data[1].attack_time = 8;
 	player_attack_data[1].damage = 3;
-	player_attack_data[1].delay = 5;
+	player_attack_data[1].delay = 4;
 	player_attack_data[1].attack_type = BULLET;
 	player_attack_data[1].angle = 0.0f;
 	player_attack_data[1].speed = 20;
@@ -991,7 +991,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[2].width = 150;
 	player_attack_data[2].height = 210;
 	player_attack_data[2].who_attack = 0;
-	player_attack_data[2].attack_time = 15;
+	player_attack_data[2].attack_time = 17;
 	player_attack_data[2].damage = 1;
 	player_attack_data[2].delay = 5;
 	player_attack_data[2].attack_type = MELEE;
@@ -1002,7 +1002,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[3].width = erea.width + 120;
 	player_attack_data[3].height = 230;
 	player_attack_data[3].who_attack = 0;
-	player_attack_data[3].attack_time = 7;
+	player_attack_data[3].attack_time = 8;
 	player_attack_data[3].damage = 2;
 	player_attack_data[3].delay = 2;
 	player_attack_data[3].attack_type = BULLET;
@@ -1015,9 +1015,9 @@ void Player::SetPlayerAttackData()
 	player_attack_data[4].width = erea.width + 190;
 	player_attack_data[4].height = 250;
 	player_attack_data[4].who_attack = 0;
-	player_attack_data[4].attack_time = 15;
+	player_attack_data[4].attack_time = 16;
 	player_attack_data[4].damage = 1;
-	player_attack_data[4].delay = 5;
+	player_attack_data[4].delay = 4;
 	player_attack_data[4].attack_type = MELEE;
 	player_attack_data[4].effect_type = PLAYER_SLASH_THREE;
 	//三段階目　強化中
