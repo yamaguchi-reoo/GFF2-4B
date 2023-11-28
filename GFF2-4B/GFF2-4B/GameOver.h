@@ -11,15 +11,22 @@ class GameOver :
 {
 private:
 
-    int game_over_image;        //文字列(ゲーム終了用)画像
-    int game_continue_image;    //文字列(ゲーム続行用)画像
-    int goal_lose_image;        //playerが敗北したシーンで表示する画像
-    int boss_stage_lose_image;  //ボスステージで負けた場合の表示画像
-    int back_death_image;       //死亡背景画像
-
+    //文字画像変数
+    int game_finish_font;       //文字画像(終了:未選択状態)
+    int game_finish_select;     //文字画像(終了:選択状態)
+    int game_continue_font;     //文字画像(続行:未選択状態)
+    int game_continue_select;   //文字画像(続行:選択状態)
+    //文字画像変数
+    int goal_lose_image;        //文字画像(到達失敗)
+    int boss_stage_lose_image;  //文字画像(討伐失敗)
+    //背景画像
+    int back_death_image;       //背景画像(Playerが倒れている画像)
+    //カーソル用変数
     int select_count;           //セレクト用のカーソルの動いた数をカウントする変数
     int once_flg;               //カーソルが動いたかどうかを確認するためのフラグ
+    //stage数情報取得用変数
     int stage_num;              //ステージ数の確保
+    //透明度用変数
     float alpha;                //画像のY座標
 
 public:

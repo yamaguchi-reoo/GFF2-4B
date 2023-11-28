@@ -25,11 +25,23 @@ void GameOver::ImageLoad(int& _handle,const char* _file_name)
 
 GameOver::GameOver(int _stage_num)
 {
-	ImageLoad(game_over_image, "resource/font/GameOverFont.png");
-	ImageLoad(game_continue_image, "resource/font/GameContinueFont.png");
+	//‰æ‘œ‰Šú‰»(ŠJn)
+	ImageLoad(game_finish_font, "resource/font/GameFinishFont.png");
+	ImageLoad(game_finish_select, "resource/font/GameFinishSelect.png");
+	
+	//‰æ‘œ‰Šú‰»(I—¹)
+	ImageLoad(game_continue_font, "resource/font/GameContinueFont.png");
+	ImageLoad(game_continue_select, "resource/font/GameContinueSelect.png");
+	
+	//‰æ‘œ‰Šú‰»(“’B¸”s)
 	ImageLoad(goal_lose_image, "resource/font/StageLoseFont.png");
+	
+	//‰æ‘œ‰Šú‰»(“¢”°¸”s)
 	ImageLoad(boss_stage_lose_image, "resource/font/PlayerLoseFont.png");
+	
+	//”wŒi‰æ‘œ‰Šú‰»(Player‚ª“|‚ê‚Ä‚¢‚é‰æ‘œ)
 	ImageLoad(back_death_image, "resource/images/BackDeathImage.png");
+	
 	select_count = 0;
 	once_flg = TRUE;
 	stage_num = _stage_num;
@@ -100,20 +112,25 @@ AbstractScene* GameOver::Update()
 
 void GameOver::Draw() const
 {
+	//“§–¾“xİ’è
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	//”wŒi‰æ‘œ•\¦
 	DrawGraph(0, 0, back_death_image, TRUE);
+	//ƒJ[ƒ\ƒ‹•\¦
 	DrawTriangle(460, 380 + (select_count * 80), 460, 430 + (select_count * 80), 500, 405 + (select_count * 80), 0x000ff0, TRUE);
-	DrawGraph(530, 350, game_continue_image, TRUE);
-	DrawGraph(530, 450, game_over_image, TRUE);
+
+	//•¶š•`‰æ(‘±s)
+	if (select_count == 0) { DrawGraph(530, 350, game_continue_select, TRUE); }
+	if (select_count == 1) { DrawGraph(530, 350, game_continue_font, TRUE); }
+	//•¶š•`‰æ(I—¹)
+	if (select_count == 0) { DrawGraph(530, 450, game_finish_font, TRUE);}
+	if (select_count == 1) { DrawGraph(530, 450, game_finish_select, TRUE); }
+
 	//stage(‚P`‚R)‚Å€–S‚µ‚½ê‡‚Ì‰æ‘œ‚ğ•\¦
-	if (stage_num != 3)
-	{
-		DrawGraph(250, 50, goal_lose_image, TRUE);
-	}
+	if (stage_num != 3){ DrawGraph(250, 50, goal_lose_image, TRUE); }
 	//stage(Boss)‚Å€–S‚µ‚½ê‡‚Ì‰æ‘œ‚ğ•\¦
-	if (stage_num == 3)
-	{
-		DrawGraph(250, 50, boss_stage_lose_image, TRUE);
-	}
+	if (stage_num == 3){ DrawGraph(250, 50, boss_stage_lose_image, TRUE); }
+
+	//“§–¾“x‚ğŒ³‚É–ß‚·
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
