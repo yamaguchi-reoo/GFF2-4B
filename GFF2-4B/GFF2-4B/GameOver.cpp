@@ -106,7 +106,7 @@ AbstractScene* GameOver::Update()
 
 		}
 	}
-	alpha += 0.5f;
+	alpha += 0.8f;
 	return this;
 }
 
