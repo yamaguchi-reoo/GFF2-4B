@@ -10,6 +10,7 @@ Attack::Attack()
 	once = false;
 	cut_flg = false;
 	cut_time = 0;
+	LoadDivGraph("resource/images/Boss/BossBullet.png", 2, 2, 1, 100, 64, bullet_img[BOSSHIMAWARI_BULLET]);
 }
 
 Attack::~Attack()
@@ -124,14 +125,23 @@ void Attack::Draw()const
 		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
 		{
 			//•`‰æ‚·‚é
+			DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][0], false);
 		}
 	}
 	if (cut_flg ==true && cut_time < CUT_ANIM_TIME)
 	{
 		//‰¼‚ÅØ‚ç‚ê‚½•\Œ»
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255-(cut_time*10));
-		DrawBox(local_location.x, local_location.y - cut_time, local_location.x + erea.width, local_location.y - (erea.height / 2) - cut_time, 0x00ff00, true);
-		DrawBox(local_location.x, local_location.y + cut_time, local_location.x + erea.width, local_location.y + (erea.height / 2) + cut_time, 0x00ff00, true);
+		if(attack_data.effect_type == BOSSHIMAWARI_BULLET)
+		{
+			//•`‰æ‚·‚é
+			DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][1], false);
+		}
+		else
+		{
+			DrawBox(local_location.x, local_location.y - cut_time, local_location.x + erea.width, local_location.y - (erea.height / 2) - cut_time, 0x00ff00, true);
+			DrawBox(local_location.x, local_location.y + cut_time, local_location.x + erea.width, local_location.y + (erea.height / 2) + cut_time, 0x00ff00, true);
+		}
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
 }

@@ -54,7 +54,17 @@ GameOver::~GameOver()
 
 AbstractScene* GameOver::Update()
 {
-	if (200 <= alpha)
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		)
+	{
+		alpha += 50.f;
+	}
+	if (150 <= alpha)
 	{
 		//Lスティック上入力
 		//左スティックの傾き具合がY座標に0.8以上かつ
@@ -106,7 +116,7 @@ AbstractScene* GameOver::Update()
 
 		}
 	}
-	alpha += 0.5f;
+	alpha += 0.8f;
 	return this;
 }
 
@@ -132,5 +142,5 @@ void GameOver::Draw() const
 	if (stage_num == 3){ DrawGraph(250, 50, boss_stage_lose_image, TRUE); }
 
 	//透明度を元に戻す
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);	
 }
