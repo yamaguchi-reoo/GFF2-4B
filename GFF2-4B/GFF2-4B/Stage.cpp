@@ -29,7 +29,7 @@ void Stage::Draw()const
 		break;
 		//’n–Ê
 	case 1:
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, true);
+		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x4C444D, true);
 		break;
 		//–Ø
 	case 2:

@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "common.h"
 
-#define MOVE_SPEED  1.5	//速度
+#define MOVE_SPEED  1	//速度
 #define ZAKURO_GRAVITY  5//重力
 
 #define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
@@ -15,8 +15,8 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 
 	location.x = pos_x;
 	location.y = pos_y;
-	erea.height = 50;
-	erea.width = 50;
+	erea.height = 120;
+	erea.width = 120;
 	speed = MOVE_SPEED;
 	who = _who;
 	//hp = 1;
@@ -33,7 +33,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	leftwall_flg = false;
 	apply_gravity = true;
 
-	hp = 2;
+	hp = 3;
 
 	Date.magenta = 15.0f;
 	Date.cyan = 5.0f;
@@ -151,7 +151,7 @@ void Zakuro::MoveNockBack()
 		location.x -= speed * 0.8f;
 	}
 
-	stop_count -= 10;
+	stop_count -= 2;
 
 	if (stop_count <= 0) 
 	{
@@ -238,7 +238,7 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = erea.height / 2;
+	attack_data.shift_y = -erea.height/4;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
