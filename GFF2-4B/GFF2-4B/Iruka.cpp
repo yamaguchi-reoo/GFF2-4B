@@ -170,10 +170,6 @@ void Iruka::MoveFall()
 	{
 		iruka_state = IrukaState::LEFT_FALL;
 	}
-	if (location.y >= 570) 
-	{
-		location.y = 570;
-	}
 }
 
 void Iruka::MoveReturn()
