@@ -24,7 +24,7 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 	erea.height = 50;
 	speed = 5;
 	who = _who;
-	hp = 2;
+	hp = 1;
 
 	image = LoadGraph("resource/images/Enemy/Iruka.png");
 
