@@ -132,11 +132,30 @@ void Boss::Update(GameMain* main) {
 		break;
 	case 6:
 		//頭下がる
-		if (Boss_Arm_Righty > -400) {
-			Boss_Arm_Righty -= 10;
+		if (Boss_Body_Y < 700) {
+			Boss_Body_Y += 10;
 		}
 		else {
 			Boss_MakeHand();
+		}
+		break;
+	case 7:
+		//身体上がって来て
+				//本体上がってくる
+
+		if (Boss_Body_Y > 0) {
+			Boss_Body_Y -= 10;
+			if (timer++ < 1) {
+				Boss_Body_X += 10;
+			}
+			else {
+				Boss_Body_X -= 10;
+				timer = 0;
+			}
+		}
+		else {
+			Boss_Body_Y = 0;
+			Boss_Body_X = 440;
 		}
 		break;
 	default:
@@ -239,11 +258,19 @@ void Boss::Draw() const {
 	case 5:
 		//左手
 		DrawGraph(Boss_Arm_Leftx, Boss_Arm_Lefty, Boss_MainArm[0], TRUE);
-		
 		//爆発
 		DrawGraph(Explosion_X, Explosion_Y, Explosion[Explosion_ImgNum], TRUE);
 		//本体
 		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+		break;
+	case 6:
+		//本体
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+		break;
+	case 7:
+		//本体
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+
 		break;
 	default:
 		break;

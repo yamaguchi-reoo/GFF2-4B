@@ -20,12 +20,16 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Attack_Num = 0;
 	Death_Anim = 0;
 	
+	Blinking_Flg = false;
+	Blinking_count = 0;
+	Display = false;
+
 	//Hands_HPimg=
 	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,50,50,Hands_HPimg);
 	//LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 
 #ifdef _DEBUG
-	hp = 4;
+	hp = 3;
 #else
 	hp = 5;
 #endif // _DEBUG
@@ -35,14 +39,17 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 0:
 		//マゼンタ初期化
 		MagentaInit();
+		LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
 		break;
 	case 1:
 		//シアン初期化
 		CyanInit();
+		LoadDivGraph("resource/images/Boss/Irukared.png", 4, 2, 2, 256, 256, Blinking_Img);
 		break;
 	case 2:
 		//イエロー初期化
 		YellowInit();
+		LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
 		break;
 	default:
 		break;
@@ -76,10 +83,12 @@ void BossHands::Update(GameMain* main) {
 		case 1:
 			//シアン
 			HandsCyan(main);
+			Blinking();
 			break;
 		case 2:
 			//イエロー
 			HandsYellow(main);
+			Blinking();
 			break;
 		default:
 			break;
@@ -98,8 +107,10 @@ void BossHands::Draw() const {
 		case 0:
 			//マゼンタ
 				DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
+
+				//HP表示
 				for (int i = 0; i < hp; i++) {
-					DrawGraphF(500*i, 500, Hands_HPimg[0], TRUE);
+					DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
 				}
 			break;
 		case 1:
@@ -114,10 +125,23 @@ void BossHands::Draw() const {
 			if (face_angle > 0.0f && face_angle <0.7f)
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
+				
+				if (Display == true) {
+					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
+				}
 			}
 			else
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
+
+				if (Display == true) {
+					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
+				}
+			}
+
+			//HP表示
+			for (int i = 0; i < hp; i++) {
+				DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
 			}
 			break;
 		case 2:
@@ -125,12 +149,17 @@ void BossHands::Draw() const {
 			if (hima_state != BossHimawariState::SF_DOWN)
 			{
 				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
+				if (Display == true) {
+					DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xff0000, true);
+				}
 			}
 			else
 			{
 				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
+
 			}
 
+			//HP表示
 			for (int i = 0; i < hp; i++) {
 				DrawGraph(500+i*50, 650, Hands_HPimg[2], TRUE);
 			}
@@ -140,6 +169,10 @@ void BossHands::Draw() const {
 			break;
 		}
 	
+		if (Blinking_Flg == true) {
+			DrawFormatString(500, 500, 0xffffff, "Blinking%d",Blinking_Flg);
+		}
+
 
 #ifdef _DEBUG
 	//DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
@@ -152,6 +185,23 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 500, 0xffffff, "location.x%f", location.x);
 	DrawFormatString(400, 550, 0xffffff, "Zakuroy%f", Old_Zakuroy-location.y);
 #endif // _DEBUG
+}
+
+void BossHands::Blinking() {
+	if (Blinking_Flg == true) {
+		switch (Blinking_count++) {
+		case 0:
+			Display = true;
+			break;
+		case 10:
+			Display = false;
+			Blinking_Flg = false;
+			Blinking_count = 0;
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void BossHands::MagentaInit()
@@ -1134,6 +1184,9 @@ void BossHands::BossAttack(GameMain* main)
 void BossHands::ApplyDamage(int num) {
 	//攻撃がヒットした回数で倒れる
 	if (HitJumpAttack!=true) {
+		if (Blinking_Flg == false) {
+			Blinking_Flg = true;
+		}
 			hp--;
 	}
 	
@@ -1164,3 +1217,4 @@ float BossHands::GetRandAngle(int _wall)
 
 	return 0;
 }
+

@@ -73,6 +73,12 @@ public:
     int Hands_HPimg[10];
     int hands_hp;
 
+    //攻撃受けたときの点滅用
+    bool Blinking_Flg;
+    int Blinking_count;
+    bool Display;
+    int Blinking_Img[10];//点滅用画像
+
     //ザクロジャンプ用
     float Zakuro_Movex;    //移動したザクロｘ
     float Zakuro_Movey;    //移動したザクロｙ
@@ -125,6 +131,9 @@ public:
     
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
+
+    //ボス画像点滅用
+    void Blinking();
 
     //マゼンタ（ザクロ）用関数
     void MagentaInit();                     //マゼンタ（ザクロ）で使う変数初期化

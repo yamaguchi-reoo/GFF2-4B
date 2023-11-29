@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "common.h"
 
-#define MOVE_SPEED  1	//速度
+#define MOVE_SPEED  1.5	//速度
 #define ZAKURO_GRAVITY  5//重力
 
 #define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
@@ -53,8 +53,7 @@ void Zakuro::Update(GameMain* main)
 			//左右移動
 			Move();
 		}
-		else 
-		{
+		else {
 			//ノックバック
 			MoveNockBack();
 		}
@@ -138,20 +137,23 @@ void Zakuro::Move()
 		}*/
 	}
 }
+
 void Zakuro::MoveNockBack()
 {
 	//左移動
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		location.x += speed * 0.3f;
+		location.x += speed * 0.8f;
 	}
 	//右移動
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		location.x -= speed * 0.3f;
+		location.x -= speed * 0.8f;
 	}
 
-	if (--stop_count <= 0) 
+	stop_count -= 10;
+
+	if (stop_count <= 0) 
 	{
 		attack_flg = true;
 		stop_count = 120;
@@ -259,6 +261,7 @@ void Zakuro::Attack(GameMain* main)
 void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
+	attack_flg = false;
 	if (hp <= 0) {
 		spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント
