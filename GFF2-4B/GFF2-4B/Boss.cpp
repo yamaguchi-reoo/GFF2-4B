@@ -162,17 +162,7 @@ void Boss::Update(GameMain* main) {
 		break;
 	}
 
-	switch (Boss_state) {
-	case BossState::Boss_M:
-		//ボスの顔沈めてザクロの顔だけ出す
-		break;
-	case BossState::Boss_C:
-		//右腕横にやってボス出現
-		break;
-	case BossState::Boss_Y:
-		//左腕うえにやって
-		break;
-	}
+
 
 	/*
 	if (Dead == false) {
