@@ -19,8 +19,8 @@ GameMain::GameMain(int _stage)
 	now_tuto = 0;
 	tuto_flg = false;
 	who = 1;
-	player = new Player();
 	scene_scroll = new SceneScroll();
+	player = new Player();
 	item_rand = 0;
 	distinguish = 0;
 
@@ -55,9 +55,11 @@ GameMain::GameMain(int _stage)
 	Hands_Delete_Flg = false;
 
 	impact_timer = 0;   
-	camera_lock_flg = true;
+	camera_x_lock_flg = true;
+	camera_y_lock_flg = true;
 	lock_pos = camera_location;
-	lock_pos_set_once = true;
+	x_pos_set_once = true;
+	y_pos_set_once = true;
 	lock_flg = 0;
 	vine_x1 = -650;
 	vine_x2 = 1290;
@@ -576,7 +578,22 @@ AbstractScene* GameMain::Update()
 	}
 	else
 	{
-		if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
+	//看板の更新
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+			sighboard[i]->SetScreenPosition(camera_location);
+		}
+	}
+		if (
+#ifdef _DEBUG
+		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
+#else
+	PadInput::OnButton(XINPUT_BUTTON_B) == true
+#endif
+			)
 		{
 			tuto_flg = false;
 			sighboard[now_tuto]->SetDispFlg(false);
@@ -713,7 +730,7 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 {
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		if (attack[i]->GetAttackFlg() == false)
+		if (attack[i]->GetAttackFlg() == false && attack[i]->GetCutFlg() == false)
 		{
 			attack[i]->SpawnAttack(_attackdata);
 			break;
@@ -868,12 +885,29 @@ void GameMain::HitCheck(GameMain* main)
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[i]->GetAttackData().who_attack == PLAYER && (attack[j]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[j]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[j]->DeleteAttack();
+				attack[j]->SetCutFlg();
 			}
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[j]->GetAttackData().who_attack == PLAYER && (attack[i]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[i]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[i]->DeleteAttack();
+				attack[i]->SetCutFlg();
+			}
+		}
+		//看板を切り続けたら看板が吹っ飛ぶ
+		for (int j = 0; j < SIGH_BOARD_NUM; j++)
+		{
+			if (sighboard[j] != nullptr)
+			{
+				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
+				{
+					ImpactCamera(3);
+					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0 && sighboard[j]->GetBreakFlg() == false)
+					{
+						sighboard[j]->SetBreak(player->GetPlayerDirection());
+						SpawnEffect(sighboard[j]);						// しぶきのスポーン処理
+						ImpactCamera(10 * attack[i]->GetAttackData().damage);
+					}
+				}
 			}
 		}
 	}
@@ -986,6 +1020,7 @@ void GameMain::LoadStageData(int _stage)
 		file >> stage_height_num;
 
 		stage_width = stage_width_num * BOX_WIDTH;
+		stage_height = stage_height_num * BOX_HEIGHT;
 		//ランキングデータ配分列データを読み込む
 		for (int i = 0; i < stage_height_num; i++)
 		{
@@ -1020,9 +1055,6 @@ void GameMain::SetStage(int _stage)
 	old_stage = now_stage;
 	now_stage = _stage;
 	//ファイルの読込
-
-
-	//�t�@�C���̓Ǎ�
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -1115,21 +1147,25 @@ void GameMain::SetStage(int _stage)
 		//hands = new BossHands(who++, boss);
 	}
 
-	//プレイヤーのリスポーン
-	Location res_location = { 100,100 };
+	//プレイヤーのリスポーン(プレイヤーが生成されているなら)
+	Location res_location = { 100,stage_height-500 };
 	player->Respawn(res_location);
+
 	//カメラのリセット
 	ResetCamera();
+
 	//カメラの位置がプレイヤーの位置にならないように
-	lock_pos_set_once = true;
+	x_pos_set_once = true;
+	y_pos_set_once = true;
+
 	//スコアリセット
 	score->ResetScore();
 }
 
-void GameMain::CameraLocation(Location _location)
+void GameMain::CameraLocation(float _x,float _y)
 {
-	camera_location.x = _location.x - (SCREEN_WIDTH / 2);
-	camera_location.y = 0;
+	camera_location.x = _x - (SCREEN_WIDTH / 2) + GetRand(impact_timer);
+	camera_location.y = _y - (SCREEN_HEIGHT / 2) + GetRand(impact_timer);
 }
 
 void GameMain::ResetCamera()
@@ -1150,35 +1186,70 @@ void GameMain::ImpactCamera(int _power)
 
 void GameMain::UpdateCamera()
 {
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
+	//今のステージが３（ボス）以外で、カメラ固定フラグが立ってないなら
+	if (now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
 	{
-		camera_lock_flg = false;
-		lock_pos_set_once = false;
-	}
-	else
-	{
-		camera_lock_flg = true;
-		if (lock_pos_set_once == false)
+		//X座標が画面端以外なら
+		if (player->GetCenterLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2))
 		{
-			lock_pos = player->GetLocation();
-			lock_pos_set_once = true;
+			//X座標のロックをしない
+			camera_x_lock_flg = false;
+			//ロック時に一度だけ入る処理をリセットする
+			x_pos_set_once = false;
+		}
+		//X座標が画面端なら
+		else
+		{
+			//X座標のロックをする
+			camera_x_lock_flg = true;
+			//固定する位置を一度だけ設定する
+			if (x_pos_set_once == false)
+			{
+				lock_pos.x = player->GetCenterLocation().x;
+				x_pos_set_once = true;
+			}
+		}
+		//Y座標が画面端以外なら
+		if (player->GetCenterLocation().y < stage_height - (SCREEN_HEIGHT/2)-10)
+		{
+			//Y座標のロックをしない
+			camera_y_lock_flg = false;
+			//ロック時に一度だけ入る処理をリセットする
+			y_pos_set_once = false;
+		}		
+		//Y座標が画面端なら
+		else
+		{
+			//Y座標のロックをする
+			camera_y_lock_flg = true;
+			//固定する位置を一度だけ設定する
+			if (y_pos_set_once == false)
+			{
+				lock_pos.y = player->GetCenterLocation().y;
+				y_pos_set_once = true;
+			}
 		}
 	}
 
-	if (camera_lock_flg == false)
+	if (camera_x_lock_flg == false && camera_y_lock_flg == false)
 	{
-		CameraLocation(player->GetLocation());
+		CameraLocation(player->GetCenterLocation().x, player->GetCenterLocation().y);
+	}
+	else if (camera_x_lock_flg == false && camera_y_lock_flg == true)
+	{
+		CameraLocation(player->GetCenterLocation().x, lock_pos.y);
+	}
+	else if (camera_x_lock_flg == true && camera_y_lock_flg == false)
+	{
+		CameraLocation(lock_pos.x, player->GetCenterLocation().y);
 	}
 	else
 	{
-		CameraLocation(lock_pos);
+		CameraLocation(lock_pos.x, lock_pos.y);
 	}
-
-	//揺れ処理
-	if (--impact_timer > 0)
+	if (--impact_timer < 0)
 	{
-		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
-		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
+		impact_timer = 0;
 	}
 }
 

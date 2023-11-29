@@ -1,13 +1,16 @@
 #include"Attack.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-
+#define CUT_ANIM_TIME 20
 Attack::Attack()
 {
 	attack_flg = false;
 	attack_data = { 0 };
 	can_apply_damage = false;
 	once = false;
+	cut_flg = false;
+	cut_time = 0;
+	LoadDivGraph("resource/images/Boss/BossBullet.png", 2, 2, 1, 100, 64, bullet_img[BOSSHIMAWARI_BULLET]);
 }
 
 Attack::~Attack()
@@ -82,6 +85,14 @@ void Attack::Update(Location _location, Erea _erea)
 	{
 		//çUåÇïsî\
 		can_apply_damage = false;
+		if (cut_time < CUT_ANIM_TIME)
+		{
+			cut_time++;
+		}
+		else
+		{
+			cut_flg = false;
+		}
 	}
 }
 
@@ -114,7 +125,24 @@ void Attack::Draw()const
 		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
 		{
 			//ï`âÊÇ∑ÇÈ
+			DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][0], false);
 		}
+	}
+	if (cut_flg ==true && cut_time < CUT_ANIM_TIME)
+	{
+		//âºÇ≈êÿÇÁÇÍÇΩï\åª
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255-(cut_time*10));
+		if(attack_data.effect_type == BOSSHIMAWARI_BULLET)
+		{
+			//ï`âÊÇ∑ÇÈ
+			DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][1], false);
+		}
+		else
+		{
+			DrawBox(local_location.x, local_location.y - cut_time, local_location.x + erea.width, local_location.y - (erea.height / 2) - cut_time, 0x00ff00, true);
+			DrawBox(local_location.x, local_location.y + cut_time, local_location.x + erea.width, local_location.y + (erea.height / 2) + cut_time, 0x00ff00, true);
+		}
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
 }
 
@@ -125,9 +153,17 @@ void Attack::SpawnAttack(AttackData _attackdata)
 	erea.width = attack_data.width;
 	erea.height = attack_data.height;
 	once = false;
+	cut_flg = false;
 }
 
 void Attack::DeleteAttack() 
 {
 	attack_flg = false; 
+}
+
+void Attack::SetCutFlg()
+{
+	cut_flg = true;
+	cut_time = 0;
+	DeleteAttack();
 }
