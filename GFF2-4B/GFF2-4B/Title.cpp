@@ -137,9 +137,10 @@ AbstractScene* Title::Update()
 			}
 		}
 	}
+
 	//------ 画像透明度に関する処理 ------//
 	
-	//タイトル画像のX座標が100以下ならXに1加算する
+	//タイトル画像のX座標が100以下ならX座標に加算する
 	if (title_x <= 100) { title_x += 1; }
 	//タイトルのα成分に１加算する
 	title_alpha += 1;
@@ -162,14 +163,18 @@ void Title::Draw()const
 	if (title_x >= 100)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, font_alpha);
+
 		//文字描画(開始)
 		if (Select == 0) { DrawGraph(850, 495, game_start_select, TRUE); }
 		if (Select == 1) { DrawGraph(850, 495, game_start_image, TRUE); }
+
 		//文字描画(終了)
 		if (Select == 0) { DrawGraph(850, 575, game_finish_image, TRUE); }
 		if (Select == 1) { DrawGraph(850, 575, game_finish_select, TRUE); }
+
 		//カーソルの表示
 		DrawTriangle(790, 500 + (Select * 90), 820, 520 + (Select * 90), 790, 540 + (Select * 90), 0xff0000, TRUE);
+		//描画ブレンドをNoBlendにする
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}
 }
