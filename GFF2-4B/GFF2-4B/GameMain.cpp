@@ -15,6 +15,7 @@ static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
+	Back_Img = LoadGraph("resource/images/Backimg.png");
 	now_stage = _stage;
 	now_tuto = 0;
 	tuto_flg = false;
@@ -607,6 +608,7 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+	DrawGraph(0, 0, Back_Img, TRUE);
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示
@@ -844,7 +846,9 @@ void GameMain::HitCheck(GameMain* main)
 				{
 					ImpactCamera(10 * attack[i]->GetAttackData().damage);
 					//ボスのダメージ処理
-					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					if (hands->zakuro_state != 0) {
+						hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					}
 					attack[i]->DeleteAttack();
 					//ジャンプ攻撃多段防止
 					if (player->GetAcs(0) > 0.1) {
@@ -946,6 +950,7 @@ void GameMain::HitCheck(GameMain* main)
 			boss->Count_Death--;
 			hands = nullptr;
 			boss->Once_Flg = true;
+			boss->Boss_Handmove++;
 			Hands_Delete_Flg = false;
 		}
 	}
