@@ -412,7 +412,6 @@ void BossHands::YellowInit()
 	attack_num = 3;
 	move_count = 0;
 	face_angle = 0;
-	LoadDivGraph("resource/images/Boss/BossBullet.png", 2, 2, 1, 100, 64, bullet_img);
 }
 
 void BossHands::HandsYellow(GameMain* main)
