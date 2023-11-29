@@ -4,12 +4,41 @@
 #include "PadInput.h"
 #include "SelectStage.h"
 
+//画像読込初期化用関数
+void Title::ImageLoad(int& _handle, const char* _file_name)
+{
+	try
+	{
+		_handle = LoadGraph(_file_name);
+		if (_handle == -1)
+		{
+			throw _file_name;
+		}
+	}
+	catch (const char& err)
+	{
+		printf("%sがありません。", &err);
+	}
+}
+
 Title::Title()
 {
 	//初期化
 	Select = 0;
 	Once = TRUE;
+	title_alpha = 0;
+	title_x = 0;
+	font_alpha = 0;
 
+	//文字画像初期化(禊)
+	ImageLoad(title_font, "resource/font/TitleFont.png");
+
+	//画像初期化(開始)
+	ImageLoad(game_start_image, "resource/font/GameStartFont.png");
+	ImageLoad(game_start_select, "resource/font/GameStartSelect.png");
+	//画像初期化(終了)
+	ImageLoad(game_finish_image, "resource/font/GameFinishFont.png");
+	ImageLoad(game_finish_select, "resource/font/GameFinishSelect.png");
 }
 
 Title::~Title()
@@ -87,30 +116,39 @@ AbstractScene* Title::Update()
 			return new SelectStage();
 			//エンド画面へ
 		case TITLE_MENU::GAME_END:
-
-			//return new End();
-			//StopSoundMem(TitleBGM);
-			break;
+			
+			return nullptr;
 		default:
 			break;
 		}
 	}
+	if (title_x <= 100) { title_x += 1; }
+	title_alpha += 1;
+	if(title_alpha >= 150){ font_alpha += 2.5; }
 	return this;
 }
 
 void Title::Draw()const
 {
-	DrawString(150, 100, "禊", 0xffffff);
+	//透明度設定
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, title_alpha);
+	//タイトル画像表示
+	DrawGraph(title_x, 25, title_font, TRUE);
+	//透明度を元に戻す
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 
-	//メニューの描画
-	DrawString(730, 260, "開始", 0xffffff);
-	//DrawString(730, 320, "ヘルプ", 0xffffff);
-	DrawString(730, 340/*400*/, "終了", 0xffffff);
-	//DrawFormatString(730, 410/*400*/,0x00ff00, "%d",Select);
-
-
-	////カーソルの描画
-	//int select_y = 230 + Select * 80;
-	//カーソル表示
-	DrawTriangle(670, 245 + Select * 80, 700, 265 + Select * 80, 670, 285 + Select * 80, 0xff0000, TRUE);
+	/***** 選択画像描画 *****/
+	if (title_x >= 100)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, font_alpha);
+		//文字描画(開始)
+		if (Select == 0) { DrawGraph(850, 495, game_start_select, TRUE); }
+		if (Select == 1) { DrawGraph(850, 495, game_start_image, TRUE); }
+		//文字描画(終了)
+		if (Select == 0) { DrawGraph(850, 575, game_finish_image, TRUE); }
+		if (Select == 1) { DrawGraph(850, 575, game_finish_select, TRUE); }
+		//カーソルの表示
+		DrawTriangle(790, 500 + (Select * 90), 820, 520 + (Select * 90), 790, 540 + (Select * 90), 0xff0000, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	}
 }

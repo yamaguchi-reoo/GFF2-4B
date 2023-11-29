@@ -1,13 +1,15 @@
 #include"Attack.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
-
+#define CUT_ANIM_TIME 20
 Attack::Attack()
 {
 	attack_flg = false;
 	attack_data = { 0 };
 	can_apply_damage = false;
 	once = false;
+	cut_flg = false;
+	cut_time = 0;
 }
 
 Attack::~Attack()
@@ -82,6 +84,14 @@ void Attack::Update(Location _location, Erea _erea)
 	{
 		//çUåÇïsî\
 		can_apply_damage = false;
+		if (cut_time < CUT_ANIM_TIME)
+		{
+			cut_time++;
+		}
+		else
+		{
+			cut_flg = false;
+		}
 	}
 }
 
@@ -116,6 +126,14 @@ void Attack::Draw()const
 			//ï`âÊÇ∑ÇÈ
 		}
 	}
+	if (cut_flg ==true && cut_time < CUT_ANIM_TIME)
+	{
+		//âºÇ≈êÿÇÁÇÍÇΩï\åª
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 255-(cut_time*10));
+		DrawBox(local_location.x, local_location.y - cut_time, local_location.x + erea.width, local_location.y - (erea.height / 2) - cut_time, 0x00ff00, true);
+		DrawBox(local_location.x, local_location.y + cut_time, local_location.x + erea.width, local_location.y + (erea.height / 2) + cut_time, 0x00ff00, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	}
 }
 
 void Attack::SpawnAttack(AttackData _attackdata)
@@ -125,9 +143,17 @@ void Attack::SpawnAttack(AttackData _attackdata)
 	erea.width = attack_data.width;
 	erea.height = attack_data.height;
 	once = false;
+	cut_flg = false;
 }
 
 void Attack::DeleteAttack() 
 {
 	attack_flg = false; 
+}
+
+void Attack::SetCutFlg()
+{
+	cut_flg = true;
+	cut_time = 0;
+	DeleteAttack();
 }

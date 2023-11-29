@@ -64,7 +64,7 @@ public:
     //ダメージ受ける処理
     void ApplyDamage(int num);
     //スポーンフラグの取得
-    int GetSpwanFlg() { return spawn_flg; }
+    int GetSpwnFlg() { return spawn_flg; }
 
     int GetHp() { return hp; }
 

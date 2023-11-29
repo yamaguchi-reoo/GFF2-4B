@@ -23,6 +23,7 @@ GameMain::GameMain(int _stage)
 	player = new Player();
 	scene_scroll = new SceneScroll();
 	item_rand = 0;
+	distinguish = 0;
 
 	if (now_stage == 3) {
 		boss = new Boss();
@@ -119,6 +120,11 @@ GameMain::~GameMain()
 		delete effect[i];
 		effect[i] = nullptr;
 	}
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		delete jar[i];
+		jar[i] = nullptr;
+	}
 	delete powergauge;
 	delete playerhp;
 	delete score;
@@ -179,6 +185,15 @@ AbstractScene* GameMain::Update()
 			{
 				bamboo[i]->SetScreenPosition(camera_location);
 				bamboo[i]->Update(this);
+			}
+		}
+		//壺
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr)
+			{
+				jar[i]->SetScreenPosition(camera_location);
+				jar[i]->Update();
 			}
 		}
 
@@ -405,12 +420,12 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		/**プレイヤーを閉じ込めるここから*/
-		//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-		if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 10285)
-		{
-			lock_flg = 1;
-		}
+	/**プレイヤーを閉じ込めるここから*/
+	//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 11600)
+	{
+		lock_flg = 1;
+	}
 
 		//蔓を下からはやす
 		if (lock_flg == 1 && vine_y > 70)
@@ -487,23 +502,23 @@ AbstractScene* GameMain::Update()
 			powergauge->ResetColorRem();
 		}
 
-		//ステージクリア
-		if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-			if (now_stage == 2)
-			{
-				SetStage(3);
-				//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
-				if (now_stage == 3 && old_stage != now_stage) {
-					//Hands_Delete_Flg = false;
-					//boss = new Boss();
-					//hands = new BossHands(who++, boss);
-				}
-			}
-			else
-			{
-				return new Loading;
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				//boss = new Boss();
+				//hands = new BossHands(who++, boss);
 			}
 		}
+		else
+		{
+			return new Loading;
+		}
+	}
 
 		//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバーフラグを立てる
 		if (player->GetPlayerHP() < 0) {
@@ -562,7 +577,22 @@ AbstractScene* GameMain::Update()
 	}
 	else
 	{
-		if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
+	//看板の更新
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+			sighboard[i]->SetScreenPosition(camera_location);
+		}
+	}
+		if (
+#ifdef _DEBUG
+		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
+#else
+	PadInput::OnButton(XINPUT_BUTTON_B) == true
+#endif
+			)
 		{
 			tuto_flg = false;
 			sighboard[now_tuto]->SetDispFlg(false);
@@ -648,11 +678,20 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+	//回復アイテム
 	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		if (heal[i] != nullptr)
 		{
 			heal[i]->Draw();
+		}
+	}
+	//壺
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		if (jar[i] != nullptr)
+		{
+			jar[i]->Draw();
 		}
 	}
 
@@ -691,7 +730,7 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 {
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		if (attack[i]->GetAttackFlg() == false)
+		if (attack[i]->GetAttackFlg() == false && attack[i]->GetCutFlg() == false)
 		{
 			attack[i]->SpawnAttack(_attackdata);
 			break;
@@ -739,6 +778,11 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				ProcessCharacterCollision(bamboo[k], stage[i][j], i);
 			}
+			//竹の数だけ繰り返す
+			for (int k = 0; k < JAR_MAX; k++)
+			{
+				ProcessCharacterCollision(jar[k], stage[i][j], i);
+			}
 		}
 	}
 	//攻撃の数だけ繰り返す
@@ -776,20 +820,22 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[j] != nullptr)
 			{
-				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetCanApplyDamage() == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
+				//プレイヤーと竹が触れたとき
+				HitPlayer(attack[i], bamboo[j]);
+			}
+		}
+		for (int j = 0; j < JAR_MAX; j++)
+		{
+			if (jar[j] != nullptr)
+			{
+				//プレイヤーと壺が触れたとき
+				HitPlayer(attack[i], jar[j]);
+				if (jar[j]->GetHp() <= 0)
 				{
-					//ダメージ量に応じた画面揺れ
-					ImpactCamera(10 * attack[i]->GetAttackData().damage);
+					// アイテムの位置を設定
+					koban->SetLocation(jar[j]->GetLocation());
+				}
 
-					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					attack[i]->DeleteAttack();
-				}
-				//プレイヤーと竹の当たり判定
-				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
-				{
-					player->Push(bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
-				}
 			}
 		}
 		if (now_stage == 3) {
@@ -841,12 +887,32 @@ void GameMain::HitCheck(GameMain* main)
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[i]->GetAttackData().who_attack == PLAYER && (attack[j]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[j]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[j]->DeleteAttack();
+				attack[j]->SetCutFlg();
 			}
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[j]->GetAttackData().who_attack == PLAYER && (attack[i]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[i]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[i]->DeleteAttack();
+				attack[i]->SetCutFlg();
+			}
+		}
+		//看板を切り続けたら看板が吹っ飛ぶ
+		for (int j = 0; j < SIGH_BOARD_NUM; j++)
+		{
+			if (sighboard[j] != nullptr)
+			{
+				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
+				{
+					ImpactCamera(3);
+					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0)
+					{
+						if (sighboard[j]->GetBreakFlg() == false)
+						{
+							sighboard[j]->SetBreak(player->GetPlayerDirection());
+							SpawnEffect(sighboard[j]);						// しぶきのスポーン処理
+							ImpactCamera(10 * attack[i]->GetAttackData().damage);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -873,7 +939,7 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwanFlg() == false && bamboo[j]->GetSpwanFlg() == false) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == false && bamboo[j]->GetSpwnFlg() == true) {
 					bamboo[i]->FalseGravity();
 				}
 			}
@@ -1066,6 +1132,15 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+			case 13:
+				for (int k = 0; k < JAR_MAX; k++)
+				{
+					if (jar[k] == nullptr)
+					{
+						jar[k] = new Jar((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT));
+						break;
+					}
+				}
 			default:
 				break;
 			}
@@ -1160,7 +1235,7 @@ template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, HealItem* heal, Koban* koban*/)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
-	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwanFlg() == false) {		
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwnFlg() == false) {		
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
@@ -1197,12 +1272,22 @@ void GameMain::HitBamboo(T* character)
 {
 	if (character != nullptr)
 	{
+		//竹とエネミーの当たり判定
 		for (int i = 0; i < BAMBOO_MAX; i++)
 		{
-			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwanFlg() == false)
+			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwnFlg() == true)
 			{
 				//触れた面に応じて押し出す
 				character->Push(i, bamboo[i]->GetLocation(), bamboo[i]->GetErea());
+			}
+		}
+		//壺とエネミーの当たり判定
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr && character->HitBox(jar[i]) == true && jar[i]->GetSpwnFlg() == true)
+			{
+				//触れた面に応じて押し出す
+				character->Push(i, jar[i]->GetLocation(), jar[i]->GetErea());
 			}
 		}
 	}
@@ -1268,6 +1353,26 @@ void  GameMain::SpawnEffect(T* character)
 	}
 }
 
+template<class T>
+void GameMain::HitPlayer(Attack* attack , T* object)
+{
+	// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+	if (attack->HitBox(object) == true && attack->GetCanApplyDamage() == true && attack->GetAttackData().who_attack == PLAYER && object->GetSpwnFlg() == true)
+	{
+		//ダメージ量に応じた画面揺れ
+		ImpactCamera(10 * attack->GetAttackData().damage);
+
+		object->ApplyDamage(attack->GetAttackData().damage);
+		attack->DeleteAttack();
+		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+	}
+	//プレイヤーと竹の当たり判定
+	if (player->HitBox(object) == true && object->GetSpwnFlg() == true)
+	{
+		player->Push(object->GetLocation(), object->GetErea(), 8);
+	}
+}
+
 //蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
@@ -1280,7 +1385,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro((float)(9900 + (200 * num)), (float)(200), true, who++);
+			zakuro[k] = new Zakuro(11500 + (150 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}

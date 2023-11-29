@@ -109,7 +109,7 @@ public:
     int attack_combo;               //’e‚ð˜A‘±‚ÅŒ‚‚Â—p
     int attack_num;                 //’e‚ð˜A‘±‚ÅŒ‚‚Â—p
     int move_count;                 //‰½‰ñˆÚ“®‚µ‚½‚©‚ð‘ª’è‚·‚é   
-
+    int bullet_img[2];              //‚Ð‚Ü‚í‚è‚Ì’e‰æ‘œ—p
     //‚¢‚é‚©‚Ð‚Ü‚í‚è‹¤—p
     float acceleration;             //ˆÚ“®‚Ì‰Á‘¬“x
     float face_angle;               //Šç‚ÌŠp“x
