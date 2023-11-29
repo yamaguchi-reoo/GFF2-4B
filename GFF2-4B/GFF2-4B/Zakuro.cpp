@@ -3,7 +3,7 @@
 #include "GameMain.h"
 #include "common.h"
 
-#define MOVE_SPEED  3	//速度
+#define MOVE_SPEED  1	//速度
 #define ZAKURO_GRAVITY  5//重力
 
 #define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
@@ -15,11 +15,11 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 
 	location.x = pos_x;
 	location.y = pos_y;
-	erea.height = 50;
-	erea.width = 50;
+	erea.height = 120;
+	erea.width = 120;
 	speed = MOVE_SPEED;
 	who = _who;
-	hp = 1;
+	//hp = 1;
 
 	image = LoadGraph("resource/images/Enemy/zakuro.png");
 
@@ -33,7 +33,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	leftwall_flg = false;
 	apply_gravity = true;
 
-	hp = 1;
+	hp = 3;
 
 	Date.magenta = 15.0f;
 	Date.cyan = 5.0f;
@@ -53,8 +53,7 @@ void Zakuro::Update(GameMain* main)
 			//左右移動
 			Move();
 		}
-		else 
-		{
+		else {
 			//ノックバック
 			MoveNockBack();
 		}
@@ -138,20 +137,23 @@ void Zakuro::Move()
 		}*/
 	}
 }
+
 void Zakuro::MoveNockBack()
 {
 	//左移動
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		location.x += speed * 0.3f;
+		location.x += speed * 0.8f;
 	}
 	//右移動
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		location.x -= speed * 0.3f;
+		location.x -= speed * 0.8f;
 	}
 
-	if (--stop_count <= 0) 
+	stop_count -= 2;
+
+	if (stop_count <= 0) 
 	{
 		attack_flg = true;
 		stop_count = 120;
@@ -236,7 +238,7 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = erea.height / 2;
+	attack_data.shift_y = -erea.height/4;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
@@ -259,6 +261,7 @@ void Zakuro::Attack(GameMain* main)
 void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
+	attack_flg = false;
 	if (hp <= 0) {
 		spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント

@@ -8,12 +8,19 @@
 #define MAX_FALL_TIME 120
 
 #define IRUKA_IMAGE_SHIFT_X 10		//画像ずらし用
-#define IRUKA_IMAGE_SHIFT_Y 10		//画像ずらし用
+#define IRUKA_IMAGE_SHIFT_Y 5		//画像ずらし用
+#define IRUKA_ANIM_MOVE 0			//移動アニメーション開始地点
+#define IRUKA_DEATH 2				//死亡アニメーション開始地
+#define IRUKA_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
+#define IRUKA_DEATH_ANIM 10				//次の画像に切り替えるまでの時間（フレーム）
+
 
 #define TRUN_RAD 1.5708f		//90度回転用
 
 Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 {
+	anim_frame = 0;
+	count = 0;
 	iruka_state = IrukaState::LEFT;
 
 	location.x = pos_x;//1400;
@@ -24,23 +31,23 @@ Iruka::Iruka(float pos_x, float pos_y, bool direction, int _who)
 	erea.height = 50;
 	speed = 5;
 	who = _who;
-	hp = 2;
+	hp = 1;
 
-	image = LoadGraph("resource/images/Enemy/Iruka.png");
+	LoadDivGraph("resource/images/Enemy/Iruka.png", 4, 4, 1, 100, 50, iruka_image);
+	iruka_anim = 0;
 
 	fps_count = 0;
 
 	iruka_direction = direction;// true;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	
+	onfloor_flg = false;
 	return_flg = false;
 	spawn_flg = false;
 	attack_flg = true;
 	fall_flg = false;
 	rightwall_flg = false;
 	leftwall_flg = false;
+	death_flg = false;
 
 	Date.magenta = 5.0f;
 	Date.cyan = 15.0f;
@@ -53,6 +60,8 @@ Iruka::~Iruka()
 
 void Iruka::Update(GameMain* main)
 {
+	anim_frame++;
+
 	if (spawn_flg == false) {
 		if (attack_flg == true) {
 			Attack(main);
@@ -86,10 +95,24 @@ void Iruka::Update(GameMain* main)
 	}
 
 	IrukaReset();
-	if (KeyInput::OnKey(KEY_INPUT_I)) {
-		spawn_flg = false;
-		hp = 2;
+
+	if (death_flg == true)
+	{
+		if (iruka_state == IrukaState::RIGHT || iruka_state == IrukaState::LEFT) {
+			iruka_state = IrukaState::DEATH;
+		}
+		else
+		{
+			iruka_state = IrukaState::FALL_DEATH;
+		}
 	}
+
+	if (death_flg == true && ++count >= (IRUKA_DEATH_ANIM + 2))
+	{
+		spawn_flg = true;
+	}
+	//描画関連の変数を動かす
+	IrukaAnim();
 }
 
 void Iruka::Draw() const
@@ -101,22 +124,28 @@ void Iruka::Draw() const
 		case IrukaState::IDLE:
 			break;
 		case IrukaState::RIGHT:
-			DrawTurnGraphF(local_location.x + IRUKA_IMAGE_SHIFT_X, local_location.y + IRUKA_IMAGE_SHIFT_Y, image, true);
+			DrawTurnGraphF(local_location.x + IRUKA_IMAGE_SHIFT_X, local_location.y + IRUKA_IMAGE_SHIFT_Y, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true);
 			break;
 		case IrukaState::LEFT:
-			DrawGraphF(local_location.x, local_location.y + IRUKA_IMAGE_SHIFT_Y, image, true);
+			DrawGraphF(local_location.x, local_location.y + IRUKA_IMAGE_SHIFT_Y, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true);
 			break;
 		case IrukaState::RIGHT_FALL:
-			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, TRUN_RAD, image, true, true);
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, TRUN_RAD, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true, true);
 			break;
 		case IrukaState::LEFT_FALL:
-			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, -TRUN_RAD, image, true, false);
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, -TRUN_RAD, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true, false);
 			break;
 		case IrukaState::RIGHT_RETURN:
-			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, -TRUN_RAD, image, true, true);
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, -TRUN_RAD, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true, true);
 			break;
 		case IrukaState::LEFT_RETURN:
-			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, TRUN_RAD, image, true, false);
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, TRUN_RAD, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true, false);
+			break;
+		case IrukaState::DEATH:
+			DrawGraphF(local_location.x, local_location.y + IRUKA_IMAGE_SHIFT_Y, iruka_image[IRUKA_DEATH + iruka_anim], true);
+			break;
+		case IrukaState::FALL_DEATH:
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, TRUN_RAD, iruka_image[IRUKA_DEATH + iruka_anim], true, true);
 			break;
 		default:
 			break;
@@ -170,10 +199,6 @@ void Iruka::MoveFall()
 	{
 		iruka_state = IrukaState::LEFT_FALL;
 	}
-	if (location.y >= 570) 
-	{
-		location.y = 570;
-	}
 }
 
 void Iruka::MoveReturn()
@@ -212,14 +237,13 @@ void Iruka::MoveReturn()
 	}
 }
 
-void Iruka::IrukaOnFloor(int num, Location _sub)
+void Iruka::IrukaOnFloor()
 {
-	onfloor_flg[num] = true;
+	onfloor_flg = true;
 	if (fall_flg == true) {
 		return_flg = true;
 		fall_flg = false;
 	}
-	
 }
 
 void Iruka::Push(int num, Location _sub_location, Erea _sub_erea)
@@ -231,8 +255,9 @@ void Iruka::Push(int num, Location _sub_location, Erea _sub_erea)
 	//床に触れた時
 	if (location.y + erea.height - 12 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
-		IrukaOnFloor(num, _sub_location);
+		location.y = (_sub_location.y) - erea.height + 0.1f;
+		//onfloor_flg = true;
+		IrukaOnFloor();
 	}
 	//右の壁に触れた時
 	else if (location.x + erea.width - 10 < _sub_location.x)
@@ -254,7 +279,7 @@ void Iruka::Push(int num, Location _sub_location, Erea _sub_erea)
 	else
 	{
 		location.y = _sub_location.y - erea.height;
-		IrukaOnFloor(num, _sub_location);
+		onfloor_flg = true;
 	}
 }
 
@@ -263,10 +288,8 @@ void Iruka::IrukaReset()
 	//重力が働くかの判定をリセット
 	rightwall_flg = false;
 	leftwall_flg = false;
-	for (int i = 0; i < FLOOR_NUM; i++)
-	{
-		onfloor_flg[i] = false;
-	}
+	onfloor_flg = false;
+
 }
 
 AttackData Iruka::CreateAttactData()
@@ -309,7 +332,8 @@ void Iruka::ApplyDamage(int num)
 {
 	hp -= num;
 	if (hp <= 0) {
-		spawn_flg = true;
+		death_flg = true;
+		//spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(1);
 	}
@@ -318,4 +342,31 @@ void Iruka::ApplyDamage(int num)
 ColorDate Iruka::GetColorDate()
 {
 	return Date;
+}
+
+void Iruka::IrukaAnim()
+{
+	if (spawn_flg == false)
+	{
+		//アニメーション用変数を回す
+		if (anim_frame % IRUKA_ANIM == 0)
+		{
+			if (++iruka_anim > 1)
+			{
+				iruka_anim = 0;
+			}
+		}
+	}
+	else
+	{
+		//アニメーション用変数を回す
+		if (anim_frame % IRUKA_DEATH_ANIM == 0)
+		{
+			if (++iruka_anim > 1)
+			{
+				iruka_anim = 0;
+			}
+		}
+	}
+
 }

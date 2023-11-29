@@ -55,7 +55,7 @@ public:
 
 	int GetHp() { return hp; }
 	//スポーンフラグの取得
-	int GetSpwanFlg() { return spawn_flg; }
+	int GetSpwnFlg() { return spawn_flg; }
 	ColorDate GetColorDate();
 
 };

@@ -2,6 +2,7 @@
 #include "BoxCollider.h"
 
 #define ATTACK_EREA_SHIFT_Y -50	 //攻撃範囲をずらす
+
 class Attack :
 	public BoxCollider
 {
@@ -10,6 +11,10 @@ private:
 	bool attack_flg;			//攻撃が発生しているかのフラグ
 	bool can_apply_damage;		//ダメージを与えられるか判断
 	bool once;					//一回だけ座標の情報を読みこむ（Bullet用）
+	bool cut_flg;				//（ひまわりの弾用）攻撃を切られたか判断
+	int cut_time;				//切られた演出をする時間
+
+	int bullet_img[ATTACK_EFFECT_NUM][10];              //エフェクト画像用
 public:
 	Attack();
 	~Attack();
@@ -25,6 +30,10 @@ public:
 	bool GetCanApplyDamage() { return can_apply_damage; }
 	//攻撃を消す
 	void DeleteAttack();
+	//（ひまわりの弾用）攻撃を切られたと判断する
+	void SetCutFlg();
+	//（ひまわりの弾用）攻撃を切られた演出中か取得
+	bool GetCutFlg() { return cut_flg; }
 	//攻撃をプレイヤーの顔側に移動させる
 	void SetDirection(bool _dir) { attack_data.direction = _dir; }
 };

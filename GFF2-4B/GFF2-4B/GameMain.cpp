@@ -15,13 +15,15 @@ static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
 GameMain::GameMain(int _stage)
 {
 	//変数の初期化
+	Back_Img = LoadGraph("resource/images/Backimg.png");
 	now_stage = _stage;
 	now_tuto = 0;
 	tuto_flg = false;
 	who = 1;
-	player = new Player();
 	scene_scroll = new SceneScroll();
+	player = new Player();
 	item_rand = 0;
+	distinguish = 0;
 
 	if (now_stage == 3) {
 		boss = new Boss();
@@ -54,9 +56,11 @@ GameMain::GameMain(int _stage)
 	Hands_Delete_Flg = false;
 
 	impact_timer = 0;   
-	camera_lock_flg = true;
+	camera_x_lock_flg = true;
+	camera_y_lock_flg = true;
 	lock_pos = camera_location;
-	lock_pos_set_once = true;
+	x_pos_set_once = true;
+	y_pos_set_once = true;
 	lock_flg = 0;
 	vine_x1 = -650;
 	vine_x2 = 1290;
@@ -66,10 +70,6 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
-
-	vine[0] = new Vine(0);
-	vine[1] = new Vine(1160);
-	lockplayer = new LockPlayer();
 }
 
 GameMain::~GameMain()
@@ -122,6 +122,11 @@ GameMain::~GameMain()
 		delete effect[i];
 		effect[i] = nullptr;
 	}
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		delete jar[i];
+		jar[i] = nullptr;
+	}
 	delete powergauge;
 	delete playerhp;
 	delete score;
@@ -129,9 +134,6 @@ GameMain::~GameMain()
 	delete boss;
 	delete hands;
 	delete koban;
-	delete vine[0];
-	delete vine[1];
-	delete lockplayer;
 }
 
 AbstractScene* GameMain::Update()
@@ -185,6 +187,15 @@ AbstractScene* GameMain::Update()
 			{
 				bamboo[i]->SetScreenPosition(camera_location);
 				bamboo[i]->Update(this);
+			}
+		}
+		//壺
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr)
+			{
+				jar[i]->SetScreenPosition(camera_location);
+				jar[i]->Update();
 			}
 		}
 
@@ -411,41 +422,45 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-		/**プレイヤーを閉じ込めるここから*/
-		//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-		if (lockplayer->GetLockFlg() == false && now_stage == 0 && player->GetLocation().x >= 10285)
-		{
-			lockplayer->SetLockFlg(true);
-		}
+	/**プレイヤーを閉じ込めるここから*/
+	//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
+	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 11600)
+	{
+		lock_flg = 1;
+	}
 
 		//蔓を下からはやす
-		if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == false && vine[1]->GetVineFlg() == false)
+		if (lock_flg == 1 && vine_y > 70)
 		{
-			vine[0]->VineAnimStart();
-			vine[1]->VineAnimStart();
+			vine_y -= 35;
 		}
-		else if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == true && vine[1]->GetVineFlg() == true)
+
+		if (lock_flg == 1 && vine_y <= 70)
 		{
-			lockplayer->GrassAnim();
+			lock_flg = 2;
+		}
+
+		//草を横からはやす
+		if (lock_flg == 2 && vine_x1 < 0)
+		{
+			vine_x1 += 35;
+			vine_x2 -= 35;
+		}
+
+		if (lock_flg == 2 && vine_x1 >= 0)
+		{
+			lock_flg = 3;
 		}
 
 		//ザクロを15匹生成
-		if (lockplayer->GetLockFlg() == true && lockplayer->GetGrassFlg() == true)
+		if (lock_flg == 3 && venemy_num1 < 15)
 		{
 			venemy_cnt++;
 			if (venemy_cnt >= 60)
-				if (lock_flg == 1 && vine_y <= 70)
-				{
-					VineEnemy(0);
-					venemy_cnt = 0;
-					lock_flg = 2;
-				}
-		}
-
-		//ザクロを15匹倒したら蔓から解放
-		if (lockplayer->GetLockFlg() == true && venemy_num2 >= 15)
-		{
-			lock_flg = 4;
+			{
+				VineEnemy();
+				venemy_cnt = 0;
+			}
 		}
 
 		//ザクロを15匹倒したら蔓から解放
@@ -489,23 +504,23 @@ AbstractScene* GameMain::Update()
 			powergauge->ResetColorRem();
 		}
 
-		//ステージクリア
-		if (player->GetLocation().x > stage_width - (stage_width * STAGE_GOAL)) {
-			if (now_stage == 2)
-			{
-				SetStage(3);
-				//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
-				if (now_stage == 3 && old_stage != now_stage) {
-					//Hands_Delete_Flg = false;
-					//boss = new Boss();
-					//hands = new BossHands(who++, boss);
-				}
-			}
-			else
-			{
-				return new Loading;
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				//boss = new Boss();
+				//hands = new BossHands(who++, boss);
 			}
 		}
+		else
+		{
+			return new Loading;
+		}
+	}
 
 		//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバーフラグを立てる
 		if (player->GetPlayerHP() < 0) {
@@ -564,7 +579,22 @@ AbstractScene* GameMain::Update()
 	}
 	else
 	{
-		if (PadInput::OnButton(XINPUT_BUTTON_B) == true)
+	//看板の更新
+	for (int i = 0; i < SIGH_BOARD_NUM; i++)
+	{
+		if (sighboard[i] != nullptr)
+		{
+			sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+			sighboard[i]->SetScreenPosition(camera_location);
+		}
+	}
+		if (
+#ifdef _DEBUG
+		(KeyInput::OnKey(KEY_INPUT_RETURN) == true || PadInput::OnButton(XINPUT_BUTTON_B) == true)
+#else
+	PadInput::OnButton(XINPUT_BUTTON_B) == true
+#endif
+			)
 		{
 			tuto_flg = false;
 			sighboard[now_tuto]->SetDispFlg(false);
@@ -578,6 +608,7 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+	DrawGraph(0, 0, Back_Img, TRUE);
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示
@@ -609,6 +640,14 @@ void GameMain::Draw() const
 		//描画
 	player->Draw();
 
+	// イルカ
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
+		if (iruka[i] != nullptr)
+		{
+			iruka[i]->Draw();
+		}
+	}
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -633,14 +672,6 @@ void GameMain::Draw() const
 			himawari[i]->Draw();
 		}
 	}
-	// イルカ
-	for (int i = 0; i < IRUKA_MAX; i++)
-	{
-		if (iruka[i] != nullptr)
-		{
-			iruka[i]->Draw();
-		}
-	}
 	//竹
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
@@ -649,11 +680,20 @@ void GameMain::Draw() const
 			bamboo[i]->Draw();
 		}
 	}
+	//回復アイテム
 	for (int i = 0; i < ITEM_MAX; i++)
 	{
 		if (heal[i] != nullptr)
 		{
 			heal[i]->Draw();
+		}
+	}
+	//壺
+	for (int i = 0; i < JAR_MAX; i++)
+	{
+		if (jar[i] != nullptr)
+		{
+			jar[i]->Draw();
 		}
 	}
 
@@ -692,7 +732,7 @@ void GameMain::SpawnAttack(AttackData _attackdata)
 {
 	for (int i = 0; i < ATTACK_NUM; i++)
 	{
-		if (attack[i]->GetAttackFlg() == false)
+		if (attack[i]->GetAttackFlg() == false && attack[i]->GetCutFlg() == false)
 		{
 			attack[i]->SpawnAttack(_attackdata);
 			break;
@@ -740,6 +780,11 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				ProcessCharacterCollision(bamboo[k], stage[i][j], i);
 			}
+			//竹の数だけ繰り返す
+			for (int k = 0; k < JAR_MAX; k++)
+			{
+				ProcessCharacterCollision(jar[k], stage[i][j], i);
+			}
 		}
 	}
 	//攻撃の数だけ繰り返す
@@ -777,20 +822,22 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[j] != nullptr)
 			{
-				// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
-				if (attack[i]->HitBox(bamboo[j]) == true && attack[i]->GetCanApplyDamage() == true && attack[i]->GetAttackData().who_attack == PLAYER && bamboo[j]->GetSpwanFlg() == false)
+				//プレイヤーと竹が触れたとき
+				HitPlayer(attack[i], bamboo[j]);
+			}
+		}
+		for (int j = 0; j < JAR_MAX; j++)
+		{
+			if (jar[j] != nullptr)
+			{
+				//プレイヤーと壺が触れたとき
+				HitPlayer(attack[i], jar[j]);
+				if (jar[j]->GetHp() <= 0)
 				{
-					//ダメージ量に応じた画面揺れ
-					ImpactCamera(10 * attack[i]->GetAttackData().damage);
+					// アイテムの位置を設定
+					koban->SetLocation(jar[j]->GetLocation());
+				}
 
-					bamboo[j]->ApplyDamage(attack[i]->GetAttackData().damage);
-					attack[i]->DeleteAttack();
-				}
-				//プレイヤーと竹の当たり判定
-				if (player->HitBox(bamboo[j]) == true && bamboo[j]->GetSpwanFlg() == false)
-				{
-					player->Push(bamboo[j]->GetLocation(), bamboo[j]->GetErea(), 8);
-				}
 			}
 		}
 		if (now_stage == 3) {
@@ -799,7 +846,9 @@ void GameMain::HitCheck(GameMain* main)
 				{
 					ImpactCamera(10 * attack[i]->GetAttackData().damage);
 					//ボスのダメージ処理
-					hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					if (hands->zakuro_state != 0) {
+						hands->ApplyDamage(attack[i]->GetAttackData().damage);
+					}
 					attack[i]->DeleteAttack();
 					//ジャンプ攻撃多段防止
 					if (player->GetAcs(0) > 0.1) {
@@ -840,12 +889,29 @@ void GameMain::HitCheck(GameMain* main)
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[i]->GetAttackData().who_attack == PLAYER && (attack[j]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[j]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[j]->DeleteAttack();
+				attack[j]->SetCutFlg();
 			}
 			//攻撃同士が当たっていて、片方の攻撃がプレイヤーによるもので、もう片方の攻撃がひまわり（ボスひまわり）の弾で、プレイヤーの攻撃がダメージを与えられるなら
 			if (attack[i]->HitBox(attack[j]) == true && (attack[i]->GetCanApplyDamage() == true && attack[j]->GetCanApplyDamage() == true) && attack[j]->GetAttackData().who_attack == PLAYER && (attack[i]->GetAttackData().effect_type == HIMAWARI_BULLET || attack[i]->GetAttackData().effect_type == BOSSHIMAWARI_BULLET))
 			{
-				attack[i]->DeleteAttack();
+				attack[i]->SetCutFlg();
+			}
+		}
+		//看板を切り続けたら看板が吹っ飛ぶ
+		for (int j = 0; j < SIGH_BOARD_NUM; j++)
+		{
+			if (sighboard[j] != nullptr)
+			{
+				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
+				{
+					ImpactCamera(3);
+					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0 && sighboard[j]->GetBreakFlg() == false)
+					{
+						sighboard[j]->SetBreak(player->GetPlayerDirection());
+						SpawnEffect(sighboard[j]);						// しぶきのスポーン処理
+						ImpactCamera(10 * attack[i]->GetAttackData().damage);
+					}
+				}
 			}
 		}
 	}
@@ -872,7 +938,7 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwanFlg() == false && bamboo[j]->GetSpwanFlg() == false) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == false && bamboo[j]->GetSpwnFlg() == true) {
 					bamboo[i]->FalseGravity();
 				}
 			}
@@ -884,6 +950,7 @@ void GameMain::HitCheck(GameMain* main)
 			boss->Count_Death--;
 			hands = nullptr;
 			boss->Once_Flg = true;
+			boss->Boss_Handmove++;
 			Hands_Delete_Flg = false;
 		}
 	}
@@ -958,6 +1025,7 @@ void GameMain::LoadStageData(int _stage)
 		file >> stage_height_num;
 
 		stage_width = stage_width_num * BOX_WIDTH;
+		stage_height = stage_height_num * BOX_HEIGHT;
 		//ランキングデータ配分列データを読み込む
 		for (int i = 0; i < stage_height_num; i++)
 		{
@@ -992,9 +1060,6 @@ void GameMain::SetStage(int _stage)
 	old_stage = now_stage;
 	now_stage = _stage;
 	//ファイルの読込
-
-
-	//�t�@�C���̓Ǎ�
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
 	{
@@ -1064,6 +1129,15 @@ void GameMain::SetStage(int _stage)
 					}
 				}
 				break;
+			case 13:
+				for (int k = 0; k < JAR_MAX; k++)
+				{
+					if (jar[k] == nullptr)
+					{
+						jar[k] = new Jar((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT));
+						break;
+					}
+				}
 			default:
 				break;
 			}
@@ -1078,21 +1152,25 @@ void GameMain::SetStage(int _stage)
 		//hands = new BossHands(who++, boss);
 	}
 
-	//プレイヤーのリスポーン
-	Location res_location = { 100,100 };
+	//プレイヤーのリスポーン(プレイヤーが生成されているなら)
+	Location res_location = { 100,stage_height-500 };
 	player->Respawn(res_location);
+
 	//カメラのリセット
 	ResetCamera();
+
 	//カメラの位置がプレイヤーの位置にならないように
-	lock_pos_set_once = true;
+	x_pos_set_once = true;
+	y_pos_set_once = true;
+
 	//スコアリセット
 	score->ResetScore();
 }
 
-void GameMain::CameraLocation(Location _location)
+void GameMain::CameraLocation(float _x,float _y)
 {
-	camera_location.x = _location.x - (SCREEN_WIDTH / 2);
-	camera_location.y = 0;
+	camera_location.x = _x - (SCREEN_WIDTH / 2) + GetRand(impact_timer);
+	camera_location.y = _y - (SCREEN_HEIGHT / 2) + GetRand(impact_timer);
 }
 
 void GameMain::ResetCamera()
@@ -1113,35 +1191,70 @@ void GameMain::ImpactCamera(int _power)
 
 void GameMain::UpdateCamera()
 {
-	if (player->GetLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2) && now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
+	//今のステージが３（ボス）以外で、カメラ固定フラグが立ってないなら
+	if (now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
 	{
-		camera_lock_flg = false;
-		lock_pos_set_once = false;
-	}
-	else
-	{
-		camera_lock_flg = true;
-		if (lock_pos_set_once == false)
+		//X座標が画面端以外なら
+		if (player->GetCenterLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2))
 		{
-			lock_pos = player->GetLocation();
-			lock_pos_set_once = true;
+			//X座標のロックをしない
+			camera_x_lock_flg = false;
+			//ロック時に一度だけ入る処理をリセットする
+			x_pos_set_once = false;
+		}
+		//X座標が画面端なら
+		else
+		{
+			//X座標のロックをする
+			camera_x_lock_flg = true;
+			//固定する位置を一度だけ設定する
+			if (x_pos_set_once == false)
+			{
+				lock_pos.x = player->GetCenterLocation().x;
+				x_pos_set_once = true;
+			}
+		}
+		//Y座標が画面端以外なら
+		if (player->GetCenterLocation().y < stage_height - (SCREEN_HEIGHT/2)-10)
+		{
+			//Y座標のロックをしない
+			camera_y_lock_flg = false;
+			//ロック時に一度だけ入る処理をリセットする
+			y_pos_set_once = false;
+		}		
+		//Y座標が画面端なら
+		else
+		{
+			//Y座標のロックをする
+			camera_y_lock_flg = true;
+			//固定する位置を一度だけ設定する
+			if (y_pos_set_once == false)
+			{
+				lock_pos.y = player->GetCenterLocation().y;
+				y_pos_set_once = true;
+			}
 		}
 	}
 
-	if (camera_lock_flg == false)
+	if (camera_x_lock_flg == false && camera_y_lock_flg == false)
 	{
-		CameraLocation(player->GetLocation());
+		CameraLocation(player->GetCenterLocation().x, player->GetCenterLocation().y);
+	}
+	else if (camera_x_lock_flg == false && camera_y_lock_flg == true)
+	{
+		CameraLocation(player->GetCenterLocation().x, lock_pos.y);
+	}
+	else if (camera_x_lock_flg == true && camera_y_lock_flg == false)
+	{
+		CameraLocation(lock_pos.x, player->GetCenterLocation().y);
 	}
 	else
 	{
-		CameraLocation(lock_pos);
+		CameraLocation(lock_pos.x, lock_pos.y);
 	}
-
-	//揺れ処理
-	if (--impact_timer > 0)
+	if (--impact_timer < 0)
 	{
-		camera_location.x += (GetRand(impact_timer) - (impact_timer / 2));
-		camera_location.y += (GetRand(impact_timer) - (impact_timer / 2));
+		impact_timer = 0;
 	}
 }
 
@@ -1158,7 +1271,7 @@ template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, HealItem* heal, Koban* koban*/)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
-	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwanFlg() == false) {		
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwnFlg() == false) {		
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
@@ -1195,12 +1308,22 @@ void GameMain::HitBamboo(T* character)
 {
 	if (character != nullptr)
 	{
+		//竹とエネミーの当たり判定
 		for (int i = 0; i < BAMBOO_MAX; i++)
 		{
-			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwanFlg() == false)
+			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwnFlg() == true)
 			{
 				//触れた面に応じて押し出す
 				character->Push(i, bamboo[i]->GetLocation(), bamboo[i]->GetErea());
+			}
+		}
+		//壺とエネミーの当たり判定
+		for (int i = 0; i < JAR_MAX; i++)
+		{
+			if (jar[i] != nullptr && character->HitBox(jar[i]) == true && jar[i]->GetSpwnFlg() == true)
+			{
+				//触れた面に応じて押し出す
+				character->Push(i, jar[i]->GetLocation(), jar[i]->GetErea());
 			}
 		}
 	}
@@ -1266,6 +1389,26 @@ void  GameMain::SpawnEffect(T* character)
 	}
 }
 
+template<class T>
+void GameMain::HitPlayer(Attack* attack , T* object)
+{
+	// 攻撃の判定が	竹被っていて、その攻撃がプレイヤーによるもので、その判定がダメージを与えられる状態なら
+	if (attack->HitBox(object) == true && attack->GetCanApplyDamage() == true && attack->GetAttackData().who_attack == PLAYER && object->GetSpwnFlg() == true)
+	{
+		//ダメージ量に応じた画面揺れ
+		ImpactCamera(10 * attack->GetAttackData().damage);
+
+		object->ApplyDamage(attack->GetAttackData().damage);
+		attack->DeleteAttack();
+		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+	}
+	//プレイヤーと竹の当たり判定
+	if (player->HitBox(object) == true && object->GetSpwnFlg() == true)
+	{
+		player->Push(object->GetLocation(), object->GetErea(), 8);
+	}
+}
+
 //蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
@@ -1278,7 +1421,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro((float)(9900 + (200 * num)), (float)(200), true, who++);
+			zakuro[k] = new Zakuro(11500 + (150 * num), 200, true, who++);
 			venemy_num1++;
 			break;
 		}

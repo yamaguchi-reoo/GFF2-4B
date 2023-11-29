@@ -23,8 +23,6 @@
 #include "HealItem.h"
 #include "Koban.h"
 #include "Jar.h"
-#include "Vine.h"
-#include "LockPlayer.h"
 
 class Player;
 
@@ -77,11 +75,18 @@ private:
     int stage_width_num;    //ステージブロックの横数
     int stage_height_num;   //ステージブロックの縦数
     int stage_width;        //ステージ横幅
-    bool camera_lock_flg;   //カメラが動けるか判断(強制戦闘時以外)
-    bool lock_pos_set_once; //カメラのロック位置設定用
+    int stage_height;        //ステージ縦幅
+    bool camera_x_lock_flg;   //カメラが動けるか判断(強制戦闘時以外)
+    bool camera_y_lock_flg;   //カメラが動けるか判断(強制戦闘時以外)
+    bool x_pos_set_once; //カメラのロック位置設定用
+    bool y_pos_set_once; //カメラのロック位置設定用
     Location lock_pos;      //カメラが動けない時に画面揺れが発生した時、カメラの位置が戻る場所
+
+    int Back_Img;//ステージ背景
+
     int impact_timer;               //画面揺れ演出
 
+    int distinguish;        // 竹と壺を見分ける
     int item_rand;
 
     int lock_flg; //強制戦闘時のフラグ
@@ -92,9 +97,6 @@ private:
     int venemy_cnt;  //敵の生成時間カウント
     int venemy_num1; //強制戦闘時に生成した敵の数
     int venemy_num2; //強制戦闘時に斬った敵の数
-
-    Vine* vine[2]; //強制戦闘ゾーンの蔓のオブジェクト
-    LockPlayer* lockplayer; //強制戦闘ゾーンの草のオブジェクト
 
 public:
     bool Hands_Delete_Flg; //ボスの腕消す用
@@ -126,10 +128,13 @@ public:
     void SetStage(int _stage);
 
     //カメラ座標の更新
-    void CameraLocation(Location _location);
+    void CameraLocation(float _x, float _y);
 
     //カメラ座標を初期地点に戻す
     void ResetCamera();
+
+    //プレイヤーにステージの高さを渡す用
+    int GetStageHeight() { return stage_height; }
 
     //ボスにプレイヤーの座標を渡す用
     Location GetPlayerLocation();
@@ -158,9 +163,9 @@ public:
     //エフェクトの出現
     template<class T>
     void SpawnEffect(T* character);
-
-    //蔓内での敵生成処理
-    void VineEnemy(int enemy);
+    //プレイヤーと竹か壺の当たり判定
+    template<class T>
+    void HitPlayer(Attack* attack, T* object);
 
     //蔓内での敵生成処理
     void VineEnemy(void);

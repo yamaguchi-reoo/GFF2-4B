@@ -13,7 +13,7 @@ EditScene::EditScene(int _stage)
 	current_type = 0;
 	tool_location.x = 100;
 	tool_location.y = 0;
-	tool_size.width = (OBJECT_TYPE_NUM * 50) + 100;
+	tool_size.width = (OBJECT_TYPE_NUM * 50) + 200;
 	tool_size.height = 100;
 	tool_pickup_flg = false;
 	current_leftbutton_flg = false;
@@ -277,6 +277,10 @@ void EditScene::Draw()const
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
 				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "‹­‰»ó‘Ô", 0xffffff);
+			}
+			if (stage_data[i][j] == 13)
+			{
+				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xBB8B38, true);
 			}
 		}
 	}

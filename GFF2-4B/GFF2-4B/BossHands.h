@@ -62,9 +62,22 @@ public:
     float Magentax[10] = { 1000,100,500 };    //Mの拳が降りてくるX座標
     int switching;                  //拳出現位置セット用
     bool hitflg=false;
-    bool onceflg=true;
     int count;
     bool Rock_Once;                 //岩出現位置一度だけ格納する用
+    int Jump_Num;//どこでジャンプするのか用
+    bool Jump_Flg;//範囲に来たらジャンプする用
+    bool Jump_Once;//ジャンプ一回だけする用
+    float Old_Zakuroy;//前のザクロのY座標格納用
+
+    //手のHP用
+    int Hands_HPimg[10];
+    int hands_hp;
+
+    //攻撃受けたときの点滅用
+    bool Blinking_Flg;
+    int Blinking_count;
+    bool Display;
+    int Blinking_Img[10];//点滅用画像
 
     //ザクロジャンプ用
     float Zakuro_Movex;    //移動したザクロｘ
@@ -102,7 +115,6 @@ public:
     int attack_combo;               //弾を連続で撃つ用
     int attack_num;                 //弾を連続で撃つ用
     int move_count;                 //何回移動したかを測定する   
-
     //いるかひまわり共用
     float acceleration;             //移動の加速度
     float face_angle;               //顔の角度
@@ -119,8 +131,12 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
 
+    //ボス画像点滅用
+    void Blinking();
+
     //マゼンタ（ザクロ）用関数
     void MagentaInit();                     //マゼンタ（ザクロ）で使う変数初期化
+    void JumpInit();
     void HandsMagenta(GameMain* main);      //マゼンタ（ザクロ）の更新
 
     //シアン（イルカ）用関数
