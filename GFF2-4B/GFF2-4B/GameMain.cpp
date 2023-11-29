@@ -70,6 +70,10 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
+
+	vine[0] = nullptr;
+	vine[1] = nullptr;
+	lockplayer = new LockPlayer();
 }
 
 GameMain::~GameMain()
@@ -134,6 +138,9 @@ GameMain::~GameMain()
 	delete boss;
 	delete hands;
 	delete koban;
+	delete vine[0];
+	delete vine[1];
+	delete lockplayer;
 }
 
 AbstractScene* GameMain::Update()
@@ -422,76 +429,37 @@ AbstractScene* GameMain::Update()
 			}
 		}
 
-	/**プレイヤーを閉じ込めるここから*/
-	//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-	if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 11600)
-	{
-		lock_flg = 1;
-	}
-
-		//蔓を下からはやす
-		if (lock_flg == 1 && vine_y > 70)
+		/**プレイヤーを閉じ込めるここから*/
+		//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
+		if (lockplayer->GetLockFlg() == false && now_stage == 0 && player->GetLocation().x >= 100)
 		{
-			vine_y -= 35;
+			vine[0] = new Vine(0);
+			vine[1] = new Vine(60);
+			lockplayer->SetLockFlg(true);
 		}
 
-		if (lock_flg == 1 && vine_y <= 70)
+		if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == false && vine[1]->GetVineFlg() == false)
 		{
-			lock_flg = 2;
+			vine[0]->VineAnimStart();
+			vine[1]->VineAnimStart();
 		}
 
-		//草を横からはやす
-		if (lock_flg == 2 && vine_x1 < 0)
+		if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == true && vine[1]->GetVineFlg() == true && lockplayer->GetGrassFlg() == false)
 		{
-			vine_x1 += 35;
-			vine_x2 -= 35;
+			lockplayer->GrassAnimStart();
 		}
 
-		if (lock_flg == 2 && vine_x1 >= 0)
+		if (lockplayer->GetLockFlg() == true && vine[0]->GetVineFlg() == true && vine[1]->GetVineFlg() == true && lockplayer->GetGrassFlg() == true)
 		{
-			lock_flg = 3;
-		}
-
-		//ザクロを15匹生成
-		if (lock_flg == 3 && venemy_num1 < 15)
-		{
-			venemy_cnt++;
-			if (venemy_cnt >= 60)
+			if (lockplayer->GetCreateEn() < 15)
 			{
 				VineEnemy();
-				venemy_cnt = 0;
+			}
+			else
+			{
+				lockplayer->GrassAnimEnd();
 			}
 		}
-
-		//ザクロを15匹倒したら蔓から解放
-		if (lock_flg == 3 && venemy_num2 >= 15)
-		{
-			lock_flg = 4;
-		}
-
-		//草を解除
-		if (lock_flg == 4 && vine_x2 < 1280)
-		{
-			vine_x1 -= 35;
-			vine_x2 += 35;
-		}
-
-		if (lock_flg == 4 && vine_x2 >= 1280)
-		{
-			lock_flg = 5;
-		}
-
-		//蔓を解除
-		if (lock_flg == 5 && vine_y < 730)
-		{
-			vine_y += 35;
-		}
-
-		if (lock_flg == 5 && vine_y >= 730)
-		{
-			lock_flg = 6;
-		}
-
 		/**プレイヤーを閉じ込めるここまで*/
 
 		//当たり判定関連の処理を行う
@@ -714,13 +682,20 @@ void GameMain::Draw() const
 		}
 	}
 
-	//プレイヤーを閉じ込める蔓の描画
-	if (lock_flg > 0 || lock_flg < 6)
+	////プレイヤーを閉じ込める蔓の描画
+	//if (lock_flg > 0 || lock_flg < 6)
+	//{
+	//	DrawGraph(-10, vine_y, vine_img[0], TRUE);
+	//	DrawGraph(1170, vine_y, vine_img[0], TRUE);
+	//	DrawGraph(vine_x1, -5, vine_img[1], TRUE);
+	//	DrawGraph(vine_x2, -5, vine_img[1], TRUE);
+	//}
+
+	if (lockplayer->GetLockFlg() == true)
 	{
-		DrawGraph(-10, vine_y, vine_img[0], TRUE);
-		DrawGraph(1170, vine_y, vine_img[0], TRUE);
-		DrawGraph(vine_x1, -5, vine_img[1], TRUE);
-		DrawGraph(vine_x2, -5, vine_img[1], TRUE);
+		//vine[0]->Draw();
+		vine[1]->Draw();
+		lockplayer->Draw();
 	}
 
 	powergauge->Draw();

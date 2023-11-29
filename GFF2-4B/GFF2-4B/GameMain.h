@@ -23,6 +23,8 @@
 #include "HealItem.h"
 #include "Koban.h"
 #include "Jar.h"
+#include "Vine.h"
+#include "LockPlayer.h"
 
 class Player;
 
@@ -98,6 +100,9 @@ private:
     int venemy_num1; //‹­§í“¬‚É¶¬‚µ‚½“G‚Ì”
     int venemy_num2; //‹­§í“¬‚Éa‚Á‚½“G‚Ì”
 
+    Vine* vine[2];
+    LockPlayer* lockplayer;
+
 public:
     bool Hands_Delete_Flg; //ƒ{ƒX‚Ì˜rÁ‚·—p
 
@@ -169,5 +174,7 @@ public:
 
     //– “à‚Å‚Ì“G¶¬ˆ—
     void VineEnemy(void);
+
+    void VineEnemy(int enemy);
 };
 

@@ -30,15 +30,16 @@ public:
     bool GetLockFlg() { return lock_flg; }
     bool GetGrassFlg() { return grass_flg; }
 
-
     //生成した敵の数をカウント
     void CntCreateEn() { create_en++; }
+    int GetCreateEn() { return create_en; }
 
     //斬った敵の数をカウント
     void CntAttackEn() { attack_en++; }
+    int GetAttackEn() { return attack_en; }
 
     //草のアニメーション
-    void GrassAnim();
-
+    void GrassAnimStart();
+    void GrassAnimEnd();
 };
 
