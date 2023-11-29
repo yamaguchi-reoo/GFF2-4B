@@ -13,7 +13,7 @@
 #define DEFAULT_MOVE_SPEED 0.3f			//基本移動速度(左右)
 #define DEFAULT_JUMP_POWER 24			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
-#define DEFAULT_ATTACK_INTERVAL	30		//基本攻撃間隔(フレーム)
+#define DEFAULT_ATTACK_INTERVAL	25		//基本攻撃間隔(フレーム)
 #define DEFAULT_INVINCIBLE_TIME	100		//基本無敵時間(攻撃を喰らった後)
 
 #define PLAYER_IMAGE_SHIFT_X 100			//画像ずらし用
@@ -548,6 +548,8 @@ void Player::Attack(GameMain* main)
 			}
 			//攻撃を生成する
 			main->SpawnAttack(CreateAttactData(attack_step));
+			//少し前移動
+			acs[direction + 2] += 7;
 		}
 		//空中にいて、落下攻撃中でないなら
 		else if (attack_step != 4)
