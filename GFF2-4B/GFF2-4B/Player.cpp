@@ -11,13 +11,13 @@
 #define LEFT 3	//左加速度用
 
 #define DEFAULT_MOVE_SPEED 0.3f			//基本移動速度(左右)
-#define DEFAULT_JUMP_POWER 28			//基本最大跳躍力
+#define DEFAULT_JUMP_POWER 24			//基本最大跳躍力
 #define GRAVITY_POWER  (ACS_MAX * 2.5f) //重力の強さ
 #define DEFAULT_ATTACK_INTERVAL	30		//基本攻撃間隔(フレーム)
 #define DEFAULT_INVINCIBLE_TIME	100		//基本無敵時間(攻撃を喰らった後)
 
 #define PLAYER_IMAGE_SHIFT_X 100			//画像ずらし用
-#define PLAYER_IMAGE_SHIFT_Y 95		//画像ずらし用
+#define PLAYER_IMAGE_SHIFT_Y 95			//画像ずらし用
 #define PLAYER_IDOL 34					//立ち姿アニメーション開始地点
 #define PLAYER_WALK 28					//移動アニメーション開始地点
 #define PLAYER_JUMP 27					//ジャンプアニメーション開始地点
@@ -38,8 +38,7 @@ Player::Player()
 	frame = 0;
 	old_location = { 0 };
 	next_location = { 0 };
-	location.x = 100;
-	location.y = 400;
+	location = {0,0};
 	erea.height = PLAYER_HEIGHT;
 	erea.width = PLAYER_WIDTH;
 	who = 0;
@@ -748,7 +747,7 @@ void Player::Move(GameMain* main)
 	}
 
 	//Y座標が一定を上回ったら死
-	if (location.y > SCREEN_HEIGHT * 1.5f)
+	if (location.y > main->GetStageHeight() + 100)
 	{
 		death_flg = true;
 		move_flg = false;

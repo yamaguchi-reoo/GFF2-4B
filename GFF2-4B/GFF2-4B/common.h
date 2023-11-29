@@ -30,7 +30,7 @@
 #define BULLET 1	//遠距離攻撃（波動も含む）
 
 //ステージ	
-#define BOX_HEIGHT	45					//ステージのブロック一つ当たりの高さ
+#define BOX_HEIGHT	48					//ステージのブロック一つ当たりの高さ
 #define BOX_WIDTH	48					//ステージのブロック一つ当たりの幅
 #define MAX_STAGE_HEIGHT 60				//ステージのブロックの縦の最大個数
 #define MAX_STAGE_WIDTH  3000			//ステージのブロックの横の最大個数
