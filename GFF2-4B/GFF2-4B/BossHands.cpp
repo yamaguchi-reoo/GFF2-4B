@@ -627,7 +627,7 @@ void BossHands::HandsCyan(GameMain* main) {
 	turu_location.x = (SCREEN_WIDTH / 2) + (local_location.x + (erea.width / 2));
 	turu_location.y = local_location.y + (erea.height / 2);
 	turu_angle = atan2f(turu_location.y - (local_location.y+(erea.height/2)), turu_location.x - (local_location.x + (erea.width / 2)));
-	turu_rad =turu_angle*(float)M_PI*2;
+	turu_rad = turu_angle * (float)M_PI * 2;
 
 	//アニメーション用
 	if (
@@ -806,7 +806,7 @@ void BossHands::HandsCyan(GameMain* main) {
 						location.y = SCREEN_HEIGHT - erea.height;
 						acceleration = 70;
 						iruka_state = BossIrukaState::D_RISE;
-						timer = 70;
+						timer = 30;
 					}
 				}
 			}
@@ -816,15 +816,15 @@ void BossHands::HandsCyan(GameMain* main) {
 			{
 				if (face_angle < 0.5f)
 				{
-					face_angle += 0.02f;
+					face_angle += 0.04f;
 				}
 				else if (face_angle < 0.74f)
 				{
-					face_angle += 0.01f;
+					face_angle += 0.02f;
 				}
 				else if (face_angle > 0.76f)
 				{
-					face_angle -= 0.01f;
+					face_angle -= 0.02f;
 				}
 				else
 				{

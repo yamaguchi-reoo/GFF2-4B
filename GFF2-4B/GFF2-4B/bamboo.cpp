@@ -15,7 +15,7 @@ Bamboo::Bamboo(float pos_x, float pos_y)
 
 	apply_gravity = true;
 	onfloor_flg = false;
-	spawn_flg = false;
+	spawn_flg = true;
 }
 
 Bamboo::~Bamboo()
@@ -24,7 +24,7 @@ Bamboo::~Bamboo()
 
 void Bamboo::Update(GameMain* main)
 {
-	if (spawn_flg == false)
+	if (spawn_flg == true)
 	{
 		//è∞Ç…êGÇÍÇƒÇ¢Ç»Ç¢Ç»ÇÁ
 		if (apply_gravity == true)
@@ -39,7 +39,7 @@ void Bamboo::Update(GameMain* main)
 
 void Bamboo::Draw() const
 {
-	if (spawn_flg == false)
+	if (spawn_flg == true)
 	{
 		DrawGraphF(local_location.x, local_location.y, image, FALSE);
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
@@ -75,7 +75,7 @@ void Bamboo::ApplyDamage(int num)
 {
 	hp = -num;
 	if (hp <= 0) {
-		spawn_flg = true;
+		spawn_flg = false;
 	}
 }
 void Bamboo::FalseGravity()

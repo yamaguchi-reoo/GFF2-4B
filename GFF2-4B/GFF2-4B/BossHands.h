@@ -102,7 +102,6 @@ public:
     int attack_combo;               //弾を連続で撃つ用
     int attack_num;                 //弾を連続で撃つ用
     int move_count;                 //何回移動したかを測定する   
-
     //いるかひまわり共用
     float acceleration;             //移動の加速度
     float face_angle;               //顔の角度

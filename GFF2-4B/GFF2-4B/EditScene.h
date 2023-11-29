@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "PadInput.h"
 
-#define OBJECT_TYPE_NUM 13   //配置できるオブジェクトの種類数
+#define OBJECT_TYPE_NUM 14   //配置できるオブジェクトの種類数
 
  //エリア区分
 enum SelectErea
@@ -29,6 +29,7 @@ static char obj_string[OBJECT_TYPE_NUM][256] =
     "看板２",
     "看板３",
     "看板４",
+    "壺",
 };
 
 class EditScene :

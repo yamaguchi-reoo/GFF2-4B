@@ -34,21 +34,23 @@
 #define BOX_WIDTH	48					//ステージのブロック一つ当たりの幅
 #define MAX_STAGE_HEIGHT 60				//ステージのブロックの縦の最大個数
 #define MAX_STAGE_WIDTH  3000			//ステージのブロックの横の最大個数
-#define STAGE_GOAL 0.05
+#define STAGE_GOAL (BOX_WIDTH*5)		//ステージでゴールとなる座標
 #define SIGH_BOARD_NUM 5				//看板の数
 //エネミーの数
 #define ZAKURO_MAX 35	//ザクロの最大数
 #define IRUKA_MAX 20		//イルカの最大数
 #define HIMAWARI_MAX 20	//ひまわりの最大数
 
-//エフェクト
-#define SPLASH_MAX 50
-
 //アイテム
 #define ITEM_MAX 10 //画面に出現できるアイテムの最大数
 #define JAR_MAX 7  //壺の最大数
 
-#define PLAYER_SLASH_ONE 0
+//エフェクト
+#define SPLASH_MAX 50
+
+#define ATTACK_EFFECT_NUM 15			//攻撃エフェクトの画像数
+//攻撃エフェクト発生用
+#define PLAYER_SLASH_ONE 0				
 #define PLAYER_SLASH_TWO 1
 #define PLAYER_SLASH_THREE 2
 #define PLAYER_SLASH_FOUR 3
