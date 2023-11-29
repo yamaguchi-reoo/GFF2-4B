@@ -48,6 +48,18 @@ Title::~Title()
 
 AbstractScene* Title::Update()
 {
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		)
+	{
+		title_alpha += 20.f;
+		title_x += 10.f;
+		font_alpha += 10.f;
+	}
 	if (font_alpha >= 100)
 	{
 		//\ŽšƒL[ª“ü—Í
