@@ -726,6 +726,12 @@ void GameMain::Draw() const
 	powergauge->Draw();
 	playerhp->Draw();
 	score->Draw();
+
+	if (now_stage == 3) {
+		if (hands != nullptr) {
+			hands->HandHp();
+		}
+	}
 }
 
 void GameMain::SpawnAttack(AttackData _attackdata)

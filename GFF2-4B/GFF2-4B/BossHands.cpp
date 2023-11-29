@@ -24,12 +24,14 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Blinking_count = 0;
 	Display = false;
 
-	//Hands_HPimg=
-	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,50,50,Hands_HPimg);
+	Stop_Count = 120;
+	Make_hpflg = false;
+	hands_hp = 0;
+	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,70,70,Hands_HPimg);
 	//LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 
 #ifdef _DEBUG
-	hp = 3;
+	hp = 5;
 #else
 	hp = 5;
 #endif // _DEBUG
@@ -39,7 +41,6 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 0:
 		//マゼンタ初期化
 		MagentaInit();
-		LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
 		break;
 	case 1:
 		//シアン初期化
@@ -49,7 +50,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 2:
 		//イエロー初期化
 		YellowInit();
-		LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
+		//LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
 		break;
 	default:
 		break;
@@ -73,6 +74,31 @@ void BossHands::Update(GameMain* main) {
 
 	//フレーム測定
 	if (++frame > 1200)frame = 0;
+
+	if (Make_hpflg != true) {
+		Stop_Count -= 10;
+		switch (Stop_Count)
+		{
+		case 120:
+			hands_hp = 0;
+			break;
+		case 80:
+			hands_hp = 1;
+			break;
+		case 40:
+			hands_hp = 2;
+			break;
+		case 0:
+			hands_hp = 3;
+			break;
+		default:
+			break;
+		}
+		if (Stop_Count < -40) {
+			Make_hpflg = true;
+		}
+	}
+	else {
 		//手の種類に応じて実行するUpdateを変える
 		switch (Hands_who)
 		{
@@ -93,26 +119,26 @@ void BossHands::Update(GameMain* main) {
 		default:
 			break;
 		}
-
+	}
 }
 
 void BossHands::Draw() const {
 
 	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
-	
-	
-
+	if (Make_hpflg != true) {
+	}
+	else {
 		switch (Hands_who)
 		{
 		case 0:
 			//マゼンタ
 				//DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
-				DrawRotaGraphF(location.x+150, location.y+140, 1, 0, Zakuro_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
+			DrawRotaGraphF(location.x + 150, location.y + 140, 1, 0, Zakuro_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
 
-				//HP表示
-				for (int i = 0; i < hp; i++) {
-					DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
-				}
+			////HP表示
+			//for (int i = 0; i < hp; i++) {
+			//	DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
+			//}
 			break;
 		case 1:
 			//シアン
@@ -123,27 +149,27 @@ void BossHands::Draw() const {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
 			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
-			if (face_angle > 0.0f && face_angle <0.7f)
+			if (face_angle > 0.0f && face_angle < 0.7f)
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
-				
+
 				if (Display == true) {
 					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
 				}
 			}
 			else
 			{
-				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
+				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 
 				if (Display == true) {
 					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
 				}
 			}
 
-			//HP表示
-			for (int i = 0; i < hp; i++) {
-				DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
-			}
+			////HP表示
+			//for (int i = 0; i < hp; i++) {
+			//	DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
+			//}
 			break;
 		case 2:
 			//イエロー
@@ -160,19 +186,14 @@ void BossHands::Draw() const {
 
 			}
 
-			//HP表示
-			for (int i = 0; i < hp; i++) {
-				DrawGraph(500+i*50, 650, Hands_HPimg[2], TRUE);
-			}
 
 			break;
 		default:
 			break;
 		}
-	
-			DrawFormatString(500, 500, 0xffffff, "Dire%d",Zakuro_Direction);
 
 
+	}
 
 #ifdef _DEBUG
 	//DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
@@ -185,6 +206,43 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 500, 0xffffff, "location.x%f", location.x);
 	DrawFormatString(400, 550, 0xffffff, "Zakuroy%f", Old_Zakuroy-location.y);
 #endif // _DEBUG
+}
+
+void BossHands::HandHp() const {
+	SetFontSize(40);
+	DrawString(450, 670, "BOSS", 0x0000ff);
+
+	if (Make_hpflg != true) {
+		switch (hands_hp) {
+		case 0:
+			DrawGraph(530, 650, Hands_HPimg[Hands_who], TRUE);
+			break;
+		case 1:
+			DrawGraph(530, 650, Hands_HPimg[Hands_who], TRUE);
+			DrawGraph(530 + 50, 650, Hands_HPimg[Hands_who], TRUE);
+			break;
+		case 2:
+			for (int i = 0; i < 3; i++) {
+				DrawGraph(530 + i * 50, 650, Hands_HPimg[Hands_who], TRUE);
+			}
+			break;
+		case 3:
+			for (int i = 0; i < 4; i++) {
+				DrawGraph(530 + i * 50, 650, Hands_HPimg[Hands_who], TRUE);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		//HP表示
+		for (int i = 0; i < hp; i++) {
+			DrawGraph(530 + i * 50, 650, Hands_HPimg[Hands_who], TRUE);
+		}
+		SetFontSize(40);
+		DrawString(450, 670, "BOSS", 0x0000ff);
+	}
 }
 
 void BossHands::Blinking() {

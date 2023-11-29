@@ -289,7 +289,7 @@ void Boss::BossImgChange(GameMain* main) {
 void Boss::Boss_MakeHand() {
 
 	if(Once_Flg==true){
-		if (timer++ > 200) {
+		if (timer++ > 100) {
 			switch (Boss_step) {
 			case 0:
 				Boss_state = Boss_Y;

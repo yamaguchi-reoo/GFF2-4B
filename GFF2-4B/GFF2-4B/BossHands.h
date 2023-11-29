@@ -38,7 +38,7 @@ class BossHands :
 {
 private:
 #define STOPBOSS (160)  //ボスが次の行動に行くまでの時間
-#define IMGMAX (5)      //ボスの画像最大数
+#define IMGMAX (8)      //ボスの画像最大数
 public:
     //全腕共通で使う
     int frame;                      //何フレーム経ったか保存する用
@@ -75,6 +75,7 @@ public:
     //手のHP用
     int Hands_HPimg[10];
     int hands_hp;
+    bool Make_hpflg;
 
     //攻撃受けたときの点滅用
     bool Blinking_Flg;
@@ -133,6 +134,8 @@ public:
     
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
+
+    void HandHp()const;
 
     //ボス画像点滅用
     void Blinking();
