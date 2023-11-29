@@ -13,7 +13,7 @@ EditScene::EditScene(int _stage)
 	current_type = 0;
 	tool_location.x = 100;
 	tool_location.y = 0;
-	tool_size.width = (OBJECT_TYPE_NUM * 50) + 100;
+	tool_size.width = (OBJECT_TYPE_NUM * 50) + 200;
 	tool_size.height = 100;
 	tool_pickup_flg = false;
 	current_leftbutton_flg = false;
