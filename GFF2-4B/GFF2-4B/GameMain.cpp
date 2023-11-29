@@ -638,6 +638,14 @@ void GameMain::Draw() const
 		//描画
 	player->Draw();
 
+	// イルカ
+	for (int i = 0; i < IRUKA_MAX; i++)
+	{
+		if (iruka[i] != nullptr)
+		{
+			iruka[i]->Draw();
+		}
+	}
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -660,14 +668,6 @@ void GameMain::Draw() const
 		if (himawari[i] != nullptr)
 		{
 			himawari[i]->Draw();
-		}
-	}
-	// イルカ
-	for (int i = 0; i < IRUKA_MAX; i++)
-	{
-		if (iruka[i] != nullptr)
-		{
-			iruka[i]->Draw();
 		}
 	}
 	//竹
