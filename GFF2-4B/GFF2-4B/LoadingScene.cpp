@@ -2,6 +2,7 @@
 #include "PadInput.h"
 #include "GameClear.h"
 #include "GameMain.h"
+#include "Title.h"
 
 Loading::Loading()
 {
@@ -32,7 +33,7 @@ AbstractScene* Loading::Update()
 		loading_mark_time = (loading_time / 30);
 		return this;
 	}
-	return new GameClear;
+	return new SelectStage();
 }
 void Loading::Draw()const
 {

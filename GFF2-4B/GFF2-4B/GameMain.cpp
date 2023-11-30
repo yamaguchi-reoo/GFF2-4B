@@ -518,7 +518,7 @@ AbstractScene* GameMain::Update()
 		}
 		else
 		{
-			return new Loading;
+			return new GameClear(now_stage);
 		}
 	}
 
