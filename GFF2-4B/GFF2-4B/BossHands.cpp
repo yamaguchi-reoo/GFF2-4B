@@ -23,6 +23,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Blinking_Flg = false;
 	Blinking_count = 0;
 	Display = false;
+	zakuro_state = Z_FALLING;
 
 	Stop_Count = 120;
 	Make_hpflg = false;
@@ -33,7 +34,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 #ifdef _DEBUG
 	hp = 5;
 #else
-	hp = 5;
+	hp = 3;
 #endif // _DEBUG
 
 	switch (Hands_who)
