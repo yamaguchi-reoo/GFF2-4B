@@ -45,15 +45,17 @@ GameClear::~GameClear()
 
 AbstractScene* GameClear::Update()
 {
-	if (cut_in01_loc.x >= -600.f && cut_in02_loc.x <= 600.f)
-	{
-		cut_in01_loc.x += -30.f;
-		cut_in02_loc.x += 30.f;
-	}
-	if (cut_in01_loc.x <= -600.f && cut_in02_loc.x >= 600.f)
+	//XÀ•W‚ª300ˆÈ‰º‚©‚Â-300ˆÈã‚È‚ç4‚¸‚Â“®‚©‚·
+	if (cut_in01_loc.x >= -CUTIN_POS_TIMING && cut_in02_loc.x <= (CUTIN_POS_TIMING))
 	{
 		cut_in01_loc.x += -4.f;
 		cut_in02_loc.x += 4.f;
+	}
+	//XÀ•W‚ª300ˆÈã‚©‚Â-300ˆÈ‰º‚È‚ç30‚¸‚Â“®‚©‚·
+	if (cut_in01_loc.x <= -CUTIN_POS_TIMING && cut_in02_loc.x >= (CUTIN_POS_TIMING))
+	{
+		cut_in01_loc.x += -30.f;
+		cut_in02_loc.x += 30.f;
 	}
 	if (
 #ifdef _DEBUG

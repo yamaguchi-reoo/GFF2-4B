@@ -56,8 +56,10 @@ AbstractScene* Title::Update()
 #endif
 		)
 	{
-		title_alpha += 20.f;
-		title_x += 10.f;
+		if(title_alpha<=150.f){ title_alpha += 150.f; }
+
+		if (title_x <= 100.f) { title_x += 100.f; }
+		
 		font_alpha += 10.f;
 	}
 	if (font_alpha >= 100)
