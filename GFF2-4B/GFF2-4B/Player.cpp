@@ -549,7 +549,7 @@ void Player::Attack(GameMain* main)
 			//UŒ‚‚ğ¶¬‚·‚é
 			main->SpawnAttack(CreateAttactData(attack_step));
 			//­‚µ‘OˆÚ“®
-			acs[direction + 2] += 7;
+			acs[direction + 2] += 5;
 		}
 		//‹ó’†‚É‚¢‚ÄA—‰ºUŒ‚’†‚Å‚È‚¢‚È‚ç
 		else if (attack_step != 4)

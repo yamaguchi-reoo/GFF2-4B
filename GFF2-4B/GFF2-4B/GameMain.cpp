@@ -25,10 +25,10 @@ GameMain::GameMain(int _stage)
 	item_rand = 0;
 	distinguish = 0;
 
-	if (now_stage == 3) {
+	/*if (now_stage == 3) {
 		boss = new Boss();
 		hands = nullptr;
-	}
+	}*/
 
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
