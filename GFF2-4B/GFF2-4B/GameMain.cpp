@@ -151,7 +151,7 @@ AbstractScene* GameMain::Update()
 			{
 				zakuro[i]->SetScreenPosition(camera_location);
 
-				if (zakuro[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && zakuro[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
+				if (zakuro[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) + 120 && zakuro[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2) - 120) {
 					zakuro[i]->Update(this);
 				}
 
@@ -763,7 +763,7 @@ void GameMain::HitCheck(GameMain* main)
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
-				ProcessCharacterCollision(zakuro[k], stage[i][j], i);
+				ProcessCharacterCollision(zakuro[k], stage[i][j], 5);
 			}
 			//イルカの数だけ繰り返す
 			for (int k = 0; k < IRUKA_MAX; k++)
@@ -916,21 +916,20 @@ void GameMain::HitCheck(GameMain* main)
 		}
 	}
 	//ザクロ同士で当たったら...
-	for (int i = 0; i < ZAKURO_MAX; i++)
+	/*for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		for (int j = i + 1; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true) {
-					zakuro[i]->HitZakuro();
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[i]->GetSpwnFlg() == false ) {
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true) {
-					zakuro[j]->HitZakuro();
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[j]->GetSpwnFlg() == false) {
+
 				}
 			}
 		}
-	}
+	}*/
 	//竹同士が当たったら止まる
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
@@ -1275,9 +1274,6 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
-		// しぶきのスポーン処理
-		SpawnEffect(character);
-
 		//ダメージ量に応じた画面揺れ
 		impact_timer = (10 * attack->GetAttackData().damage);
 
@@ -1299,6 +1295,8 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 			{
 				venemy_num2++;
 			}
+			// しぶきのスポーン処理
+			SpawnEffect(character);
 		}
 	}
 }

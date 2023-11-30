@@ -7,6 +7,7 @@ enum  class ZakuroState {
 	IDLE_LEFT,
 	RIGHT,
 	LEFT,
+	DEATH
 };
 
 //仮想クラス
@@ -15,6 +16,9 @@ class Zakuro :public CharaBase
 private:
 
 	ZakuroState zakuro_state;
+
+	int anim_frame;     //アニメーションフレーム測定
+	int count;			//カウント
 
 	bool attack_flg;	// 攻撃しているか	
 	int stop_count;		
@@ -26,6 +30,7 @@ private:
 	bool rightwall_flg;				//いずれかの右壁に触れているかどうか
 	bool leftwall_flg;				//いずれかの左壁に触れているかどうか
 	bool apply_gravity;				//重力を適用するかどうか
+	bool hit_flg; 
 
 public:
 	Zakuro(float pos_x, float pos_y, bool direction, int _who);
@@ -46,16 +51,24 @@ public:
 	//攻撃をスポーンさせるのに必要な情報をまとめる
 	AttackData CreateAttactData();
 	void Attack(GameMain*main);
+	//攻撃停止
 	void Stop_Attack() { attack_flg = false; }
 	//ダメージ受ける処理
 	void ApplyDamage(int num);
-
+	//ザクロ同士が当たった時の処理
 	void HitZakuro();
-
-
+	//HPの取得
 	int GetHp() { return hp; }
 	//スポーンフラグの取得
 	int GetSpwnFlg() { return spawn_flg; }
+	//アニメーション
+	void ZakuroAnim();
+	//向きの反転
+	void ReverseDirection() override{ zakuro_direction != zakuro_direction; }
+	// 向きを取得するメソッドをオーバーライド
+	bool GetDirection() const override {
+		return zakuro_direction;
+	}
 	ColorDate GetColorDate();
 
 };

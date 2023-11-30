@@ -21,6 +21,8 @@ protected:
 public:
 	virtual void Update(GameMain* main) = 0;
 	virtual void Draw()const = 0;
-	//virtual void EnemyPush(int num, Location _sub_location, Erea _sub_erea) = 0;
+	virtual void ReverseDirection() {}  // デフォルト実装は何もしない
+  // 向きを取得するメソッドも追加
+	virtual bool GetDirection() const { return true; }
 
 };

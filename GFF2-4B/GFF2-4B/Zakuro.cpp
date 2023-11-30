@@ -8,9 +8,18 @@
 
 #define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
 #define ZAKURO_IMAGE_SHIFT_Y 12		//画像ずらし用
+#define ZAKURO_ANIM_MOVE 0			//移動アニメーション開始地点
+#define ZAKURO_DEATH 2				//死亡アニメーション開始地
+#define ZAKURO_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
+#define ZAKURO_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
+
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 {
+
+	anim_frame = 0;
+	count = 0;
+
 	zakuro_state = ZakuroState::IDLE;
 
 	location.x = pos_x;
@@ -32,6 +41,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	rightwall_flg = false;
 	leftwall_flg = false;
 	apply_gravity = true;
+	hit_flg = false;
 
 	hp = 3;
 
@@ -275,7 +285,7 @@ void Zakuro::HitZakuro()
 	//if (zakuro_state == ZakuroState::RIGHT) {
 	//	zakuro_state = ZakuroState::LEFT;
 	//}
-	zakuro_direction = !zakuro_direction;
+	////zakuro_direction = !zakuro_direction;
 	//if (zakuro_state == ZakuroState::LEFT) {
 	//	zakuro_state = ZakuroState::RIGHT;
 	//}
