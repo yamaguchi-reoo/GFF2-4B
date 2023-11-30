@@ -17,7 +17,7 @@ GameMain::GameMain(int _stage)
 	//変数の初期化
 	pause_flg = false;
 	Back_Img = LoadGraph("resource/images/Backimg.png");
-	/*Pause_Img = LoadGraph();*/
+	Pause_Img = LoadGraph("resource/images/UI/PouseImage.png");
 	now_stage = _stage;
 	now_tuto = 0;
 	tuto_flg = false;
@@ -747,6 +747,7 @@ void GameMain::Draw() const
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+		DrawGraph(SCREEN_WIDTH / 2-120, SCREEN_HEIGHT / 2-35, Pause_Img,true);
 	}
 }
 
