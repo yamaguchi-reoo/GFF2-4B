@@ -12,7 +12,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//全腕共通の初期化
 	frame = 0;
 	Hands_Img_num = 0;//イルカ
-	//Hands_who = 2;
+	//Hands_who = 0;
 	Hands_who = boss->Hand_Num;
 	erea.height = (float)hands_height[Hands_who];
 	erea.width = (float)hands_width[Hands_who];
@@ -24,12 +24,14 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Blinking_count = 0;
 	Display = false;
 
-	//Hands_HPimg=
-	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,50,50,Hands_HPimg);
+	Stop_Count = 120;
+	Make_hpflg = false;
+	hands_hp = 0;
+	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,70,70,Hands_HPimg);
 	//LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 
 #ifdef _DEBUG
-	hp = 3;
+	hp = 5;
 #else
 	hp = 5;
 #endif // _DEBUG
@@ -39,7 +41,6 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 0:
 		//マゼンタ初期化
 		MagentaInit();
-		LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
 		break;
 	case 1:
 		//シアン初期化
@@ -49,7 +50,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 2:
 		//イエロー初期化
 		YellowInit();
-		LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
+		//LoadDivGraph("resource/images/Boss/Bosshp.png", 3, 3, 1, 50, 50, Blinking_Img);
 		break;
 	default:
 		break;
@@ -73,6 +74,32 @@ void BossHands::Update(GameMain* main) {
 
 	//フレーム測定
 	if (++frame > 1200)frame = 0;
+
+	if (Make_hpflg != true) {
+		Stop_Count -= 10;
+		switch (Stop_Count)
+		{
+		case 120:
+			hands_hp = 0;
+			break;
+		case 80:
+			hands_hp = 1;
+			break;
+		case 40:
+			hands_hp = 2;
+			break;
+		case 0:
+			hands_hp = 3;
+			break;
+		default:
+			break;
+		}
+		if (Stop_Count < -40) {
+			Make_hpflg = true;
+			Stop_Count = 120;
+		}
+	}
+	else {
 		//手の種類に応じて実行するUpdateを変える
 		switch (Hands_who)
 		{
@@ -93,25 +120,26 @@ void BossHands::Update(GameMain* main) {
 		default:
 			break;
 		}
-
+	}
 }
 
 void BossHands::Draw() const {
 
 	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
-	
-	
-
+	if (Make_hpflg != true) {
+	}
+	else {
 		switch (Hands_who)
 		{
 		case 0:
 			//マゼンタ
-				DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
+				//DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
+			DrawRotaGraphF(location.x + 150, location.y + 170, 1, Zakuro_rad, Zakuro_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
 
-				//HP表示
-				for (int i = 0; i < hp; i++) {
-					DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
-				}
+			////HP表示
+			//for (int i = 0; i < hp; i++) {
+			//	DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
+			//}
 			break;
 		case 1:
 			//シアン
@@ -122,27 +150,28 @@ void BossHands::Draw() const {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
 			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
-			if (face_angle > 0.0f && face_angle <0.7f)
+			if (face_angle > 0.0f && face_angle < 0.7f)
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
-				
+
 				if (Display == true) {
 					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
 				}
 			}
 			else
 			{
-				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE , TRUE);
+				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 
 				if (Display == true) {
 					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
 				}
 			}
 
-			//HP表示
-			for (int i = 0; i < hp; i++) {
-				DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
-			}
+			////HP表示
+			//for (int i = 0; i < hp; i++) {
+			//	DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
+			//}
+
 			break;
 		case 2:
 			//イエロー
@@ -156,23 +185,20 @@ void BossHands::Draw() const {
 			else
 			{
 				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
+				if (Display == true) {
+					DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xff0000, true);
 
+				}
 			}
 
-			//HP表示
-			for (int i = 0; i < hp; i++) {
-				DrawGraph(500+i*50, 650, Hands_HPimg[2], TRUE);
-			}
 
 			break;
 		default:
 			break;
 		}
-	
-		if (Blinking_Flg == true) {
-			DrawFormatString(500, 500, 0xffffff, "Blinking%d",Blinking_Flg);
-		}
 
+
+	}
 
 #ifdef _DEBUG
 	//DrawFormatString(100, 500, 0xffffff, "イルカのrad = %f", iruka_rad);
@@ -185,6 +211,43 @@ void BossHands::Draw() const {
 	DrawFormatString(100, 500, 0xffffff, "location.x%f", location.x);
 	DrawFormatString(400, 550, 0xffffff, "Zakuroy%f", Old_Zakuroy-location.y);
 #endif // _DEBUG
+}
+
+void BossHands::HandHp() const {
+	SetFontSize(40);
+	DrawString(450, 670, "BOSS", 0x0000ff);
+
+	if (Make_hpflg != true) {
+		switch (hands_hp) {
+		case 0:
+			DrawGraph(530, 650, Hands_HPimg[Hands_who], TRUE);
+			break;
+		case 1:
+			DrawGraph(530, 650, Hands_HPimg[Hands_who], TRUE);
+			DrawGraph(530 + 50, 650, Hands_HPimg[Hands_who], TRUE);
+			break;
+		case 2:
+			for (int i = 0; i < 3; i++) {
+				DrawGraph(530 + i * 50, 650, Hands_HPimg[Hands_who], TRUE);
+			}
+			break;
+		case 3:
+			for (int i = 0; i < 4; i++) {
+				DrawGraph(530 + i * 50, 650, Hands_HPimg[Hands_who], TRUE);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	else {
+		//HP表示
+		for (int i = 0; i < hp; i++) {
+			DrawGraph(530 + i * 50, 650, Hands_HPimg[Hands_who], TRUE);
+		}
+		SetFontSize(40);
+		DrawString(450, 670, "BOSS", 0x0000ff);
+	}
 }
 
 void BossHands::Blinking() {
@@ -209,7 +272,8 @@ void BossHands::MagentaInit()
 	zakuro_state = BossZakuroState::Z_ANIM_UP;
 	Zakuro_Direction = 0;
 	Zakuro_Imgnum = 0;
-	location.x = 700;
+	Stop_Count = 120;
+	location.x = 900;
 	location.y = 700;
 	Set_Zakuro_x = 0;
 	Set_Zakuro_y = 0;
@@ -228,6 +292,10 @@ void BossHands::MagentaInit()
 	Jump_Num = -1;
 	Jump_Once = true;
 	Jump_Flg = false;
+	Zakuro_rad = 0;
+	Go_Flg = false;
+	Charge = 0;
+	Rush_speed = 0;
 }
 
 void BossHands::JumpInit() {
@@ -362,110 +430,108 @@ void BossHands::HandsMagenta(GameMain* main) {
 			break;
 		case BossZakuroState::Z_MOVE:
 			Zakuro_Imgnum = 0;
+			Zakuro_rad = 0;
 
-			Attack_Num = 4;
-			BossAttack(main);
-			
-			if (location.x > 1000) {
-				Zakuro_Direction = 1;
-				Jump_Once = true;
-				//Jump_Num = 0 + rand() % 3;
-
-			}
-			else if (location.x < 0) {
-				Zakuro_Direction = 0;
-				Jump_Once = true;
-				//Jump_Num = 0 + rand() % 3;
-
-			}
-
-			if (Zakuro_Direction == 1) {
-				location.x-=5;
-
-			}
+			if (hitflg == true) {
+				zakuro_state = Z_NOCKBACK;
+		}
 			else {
-				location.x += 5;
-			}
+				Attack_Num = 4;
+				BossAttack(main);
 
-
-			//float a = main->GetPlayerLocation().x - location.x;
-			checkabs = fabsf(main->GetPlayerLocation().x - location.x);
-
-			//if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
-			//	checkabs = fabsf(main->GetPlayerLocation().x - location.x+180);
-
-			//}
-
-			if (Jump_Once == true) {
-				if (location.x > 426 && location.x < 752) {
-
-					//if (0 + rand() % 100 == 0) {
-					//onceflg = true;
-					//}
-					//if (onceflg == true) {
-					//	//ジャンプはいる前に初期化
-					//	JumpInit();
-					//		zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
-					//		Jump_Count++;
-					//		onceflg = false;
-					//}
-					//
-					//if (Jump_Count == 0) {
-					//	JumpInit();
-					//	zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
-					//	Jump_Count++;
-					//
-					//}
-
-					//Jump_Once = false;
-					////Jump_Num = 0 + rand() % 3;
-					Jump_Num = 2;
-					//zakuro_state = Z_JUMP_RIGHT;
-					//プレイヤーとの距離いくらかに入り込んで来たら
-					//そっから区分分けしてジャンプする
-
-					switch (Jump_Num) {
-					case 0:
-						if (location.x >= 426 && location.x <= 507) {
-							Jump_Once = false;
-							JumpInit();
-							zakuro_state = Z_JUMP_RIGHT;
-						}
-						break;
-					case 1:
-						if (location.x > 557 && location.x <= 589) {
-							Jump_Once = false;
-							JumpInit();
-							zakuro_state = Z_JUMP_RIGHT;
-						}
-						break;
-					case 2:
-						if (location.x > 600 && location.x <= 670) {
-							Jump_Once = false;
-							JumpInit();
-							zakuro_state = Z_JUMP_RIGHT;
-						}
-						break;
-					case 3:
-						if (location.x > 700 && location.x <= 752) {
-							Jump_Once = false;
-							JumpInit();
-							zakuro_state = Z_JUMP_RIGHT;
-						}
-						break;
-					default:
-						break;
-					}
-
+				if (location.x > 1000) {
+					Zakuro_Direction = 0;
+					//Jump_Once = true;
+					//Jump_Num = 0 + rand() % 3;
 				}
+				else if (location.x < 0) {
+					Zakuro_Direction = 1;
+					//Jump_Once = true;
+					//Jump_Num = 0 + rand() % 3;
+				}
+
+				if (Zakuro_Direction == 0) {
+					location.x -= 5;
+				}
+				else {
+					location.x += 5;
+				}
+
+				//float a = main->GetPlayerLocation().x - location.x;
+				checkabs = fabsf(main->GetPlayerLocation().x - location.x);
+
+				//if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
+				//	checkabs = fabsf(main->GetPlayerLocation().x - location.x+180);
+				//}
+				/*
+				if (Jump_Once == true) {
+					if (location.x > 426 && location.x < 752) {
+
+						//if (0 + rand() % 100 == 0) {
+						//onceflg = true;
+						//}
+						//if (onceflg == true) {
+						//	//ジャンプはいる前に初期化
+						//	JumpInit();
+						//		zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+						//		Jump_Count++;
+						//		onceflg = false;
+						//}
+						//
+						//if (Jump_Count == 0) {
+						//	JumpInit();
+						//	zakuro_state = BossZakuroState::Z_JUMP_RIGHT;
+						//	Jump_Count++;
+						//
+						//}
+
+						//Jump_Once = false;
+						////Jump_Num = 0 + rand() % 3;
+						Jump_Num = 2;
+						//zakuro_state = Z_JUMP_RIGHT;
+						//プレイヤーとの距離いくらかに入り込んで来たら
+						//そっから区分分けしてジャンプする
+
+						switch (Jump_Num) {
+						case 0:
+							if (location.x >= 426 && location.x <= 507) {
+								Jump_Once = false;
+								JumpInit();
+								zakuro_state = Z_JUMP_RIGHT;
+							}
+							break;
+						case 1:
+							if (location.x > 557 && location.x <= 589) {
+								Jump_Once = false;
+								JumpInit();
+								zakuro_state = Z_JUMP_RIGHT;
+							}
+							break;
+						case 2:
+							if (location.x > 600 && location.x <= 670) {
+								Jump_Once = false;
+								JumpInit();
+								zakuro_state = Z_JUMP_RIGHT;
+							}
+							break;
+						case 3:
+							if (location.x > 700 && location.x <= 752) {
+								Jump_Once = false;
+								JumpInit();
+								zakuro_state = Z_JUMP_RIGHT;
+							}
+							break;
+						default:
+							break;
+						}
+
+					}
+				}
+				*/
 			}
-
-
-
 
 			break;
 		case BossZakuroState::Z_JUMP_RIGHT:
-
 
 			Old_Zakuroy = location.y;
 
@@ -482,6 +548,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				if (location.y > 320) {
 					zakuro_state = BossZakuroState::Z_MOVE;
 					Jump_Flg = false;
+					hitflg = false;
 					location.y = 310;
 				}
 
@@ -493,10 +560,10 @@ void BossHands::HandsMagenta(GameMain* main) {
 					Zakuro_Imgnum = 2;
 				}
 
-
 			break;
 
 		case BossZakuroState::Z_JUMP_LEFT:
+			/*
 			Zakuro_Movex = V_zero * cosf(rad) * time;
 			Zakuro_Movey = -V_zero * sinf(rad) * time + (g * time * time) / 2;
 			if (location.x > 0)location.x = Set_Zakuro_x - Zakuro_Movex;
@@ -507,16 +574,85 @@ void BossHands::HandsMagenta(GameMain* main) {
 				zakuro_state = BossZakuroState::Z_MOVE;
 				location.y = 310;
 			}
-
+			*/
 			break;
 		case BossZakuroState::Z_FALLING:
 			Zakuro_Imgnum = 2;
 			Attack_Num = 4;
 			BossAttack(main);
 			if (location.y>290) {
+				//Attack_Num = 1;
+				//BossAttack(main);
+				//Attack_Num = 2;
+				//BossAttack(main);
 				zakuro_state = BossZakuroState::Z_MOVE;
 			}
 				location.y += 10;
+			break;
+		case BossZakuroState::Z_ANIM_RUSH:
+			RushStartAnim();
+			break;
+		case BossZakuroState::Z_RUSH:
+
+			//右に向かって突進
+			if (Zakuro_Direction == 0) {
+				if (hitflg == true) {
+					location.x += 10;
+					location.y -= 10;
+
+					if (location.x < 1300 && location.y < -100) {
+						hitflg = false;
+						location.x = 640;
+						location.y = -500;
+						Zakuro_Direction=1;
+						zakuro_state = Z_FALLING;
+					}
+
+				}
+				else {
+					location.x -= Rush_speed;
+				}
+
+				if (location.x < -100) {
+					hitflg = false;
+					location.x = 640;
+					location.y = -500;
+					Zakuro_Direction = 1;
+					zakuro_state = Z_FALLING;
+				}
+			}
+			else {
+				//左に向かって突進
+				if (hitflg == true) {
+					location.x -= 10;
+					location.y -= 10;
+
+					if (location.x < -100 && location.y < -100) {
+						hitflg = false;
+						Zakuro_Direction = 0;
+
+						location.x = 640;
+						location.y = -500;
+						zakuro_state = Z_FALLING;
+					}
+
+				}
+				else {
+					location.x += Rush_speed;
+				}
+
+				if (location.x > 1300) {
+					hitflg = false;
+					Zakuro_Direction = 0;
+					location.x = 600;
+					location.y = -500;
+					zakuro_state = Z_FALLING;
+				}
+			}
+
+			break;
+		case Z_NOCKBACK:
+			NockBack();
 			break;
 		default:
 			break;
@@ -544,6 +680,121 @@ void BossHands::HandsMagenta(GameMain* main) {
 		};
 	}
 
+}
+
+void BossHands::RushStartAnim() {
+	
+	Stop_Count -= 1;
+	if (Go_Flg == false) {
+		if (Zakuro_Direction == 0) {
+			switch (Stop_Count) {
+			case 60:
+				Zakuro_rad = pi / -10;
+				location.x += 30;
+				break;
+			case 50:
+				Zakuro_rad = pi / -5;
+				location.x += 50;
+			case 40:
+				Stop_Count = 120;
+				//zakuro_state = Z_RUSH;
+				Go_Flg = true;
+				Charge = 0;
+				break;
+			default:
+				break;
+			}
+		}
+		else {
+			switch (Stop_Count) {
+			case 50:
+				location.x -= 30;
+				Zakuro_rad = pi / 10;
+				break;
+			case 20:
+				location.x -= 50;
+				Zakuro_rad = pi / 5;
+				break;
+			case 0:
+				Stop_Count = 120;
+				Charge = GetRand(4);
+				Go_Flg = true;
+				break;
+			default:
+				break;
+			}
+
+		}
+	}
+	else {
+		switch (Charge)
+		{
+		case 0:
+			if (Stop_Count == 70) {
+				zakuro_state = Z_RUSH;
+				Stop_Count = 120;
+				Go_Flg = false;
+				Rush_speed = 20;
+			}
+			break;
+		case 1:
+			if (Stop_Count == 80) {
+				zakuro_state = Z_RUSH;
+				Stop_Count = 120;
+				Go_Flg = false;
+				Rush_speed = 15;
+			}
+			break;
+		case 2:
+			if (Stop_Count == 90) {
+				zakuro_state = Z_RUSH;
+				Stop_Count = 120;
+				Go_Flg = false;
+				Rush_speed = 10;
+			}
+			break;
+		default:
+			if (Stop_Count == 100) {
+				zakuro_state = Z_RUSH;
+				Stop_Count = 120;
+				Go_Flg = false;
+				Rush_speed = 5;
+			}
+			break;
+		}
+	}
+
+
+}
+
+void BossHands::NockBack()
+{
+	if (Zakuro_Direction == 0) {
+		Zakuro_rad = pi / 10;
+	}
+	else {
+		Zakuro_rad = pi / -10;
+	}
+
+	//左移動
+	if (Zakuro_Direction==0)
+	{
+		location.x += 10 * 0.8f;
+	}
+	//右移動
+	if (Zakuro_Direction ==1)
+	{
+		location.x -= 10 * 0.8f;
+	}
+
+	Stop_Count -= 5;
+
+	if (Stop_Count <= 0)
+	{
+		hitflg = false;
+		zakuro_state = Z_ANIM_RUSH;
+		Stop_Count = 120;
+	}
 }
 
 void BossHands::YellowInit()
@@ -1110,10 +1361,10 @@ AttackData BossHands::BossAttactData()
 		break;
 		//衝撃波
 	case 1:
-		attack_data.shift_x = -erea.width;
-		attack_data.shift_y = 50;
-		attack_data.width = erea.width;
-		attack_data.height = erea.height / 2;
+		attack_data.shift_x = -erea.width/2;
+		attack_data.shift_y = 200;
+		attack_data.width = erea.width/2;
+		attack_data.height = erea.height / 4;
 		attack_data.who_attack = who;
 		attack_data.attack_time = 300;
 		attack_data.delay = 3;
@@ -1126,10 +1377,10 @@ AttackData BossHands::BossAttactData()
 		attack_data.direction = true;
 		break;
 	case 2:
-		attack_data.shift_x = -erea.width;
-		attack_data.shift_y = 50;
-		attack_data.width = erea.width;
-		attack_data.height = erea.height / 2;
+		attack_data.shift_x = -erea.width/2;
+		attack_data.shift_y = 200;
+		attack_data.width = erea.width/2;
+		attack_data.height = erea.height / 4;
 		attack_data.who_attack = who;
 		attack_data.attack_time = 300;
 		attack_data.delay = 3;
@@ -1182,12 +1433,15 @@ void BossHands::BossAttack(GameMain* main)
 
 void BossHands::ApplyDamage(int num) {
 	//攻撃がヒットした回数で倒れる
-	if (HitJumpAttack!=true) {
+	//if (HitJumpAttack!=true) {
 		if (Blinking_Flg == false) {
 			Blinking_Flg = true;
 		}
+			hitflg = true;
+
 			hp--;
-	}
+
+	//}
 	
 	if (hp <= 0) {
 		Death_Flg = true;

@@ -28,7 +28,10 @@ enum BossZakuroState {
     Z_MOVE,
     Z_JUMP_RIGHT,
     Z_JUMP_LEFT,
-    Z_FALLING
+    Z_FALLING,
+    Z_RUSH,
+    Z_ANIM_RUSH,
+    Z_NOCKBACK,
 };
 
 class BossHands :
@@ -36,7 +39,7 @@ class BossHands :
 {
 private:
 #define STOPBOSS (160)  //ボスが次の行動に行くまでの時間
-#define IMGMAX (5)      //ボスの画像最大数
+#define IMGMAX (8)      //ボスの画像最大数
 public:
     //全腕共通で使う
     int frame;                      //何フレーム経ったか保存する用
@@ -58,7 +61,7 @@ public:
     int Zakuro_img[IMGMAX];
 
     int Zakuro_Imgnum;//ザクロの画像切り替え用
-    int Zakuro_Direction;//ザクロの向き　右:0 左:1
+    int Zakuro_Direction;//ザクロの向き　右:1 左:0
     float Magentax[10] = { 1000,100,500 };    //Mの拳が降りてくるX座標
     int switching;                  //拳出現位置セット用
     bool hitflg=false;
@@ -68,10 +71,16 @@ public:
     bool Jump_Flg;//範囲に来たらジャンプする用
     bool Jump_Once;//ジャンプ一回だけする用
     float Old_Zakuroy;//前のザクロのY座標格納用
+    int Stop_Count;
+    float Zakuro_rad;//ザクロの画像傾け用
+    bool Go_Flg;
+    int Charge;
+    float Rush_speed;
 
     //手のHP用
     int Hands_HPimg[10];
     int hands_hp;
+    bool Make_hpflg;
 
     //攻撃受けたときの点滅用
     bool Blinking_Flg;
@@ -131,12 +140,16 @@ public:
     AttackData BossAttactData();
     void BossAttack(GameMain* main);
 
+    void HandHp()const;
+
     //ボス画像点滅用
     void Blinking();
 
     //マゼンタ（ザクロ）用関数
     void MagentaInit();                     //マゼンタ（ザクロ）で使う変数初期化
     void JumpInit();
+    void RushStartAnim();
+    void NockBack();
     void HandsMagenta(GameMain* main);      //マゼンタ（ザクロ）の更新
 
     //シアン（イルカ）用関数

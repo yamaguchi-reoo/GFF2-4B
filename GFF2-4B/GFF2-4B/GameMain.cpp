@@ -563,7 +563,9 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+
 	DrawGraph(0, 0, Back_Img, TRUE);
+	
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示
@@ -682,15 +684,23 @@ void GameMain::Draw() const
 	playerhp->Draw();
 	score->Draw();
 
+	if (now_stage == 3) {
+		if (hands != nullptr) {
+			hands->HandHp();
+		}
+	}
+
 	//一時停止中なら画面を薄暗くする
 	if (pause_flg == true)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-		DrawGraph(SCREEN_WIDTH / 2-120, SCREEN_HEIGHT / 2-35, Pause_Img,true);
+		DrawGraph(SCREEN_WIDTH / 2 - 120, SCREEN_HEIGHT / 2 - 35, Pause_Img, true);
 	}
 }
+
+
 
 void GameMain::SpawnAttack(AttackData _attackdata)
 {
