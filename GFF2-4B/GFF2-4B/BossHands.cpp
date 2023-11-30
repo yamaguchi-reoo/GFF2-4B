@@ -1433,7 +1433,7 @@ void BossHands::BossAttack(GameMain* main)
 
 void BossHands::ApplyDamage(int num) {
 	//UŒ‚‚ªƒqƒbƒg‚µ‚½‰ñ”‚Å“|‚ê‚é
-	if (HitJumpAttack!=true) {
+	//if (HitJumpAttack!=true) {
 		if (Blinking_Flg == false) {
 			Blinking_Flg = true;
 		}
@@ -1441,7 +1441,7 @@ void BossHands::ApplyDamage(int num) {
 
 			hp--;
 
-	}
+	//}
 	
 	if (hp <= 0) {
 		Death_Flg = true;

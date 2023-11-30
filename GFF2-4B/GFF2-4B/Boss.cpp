@@ -126,7 +126,7 @@ void Boss::Update(GameMain* main) {
 		//”š”­‚à‚·‚é
 		// 
 
-		//ExplosionAnim();
+		ExplosionAnim();
 
 		//Boss_Handmove++
 		break;
