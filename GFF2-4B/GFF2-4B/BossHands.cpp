@@ -156,7 +156,10 @@ void BossHands::Draw() const {
 			else
 			{
 				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
+				if (Display == true) {
+					DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xff0000, true);
 
+				}
 			}
 
 			//HP•\Ž¦
