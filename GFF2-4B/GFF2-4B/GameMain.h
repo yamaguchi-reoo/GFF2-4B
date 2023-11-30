@@ -91,9 +91,12 @@ private:
     int item_rand;
 
     int lock_flg; //強制戦闘時のフラグ
-    int vine_y;   //蔓のY座標
-    int vine_x1;  //左の草のX座標
-    int vine_x2;  //右の草のX座標
+    bool battle_once_flg[BATTLE_ZONE_NUM];      //各強制戦闘ゾーンが一回だけ発生する用
+    Location battle_start_pos[BATTLE_ZONE_NUM] = { {-100,-100} ,{-100,-100} ,{-100,-100} ,{-100,-100} ,{-100,-100} };   //戦闘が始まる座標
+    int now_battle;                  //現在どこのエリアで強制戦闘が起きているか判断 (-1=どこでも戦っていない)
+    Location vine1;                 //両端の蔓の座標（左右の蔓の間の座標が入っている）
+    Location vine2;                 //右上の蔓の座標
+    Location vine3;                 //左上の蔓の座標
     int vine_img[2]; //蔓、草の画像
     int venemy_cnt;  //敵の生成時間カウント
     int venemy_num1; //強制戦闘時に生成した敵の数
@@ -146,6 +149,9 @@ public:
     //カメラの更新＆カメラを揺らす
     void UpdateCamera();
 
+    //カメラ位置の取得
+    Location GetCameraLocation();
+
     //ゲームオーバーのフラグを立てる
     void SetGameOver() { game_over_flg = true; }
     //エネミーのPushを関数化
@@ -170,5 +176,8 @@ public:
 
     //蔓内での敵生成処理
     void VineEnemy(void);
+
+    //強制戦闘ゾーン関連処理
+    void BattleZone();
 };
 
