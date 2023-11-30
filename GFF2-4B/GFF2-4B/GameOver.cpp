@@ -44,8 +44,11 @@ GameOver::GameOver(int _stage_num)
 	
 	select_count = 0;
 	once_flg = TRUE;
+
+	//stage数情報格納用変数
 	stage_num = _stage_num;
 
+	//α成分用変数
 	heading_alpha = 0.0f;
 	choise_alpha = 0.0f;
 
@@ -66,8 +69,11 @@ AbstractScene* GameOver::Update()
 #endif
 		)
 	{
-		heading_alpha += 50.f;
-		choise_alpha += 50.f;
+		heading_alpha += 100.f;
+
+		if (heading_y <= 80){ heading_y += 40; }
+		
+		choise_alpha += 20.f;
 	}
 	if (150 <= heading_alpha)
 	{
@@ -126,8 +132,10 @@ AbstractScene* GameOver::Update()
 
 	//タイトル画像のY座標が350以下ならY座標に加算する
 	if (heading_y <= 80.f) { heading_y += 0.25f; }
+
 	//見出し画像のα成分に加算を行う
 	heading_alpha += 1.f;
+
 	//見出し画像のα成分が150より大きくなったら選択画像のα成分に加算を行う
 	if (heading_alpha >= 150) { choise_alpha += 2.5f; }
 
@@ -137,14 +145,15 @@ AbstractScene* GameOver::Update()
 void GameOver::Draw() const
 {
 	//見出し透明度設定
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, heading_alpha);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)heading_alpha);
 	//背景画像表示
 	DrawGraph(0, 0, back_death_image, TRUE);
 
 	//stage(１～３)で死亡した場合の画像を表示
-	if (stage_num != 3) { DrawGraph(250, heading_y, goal_lose_image, TRUE); }
+	if (stage_num != 3) { DrawGraphF(250, heading_y, goal_lose_image, TRUE); }
+
 	//stage(Boss)で死亡した場合の画像を表示
-	if (stage_num == 3) { DrawGraph(250, heading_y, boss_stage_lose_image, TRUE); }
+	if (stage_num == 3) { DrawGraphF(250, heading_y, boss_stage_lose_image, TRUE); }
 
 	//透明度を元に戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
@@ -152,13 +161,16 @@ void GameOver::Draw() const
 	if (heading_alpha >= 100)
 	{
 		//選択肢画像とカーソル透明度設定
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, choise_alpha);
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, (int)choise_alpha);
 
 		//文字描画(続行)
 		if (select_count == 0) { DrawGraph(530, 350, game_continue_select, TRUE); }
+
 		if (select_count == 1) { DrawGraph(530, 350, game_continue_font, TRUE); }
+
 		//文字描画(終了)
 		if (select_count == 0) { DrawGraph(530, 450, game_finish_font, TRUE); }
+
 		if (select_count == 1) { DrawGraph(530, 450, game_finish_select, TRUE); }
 
 		//カーソル表示

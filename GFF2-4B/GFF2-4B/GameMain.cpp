@@ -518,23 +518,23 @@ AbstractScene* GameMain::Update()
 				powergauge->ResetColorRem();
 			}
 
-			//ステージクリア
-			if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
-				if (now_stage == 2)
-				{
-					SetStage(3);
-					//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
-					if (now_stage == 3 && old_stage != now_stage) {
-						//Hands_Delete_Flg = false;
-						//boss = new Boss();
-						//hands = new BossHands(who++, boss);
-					}
-				}
-				else
-				{
-					return new Loading;
-				}
+	//ステージクリア
+	if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
+		if (now_stage == 2)
+		{
+			SetStage(3);
+			//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
+			if (now_stage == 3 && old_stage != now_stage) {
+				//Hands_Delete_Flg = false;
+				//boss = new Boss();
+				//hands = new BossHands(who++, boss);
 			}
+		}
+		else
+		{
+			return new GameClear(now_stage);
+		}
+	}
 
 			//HPが0の状態でダメージを受けたら（HPがマイナスになったら）ゲームオーバーフラグを立てる
 			if (player->GetPlayerHP() < 0) {
