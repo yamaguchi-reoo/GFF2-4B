@@ -165,9 +165,9 @@ AbstractScene* GameMain::Update()
 				{
 					zakuro[i]->SetScreenPosition(camera_location);
 
-					if (zakuro[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) && zakuro[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2)) {
-						zakuro[i]->Update(this);
-					}
+				if (zakuro[i]->GetLocaLocationX() <= screen_origin.x + (SCREEN_WIDTH / 2) + 120 && zakuro[i]->GetLocaLocationX() >= screen_origin.x - (SCREEN_WIDTH / 2) - 120) {
+					zakuro[i]->Update(this);
+				}
 
 				}
 			}
@@ -786,7 +786,7 @@ void GameMain::HitCheck(GameMain* main)
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
-				ProcessCharacterCollision(zakuro[k], stage[i][j], i);
+				ProcessCharacterCollision(zakuro[k], stage[i][j], 5);
 			}
 			//イルカの数だけ繰り返す
 			for (int k = 0; k < IRUKA_MAX; k++)
@@ -945,11 +945,13 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true) {
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[i]->GetSpwnFlg() == false ) {
 					zakuro[i]->HitZakuro();
+					//zakuro[i]->Push(i, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true) {
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[j]->GetSpwnFlg() == false) {
 					zakuro[j]->HitZakuro();
+					//zakuro[j]->Push(j, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
 				}
 			}
 		}
@@ -1298,12 +1300,9 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
-		// しぶきのスポーン処理
-		SpawnEffect(character);
-
 		//ダメージ量に応じた画面揺れ
 		impact_timer = (10 * attack->GetAttackData().damage);
-
+		//character->MoveNockBack();
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
@@ -1322,6 +1321,8 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 			{
 				venemy_num2++;
 			}
+			// しぶきのスポーン処理
+			SpawnEffect(character);
 		}
 	}
 }
