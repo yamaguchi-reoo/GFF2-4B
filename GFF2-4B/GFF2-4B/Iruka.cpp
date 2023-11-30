@@ -12,7 +12,7 @@
 #define IRUKA_ANIM_MOVE 0			//移動アニメーション開始地点
 #define IRUKA_DEATH 2				//死亡アニメーション開始地
 #define IRUKA_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
-#define IRUKA_DEATH_ANIM 10				//次の画像に切り替えるまでの時間（フレーム）
+#define IRUKA_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
 
 
 #define TRUN_RAD 1.5708f		//90度回転用
@@ -61,7 +61,7 @@ Iruka::~Iruka()
 void Iruka::Update(GameMain* main)
 {
 	anim_frame++;
-
+	//スポーンしているなら
 	if (spawn_flg == false) {
 		if (attack_flg == true) {
 			Attack(main);
@@ -93,26 +93,29 @@ void Iruka::Update(GameMain* main)
 		iruka_direction = true;
 		rightwall_flg = false;
 	}
-
+	//各移動用変数をリセット
 	IrukaReset();
-
+	//描画関連の変数を動かす
+	IrukaAnim();
+	//フラグがtrueになったらイルカの状態をDEATHにする
 	if (death_flg == true)
 	{
+		//空中にいるなら
 		if (iruka_state == IrukaState::RIGHT || iruka_state == IrukaState::LEFT) {
 			iruka_state = IrukaState::DEATH;
 		}
+		//下降または上昇中なら
 		else
 		{
 			iruka_state = IrukaState::FALL_DEATH;
 		}
 	}
-
+	//フラグがtrueになってからcountが12以上になったら
 	if (death_flg == true && ++count >= (IRUKA_DEATH_ANIM + 2))
 	{
+		//スポーンフラグを
 		spawn_flg = true;
 	}
-	//描画関連の変数を動かす
-	IrukaAnim();
 }
 
 void Iruka::Draw() const
@@ -191,12 +194,16 @@ void Iruka::MoveFall()
 	erea.width = 50;
 	erea.height = 120;
 	location.y += MOVE_FALL_SPEED;
+	//右を向いている時にプレイヤーに向かって降下するなら
 	if (iruka_state == IrukaState::RIGHT) 
 	{
+		//Stateを変化
 		iruka_state = IrukaState::RIGHT_FALL;
 	}
+	//左を向いている時にプレイヤーに向かって降下するなら
 	if (iruka_state == IrukaState::LEFT) 
 	{
+		//Stateを変化
 		iruka_state = IrukaState::LEFT_FALL;
 	}
 }
@@ -215,23 +222,30 @@ void Iruka::MoveReturn()
 				erea.height = 50;
 				return_flg = false;
 				fps_count = 0;
+				//元の高さに戻るときイルカが右向きだったら
 				if (iruka_state == IrukaState::RIGHT_RETURN)
 				{
+					//右向き移動にする
 					iruka_state = IrukaState::RIGHT;
 				}
+				//元の高さに戻るときイルカが左向きだったら
 				if (iruka_state == IrukaState::LEFT_RETURN)
 				{
+					//左向き移動にする
 					iruka_state = IrukaState::LEFT;
 				}
 			}
 		}
-		
+		//右向きで降りたら
 		if (iruka_state == IrukaState::RIGHT_FALL) 
 		{
+			//右向きで上昇する
 			iruka_state = IrukaState::RIGHT_RETURN;
 		}
+		//左向きで降りたら
 		if (iruka_state == IrukaState::LEFT_FALL) 
 		{
+			//左向きで上昇する
 			iruka_state = IrukaState::LEFT_RETURN;
 		}		
 	}
@@ -357,16 +371,15 @@ void Iruka::IrukaAnim()
 			}
 		}
 	}
-	else
-	{
-		//アニメーション用変数を回す
-		if (anim_frame % IRUKA_DEATH_ANIM == 0)
-		{
-			if (++iruka_anim > 1)
-			{
-				iruka_anim = 0;
-			}
-		}
-	}
-
+	//else
+	//{
+	//	//アニメーション用変数を回す
+	//	if (anim_frame % IRUKA_DEATH_ANIM == 0)
+	//	{
+	//		if (++iruka_anim > 1)
+	//		{
+	//			iruka_anim = 0;
+	//		}
+	//	}
+	//}
 }

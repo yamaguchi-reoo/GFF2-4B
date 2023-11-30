@@ -30,6 +30,7 @@ class GameMain :
     public AbstractScene
 {
 private:
+    bool pause_flg;     //ポーズ画面用
     bool tuto_flg; //チュートリアル表示中か
     int old_stage;//前のステージ数　デバック用
     int now_tuto;   //現在表示されているチュートリアル
@@ -83,7 +84,7 @@ private:
     Location lock_pos;      //カメラが動けない時に画面揺れが発生した時、カメラの位置が戻る場所
 
     int Back_Img;//ステージ背景
-
+    int Pause_Img;      //一時停止
     int impact_timer;               //画面揺れ演出
 
     int distinguish;        // 竹と壺を見分ける

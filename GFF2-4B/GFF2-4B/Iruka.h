@@ -20,7 +20,7 @@ private:
 
     float fps_count;    //フレーム
     int anim_frame;     //アニメーションフレーム測定
-    int count;
+    int count;          //カウント
 
 
     bool attack_flg;//攻撃しているか
