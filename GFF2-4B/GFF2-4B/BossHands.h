@@ -31,6 +31,7 @@ enum BossZakuroState {
     Z_FALLING,
     Z_RUSH,
     Z_ANIM_RUSH,
+    Z_NOCKBACK,
 };
 
 class BossHands :
@@ -71,6 +72,10 @@ public:
     bool Jump_Once;//ジャンプ一回だけする用
     float Old_Zakuroy;//前のザクロのY座標格納用
     int Stop_Count;
+    float Zakuro_rad;//ザクロの画像傾け用
+    bool Go_Flg;
+    int Charge;
+    float Rush_speed;
 
     //手のHP用
     int Hands_HPimg[10];

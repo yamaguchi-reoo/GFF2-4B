@@ -145,9 +145,9 @@ AbstractScene* SelectStage::Update()
 //•`‰æ‚ÉŠÖ‚·‚é‚±‚Æ‚ðŽÀ‘•
 void SelectStage::Draw() const
 {
-	DrawBox(0, 0, 1280, 720, 0x7d7d7d, TRUE);
+	DrawBox(0, 0, 1280, 720, 0x666464, TRUE);
 
-	DrawGraph(89, 25, img[8], TRUE);
+	DrawGraph(80, 25, img[8], TRUE);
 
 	switch (stage_num)
 	{

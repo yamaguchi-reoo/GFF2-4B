@@ -608,7 +608,9 @@ AbstractScene* GameMain::Update()
 void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
+
 	DrawGraph(0, 0, Back_Img, TRUE);
+	
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
 	//ボス表示

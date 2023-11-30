@@ -14,7 +14,7 @@ Result::Result()
 
 	img[1] = LoadGraph("resource/images/Enemy/zakuro.png");
 	img[2] = LoadGraph("resource/images/Enemy/himawari.png");
-	img[3] = LoadGraph("resource/images/Enemy/iruka.png");
+	img[3] = LoadGraph("resource/images/Enemy/I.png");
 	img[4] = LoadGraph("resource/images/Result/Result1.png");
 	img[5] = LoadGraph("resource/images/Result/Result2.png");
 
