@@ -24,6 +24,9 @@ private:
     int stage_goal_image;   //•¶š‰æ‘œ(“’B¬Œ÷)
     int boss_beat_image;    //•¶š‰æ‘œ(“¢”°¬Œ÷)
 
+    //”wŒi‰æ‘œ—p•Ï”
+    int clear_back_image;   //”wŒi‰æ‘œ
+
     //stage”æ“¾—p•Ï”
     int stage_num;          //stage”‚Ìî•ñ‚ğŠm•Û‚·‚é•Ï”
 

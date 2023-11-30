@@ -563,6 +563,11 @@ AbstractScene* GameMain::Update()
 			flg = true;
 			player->ApplyDamage(this, 1);
 		}
+		//Xボタンを押すとClear画面へ遷移
+		if (PadInput::OnButton(XINPUT_BUTTON_X))
+		{
+			return new GameClear(now_stage);
+		}
 
 		//蔓から解放
 		if (KeyInput::OnKey(KEY_INPUT_7))
