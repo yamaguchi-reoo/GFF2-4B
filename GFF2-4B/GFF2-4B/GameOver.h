@@ -16,18 +16,27 @@ private:
     int game_finish_select;     //文字画像(終了:選択状態)
     int game_continue_font;     //文字画像(続行:未選択状態)
     int game_continue_select;   //文字画像(続行:選択状態)
+
     //文字画像変数
     int goal_lose_image;        //文字画像(到達失敗)
     int boss_stage_lose_image;  //文字画像(討伐失敗)
+
     //背景画像
     int back_death_image;       //背景画像(Playerが倒れている画像)
+
     //カーソル用変数
     int select_count;           //セレクト用のカーソルの動いた数をカウントする変数
     int once_flg;               //カーソルが動いたかどうかを確認するためのフラグ
+
     //stage数情報取得用変数
     int stage_num;              //ステージ数の確保
+
     //透明度用変数
-    float alpha;                //画像のY座標
+    float heading_alpha;        //見出し画像のα成分
+    float choise_alpha;         //選択肢画像のα成分
+
+    //画像座標用の変数
+    float heading_y;            //見出し画像のX座標
 
 public:
 

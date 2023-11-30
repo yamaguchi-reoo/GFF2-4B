@@ -81,6 +81,9 @@ private:
     bool x_pos_set_once; //カメラのロック位置設定用
     bool y_pos_set_once; //カメラのロック位置設定用
     Location lock_pos;      //カメラが動けない時に画面揺れが発生した時、カメラの位置が戻る場所
+
+    int Back_Img;//ステージ背景
+
     int impact_timer;               //画面揺れ演出
 
     int distinguish;        // 竹と壺を見分ける

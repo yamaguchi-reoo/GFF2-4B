@@ -177,7 +177,7 @@ void Player::Draw()const
 			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + player_anim], true);
 			break;
 		case MOVE_LEFT:
-			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK +player_anim], true);
+			DrawTurnGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_WALK + player_anim], true);
 			break;
 		case JUMP_RIGHT:
 			DrawGraphF(local_location.x - PLAYER_IMAGE_SHIFT_X, local_location.y - PLAYER_IMAGE_SHIFT_Y, player_image[PLAYER_JUMP], true);

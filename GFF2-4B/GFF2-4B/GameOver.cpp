@@ -45,7 +45,11 @@ GameOver::GameOver(int _stage_num)
 	select_count = 0;
 	once_flg = TRUE;
 	stage_num = _stage_num;
-	alpha = 0.0f;
+
+	heading_alpha = 0.0f;
+	choise_alpha = 0.0f;
+
+	heading_y = 0.f;
 }
 
 GameOver::~GameOver()
@@ -54,7 +58,18 @@ GameOver::~GameOver()
 
 AbstractScene* GameOver::Update()
 {
-	if (200 <= alpha)
+	if (
+#ifdef _DEBUG
+		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+#else
+		PadInput::OnButton(XINPUT_BUTTON_A)
+#endif
+		)
+	{
+		heading_alpha += 50.f;
+		choise_alpha += 50.f;
+	}
+	if (150 <= heading_alpha)
 	{
 		//Lスティック上入力
 		//左スティックの傾き具合がY座標に0.8以上かつ
@@ -106,31 +121,49 @@ AbstractScene* GameOver::Update()
 
 		}
 	}
-	alpha += 0.5f;
+
+	//------ 画像透明度に関する処理 ------//
+
+	//タイトル画像のY座標が350以下ならY座標に加算する
+	if (heading_y <= 80.f) { heading_y += 0.25f; }
+	//見出し画像のα成分に加算を行う
+	heading_alpha += 1.f;
+	//見出し画像のα成分が150より大きくなったら選択画像のα成分に加算を行う
+	if (heading_alpha >= 150) { choise_alpha += 2.5f; }
+
 	return this;
 }
 
 void GameOver::Draw() const
 {
-	//透明度設定
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+	//見出し透明度設定
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, heading_alpha);
 	//背景画像表示
 	DrawGraph(0, 0, back_death_image, TRUE);
-	//カーソル表示
-	DrawTriangle(460, 380 + (select_count * 80), 460, 430 + (select_count * 80), 500, 405 + (select_count * 80), 0x000ff0, TRUE);
-
-	//文字描画(続行)
-	if (select_count == 0) { DrawGraph(530, 350, game_continue_select, TRUE); }
-	if (select_count == 1) { DrawGraph(530, 350, game_continue_font, TRUE); }
-	//文字描画(終了)
-	if (select_count == 0) { DrawGraph(530, 450, game_finish_font, TRUE);}
-	if (select_count == 1) { DrawGraph(530, 450, game_finish_select, TRUE); }
 
 	//stage(１～３)で死亡した場合の画像を表示
-	if (stage_num != 3){ DrawGraph(250, 50, goal_lose_image, TRUE); }
+	if (stage_num != 3) { DrawGraph(250, heading_y, goal_lose_image, TRUE); }
 	//stage(Boss)で死亡した場合の画像を表示
-	if (stage_num == 3){ DrawGraph(250, 50, boss_stage_lose_image, TRUE); }
+	if (stage_num == 3) { DrawGraph(250, heading_y, boss_stage_lose_image, TRUE); }
 
 	//透明度を元に戻す
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	
+	if (heading_alpha >= 100)
+	{
+		//選択肢画像とカーソル透明度設定
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, choise_alpha);
+
+		//文字描画(続行)
+		if (select_count == 0) { DrawGraph(530, 350, game_continue_select, TRUE); }
+		if (select_count == 1) { DrawGraph(530, 350, game_continue_font, TRUE); }
+		//文字描画(終了)
+		if (select_count == 0) { DrawGraph(530, 450, game_finish_font, TRUE); }
+		if (select_count == 1) { DrawGraph(530, 450, game_finish_select, TRUE); }
+
+		//カーソル表示
+		DrawTriangle(460, 380 + (select_count * 80), 460, 430 + (select_count * 80), 500, 405 + (select_count * 80), 0x000ff0, TRUE);
+		//描画ブレンドをNoBlendにする
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+	}
 }
