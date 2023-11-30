@@ -64,14 +64,12 @@ void Zakuro::Update(GameMain* main)
 			//左右移動
 			Move();
 		}
-		//else {
-		//	//ノックバック
-		//	MoveNockBack();
-		//}
-		if (knockback_flg == true)
+		//ノックバック中にザクロ同士で当たるとえぐい挙動になるので
+		//直すまでコメントアウト↓
+	/*	if (knockback_flg == true)
 		{
 			MoveNockBack();
-		}
+		}*/
 	}
 		//床に乗っていたら重力OFF
 	if (onfloor_flg == true)
