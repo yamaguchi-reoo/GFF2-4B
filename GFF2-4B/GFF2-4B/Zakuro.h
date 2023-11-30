@@ -24,6 +24,7 @@ private:
 	int stop_count;		
 	bool spawn_flg;		//スポーンしているか
 	bool zakuro_direction;//向き(0 = 右 1 = 左)
+	bool knockback_flg;
 
 	//当たり判定関連
 	bool onfloor_flg;	//いずれかの地面に触れているかどうか
@@ -43,9 +44,10 @@ public:
 	void ZakuroReset();// 当たり判定のリセット
 	//重力が働く
 	void ZakuroGiveGravity();
-	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
+	//押し出す( _sub = 当たっている床の左上座標 _type = 当たった床の種類)
 	void Push(int num, Location _sub_location, Erea _sub_erea);
 
+	//void Push(Location _sub_location, Erea _sub_erea, int _type);
 	void HitWall();
 
 	//攻撃をスポーンさせるのに必要な情報をまとめる
@@ -61,14 +63,14 @@ public:
 	int GetHp() { return hp; }
 	//スポーンフラグの取得
 	int GetSpwnFlg() { return spawn_flg; }
+
+	int GetAttackFlg() { return attack_flg; }
 	//アニメーション
-	void ZakuroAnim();
+	//void ZakuroAnim();
 	//向きの反転
-	void ReverseDirection() override{ zakuro_direction != zakuro_direction; }
-	// 向きを取得するメソッドをオーバーライド
-	bool GetDirection() const override {
-		return zakuro_direction;
-	}
+	//void ReverseDirection();
+
+	ZakuroState GetZakuroState(){return zakuro_state;}
 	ColorDate GetColorDate();
 
 };

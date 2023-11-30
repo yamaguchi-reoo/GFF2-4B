@@ -916,20 +916,23 @@ void GameMain::HitCheck(GameMain* main)
 		}
 	}
 	//ザクロ同士で当たったら...
-	/*for (int i = 0; i < ZAKURO_MAX; i++)
+	for (int i = 0; i < ZAKURO_MAX; i++)
 	{
 		for (int j = i + 1; j < ZAKURO_MAX; j++)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
 				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[i]->GetSpwnFlg() == false ) {
+					zakuro[i]->HitZakuro();
+					//zakuro[i]->Push(i, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
 				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[j]->GetSpwnFlg() == false) {
-
+					zakuro[j]->HitZakuro();
+					//zakuro[j]->Push(j, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
 				}
 			}
 		}
-	}*/
+	}
 	//竹同士が当たったら止まる
 	for (int i = 0; i < BAMBOO_MAX; i++)
 	{
@@ -1276,7 +1279,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 
 		//ダメージ量に応じた画面揺れ
 		impact_timer = (10 * attack->GetAttackData().damage);
-
+		//character->MoveNockBack();
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
