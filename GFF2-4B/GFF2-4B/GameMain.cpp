@@ -945,11 +945,11 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[i]->GetSpwnFlg() == false ) {
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpwnFlg() == false ) {
 					zakuro[i]->HitZakuro();
 					//zakuro[i]->Push(i, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[j]->GetSpwnFlg() == false) {
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpwnFlg() == false) {
 					zakuro[j]->HitZakuro();
 					//zakuro[j]->Push(j, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
 				}

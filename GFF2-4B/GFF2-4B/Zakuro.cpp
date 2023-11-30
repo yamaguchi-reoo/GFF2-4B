@@ -169,7 +169,7 @@ void Zakuro::MoveNockBack()
 	{
 		attack_flg = true;
 		stop_count = 120;
-		knockback_flg = false;
+		//knockback_flg = false;
 	}
 }
 
@@ -293,8 +293,8 @@ void Zakuro::Attack(GameMain* main)
 void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
-	attack_flg = false;
-	knockback_flg = true;
+	//attack_flg = false;
+	//knockback_flg = true;
 	//MoveNockBack();
 	if (hp <= 0) {
 		spawn_flg = true;
@@ -305,8 +305,8 @@ void Zakuro::ApplyDamage(int num)
 
 void Zakuro::HitZakuro()
 {
-	if (knockback_flg == false)
-	{
+	/*if (knockback_flg == false)
+	{*/
 		// ƒUƒNƒ‚Ìó‘Ô‚É‰ž‚¶‚Ä”½‘Î•ûŒü‚ÉŒü‚«‚ð•Ï‚¦‚é
 		switch (zakuro_state) {
 		case ZakuroState::RIGHT:
@@ -318,7 +318,7 @@ void Zakuro::HitZakuro()
 			zakuro_direction = false;
 			break;
 		}
-	}
+	/*}*/
 
 }
 
