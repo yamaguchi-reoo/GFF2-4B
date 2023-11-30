@@ -82,6 +82,9 @@ public:
     //ひとつ前のデータの保持
     void SaveOldData();
 
+    //ステージ全体を縦にずらす
+    void StageShift(int _num);
+
     //今どのエリアにカーソルがあるか
     int ChechSelectErea();
 

@@ -493,8 +493,10 @@ void EditScene::UpdateStageData(int _stage)
 
 void EditScene::UpdateStage(int _width,int _height)
 {
+	int old_stage_height_num = stage_height_num;
 	stage_width_num = _width;
 	stage_height_num = _height;
+	int stage_height_shift = stage_height_num - old_stage_height_num;
 	//Šg’£‚ÌãŒÀ‚Æk¬‚Ì‰ºŒÀ
 	if (stage_width_num > MAX_STAGE_WIDTH)
 	{
@@ -519,12 +521,13 @@ void EditScene::UpdateStage(int _width,int _height)
 			if (stage_data[i][j] < 0)
 			{
 				stage_data[i][j] = 0;
+				stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
+				stage[i][j]->SetDebugFlg();
+				select_data[i][j] = false;
 			}
-			stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
-			stage[i][j]->SetDebugFlg();
-			select_data[i][j] = false;
 		}
 	}
+	StageShift(stage_height_shift);
 }
 
 void EditScene::SaveOldData()
@@ -534,6 +537,45 @@ void EditScene::SaveOldData()
 		for (int j = 0; j < stage_width_num; j++)
 		{
 			old_stage_data[i][j] = stage_data[i][j];
+		}
+	}
+}
+
+void EditScene::StageShift(int _num)
+{
+	if (_num > 0)
+	{
+		for (int i = stage_height_num-1; i >= 0; i--)
+		{
+			for (int j = 0; j < stage_width_num; j++)
+			{
+				if (i - _num >= 0)
+				{
+					stage_data[i][j] = stage_data[i - _num][j];
+				}
+				else
+				{
+					stage_data[i][j] = 0;
+				}
+			}
+		}
+	}
+	else if (_num < 0)
+	{
+		for (int i = 0; i < stage_height_num; i++)
+		{
+			for (int j = 0; j < stage_width_num; j++)
+			{
+				if (i - _num < stage_height_num+1)
+				{
+					stage_data[i][j] = stage_data[i - _num][j];
+
+				}
+				else
+				{
+					stage_data[i][j] = 0;
+				}
+			}
 		}
 	}
 }
