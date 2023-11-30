@@ -3,8 +3,40 @@
 #include "Title.h"
 #include "Result.h"
 
-GameClear::GameClear()
+void GameClear::ImageLoad(int& _handle, const char* _file_name)
 {
+	try 
+	{
+		_handle = LoadGraph(_file_name);
+		if(_handle == -1)
+		{
+			throw _file_name;
+		}
+	}
+	catch (const char& err)
+	{
+		printf("%sがありません。", &err);
+	}
+}
+
+GameClear::GameClear(int _stage_num)
+{
+	//カットイン演出用画像
+	ImageLoad(cut_in01, "resource/images/GameClear/CutIn01.png");
+	ImageLoad(cut_in02, "resource/images/GameClear/CutIn02.png");
+	
+	//背景画像用変数
+	ImageLoad(clear_back_image, "resource/images/GameClear/GameClearImage.png");
+
+	//カットイン01の座標変数
+	cut_in01_loc.x = 0.0f;			//X座標
+	cut_in01_loc.y = 0.0f;			//Y座標
+
+	//カットイン02の座標変数
+	cut_in02_loc.x = 0.0f;			//X座標
+	cut_in02_loc.y = 0.0f;			//Y座標
+
+	stage_num = _stage_num;			//stage数情報格納用変数
 }
 
 GameClear::~GameClear()
@@ -13,7 +45,16 @@ GameClear::~GameClear()
 
 AbstractScene* GameClear::Update()
 {
-
+	if (cut_in01_loc.x >= -600.f && cut_in02_loc.x <= 600.f)
+	{
+		cut_in01_loc.x += -30.f;
+		cut_in02_loc.x += 30.f;
+	}
+	if (cut_in01_loc.x <= -600.f && cut_in02_loc.x >= 600.f)
+	{
+		cut_in01_loc.x += -4.f;
+		cut_in02_loc.x += 4.f;
+	}
 	if (
 #ifdef _DEBUG
 		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
@@ -29,6 +70,8 @@ AbstractScene* GameClear::Update()
 
 void GameClear::Draw() const
 {
-	SetFontSize(48);
-	DrawString(500, 400, "Clear", 0xffffff);
+	DrawGraph(0, 0, clear_back_image, TRUE);
+
+	DrawGraphF(cut_in01_loc.x, cut_in01_loc.y, cut_in01, TRUE);
+	DrawGraphF(cut_in02_loc.x, cut_in02_loc.y, cut_in02, TRUE);
 }

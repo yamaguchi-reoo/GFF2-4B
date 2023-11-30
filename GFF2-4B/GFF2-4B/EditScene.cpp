@@ -13,11 +13,15 @@ EditScene::EditScene(int _stage)
 	current_type = 0;
 	tool_location.x = 100;
 	tool_location.y = 0;
-	tool_size.width = (OBJECT_TYPE_NUM * 50) + 200;
+	tool_size.width = (OBJECT_TYPE_NUM * 50) + 210;
 	tool_size.height = 100;
+	width_button_location = { tool_location.x + tool_size.width - 90, tool_location.y + 25 };
+	height_button_location = { tool_location.x + tool_size.width - 190, tool_location.y + 35 };
 	tool_pickup_flg = false;
 	current_leftbutton_flg = false;
 	current_rightbutton_flg = false;
+	current_upbutton_flg = false;
+	current_downbutton_flg = false;
 	button_interval = 0;
 	LoadStageData(now_stage);
 	for (int i = 0; i < stage_height_num; i++)
@@ -112,13 +116,13 @@ AbstractScene* EditScene::Update()
 			}
 		}
 		//幅を減らす
-		if (cursor.x > tool_location.x + tool_size.width - 80 && cursor.x < tool_location.x + tool_size.width - 65 && cursor.y>tool_location.y + 20 && cursor.y < tool_location.y + 45)
+		if (cursor.x > width_button_location.x && cursor.x < width_button_location.x + 15 && cursor.y>width_button_location.y && cursor.y < width_button_location.y + 25)
 		{
 			current_leftbutton_flg = true;
 			if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT) && --button_interval < 0)
 			{
 				button_interval = 10;
-				UpdateStageWidth(stage_width_num - 1);
+				UpdateStage(stage_width_num - 1,stage_height_num);
 			}
 			if (KeyInput::OnReleaseMouse(MOUSE_INPUT_LEFT))
 			{
@@ -131,13 +135,13 @@ AbstractScene* EditScene::Update()
 		}
 
 		//幅を増やす
-		if (cursor.x > tool_location.x + tool_size.width - 15 && cursor.x < tool_location.x + tool_size.width && cursor.y>tool_location.y + 20 && cursor.y < tool_location.y + 45)
+		if (cursor.x > width_button_location.x + 65 && cursor.x < width_button_location.x+80 && cursor.y>width_button_location.y && cursor.y < width_button_location.y + 25)
 		{
 			current_rightbutton_flg = true;
 			if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT) && --button_interval < 0)
 			{
 				button_interval = 10;
-				UpdateStageWidth(stage_width_num + 1);
+				UpdateStage(stage_width_num + 1,stage_height_num);
 			}
 			if (KeyInput::OnReleaseMouse(MOUSE_INPUT_LEFT))
 			{
@@ -149,6 +153,43 @@ AbstractScene* EditScene::Update()
 			current_rightbutton_flg = false;
 		}
 
+		//高さを増やす
+		if (cursor.x > height_button_location.x && cursor.x < height_button_location.x + 65 && cursor.y>height_button_location.y - 15 && cursor.y < height_button_location.y)
+		{
+			current_upbutton_flg = true;
+			if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT) && --button_interval < 0)
+			{
+				button_interval = 10;
+				UpdateStage(stage_width_num, stage_height_num + 1);
+			}
+			if (KeyInput::OnReleaseMouse(MOUSE_INPUT_LEFT))
+			{
+				button_interval = 0;
+			}
+		}
+		else
+		{
+			current_upbutton_flg = false;
+		}
+
+		//高さを減らす
+		if (cursor.x > height_button_location.x && cursor.x < height_button_location.x + 65 && cursor.y>height_button_location.y + 25 && cursor.y < height_button_location.y + 40)
+		{
+			current_downbutton_flg = true;
+			if (KeyInput::OnPressedMouse(MOUSE_INPUT_LEFT) && --button_interval < 0)
+			{
+				button_interval = 10;
+				UpdateStage(stage_width_num, stage_height_num - 1);
+			}
+			if (KeyInput::OnReleaseMouse(MOUSE_INPUT_LEFT))
+			{
+				button_interval = 0;
+			}
+		}
+		else
+		{
+			current_downbutton_flg = false;
+		}
 		//つかんで動かす
 		if (KeyInput::OnPressedMouse(MOUSE_INPUT_RIGHT))
 		{
@@ -282,6 +323,10 @@ void EditScene::Draw()const
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xBB8B38, true);
 			}
+			if (stage_data[i][j] == 14)
+			{
+				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xFF0000, true);
+			}
 		}
 	}
 	SetFontSize(16);
@@ -308,39 +353,73 @@ void EditScene::Draw()const
 	}
 
 	//ステージ幅変更用表示
-	DrawStringF(tool_location.x + tool_size.width - 85, tool_location.y + 2, "ステージ幅", 0xffffff);
+	DrawStringF(width_button_location.x - 5, width_button_location.y-20, "ステージ幅", 0xffffff);
 
 	//ステージの横のブロック数が表示されるエリア
-	DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0x000000, true);
-	DrawBoxAA(tool_location.x + tool_size.width - 65, tool_location.y + 20, tool_location.x + tool_size.width - 15, tool_location.y + 45, 0xffffff, false);
-	DrawFormatStringF(tool_location.x + tool_size.width - 55, tool_location.y + 25, 0xffffff, "%d", stage_width_num);
+	DrawBoxAA(width_button_location.x + 15, width_button_location.y, width_button_location.x + 65, width_button_location.y + 25, 0x000000, true);
+	DrawBoxAA(width_button_location.x + 15, width_button_location.y, width_button_location.x + 65, width_button_location.y + 25, 0xffffff, false);
+	DrawFormatStringF(width_button_location.x + 25, width_button_location.y + 5, 0xffffff, "%d", stage_width_num);
 
 	//ステージサイズ変更ボタン
 	if (current_leftbutton_flg == false)
 	{
-		DrawBoxAA(tool_location.x + tool_size.width - 80, tool_location.y + 20, tool_location.x + tool_size.width - 65, tool_location.y + 45, 0x000000, true);
-		DrawBoxAA(tool_location.x + tool_size.width - 80, tool_location.y + 20, tool_location.x + tool_size.width - 65, tool_location.y + 45, 0xffffff, false);
-		DrawStringF(tool_location.x + tool_size.width - 75, tool_location.y + 25, "<", 0xffffff);
+		DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x+15, width_button_location.y + 25, 0x000000, true);
+		DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0xffffff, false);
+		DrawStringF(width_button_location.x + 5, width_button_location.y+5, "<", 0xffffff);
 	}
 	else
 	{
-		DrawBoxAA(tool_location.x + tool_size.width - 80, tool_location.y + 20, tool_location.x + tool_size.width - 65, tool_location.y + 45, 0xffffff, true);
-		DrawBoxAA(tool_location.x + tool_size.width - 80, tool_location.y + 20, tool_location.x + tool_size.width - 65, tool_location.y + 45, 0x000000, false);
-		DrawStringF(tool_location.x + tool_size.width - 75, tool_location.y + 25, "<", 0x000000);
+		DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0xffffff, true);
+		DrawBoxAA(width_button_location.x, width_button_location.y, width_button_location.x + 15, width_button_location.y + 25, 0x000000, false);
+		DrawStringF(width_button_location.x + 5, width_button_location.y+5, "<", 0x000000);
 	}
 	if (current_rightbutton_flg == false)
 	{
-		DrawBoxAA(tool_location.x + tool_size.width - 15, tool_location.y + 20, tool_location.x + tool_size.width, tool_location.y + 45, 0x000000, true);
-		DrawBoxAA(tool_location.x + tool_size.width - 15, tool_location.y + 20, tool_location.x + tool_size.width, tool_location.y + 45, 0xffffff, false);
-		DrawStringF(tool_location.x + tool_size.width - 10, tool_location.y + 25, ">", 0xffffff);
+		DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x+80, width_button_location.y + 25, 0x000000, true);
+		DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0xffffff, false);
+		DrawStringF(width_button_location.x+70, width_button_location.y + 5, ">", 0xffffff);
 	}
 	else
 	{
-		DrawBoxAA(tool_location.x + tool_size.width - 15, tool_location.y + 20, tool_location.x + tool_size.width, tool_location.y + 45, 0xffffff, true);
-		DrawBoxAA(tool_location.x + tool_size.width - 15, tool_location.y + 20, tool_location.x + tool_size.width, tool_location.y + 45, 0x000000, false);
-		DrawStringF(tool_location.x + tool_size.width - 10, tool_location.y + 25, ">", 0x000000);
+		DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0xffffff, true);
+		DrawBoxAA(width_button_location.x + 65, width_button_location.y, width_button_location.x + 80, width_button_location.y + 25, 0x000000, false);
+		DrawStringF(width_button_location.x + 70, width_button_location.y + 5, ">", 0x000000);
 	}
 
+	//ステージ高さ変更用表示
+	DrawStringF(height_button_location.x - 15, height_button_location.y - 30, "ステージ高さ", 0xffffff);
+
+	//ステージの縦のブロック数が表示されるエリア
+	DrawBoxAA(height_button_location.x, height_button_location.y, height_button_location.x + 65, height_button_location.y + 25, 0x000000, true);
+	DrawBoxAA(height_button_location.x, height_button_location.y, height_button_location.x + 65, height_button_location.y + 25, 0xffffff, false);
+	DrawFormatStringF(height_button_location.x + 25, height_button_location.y + 5, 0xffffff, "%d", stage_height_num);
+
+	//ステージサイズ変更ボタン
+	if (current_upbutton_flg == false)
+	{
+		DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0x000000, true);
+		DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0xffffff, false);
+		DrawRotaStringF(height_button_location.x + 40, height_button_location.y - 10, 1, 1, 0, 0, 1.6f, 0xffffff, 0, 0, "<");
+	}
+	else
+	{
+		DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0xffffff, true);
+		DrawBoxAA(height_button_location.x, height_button_location.y - 15, height_button_location.x + 65, height_button_location.y, 0x000000, false);
+		DrawRotaStringF(height_button_location.x + 40, height_button_location.y - 10, 1, 1, 0, 0, 1.6f, 0x000000, 0, 0, "<");
+	}
+	//ステージサイズ変更ボタン
+	if (current_downbutton_flg == false)
+	{
+		DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0x000000, true);
+		DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0xffffff, false);
+		DrawRotaStringF(height_button_location.x + 25, height_button_location.y +35, 1, 1, 0, 0, 4.7f, 0xffffff, 0, 0, "<");
+	}
+	else
+	{
+		DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0xffffff, true);
+		DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0x000000, false);
+		DrawRotaStringF(height_button_location.x + 25, height_button_location.y + 35, 1, 1, 0, 0, 4.7f, 0x000000, 0, 0, "<");
+	}
 	SetFontSize(old_size);
 }
 
@@ -416,9 +495,12 @@ void EditScene::UpdateStageData(int _stage)
 	}
 }
 
-void EditScene::UpdateStageWidth(int _width)
+void EditScene::UpdateStage(int _width,int _height)
 {
+	int old_stage_height_num = stage_height_num;
 	stage_width_num = _width;
+	stage_height_num = _height;
+	int stage_height_shift = stage_height_num - old_stage_height_num;
 	//拡張の上限と縮小の下限
 	if (stage_width_num > MAX_STAGE_WIDTH)
 	{
@@ -428,7 +510,14 @@ void EditScene::UpdateStageWidth(int _width)
 	{
 		stage_width_num = 1;
 	}
-
+	if (stage_height_num > MAX_STAGE_HEIGHT)
+	{
+		stage_height_num = MAX_STAGE_HEIGHT;
+	}
+	if (stage_height_num <= 0)
+	{
+		stage_height_num = 1;
+	}
 	for (int i = 0; i < stage_height_num; i++)
 	{
 		for (int j = 0; j < stage_width_num; j++)
@@ -436,12 +525,13 @@ void EditScene::UpdateStageWidth(int _width)
 			if (stage_data[i][j] < 0)
 			{
 				stage_data[i][j] = 0;
+				stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
+				stage[i][j]->SetDebugFlg();
+				select_data[i][j] = false;
 			}
-			stage[i][j] = new Stage((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), BOX_WIDTH, BOX_HEIGHT, stage_data[i][j]);
-			stage[i][j]->SetDebugFlg();
-			select_data[i][j] = false;
 		}
 	}
+	StageShift(stage_height_shift);
 }
 
 void EditScene::SaveOldData()
@@ -451,6 +541,45 @@ void EditScene::SaveOldData()
 		for (int j = 0; j < stage_width_num; j++)
 		{
 			old_stage_data[i][j] = stage_data[i][j];
+		}
+	}
+}
+
+void EditScene::StageShift(int _num)
+{
+	if (_num > 0)
+	{
+		for (int i = stage_height_num-1; i >= 0; i--)
+		{
+			for (int j = 0; j < stage_width_num; j++)
+			{
+				if (i - _num >= 0)
+				{
+					stage_data[i][j] = stage_data[i - _num][j];
+				}
+				else
+				{
+					stage_data[i][j] = 0;
+				}
+			}
+		}
+	}
+	else if (_num < 0)
+	{
+		for (int i = 0; i < stage_height_num; i++)
+		{
+			for (int j = 0; j < stage_width_num; j++)
+			{
+				if (i - _num < stage_height_num+1)
+				{
+					stage_data[i][j] = stage_data[i - _num][j];
+
+				}
+				else
+				{
+					stage_data[i][j] = 0;
+				}
+			}
 		}
 	}
 }

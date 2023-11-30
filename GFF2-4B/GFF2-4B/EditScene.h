@@ -5,7 +5,7 @@
 #include "Stage.h"
 #include "PadInput.h"
 
-#define OBJECT_TYPE_NUM 14   //配置できるオブジェクトの種類数
+#define OBJECT_TYPE_NUM 15  //配置できるオブジェクトの種類数
 
  //エリア区分
 enum SelectErea
@@ -30,6 +30,7 @@ static char obj_string[OBJECT_TYPE_NUM][256] =
     "看板３",
     "看板４",
     "壺",
+    "戦闘"
 };
 
 class EditScene :
@@ -44,8 +45,12 @@ private:
     int old_stage_data[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];//ステージの変更前データ格納用
     Stage* stage[MAX_STAGE_HEIGHT][MAX_STAGE_WIDTH];      //床のオブジェクト
     int current_type;                                     //今選ばれているオブジェクトタイプ
+    Location width_button_location;                       //ステージ幅変更用ボタンの位置
+    Location height_button_location;                       //ステージ高さ変更用ボタンの位置
     bool current_leftbutton_flg;                          //ステージサイズ変更用の左ボタンが選ばれているか
-    bool current_rightbutton_flg;                          //ステージサイズ変更用の右ボタンが選ばれているか
+    bool current_rightbutton_flg;                         //ステージサイズ変更用の右ボタンが選ばれているか
+    bool current_upbutton_flg;                            //ステージサイズ変更用の上ボタンが選ばれているか
+    bool current_downbutton_flg;                          //ステージサイズ変更用の下ボタンが選ばれているか
     int button_interval;                                  //ステージ幅変更のインターバル
     Location tool_location;                               //ツールボックスの左上座標
     Erea tool_size;                                       //左上のツールボックスの幅
@@ -72,11 +77,14 @@ public:
     //ステージのファイルを更新する
     void UpdateStageData(int _stage);
 
-    //ステージの横幅を更新する
-    void UpdateStageWidth(int _width);
+    //ステージの横幅、立幅を更新する
+    void UpdateStage(int _width,int _height);
 
     //ひとつ前のデータの保持
     void SaveOldData();
+
+    //ステージ全体を縦にずらす
+    void StageShift(int _num);
 
     //今どのエリアにカーソルがあるか
     int ChechSelectErea();
