@@ -430,17 +430,8 @@ void BossHands::HandsMagenta(GameMain* main) {
 			Zakuro_rad = 0;
 
 			if (hitflg == true) {
-				if (Zakuro_Direction==0&&location.x <= 640) {
-					zakuro_state = Z_NOCKBACK;
-				}
-				else if (Zakuro_Direction == 1 && location.x >= 450) {
-					zakuro_state = Z_NOCKBACK;
-				}
-				else {
-					hitflg = false;
-				}
-
-			}
+				zakuro_state = Z_NOCKBACK;
+		}
 			else {
 				Attack_Num = 4;
 				BossAttack(main);
@@ -469,7 +460,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				//if (fabsf(main->GetPlayerLocation().x - location.x)<200) {
 				//	checkabs = fabsf(main->GetPlayerLocation().x - location.x+180);
 				//}
-
+				/*
 				if (Jump_Once == true) {
 					if (location.x > 426 && location.x < 752) {
 
@@ -533,7 +524,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 					}
 				}
-
+				*/
 			}
 
 			break;
