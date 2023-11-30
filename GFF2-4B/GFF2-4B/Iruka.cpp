@@ -12,7 +12,7 @@
 #define IRUKA_ANIM_MOVE 0			//移動アニメーション開始地点
 #define IRUKA_DEATH 2				//死亡アニメーション開始地
 #define IRUKA_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
-#define IRUKA_DEATH_ANIM 10				//次の画像に切り替えるまでの時間（フレーム）
+#define IRUKA_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
 
 
 #define TRUN_RAD 1.5708f		//90度回転用
@@ -110,7 +110,7 @@ void Iruka::Update(GameMain* main)
 			iruka_state = IrukaState::FALL_DEATH;
 		}
 	}
-	//フラグがtrueになってからcountが4以上になったら
+	//フラグがtrueになってからcountが12以上になったら
 	if (death_flg == true && ++count >= (IRUKA_DEATH_ANIM + 2))
 	{
 		//スポーンフラグを

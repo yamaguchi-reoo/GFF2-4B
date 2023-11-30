@@ -6,11 +6,20 @@
 #define MOVE_SPEED  1	//速度
 #define ZAKURO_GRAVITY  5//重力
 
-#define ZAKURO_IMAGE_SHIFT_X 20		//画像ずらし用
-#define ZAKURO_IMAGE_SHIFT_Y 12		//画像ずらし用
+#define ZAKURO_IMAGE_SHIFT_X 0		//画像ずらし用
+#define ZAKURO_IMAGE_SHIFT_Y -20	//画像ずらし用
+#define ZAKURO_ANIM_MOVE 0			//移動アニメーション開始地点
+#define ZAKURO_DEATH 2				//死亡アニメーション開始地
+#define ZAKURO_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
+#define ZAKURO_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
+
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 {
+
+	anim_frame = 0;
+	count = 0;
+
 	zakuro_state = ZakuroState::IDLE;
 
 	location.x = pos_x;
@@ -23,7 +32,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 
 	image = LoadGraph("resource/images/Enemy/zakuro.png");
 
-	stop_count = 120;
+	stop_count = 60;
 
 	zakuro_direction = true;
 	onfloor_flg = false;
@@ -32,6 +41,8 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	rightwall_flg = false;
 	leftwall_flg = false;
 	apply_gravity = true;
+	hit_flg = false;
+	knockback_flg = false;
 
 	hp = 3;
 
@@ -53,10 +64,12 @@ void Zakuro::Update(GameMain* main)
 			//左右移動
 			Move();
 		}
-		else {
-			//ノックバック
+		//ノックバック中にザクロ同士で当たるとえぐい挙動になるので
+		//直すまでコメントアウト↓
+	/*	if (knockback_flg == true)
+		{
 			MoveNockBack();
-		}
+		}*/
 	}
 		//床に乗っていたら重力OFF
 	if (onfloor_flg == true)
@@ -140,23 +153,23 @@ void Zakuro::Move()
 
 void Zakuro::MoveNockBack()
 {
+	stop_count -= 2;
 	//左移動
-	if (zakuro_state == ZakuroState::LEFT) 
+	if (zakuro_state == ZakuroState::LEFT)
 	{
 		location.x += speed * 0.8f;
 	}
 	//右移動
-	if (zakuro_state == ZakuroState::RIGHT) 
+	if (zakuro_state == ZakuroState::RIGHT)
 	{
 		location.x -= speed * 0.8f;
 	}
 
-	stop_count -= 2;
-
-	if (stop_count <= 0) 
+	if (stop_count <= 0)
 	{
 		attack_flg = true;
 		stop_count = 120;
+		//knockback_flg = false;
 	}
 }
 
@@ -187,7 +200,6 @@ void Zakuro::Push(int num, Location _sub_location, Erea _sub_erea)
 	Location z_center = { 0 };
 	z_center.x = location.x + (erea.width / 2);
 	z_center.y = location.y + (erea.height / 2);
-
 	//床に触れた時
 	if (location.y + erea.height - 12 < _sub_location.y)
 	{
@@ -216,6 +228,26 @@ void Zakuro::Push(int num, Location _sub_location, Erea _sub_erea)
 		location.y = _sub_location.y - erea.height;
 		onfloor_flg = true;
 	}
+
+	//// 右の壁に触れた時
+	//if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 12 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
+	//{
+	//	location.x = _sub_location.x - erea.width;
+	//	//右の壁に触れたフラグを立てる
+	//	rightwall_flg = true;
+	//}
+	////左の壁に触れた時
+	//else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 12 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
+	//{
+	//	location.x = _sub_location.x + _sub_erea.width;
+	//	//左の壁に触れたフラグを立てる
+	//	leftwall_flg = true;
+	//}
+	////床に触れた時
+	//else if (location.y + erea.height - 30 < _sub_location.y && (_type == 1 || _type == 2 || _type == 3 || _type == 4 || _type == 8))
+	//{
+	//	onfloor_flg = true;
+	//}
 }
 
 void Zakuro::HitWall()
@@ -238,7 +270,7 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = -erea.height/4;
+	attack_data.shift_y = (- erea.height / 4) + 20;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
@@ -261,7 +293,9 @@ void Zakuro::Attack(GameMain* main)
 void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
-	attack_flg = false;
+	//attack_flg = false;
+	//knockback_flg = true;
+	//MoveNockBack();
 	if (hp <= 0) {
 		spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント
@@ -271,14 +305,20 @@ void Zakuro::ApplyDamage(int num)
 
 void Zakuro::HitZakuro()
 {
-
-	//if (zakuro_state == ZakuroState::RIGHT) {
-	//	zakuro_state = ZakuroState::LEFT;
-	//}
-	zakuro_direction = !zakuro_direction;
-	//if (zakuro_state == ZakuroState::LEFT) {
-	//	zakuro_state = ZakuroState::RIGHT;
-	//}
+	/*if (knockback_flg == false)
+	{*/
+		// ザクロの状態に応じて反対方向に向きを変える
+		switch (zakuro_state) {
+		case ZakuroState::RIGHT:
+			zakuro_state = ZakuroState::LEFT;
+			zakuro_direction = true;
+			break;
+		case ZakuroState::LEFT:
+			zakuro_state = ZakuroState::RIGHT;
+			zakuro_direction = false;
+			break;
+		}
+	/*}*/
 
 }
 
