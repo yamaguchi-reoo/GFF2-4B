@@ -731,6 +731,19 @@ void Player::Move(GameMain* main)
 	{
 		acs[DOWN]++;
 	}
+	//カメラ端より先には行けない
+	if (main->GetCameraLocation().x+100 > location.x)
+	{
+		location.x = main->GetCameraLocation().x + 100;
+	}
+	if (main->GetCameraLocation().x + SCREEN_WIDTH - erea.width-100 < location.x)
+	{
+		location.x = main->GetCameraLocation().x + SCREEN_WIDTH - erea.width - 100;
+	}
+	if (main->GetCameraLocation().y + 50 > location.y)
+	{
+		location.y = main->GetCameraLocation().y + 50;
+	}
 	//1フレーム前の座標を保存
 	old_location = location;
 	//移動処理
@@ -742,6 +755,7 @@ void Player::Move(GameMain* main)
 	next_location.y = location.y - acs[UP] + acs[DOWN];
 	MoveLocation(main, next_location.x - old_location.x, next_location.y - old_location.y);
 
+	
 	//歩行音を再生する
 	if (next_location.x != old_location.x && onfloor_flg == true)
 	{

@@ -9,7 +9,7 @@
 #include "GameClear.h"
 #include "GameOver.h"
 
-static Location camera_location = { (SCREEN_WIDTH / 2),0};	//カメラの座標
+static Location camera_location = { 0,0};	//カメラの座標
 static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
 
 GameMain::GameMain(int _stage)
@@ -64,9 +64,14 @@ GameMain::GameMain(int _stage)
 	x_pos_set_once = true;
 	y_pos_set_once = true;
 	lock_flg = 0;
-	vine_x1 = -650;
-	vine_x2 = 1290;
-	vine_y = 730;
+	now_battle = -1;
+	for (int i = 0; i < BATTLE_ZONE_NUM; i++)
+	{
+		battle_once_flg[i] = false;
+	}
+	vine1 = { 0,0 };
+	vine2 = { 0,0 };
+	vine3 = { 0,0 };
 	venemy_cnt = 0;
 	venemy_num1 = 0;
 	venemy_num2 = 0;
@@ -436,77 +441,8 @@ AbstractScene* GameMain::Update()
 				}
 			}
 
-			/**プレイヤーを閉じ込めるここから*/
-			//プレイヤーが強化ゲージの看板がある座標に来たら強制戦闘開始
-			if (lock_flg == 0 && now_stage == 0 && player->GetLocation().x >= 11600)
-			{
-				lock_flg = 1;
-			}
-
-			//蔓を下からはやす
-			if (lock_flg == 1 && vine_y > 70)
-			{
-				vine_y -= 35;
-			}
-
-			if (lock_flg == 1 && vine_y <= 70)
-			{
-				lock_flg = 2;
-			}
-
-			//草を横からはやす
-			if (lock_flg == 2 && vine_x1 < 0)
-			{
-				vine_x1 += 35;
-				vine_x2 -= 35;
-			}
-
-			if (lock_flg == 2 && vine_x1 >= 0)
-			{
-				lock_flg = 3;
-			}
-
-			//ザクロを15匹生成
-			if (lock_flg == 3 && venemy_num1 < 15)
-			{
-				venemy_cnt++;
-				if (venemy_cnt >= 60)
-				{
-					VineEnemy();
-					venemy_cnt = 0;
-				}
-			}
-
-			//ザクロを15匹倒したら蔓から解放
-			if (lock_flg == 3 && venemy_num2 >= 15)
-			{
-				lock_flg = 4;
-			}
-
-			//草を解除
-			if (lock_flg == 4 && vine_x2 < 1280)
-			{
-				vine_x1 -= 35;
-				vine_x2 += 35;
-			}
-
-			if (lock_flg == 4 && vine_x2 >= 1280)
-			{
-				lock_flg = 5;
-			}
-
-			//蔓を解除
-			if (lock_flg == 5 && vine_y < 730)
-			{
-				vine_y += 35;
-			}
-
-			if (lock_flg == 5 && vine_y >= 730)
-			{
-				lock_flg = 6;
-			}
-
-			/**プレイヤーを閉じ込めるここまで*/
+			//強制戦闘関連の処理
+			BattleZone();
 
 			//当たり判定関連の処理を行う
 			HitCheck(this);
@@ -519,7 +455,7 @@ AbstractScene* GameMain::Update()
 			}
 
 	//ステージクリア
-	if (player->GetLocation().x > stage_width - (STAGE_GOAL)) {
+	if (now_stage !=3 && player->GetLocation().x > stage_width - (STAGE_GOAL)) {
 		if (now_stage == 2)
 		{
 			SetStage(3);
@@ -729,12 +665,12 @@ void GameMain::Draw() const
 	}
 
 	//プレイヤーを閉じ込める蔓の描画
-	if (lock_flg > 0 || lock_flg < 6)
+	if (lock_flg != 0 && lock_flg != 6)
 	{
-		DrawGraph(-10, vine_y, vine_img[0], TRUE);
-		DrawGraph(1170, vine_y, vine_img[0], TRUE);
-		DrawGraph(vine_x1, -5, vine_img[1], TRUE);
-		DrawGraph(vine_x2, -5, vine_img[1], TRUE);
+		DrawGraph(vine1.x - (SCREEN_WIDTH / 2) - camera_location.x, vine1.y - camera_location.y, vine_img[0], TRUE);
+		DrawGraph(vine1.x + (SCREEN_WIDTH / 2)-100 - camera_location.x, vine1.y - camera_location.y, vine_img[0], TRUE);
+		DrawGraph(vine2.x - camera_location.x, vine2.y - camera_location.y, vine_img[1], TRUE);
+		DrawGraph(vine3.x - camera_location.x, vine3.y - camera_location.y, vine_img[1], TRUE);
 	}
 
 	powergauge->Draw();
@@ -1163,6 +1099,19 @@ void GameMain::SetStage(int _stage)
 						break;
 					}
 				}
+				break;
+			case 14:
+				//強制戦闘ゾーン
+				for (int k = 0; k < BATTLE_ZONE_NUM; k++)
+				{
+					//未割り当ての配列に入れる
+					if (battle_start_pos[k].x < -1)
+					{
+						battle_start_pos[k].x = (float)(j * BOX_WIDTH);
+						battle_start_pos[k].y = (float)(i * BOX_HEIGHT);
+						break;
+					}
+				}
 			default:
 				break;
 			}
@@ -1216,71 +1165,84 @@ void GameMain::ImpactCamera(int _power)
 
 void GameMain::UpdateCamera()
 {
+	//X座標が画面端以外なら
+	if (player->GetCenterLocation().x > (SCREEN_WIDTH / 2) && player->GetCenterLocation().x < stage_width - (SCREEN_WIDTH / 2))
+	{
+		//X座標のロックをしない
+		camera_x_lock_flg = false;
+		//ロック時に一度だけ入る処理をリセットする
+		x_pos_set_once = false;
+	}
+	//X座標が画面端なら
+	else
+	{
+		//X座標のロックをする
+		camera_x_lock_flg = true;
+		//固定する位置を一度だけ設定する
+		if (x_pos_set_once == false)
+		{
+			lock_pos.x = player->GetCenterLocation().x;
+			x_pos_set_once = true;
+		}
+	}
+	//Y座標が画面端以外なら
+	if (player->GetCenterLocation().y < stage_height - (SCREEN_HEIGHT / 2) - 10 && player->GetCenterLocation().y>(SCREEN_HEIGHT / 2))
+	{
+		//Y座標のロックをしない
+		camera_y_lock_flg = false;
+		//ロック時に一度だけ入る処理をリセットする
+		y_pos_set_once = false;
+	}
+	//Y座標が画面端なら
+	else
+	{
+		//Y座標のロックをする
+		camera_y_lock_flg = true;
+		//固定する位置を一度だけ設定する
+		if (y_pos_set_once == false)
+		{
+			lock_pos.y = player->GetCenterLocation().y;
+			y_pos_set_once = true;
+		}
+	}
 	//今のステージが３（ボス）以外で、カメラ固定フラグが立ってないなら
 	if (now_stage != 3 && (lock_flg == 0 || lock_flg == 6))
 	{
-		//X座標が画面端以外なら
-		if (player->GetCenterLocation().x > (SCREEN_WIDTH / 2) && player->GetLocation().x < stage_width - (SCREEN_WIDTH / 2))
+		//カメラ更新
+		if (camera_x_lock_flg == false && camera_y_lock_flg == false)
 		{
-			//X座標のロックをしない
-			camera_x_lock_flg = false;
-			//ロック時に一度だけ入る処理をリセットする
-			x_pos_set_once = false;
+			CameraLocation(player->GetCenterLocation().x, player->GetCenterLocation().y);
 		}
-		//X座標が画面端なら
+		else if (camera_x_lock_flg == false && camera_y_lock_flg == true)
+		{
+			CameraLocation(player->GetCenterLocation().x, lock_pos.y);
+		}
+		else if (camera_x_lock_flg == true && camera_y_lock_flg == false)
+		{
+			CameraLocation(lock_pos.x, player->GetCenterLocation().y);
+		}
 		else
 		{
-			//X座標のロックをする
-			camera_x_lock_flg = true;
-			//固定する位置を一度だけ設定する
-			if (x_pos_set_once == false)
-			{
-				lock_pos.x = player->GetCenterLocation().x;
-				x_pos_set_once = true;
-			}
-		}
-		//Y座標が画面端以外なら
-		if (player->GetCenterLocation().y < stage_height - (SCREEN_HEIGHT/2)-10 && player->GetCenterLocation().y>(SCREEN_HEIGHT/2))
-		{
-			//Y座標のロックをしない
-			camera_y_lock_flg = false;
-			//ロック時に一度だけ入る処理をリセットする
-			y_pos_set_once = false;
-		}		
-		//Y座標が画面端なら
-		else
-		{
-			//Y座標のロックをする
-			camera_y_lock_flg = true;
-			//固定する位置を一度だけ設定する
-			if (y_pos_set_once == false)
-			{
-				lock_pos.y = player->GetCenterLocation().y;
-				y_pos_set_once = true;
-			}
+			CameraLocation(lock_pos.x, lock_pos.y);
 		}
 	}
-
-	if (camera_x_lock_flg == false && camera_y_lock_flg == false)
+	else if (now_stage == 3)
 	{
-		CameraLocation(player->GetCenterLocation().x, player->GetCenterLocation().y);
+		CameraLocation(screen_origin.x, screen_origin.y+(SCREEN_HEIGHT/2)+48);
 	}
-	else if (camera_x_lock_flg == false && camera_y_lock_flg == true)
+	else if (lock_flg != 0)
 	{
-		CameraLocation(player->GetCenterLocation().x, lock_pos.y);
-	}
-	else if (camera_x_lock_flg == true && camera_y_lock_flg == false)
-	{
-		CameraLocation(lock_pos.x, player->GetCenterLocation().y);
-	}
-	else
-	{
-		CameraLocation(lock_pos.x, lock_pos.y);
+		CameraLocation(battle_start_pos[now_battle].x, battle_start_pos[now_battle].y-(SCREEN_HEIGHT/2)+144);
 	}
 	if (--impact_timer < 0)
 	{
 		impact_timer = 0;
 	}
+}
+
+Location GameMain::GetCameraLocation()
+{
+	return camera_location;
 }
 
 template <class T>
@@ -1438,17 +1400,102 @@ void GameMain::VineEnemy(void)
 {
 	int num = 0;
 
-	num = GetRand(4);
+	num = GetRand(4)-2;
 
 	//空いてる枠にザクロ生成
 	for (int k = 0; k < ZAKURO_MAX; k++)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(11500 + (150 * num), 200, true, who++);
+			zakuro[k] = new Zakuro(battle_start_pos[now_battle].x + (150 * num), battle_start_pos[now_battle].y-400, true, who++);
 			venemy_num1++;
 			break;
 		}
+	}
+}
+
+void GameMain::BattleZone()
+{
+	for (int k = 0; k < BATTLE_ZONE_NUM; k++)
+	{
+		//プレイヤーが戦闘ゾーンに触れたら強制戦闘開始
+		if (lock_flg == 0 &&battle_once_flg[k] == false && player->GetCenterLocation().x >= battle_start_pos[k].x - 100 && player->GetCenterLocation().x <= battle_start_pos[k].x + 100 && player->GetCenterLocation().y >= battle_start_pos[k].y - 100 && player->GetCenterLocation().y <= battle_start_pos[k].y + 100)
+		{
+			lock_flg = 1;
+			battle_once_flg[k] = true;
+			now_battle = k;
+			vine1.x = battle_start_pos[k].x;
+			vine1.y = battle_start_pos[k].y;
+			vine2.x = battle_start_pos[k].x - (SCREEN_WIDTH / 2)-650;
+			vine2.y = battle_start_pos[k].y - SCREEN_HEIGHT+70;
+			vine3.x = battle_start_pos[k].x + (SCREEN_WIDTH / 2);
+			vine3.y = battle_start_pos[k].y - SCREEN_HEIGHT+70;
+			venemy_num1 = 0;
+			venemy_num2 = 0;
+			break;
+		}
+	}
+	//蔓を下からはやす
+	if (lock_flg == 1 && vine1.y > battle_start_pos[now_battle].y - SCREEN_HEIGHT + 100)
+	{
+		vine1.y -= 35;
+	}
+
+	if (lock_flg == 1 && vine1.y <= battle_start_pos[now_battle].y - SCREEN_HEIGHT + 100)
+	{
+		lock_flg = 2;
+	}
+
+	//草を横からはやす
+	if (lock_flg == 2 && vine2.x < battle_start_pos[now_battle].x-(SCREEN_WIDTH/2))
+	{
+		vine2.x += 35;
+		vine3.x -= 35;
+	}
+
+	if (lock_flg == 2 && vine2.x >= battle_start_pos[now_battle].x - (SCREEN_WIDTH / 2))
+	{
+		lock_flg = 3;
+	}
+
+	//ザクロを15匹生成
+	if (lock_flg == 3 && venemy_num1 < 2)
+	{
+		venemy_cnt++;
+		if (venemy_cnt >= 60)
+		{
+			VineEnemy();
+			venemy_cnt = 0;
+		}
+	}
+
+	//ザクロを15匹倒したら蔓から解放
+	if (lock_flg == 3 && venemy_num2 >= 2)
+	{
+		lock_flg = 4;
+	}
+
+	//草を解除
+	if (lock_flg == 4 && vine2.x < battle_start_pos[now_battle].x + (SCREEN_WIDTH / 2))
+	{
+		vine3.x -= 35;
+		vine2.x += 35;
+	}
+
+	if (lock_flg == 4 && vine2.x >= battle_start_pos[now_battle].x + (SCREEN_WIDTH / 2))
+	{
+		lock_flg = 5;
+	}
+
+	//蔓を解除
+	if (lock_flg == 5 && vine1.y < battle_start_pos[now_battle].y +10)
+	{
+		vine1.y += 35;
+	}
+
+	if (lock_flg == 5 && vine1.y >= battle_start_pos[now_battle].y + 10)
+	{
+		lock_flg = 0;
 	}
 }
 
