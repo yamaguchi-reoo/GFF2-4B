@@ -430,7 +430,7 @@ AbstractScene* GameMain::Update()
 			{
 				if (sighboard[i] != nullptr)
 				{
-					sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+					sighboard[i]->Update(stage_height,player->GetLocation(), player->GetLocalLocation());
 					sighboard[i]->SetScreenPosition(camera_location);
 					if (sighboard[i]->GetDispFlg() == true && sighboard[i]->GetDispOnce() == false)
 					{
@@ -539,7 +539,7 @@ AbstractScene* GameMain::Update()
 			{
 				if (sighboard[i] != nullptr)
 				{
-					sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+					sighboard[i]->Update(stage_height, player->GetLocation(), player->GetLocalLocation());
 					sighboard[i]->SetScreenPosition(camera_location);
 				}
 			}
@@ -1334,7 +1334,6 @@ void GameMain::HitBamboo(T* character)
 	}
 }
 
-// アイテムスポーンのランダムな処理
 template<class T>
 void GameMain::ItemSpwanRand(T* character)
 {
@@ -1369,7 +1368,6 @@ void GameMain::ItemSpwanRand(T* character)
 	}
 }
 
-//しぶきの生成
 template<class T>
 void  GameMain::SpawnEffect(T* character)
 {
@@ -1414,7 +1412,6 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 	}
 }
 
-//蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
 	int num = 0;
@@ -1448,7 +1445,7 @@ void GameMain::BattleZone()
 			vine2.x = battle_start_pos[k].x - (SCREEN_WIDTH / 2)-650;
 			vine2.y = battle_start_pos[k].y - SCREEN_HEIGHT+70;
 			vine3.x = battle_start_pos[k].x + (SCREEN_WIDTH / 2);
-			vine3.y = battle_start_pos[k].y - SCREEN_HEIGHT+70;
+			vine3.y = battle_start_pos[k].y - SCREEN_HEIGHT + 70;
 			venemy_num1 = 0;
 			venemy_num2 = 0;
 			break;
