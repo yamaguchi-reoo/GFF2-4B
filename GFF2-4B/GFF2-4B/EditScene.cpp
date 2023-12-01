@@ -335,6 +335,7 @@ void EditScene::Draw()const
 	DrawStringF(tool_location.x, tool_location.y + 60, "左クリックで選択＆配置", 0xffffff);
 	DrawStringF(tool_location.x, tool_location.y + 80, "ctrl+zで一つ戻る", 0xffffff);
 	DrawStringF(tool_location.x + tool_size.width-270, tool_location.y + 80, "Bキーで保存＆ゲームメインへ戻る", 0xffffff);
+
 	//現在選択中のオブジェクトを分かりやすく	
 	for (int i = 0; i < OBJECT_TYPE_NUM; i++)
 	{
@@ -420,6 +421,7 @@ void EditScene::Draw()const
 		DrawBoxAA(height_button_location.x, height_button_location.y + 25, height_button_location.x + 65, height_button_location.y + 40, 0x000000, false);
 		DrawRotaStringF(height_button_location.x + 25, height_button_location.y + 35, 1, 1, 0, 0, 4.7f, 0x000000, 0, 0, "<");
 	}
+
 	SetFontSize(old_size);
 }
 

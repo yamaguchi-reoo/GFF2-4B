@@ -430,7 +430,7 @@ AbstractScene* GameMain::Update()
 			{
 				if (sighboard[i] != nullptr)
 				{
-					sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+					sighboard[i]->Update(stage_height,player->GetLocation(), player->GetLocalLocation());
 					sighboard[i]->SetScreenPosition(camera_location);
 					if (sighboard[i]->GetDispFlg() == true && sighboard[i]->GetDispOnce() == false)
 					{
@@ -539,7 +539,7 @@ AbstractScene* GameMain::Update()
 			{
 				if (sighboard[i] != nullptr)
 				{
-					sighboard[i]->Update(player->GetLocation(), player->GetLocalLocation());
+					sighboard[i]->Update(stage_height, player->GetLocation(), player->GetLocalLocation());
 					sighboard[i]->SetScreenPosition(camera_location);
 				}
 			}
@@ -896,13 +896,17 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpwnFlg() == false ) {
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpwnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
 					zakuro[i]->HitZakuro();
-					//zakuro[i]->Push(i, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpwnFlg() == false) {
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpwnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
 					zakuro[j]->HitZakuro();
-					//zakuro[j]->Push(j, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
+				}
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpwnFlg() == false && zakuro[j]->GetAttackFlg() == false) {
+					zakuro[i]->Push(5, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
+				}
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpwnFlg() == false && zakuro[i]->GetAttackFlg() == false) {
+					zakuro[j]->Push(5, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
 			}
 		}
@@ -914,7 +918,7 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == false && bamboo[j]->GetSpwnFlg() == true) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == true && bamboo[j]->GetSpwnFlg() == true) {
 					bamboo[i]->FalseGravity();
 				}
 			}
@@ -1330,7 +1334,6 @@ void GameMain::HitBamboo(T* character)
 	}
 }
 
-// アイテムスポーンのランダムな処理
 template<class T>
 void GameMain::ItemSpwanRand(T* character)
 {
@@ -1365,7 +1368,6 @@ void GameMain::ItemSpwanRand(T* character)
 	}
 }
 
-//しぶきの生成
 template<class T>
 void  GameMain::SpawnEffect(T* character)
 {
@@ -1410,7 +1412,6 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 	}
 }
 
-//蔓内での敵生成処理
 void GameMain::VineEnemy(void)
 {
 	int num = 0;
@@ -1444,7 +1445,7 @@ void GameMain::BattleZone()
 			vine2.x = battle_start_pos[k].x - (SCREEN_WIDTH / 2)-650;
 			vine2.y = battle_start_pos[k].y - SCREEN_HEIGHT+70;
 			vine3.x = battle_start_pos[k].x + (SCREEN_WIDTH / 2);
-			vine3.y = battle_start_pos[k].y - SCREEN_HEIGHT+70;
+			vine3.y = battle_start_pos[k].y - SCREEN_HEIGHT + 70;
 			venemy_num1 = 0;
 			venemy_num2 = 0;
 			break;
