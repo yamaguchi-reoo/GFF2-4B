@@ -25,7 +25,7 @@ public:
     //デストラクタ
     ~SighBoard();
 
-    void Update(Location _player_location,Location _player_local_location);
+    void Update(int _stage_height ,Location _player_location,Location _player_local_location);
     void Draw()const;
 
     //減速処理(num = 方向)

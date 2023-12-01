@@ -33,7 +33,7 @@ SighBoard::~SighBoard()
 
 }
 
-void SighBoard::Update(Location _player_location, Location _player_local_location)
+void SighBoard::Update(int _stage_height,Location _player_location, Location _player_local_location)
 {
 	if (++frame > 30)
 	{
@@ -43,7 +43,7 @@ void SighBoard::Update(Location _player_location, Location _player_local_locatio
 	{
 		tuto_disp_flg = true;
 	}
-	if (break_flg == true && location.y < SCREEN_HEIGHT + 100)
+	if (break_flg == true && location.y < _stage_height + 100)
 	{
 		//d—Í
 		acs[DOWN]++;
