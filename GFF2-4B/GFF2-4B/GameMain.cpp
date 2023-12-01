@@ -918,7 +918,7 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (bamboo[i] != nullptr && bamboo[j] != nullptr)
 			{
-				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == false && bamboo[j]->GetSpwnFlg() == true) {
+				if (bamboo[i]->HitBox(bamboo[j]) == true && bamboo[i]->GetSpwnFlg() == true && bamboo[j]->GetSpwnFlg() == true) {
 					bamboo[i]->FalseGravity();
 				}
 			}
