@@ -69,3 +69,6 @@
 #define HIMAWARI_BULLET 12
 #define BOSSZAKURO_WAVES 13
 #define BOSSHIMAWARI_BULLET 14
+
+//カットイン速度変更タイミング
+#define CUTIN_POS_TIMING 300

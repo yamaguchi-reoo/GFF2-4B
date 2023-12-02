@@ -1,5 +1,6 @@
 #pragma once
 #include "AbstractScene.h"
+#include "common.h"
 
 //カットイン01座標
 struct CutIn01Pos { float x; float y; };
