@@ -32,6 +32,8 @@ enum BossZakuroState {
     Z_RUSH,
     Z_ANIM_RUSH,
     Z_NOCKBACK,
+    Z_FAINTING,
+    Z_CUTIN,
 };
 
 class BossHands :
@@ -76,6 +78,16 @@ public:
     bool Go_Flg;
     int Charge;
     float Rush_speed;
+    int Fainting_img[10];//気絶の画像用
+    int CF;//気絶の画像切り替え用
+
+    //
+    int Cutin_img[3];//カットイン用画像
+    int Font_img;
+    bool Cutflg;
+    int x1;
+    int x2;
+    int CO;//開けたり閉めたりするやつ
 
     //手のHP用
     int Hands_HPimg[10];

@@ -1,7 +1,7 @@
 #include "Boss.h"
 
 Boss::Boss() {
-	LoadDivGraph("resource/images/Boss/BossBody.png", 3, 3, 1, 360, 700,Boss_MainBody);
+	LoadDivGraph("resource/images/Boss/BossBody.png", 4, 4, 1, 360, 700,Boss_MainBody);
 	LoadDivGraph("resource/images/Boss/BossArm.png", 2, 2, 1, 420, 700,Boss_MainArm);
 	LoadDivGraph("resource/images/Boss/explosionMini.png", 2, 2, 1, 160, 160, Explosion);
 
