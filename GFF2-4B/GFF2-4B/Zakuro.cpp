@@ -64,12 +64,10 @@ void Zakuro::Update(GameMain* main)
 			//左右移動
 			Move();
 		}
-		//ノックバック中にザクロ同士で当たるとえぐい挙動になるので
-		//直すまでコメントアウト↓
-	/*	if (knockback_flg == true)
+		else
 		{
 			MoveNockBack();
-		}*/
+		}
 	}
 		//床に乗っていたら重力OFF
 	if (onfloor_flg == true)
@@ -153,7 +151,6 @@ void Zakuro::Move()
 
 void Zakuro::MoveNockBack()
 {
-	stop_count -= 2;
 	//左移動
 	if (zakuro_state == ZakuroState::LEFT)
 	{
@@ -164,7 +161,7 @@ void Zakuro::MoveNockBack()
 	{
 		location.x -= speed * 0.8f;
 	}
-
+	stop_count -= 2;
 	if (stop_count <= 0)
 	{
 		attack_flg = true;
@@ -229,25 +226,6 @@ void Zakuro::Push(int num, Location _sub_location, Erea _sub_erea)
 		onfloor_flg = true;
 	}
 
-	//// 右の壁に触れた時
-	//if (location.x + erea.width - 12 < _sub_location.x && location.y + erea.height - 12 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
-	//{
-	//	location.x = _sub_location.x - erea.width;
-	//	//右の壁に触れたフラグを立てる
-	//	rightwall_flg = true;
-	//}
-	////左の壁に触れた時
-	//else if (location.x + 12 > _sub_location.x + _sub_erea.width && location.y + erea.height - 12 > _sub_location.y && (_type == 1 || _type == 3 || _type == 8))
-	//{
-	//	location.x = _sub_location.x + _sub_erea.width;
-	//	//左の壁に触れたフラグを立てる
-	//	leftwall_flg = true;
-	//}
-	////床に触れた時
-	//else if (location.y + erea.height - 30 < _sub_location.y && (_type == 1 || _type == 2 || _type == 3 || _type == 4 || _type == 8))
-	//{
-	//	onfloor_flg = true;
-	//}
 }
 
 void Zakuro::HitWall()
@@ -293,9 +271,7 @@ void Zakuro::Attack(GameMain* main)
 void Zakuro::ApplyDamage(int num)
 {
 	hp -= num;
-	//attack_flg = false;
-	//knockback_flg = true;
-	//MoveNockBack();
+	attack_flg = false;
 	if (hp <= 0) {
 		spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント
@@ -305,21 +281,16 @@ void Zakuro::ApplyDamage(int num)
 
 void Zakuro::HitZakuro()
 {
-	/*if (knockback_flg == false)
-	{*/
-		// ザクロの状態に応じて反対方向に向きを変える
-		switch (zakuro_state) {
-		case ZakuroState::RIGHT:
-			zakuro_state = ZakuroState::LEFT;
-			zakuro_direction = true;
-			break;
-		case ZakuroState::LEFT:
-			zakuro_state = ZakuroState::RIGHT;
-			zakuro_direction = false;
-			break;
-		}
-	/*}*/
-
+	switch (zakuro_state) {
+	case ZakuroState::RIGHT:
+		zakuro_state = ZakuroState::LEFT;
+		zakuro_direction = true;
+		break;
+	case ZakuroState::LEFT:
+		zakuro_state = ZakuroState::RIGHT;
+		zakuro_direction = false;
+		break;
+	}
 }
 
 ColorDate Zakuro::GetColorDate()

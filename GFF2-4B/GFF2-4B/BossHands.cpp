@@ -149,6 +149,7 @@ void BossHands::Draw() const {
 			//else {
 			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
 			//}
+			
 			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
 			if (face_angle > 0.0f && face_angle < 0.7f)
 			{
@@ -175,6 +176,9 @@ void BossHands::Draw() const {
 			break;
 		case 2:
 			//イエロー
+			//local_location.xが0の時はturu_location.xに+640、1280のときは+0
+			//local_location.xが0、local_location.yが720の時は+、local_location.xが1280、local_location.yが720の時は-
+			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
 			if (hima_state != BossHimawariState::SF_DOWN)
 			{
 				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
@@ -816,10 +820,25 @@ void BossHands::YellowInit()
 	attack_num = 3;
 	move_count = 0;
 	face_angle = 0;
+	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
+	turu_location = { 0,0 };
+	turu_angle = 0;
+	turu_rad = 0;
 }
 
 void BossHands::HandsYellow(GameMain* main)
 {
+
+	//turu_location.x = (SCREEN_WIDTH / 2) + (local_location.x + (erea.width / 2));
+	//turu_location.y = local_location.y + (erea.height / 2);
+	//turu_angle = atan2f(turu_location.y - (local_location.y + (erea.height / 2)), turu_location.x - (local_location.x + (erea.width / 2)));
+	//turu_rad = turu_angle * (float)M_PI * 2;
+
+	turu_location.x = local_location.x + (erea.width / 2);
+	turu_location.y = local_location.y + (erea.height / 2);
+	turu_angle = atan2f(turu_location.y, turu_location.x - SCREEN_WIDTH);
+	turu_rad = turu_angle * (float)M_PI * 2;
+
 	//生きているなら
 	if (Death_Flg == false) {
 

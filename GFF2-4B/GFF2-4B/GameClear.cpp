@@ -54,8 +54,8 @@ AbstractScene* GameClear::Update()
 	//Xç¿ïWÇ™300à»è„Ç©Ç¬-300à»â∫Ç»ÇÁ30Ç∏Ç¬ìÆÇ©Ç∑
 	if (cut_in01_loc.x <= -CUTIN_POS_TIMING && cut_in02_loc.x >= (CUTIN_POS_TIMING))
 	{
-		cut_in01_loc.x += -30.f;
-		cut_in02_loc.x += 30.f;
+		cut_in01_loc.x += -50.f;
+		cut_in02_loc.x += 50.f;
 	}
 	if (
 #ifdef _DEBUG
@@ -77,3 +77,5 @@ void GameClear::Draw() const
 	DrawGraphF(cut_in01_loc.x, cut_in01_loc.y, cut_in01, TRUE);
 	DrawGraphF(cut_in02_loc.x, cut_in02_loc.y, cut_in02, TRUE);
 }
+
+
