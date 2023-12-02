@@ -23,7 +23,6 @@ enum BossIrukaState {
 //ザクロの状態
 enum BossZakuroState {
     Z_ANIM_UP=0,
-    Z_ANIM_FALLING,
     Z_ANIM_DEAD,
     Z_MOVE,
     Z_JUMP_RIGHT,
@@ -80,14 +79,17 @@ public:
     float Rush_speed;
     int Fainting_img[10];//気絶の画像用
     int CF;//気絶の画像切り替え用
+    int F_switching;//気絶内部状態切り替え用
+    int F_count;//気絶時間カウント
 
-    //
     int Cutin_img[3];//カットイン用画像
     int Font_img;
     bool Cutflg;
     int x1;
     int x2;
     int CO;//開けたり閉めたりするやつ
+    bool Cutin_flg;//カットイン一回だけ用
+
 
     //手のHP用
     int Hands_HPimg[10];
@@ -158,10 +160,11 @@ public:
     void Blinking();
 
     //マゼンタ（ザクロ）用関数
-    void MagentaInit();                     //マゼンタ（ザクロ）で使う変数初期化
+    void MagentaInit();                  //マゼンタ（ザクロ）で使う変数初期化
     void JumpInit();
     void RushStartAnim();
     void NockBack();
+    void DrawCutin()const;
     void HandsMagenta(GameMain* main);      //マゼンタ（ザクロ）の更新
 
     //シアン（イルカ）用関数

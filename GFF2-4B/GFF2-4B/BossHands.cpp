@@ -37,6 +37,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	hp = 5;
 #endif // _DEBUG
 
+
 	switch (Hands_who)
 	{
 	case 0:
@@ -137,14 +138,15 @@ void BossHands::Draw() const {
 				//DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
 			DrawRotaGraphF(location.x + 150, location.y + 170, 1, Zakuro_rad, Zakuro_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
 			
-			if (zakuro_state == BossZakuroState::Z_FAINTING) {
+			if (zakuro_state == BossZakuroState::Z_FAINTING && F_switching==1) {
 				DrawGraphF(location.x + 150, location.y - 40, Fainting_img[CF], TRUE);
 			}
 
 			if (zakuro_state == Z_CUTIN) {
-				DrawGraphF(x1, 0, Cutin_img[0], TRUE);
-				DrawGraphF(x2, 0, Cutin_img[1], TRUE);
-				DrawGraph(420, 300, Font_img, TRUE);
+				//DrawGraphF(x1, 0, Cutin_img[0], TRUE);
+				//DrawGraphF(x2, 0, Cutin_img[1], TRUE);
+				//DrawGraph(420, 300, Font_img, TRUE);
+				DrawCutin();
 			}
 			////HP表示
 			//for (int i = 0; i < hp; i++) {
@@ -318,6 +320,9 @@ void BossHands::MagentaInit()
 	x1 = -450;
 	x2 =1100;
 	CO = 0;
+	Cutin_flg = false;
+	F_switching = 0;
+	F_count = 700;
 }
 
 void BossHands::JumpInit() {
@@ -446,9 +451,6 @@ void BossHands::HandsMagenta(GameMain* main) {
 				location.y -= 15;
 			}
 			break;
-		case BossZakuroState::Z_ANIM_FALLING:
-			//最初の落ちてくるときはダメージありがいいか
-			break;
 		case BossZakuroState::Z_MOVE:
 			Zakuro_Imgnum = 0;
 			Zakuro_rad = 0;
@@ -460,7 +462,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				Attack_Num = 4;
 				BossAttack(main);
 
-				if (location.x > 1000) {
+				if (location.x > 900) {
 					Zakuro_Direction = 0;
 					//Jump_Once = true;
 					//Jump_Num = 0 + rand() % 3;
@@ -552,6 +554,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 			}
 
 			break;
+			/*
 		case BossZakuroState::Z_JUMP_RIGHT:
 
 			Old_Zakuroy = location.y;
@@ -578,8 +581,8 @@ void BossHands::HandsMagenta(GameMain* main) {
 				else {
 					Zakuro_Imgnum = 2;
 				}
-			break;
 
+			break;
 		case BossZakuroState::Z_JUMP_LEFT:
 			/*
 			Zakuro_Movex = V_zero * cosf(rad) * time;
@@ -592,8 +595,9 @@ void BossHands::HandsMagenta(GameMain* main) {
 				zakuro_state = BossZakuroState::Z_MOVE;
 				location.y = 310;
 			}
-			*/
+			
 			break;
+			*/
 		case BossZakuroState::Z_FALLING:
 			Zakuro_Imgnum = 2;
 			Attack_Num = 4;
@@ -613,6 +617,10 @@ void BossHands::HandsMagenta(GameMain* main) {
 			break;
 		case BossZakuroState::Z_RUSH:
 
+			Attack_Num = 4;
+			BossAttack(main);
+
+
 			if (--Stop_Count < -50) {
 				//右に向かって突進
 				if (Zakuro_Direction == 0) {
@@ -625,7 +633,8 @@ void BossHands::HandsMagenta(GameMain* main) {
 							location.x = 640;
 							location.y = -500;
 							Zakuro_Direction = 1;
-							zakuro_state = Z_FALLING;
+							F_switching = 0;
+							zakuro_state = Z_FAINTING;
 						}
 
 					}
@@ -653,7 +662,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 							location.x = 640;
 							location.y = -500;
-							zakuro_state = Z_FALLING;
+							zakuro_state = Z_FAINTING;
 						}
 
 					}
@@ -670,9 +679,12 @@ void BossHands::HandsMagenta(GameMain* main) {
 					}
 				}
 			}
+
 			break;
 		case Z_NOCKBACK:
+
 			NockBack();
+
 			break;
 		case Z_CUTIN:
 
@@ -714,25 +726,81 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 			break;
 		case Z_FAINTING:
-			//気絶
+			//吹き飛ばされたのち落下
+			switch (F_switching)
+			{
+			case 0:
+				//落下してくる
+				Zakuro_Imgnum = 2;
+				if (location.y > 340){
+					F_switching++;
+				}
+				location.y += 10;
 
-			//かけよって4撃突っ込めるぐらいの時間
-
-			switch (Stop_Count) {
-			case 120:
-				CF = 0;
 				break;
-			case 60:
-				CF = 1;
+			case 1:
+				//気絶
+				//かけよって4撃突っ込めるぐらいの時間
+				Zakuro_Imgnum = 3;
+				F_count -= 5;
+				if (F_count > 0) {
+					switch (Stop_Count) {
+					case 120:
+						CF = 0;
+						break;
+					case 60:
+						CF = 1;
+						break;
+					default:
+						break;
+					}
+
+					Stop_Count -= 10;
+					if (Stop_Count < 0) {
+						Stop_Count = 120;
+					}
+				}
+				else {
+					Stop_Count = 120;
+					F_count = 700;
+					F_switching++;
+				}
+
+				break;
+			case 2:
+
+				Zakuro_Imgnum = 1;
+					switch (Stop_Count) {
+					case 120:
+						Zakuro_Direction=0;
+						break;
+					case 60:
+						Zakuro_rad = 0;
+						Zakuro_Direction=1;
+						break;
+					case 40:
+						Zakuro_Direction = 0;
+						break;
+					case 0:
+						Stop_Count = 120;
+						zakuro_state = Z_ANIM_UP;
+						break;
+					default:
+						break;
+					}
+
+					Stop_Count -= 1;
+					if (Stop_Count < 0) {
+						Stop_Count = 120;
+					}
+
+
 				break;
 			default:
 				break;
 			}
 
-			Stop_Count -= 10;
-			if (Stop_Count < 0) {
-				Stop_Count = 120;
-			}
+
 
 			break;
 		default:
@@ -760,6 +828,14 @@ void BossHands::HandsMagenta(GameMain* main) {
 			break;
 		};
 	}
+
+}
+
+void BossHands::DrawCutin()const {
+
+	DrawGraphF(x1, 0, Cutin_img[0], TRUE);
+	DrawGraphF(x2, 0, Cutin_img[1], TRUE);
+	DrawGraph(420, 300, Font_img, TRUE);
 
 }
 
@@ -812,7 +888,13 @@ void BossHands::RushStartAnim() {
 		{
 		case 0:
 			if (Stop_Count == 70) {
-				zakuro_state = Z_CUTIN;
+				if (Cutin_flg == false) {
+					Cutin_flg = true;
+					zakuro_state = Z_CUTIN;
+				}
+				else {
+					zakuro_state = Z_RUSH;
+				}
 				Stop_Count = 120;
 				Go_Flg = false;
 				Rush_speed = 20;
@@ -876,6 +958,7 @@ void BossHands::NockBack()
 		zakuro_state = Z_ANIM_RUSH;
 		Stop_Count = 120;
 	}
+
 }
 
 void BossHands::YellowInit()
