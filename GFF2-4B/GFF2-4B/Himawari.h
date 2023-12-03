@@ -20,7 +20,9 @@ private:
 
    int bullet_num;
 
-
+   int img[10];
+   int num;
+   int timer;
 
     //“–‚½‚è”»’èŠÖ˜A
     bool onfloor_flg;	//‚¢‚¸‚ê‚©‚Ì’n–Ê‚ÉG‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©

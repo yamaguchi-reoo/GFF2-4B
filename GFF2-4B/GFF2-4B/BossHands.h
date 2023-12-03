@@ -81,6 +81,7 @@ public:
     int CF;//気絶の画像切り替え用
     int F_switching;//気絶内部状態切り替え用
     int F_count;//気絶時間カウント
+    bool Damage_flg;//ダメージ受け付けるかどうか
 
     int Cutin_img[3];//カットイン用画像
     int Font_img;

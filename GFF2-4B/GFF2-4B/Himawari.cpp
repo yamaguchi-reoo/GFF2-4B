@@ -20,6 +20,8 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	who = _who;
 
 	image = LoadGraph("resource/images/Enemy/Himawari.png");
+	LoadDivGraph("resource/images/Enemy/Himawari.png", 5, 5, 1, 90, 120, img);
+	num = 0;
 
 	himawari_direction = direction;
 
@@ -38,6 +40,8 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	Date.magenta = 5.0f;
 	Date.cyan = 5.0f;
 	Date.yellow = 15.0f;
+	num = 0;
+	timer = 120;
 }
 
 Himawari::~Himawari()
@@ -49,10 +53,28 @@ void Himawari::Update(GameMain* main)
 	//スポーンしているかつアタックフラグが立っているとき
 	if (spawn_flg == false && attack_flg == true)
 	{
+
+		timer += -5;
+		switch (timer) {
+		case 120:
+			num = 1;
+			break;
+		case 60:
+			num = 2;
+			break;
+		case 0:
+			timer = 160;
+			break;
+		default:
+			break;
+		}
+
+
 		if (himawari_state == HimawariState::SHOOT) 
 		{
 			//攻撃
 			Attack(main);
+
 		}
 	}
 	//床に触れていないなら
@@ -63,6 +85,7 @@ void Himawari::Update(GameMain* main)
 	}
 	//各移動用変数をリセット
 	HimawariReset();
+
 
 }
 
@@ -75,13 +98,14 @@ void Himawari::Draw() const
 		if (himawari_direction == true) 
 		{
 			//DrawBoxAA(local_location.x + 40, local_location.y + 10, local_location.x, local_location.y + 40, 0x00ff00, true);
-			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_X, image, true);
+			//DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_X, image, true);
+			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_X, img[num], true);
 		}
 		//右向き
 		else if (himawari_direction == false) 
 		{
 			//DrawBoxAA(local_location.x + erea.width - 40, local_location.y + 10, local_location.x + erea.width, local_location.y + 40, 0x00ff00, true);
-			DrawTurnGraphF(local_location.x - HIMAWARI_IMAGE_SHIFT_X, local_location.y - HIMAWARI_IMAGE_SHIFT_Y,image, true);
+			//DrawTurnGraphF(local_location.x - HIMAWARI_IMAGE_SHIFT_X, local_location.y - HIMAWARI_IMAGE_SHIFT_Y,image, true);
 		}
 	}
 }

@@ -24,6 +24,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Blinking_count = 0;
 	Display = false;
 	zakuro_state = Z_FALLING;
+	Damage_flg = false;
 
 	Stop_Count = 120;
 	Make_hpflg = false;
@@ -456,7 +457,25 @@ void BossHands::HandsMagenta(GameMain* main) {
 			Zakuro_rad = 0;
 
 			if (hitflg == true) {
-				zakuro_state = Z_NOCKBACK;
+				if (Zakuro_Direction == 0 && location.x<700) {
+					if (location.x> main->GetPlayerLocation().x) {
+						zakuro_state = Z_NOCKBACK;
+					}
+					else {
+						hitflg = false;
+					}
+				}
+				else if (Zakuro_Direction == 1 && location.x > 490) {
+					if (location.x < main->GetPlayerLocation().x) {
+						zakuro_state = Z_NOCKBACK;
+					}
+					else {
+						hitflg = false;
+					}
+				}
+				else {
+					hitflg = false;
+				}
 		}
 			else {
 				Attack_Num = 4;
@@ -613,6 +632,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				location.y += 10;
 			break;
 		case BossZakuroState::Z_ANIM_RUSH:
+			Damage_flg = true;
 			RushStartAnim();
 			break;
 		case BossZakuroState::Z_RUSH:
@@ -622,13 +642,14 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 
 			if (--Stop_Count < -50) {
+				Damage_flg = false;
 				//‰E‚ÉŒü‚©‚Á‚Ä“Ëi
 				if (Zakuro_Direction == 0) {
 					if (hitflg == true) {
-						location.x += 10;
-						location.y -= 10;
+						location.x += 20;
+						location.y -= 20;
 
-						if (location.x < 1300 && location.y < -100) {
+						if (location.x < 1300 && location.y < -400) {
 							hitflg = false;
 							location.x = 640;
 							location.y = -500;
@@ -653,10 +674,10 @@ void BossHands::HandsMagenta(GameMain* main) {
 				else {
 					//¶‚ÉŒü‚©‚Á‚Ä“Ëi
 					if (hitflg == true) {
-						location.x -= 10;
-						location.y -= 10;
+						location.x -= 20;
+						location.y -= 20;
 
-						if (location.x < -100 && location.y < -100) {
+						if (location.x < -100 && location.y < -400) {
 							hitflg = false;
 							Zakuro_Direction = 0;
 
@@ -679,10 +700,14 @@ void BossHands::HandsMagenta(GameMain* main) {
 					}
 				}
 			}
+			else {
+				Damage_flg = true;
+				hitflg = false;
+			}
 
 			break;
 		case Z_NOCKBACK:
-
+			Damage_flg = true;
 			NockBack();
 
 			break;
@@ -717,6 +742,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				else {
 					CO=0;
 					Cutflg = false;
+					Damage_flg = false;
 					zakuro_state=Z_RUSH;
 				}
 				break;
@@ -728,11 +754,13 @@ void BossHands::HandsMagenta(GameMain* main) {
 		case Z_FAINTING:
 			//‚«”ò‚Î‚³‚ê‚½‚Ì‚¿—Ž‰º
 			switch (F_switching)
-			{
+			{ 
 			case 0:
 				//—Ž‰º‚µ‚Ä‚­‚é
+				Damage_flg = true;
 				Zakuro_Imgnum = 2;
 				if (location.y > 340){
+					Damage_flg = false;
 					F_switching++;
 				}
 				location.y += 10;
@@ -954,6 +982,7 @@ void BossHands::NockBack()
 
 	if (Stop_Count <= 0)
 	{
+		Damage_flg = false;
 		hitflg = false;
 		zakuro_state = Z_ANIM_RUSH;
 		Stop_Count = 120;
@@ -1618,8 +1647,9 @@ void BossHands::ApplyDamage(int num) {
 		}
 			hitflg = true;
 
-			hp--;
-
+			if (Damage_flg == false) {
+				hp--;
+			}
 	//}
 	
 	if (hp <= 0) {
