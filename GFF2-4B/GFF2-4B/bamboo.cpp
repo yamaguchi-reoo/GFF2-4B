@@ -3,19 +3,33 @@
 
 #define BAMBOO_GRAVITY  10
 
+#define BAMBOO_IMAGE_SHIFT_X 12		//画像ずらし用
+#define BAMBOO_IMAGE_SHIFT_Y 48/*20*/		//画像ずらし用
+#define BAMBOO_IDLE 0				//アイドル状態の画像
+#define BAMBOO_ON_DEATH 1			//上から攻撃されたときの画像
+#define BAMBOO_DEATH 3				//死亡アニメーション開始地
+#define BAMBOO_DEATH_ANIM 10		//次の画像に切り替えるまでの時間（フレーム）
+
+
 Bamboo::Bamboo(float pos_x, float pos_y)
 {
+	bamboo_state = BambooState::IDLE;
+	anim_frame = 0;
+	count = 0;
 	location.x = pos_x;
 	location.y = pos_y;
-	erea.width = 100;
-	erea.height = 200;
+	erea.width = 75/*100*/;
+	erea.height = 120/*200*/;
 
 	hp = 1;
 	image = LoadGraph("resource/images/Enemy/Bamboo.png");
+	LoadDivGraph("resource/images/Enemy/bamboo(2).png", 4, 4, 1, 100, 200, bamboo_image);
+	bamboo_anim = 0;
 
 	apply_gravity = true;
 	onfloor_flg = false;
 	spawn_flg = true;
+	death_flg = false;
 }
 
 Bamboo::~Bamboo()
@@ -24,6 +38,7 @@ Bamboo::~Bamboo()
 
 void Bamboo::Update(GameMain* main)
 {
+	anim_frame++;
 	if (spawn_flg == true)
 	{
 		//床に触れていないなら
@@ -32,17 +47,30 @@ void Bamboo::Update(GameMain* main)
 			//重力を与える
 			BambooGiveGravity();
 		}
-		//各移動用変数をリセット
-		BambooReset();
 	}
+	//各移動用変数をリセット
+	BambooReset();
+	//描画関連の変数を動かす
+	BambooAnim();
 }
 
 void Bamboo::Draw() const
 {
 	if (spawn_flg == true)
 	{
-		DrawGraphF(local_location.x, local_location.y, image, FALSE);
+		/*DrawGraphF(local_location.x, local_location.y, image, FALSE);*/
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
+		switch (bamboo_state)
+		{
+		case BambooState::IDLE:
+			DrawGraphF(local_location.x - BAMBOO_IMAGE_SHIFT_X, local_location.y - BAMBOO_IMAGE_SHIFT_Y, bamboo_image[BAMBOO_IDLE], true);
+			break;
+		case BambooState::DEATH:
+			DrawGraphF(local_location.x - BAMBOO_IMAGE_SHIFT_X, local_location.y - BAMBOO_IMAGE_SHIFT_Y, bamboo_image[BAMBOO_DEATH], true);
+			break;
+		default:
+			break;
+		}
 	}
 	//DrawFormatString(200, 400, 0xfffff, "%d", spawn_flg);
 }
@@ -75,11 +103,36 @@ void Bamboo::ApplyDamage(int num)
 {
 	hp = -num;
 	if (hp <= 0) {
-		spawn_flg = false;
+		/*spawn_flg = false;*/
+		death_flg = true;
 	}
 }
 void Bamboo::FalseGravity()
 {
 	apply_gravity = false;
+}
+
+void Bamboo::BambooAnim()
+{
+	//アニメーション用変数を回す
+	if (anim_frame % BAMBOO_DEATH_ANIM == 0)
+	{
+		if (++bamboo_anim > 1)
+		{
+			bamboo_anim = 0;
+		}
+	}
+
+	if (death_flg == true)
+	{
+		bamboo_state = BambooState::DEATH;
+	}
+	//フラグがtrueになってからcountが12以上になったら
+	if (death_flg == true && ++count >= (BAMBOO_DEATH_ANIM))
+	{
+		//スポーンフラグを
+		spawn_flg = false;
+		count = 0;
+	}
 }
 

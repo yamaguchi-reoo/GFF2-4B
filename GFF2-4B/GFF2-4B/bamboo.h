@@ -1,10 +1,21 @@
 #pragma once
 #include "CharaBase.h"
+enum  class BambooState {
+    IDLE = 0,
+    DEATH
+};
 class Bamboo:
     public CharaBase
 {
 private:
+    int anim_frame;     //アニメーションフレーム測定
+    int count;			//カウント
+    BambooState bamboo_state;
+
     bool spawn_flg;
+    bool death_flg;
+    int bamboo_image[4];
+    int bamboo_anim;
 
     bool onfloor_flg;	//いずれかの地面に触れているかどうか
     bool apply_gravity;		//重力を適用するかどうか
@@ -33,5 +44,6 @@ public:
 
     void FalseGravity();
 
+    void BambooAnim();
 };
 
