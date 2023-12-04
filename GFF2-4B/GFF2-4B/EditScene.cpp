@@ -283,49 +283,26 @@ void EditScene::Draw()const
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xff0000, false);
 			}
-			if (stage_data[i][j] == 5)
-			{
-				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xff00ff, true);
-			}
-			if (stage_data[i][j] == 6)
-			{
-				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x00ffff, true);
-			}
-			if (stage_data[i][j] == 7)
-			{
-				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xffff00, true);
-			}
-			if (stage_data[i][j] == 8)
-			{
-				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x88ff88, true);
-			}
+			//各看板
 			if (stage_data[i][j] == 9)
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "攻撃", 0xffffff);
+				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "攻撃", 0x76D0E4);
 			}
 			if (stage_data[i][j] == 10)
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "ジャンプ", 0xffffff);
+				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "ジャンプ", 0x76D0E4);
 			}
 			if (stage_data[i][j] == 11)
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "ジャンプ攻撃", 0xffffff);
+				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "ジャンプ攻撃", 0x76D0E4);
 			}
 			if (stage_data[i][j] == 12)
 			{
 				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0x892F1B, true);
-				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "強化状態", 0xffffff);
-			}
-			if (stage_data[i][j] == 13)
-			{
-				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xBB8B38, true);
-			}
-			if (stage_data[i][j] == 14)
-			{
-				DrawBoxAA(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, stage[i][j]->GetLocalLocation().x + BOX_WIDTH, stage[i][j]->GetLocalLocation().y + BOX_HEIGHT, 0xFF0000, true);
+				DrawStringF(stage[i][j]->GetLocalLocation().x, stage[i][j]->GetLocalLocation().y, "強化状態", 0x76D0E4);
 			}
 		}
 	}

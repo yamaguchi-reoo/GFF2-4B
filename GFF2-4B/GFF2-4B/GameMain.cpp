@@ -77,6 +77,7 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
+
 }
 
 GameMain::~GameMain()
@@ -700,8 +701,6 @@ void GameMain::Draw() const
 	}
 }
 
-
-
 void GameMain::SpawnAttack(AttackData _attackdata)
 {
 	for (int i = 0; i < ATTACK_NUM; i++)
@@ -1137,7 +1136,14 @@ void GameMain::SetStage(int _stage)
 		}
 	}
 
-
+	//ステージのマップチップ用
+	for (int i = 0; i < stage_height_num; i++)
+	{
+		for (int j = 0; j < stage_width_num; j++)
+		{
+			stage[i][j]->SetDrawType(GetStageType(i - 1, j), GetStageType(i, j - 1), GetStageType(i, j + 1), GetStageType(i + 1, j));
+		}
+	}
 	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
 	if (now_stage == 3 && old_stage != now_stage) {
 		//Hands_Delete_Flg = false;
@@ -1170,6 +1176,21 @@ void GameMain::ResetCamera()
 {
 	camera_location.x = screen_origin.x;
 	camera_location.y = screen_origin.y;
+}
+
+int GameMain::GetStageType(int _i, int _j)
+{
+	int ret = -1;
+	if (stage[_i][_j] == nullptr || _i >= stage_height_num || _j >= stage_width_num)
+	{
+		//無を返す
+		ret = -1;
+	}
+	else
+	{
+		ret = stage[_i][_j]->GetStageType();
+	}
+	return ret;
 }
 
 Location GameMain::GetPlayerLocation()

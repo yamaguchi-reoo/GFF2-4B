@@ -102,12 +102,9 @@ public:
 
     //いるか
     BossIrukaState iruka_state;     //いるかの状態
-    Location turu_location;         //つる描画位置
+    bool lottery_once;              //攻撃するか抽選
     bool rare_flg;                  //没挙動を低確率でする
     float iruka_rad;                //いるかの角度計算用
-    float turu_angle;               //つる角度
-    float turu_rad;                 //つるの描画角度計算用
-    int turu_img;                   //つる画像用
     int ref_num;                    //いるかが壁に跳ね返った回数
     int tackle_num;                 //いるかが攻撃した回数
 
@@ -125,6 +122,9 @@ public:
     int attack_num;                 //弾を連続で撃つ用
     int move_count;                 //何回移動したかを測定する   
     //いるかひまわり共用
+    Location turu_location;         //つる描画位置
+    float turu_rad;                 //つるの描画角度計算用
+    int turu_img;                   //つる画像用
     float acceleration;             //移動の加速度
     float face_angle;               //顔の角度
     int timer;                      //各モーションの時間
