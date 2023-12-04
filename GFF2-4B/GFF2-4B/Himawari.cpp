@@ -301,7 +301,7 @@ void Himawari::HimawariAnim()
 		himawari_state = HimawariState::DEATH;
 	}
 	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (HIMAWARI_DEATH_ANIM + 2))
+	if (death_flg == true && ++count >= (HIMAWARI_DEATH_ANIM))
 	{
 		//スポーンフラグを
 		spawn_flg = true;

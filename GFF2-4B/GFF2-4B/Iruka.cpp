@@ -111,7 +111,7 @@ void Iruka::Update(GameMain* main)
 		}
 	}
 	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (IRUKA_DEATH_ANIM + 2))
+	if (death_flg == true && ++count >= (IRUKA_DEATH_ANIM))
 	{
 		//スポーンフラグを
 		spawn_flg = true;

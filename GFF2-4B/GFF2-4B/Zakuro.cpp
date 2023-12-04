@@ -105,7 +105,7 @@ void Zakuro::Update(GameMain* main)
 	//各移動用変数をリセット
 	ZakuroReset();
 	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM + 2))
+	if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM))
 	{
 		//スポーンフラグを
 		spawn_flg = true;
