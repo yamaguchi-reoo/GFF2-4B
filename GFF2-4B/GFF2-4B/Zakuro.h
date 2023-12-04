@@ -30,6 +30,7 @@ private:
 	int zakuro_image[2];			//ザクロ画像
 	int zakuro_death_image[2];		//ザクロの死亡時の画像
 	int zakuro_anim;				//画像アニメーション用
+	int zakuro_death_anim;			//画像アニメーション用
 
 	//当たり判定関連
 	bool onfloor_flg;	//いずれかの地面に触れているかどうか

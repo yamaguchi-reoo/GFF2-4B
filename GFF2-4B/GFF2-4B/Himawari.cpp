@@ -114,7 +114,7 @@ void Himawari::Draw() const
 		case HimawariState::CHARGE:
 			break;
 		case HimawariState::DEATH:
-			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_Y, himawari_image[HIMAWARI_DEATH + himawari_anim], true);
+			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_Y, himawari_image[/*HIMAWARI_DEATH + */himawari_anim], true);
 			break;
 		default:
 			break;
@@ -299,14 +299,26 @@ void Himawari::HimawariAnim()
 	if (death_flg == true)
 	{
 		himawari_state = HimawariState::DEATH;
+		if (++count > HIMAWARI_DEATH_ANIM)
+		{
+			himawari_anim = 3;
+		}
+		if (++count > HIMAWARI_DEATH_ANIM + 20)
+		{
+			himawari_anim = 4;
+		}
+		if (++count > HIMAWARI_DEATH_ANIM + 40)
+		{
+			spawn_flg = true;
+		}
 	}
-	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (HIMAWARI_DEATH_ANIM))
-	{
-		//スポーンフラグを
-		spawn_flg = true;
-		count = 0;
-	}
+	////フラグがtrueになってからcountが12以上になったら
+	//if (death_flg == true && ++count >= (HIMAWARI_DEATH_ANIM))
+	//{
+	//	//スポーンフラグを
+	//	spawn_flg = true;
+	//	count = 0;
+	//}
 }
 
 ColorDate Himawari::GetColorDate()
