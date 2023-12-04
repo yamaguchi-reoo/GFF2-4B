@@ -115,6 +115,7 @@ void Iruka::Update(GameMain* main)
 	{
 		//スポーンフラグを
 		spawn_flg = true;
+		count = 0;
 	}
 }
 

@@ -11,7 +11,7 @@
 #define ZAKURO_ANIM_MOVE 0			//移動アニメーション開始地点
 #define ZAKURO_DEATH 0				//死亡アニメーション開始地
 #define ZAKURO_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
-#define ZAKURO_DEATH_ANIM 5		//次の画像に切り替えるまでの時間（フレーム）
+#define ZAKURO_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
 
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
@@ -109,6 +109,7 @@ void Zakuro::Update(GameMain* main)
 	{
 		//スポーンフラグを
 		spawn_flg = true;
+		count = 0;
 	}
 }
 
