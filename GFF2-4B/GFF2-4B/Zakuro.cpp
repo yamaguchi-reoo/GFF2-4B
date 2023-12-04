@@ -161,7 +161,7 @@ void Zakuro::MoveNockBack()
 	{
 		location.x -= speed * 0.8f;
 	}
-	stop_count -= 2;
+	stop_count -= 1;
 	if (stop_count <= 0)
 	{
 		attack_flg = true;

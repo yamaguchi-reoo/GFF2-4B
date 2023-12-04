@@ -18,6 +18,7 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	erea.height = 100;
 	erea.width = 50;
 	who = _who;
+	hp = 2;
 
 	image = LoadGraph("resource/images/Enemy/Himawari.png");
 
@@ -151,7 +152,7 @@ AttackData Himawari::CreateAttactData()
 	//UŒ‚‚ÉŠÖ‚·‚éî•ñ
 	attack_data.attack_time = 60;
 	attack_data.damage = 1;
-	attack_data.delay = 10;
+	attack_data.delay = 5;
 	attack_data.attack_type = BULLET;//MELEE;
 	attack_data.effect_type = HIMAWARI_BULLET;
 
