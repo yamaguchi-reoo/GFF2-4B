@@ -2,7 +2,7 @@
 #include "GameMain.h"
 
 #define BULLET_INTERVAL 120		//インターバル
-#define RAPID_INTERVAL 9		//連射インターバル	
+#define RAPID_INTERVAL 36		//連射インターバル	
 #define HIMAWARI_GRAVITY  10	// 重力
 #define BULLET_NUM_MAX 3		//弾の最大連射数
 
@@ -27,7 +27,7 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	erea.height = 100;
 	erea.width = 50;
 	who = _who;
-	hp = 2;
+	hp = 1;
 
 	image = LoadGraph("resource/images/Enemy/Himawari.png");
 	LoadDivGraph("resource/images/Enemy/Himawari.png", 5, 5, 1, 90, 120, himawari_image);
@@ -216,7 +216,7 @@ AttackData Himawari::CreateAttactData()
 	{
 		attack_data.angle = 0.5f;
 	}
-	attack_data.speed = 10;
+	attack_data.speed = 7;
 
 	return attack_data;
 	
