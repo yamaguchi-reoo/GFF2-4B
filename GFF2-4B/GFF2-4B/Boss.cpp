@@ -25,7 +25,7 @@ Boss::Boss() {
 	Boss_state = 2;
 	Once_Flg = true;
 	Boss_step = 0;
-	Boss_Handmove=6;
+	Boss_Handmove = 7;
 	Explosion_ImgNum = 0;
 	Expl_count = 0;
 
@@ -153,17 +153,17 @@ void Boss::Update(GameMain* main) {
 			}
 		}
 		else {
-			Boss_Handmove++;
 			Boss_Body_Y = 0;
 			Boss_Body_X = 440;
+			Boss_Handmove++;
 		}
 	case 8:
 
 		//”š”­‚µ‚ÄŽ€‚Ê
 		
 		//if()
-			Boss_Body_X += 10;
-			Boss_Body_X -= 10;
+			//Boss_Body_X += 10;
+			//Boss_Body_X -= 10;
 
 		break;
 	default:

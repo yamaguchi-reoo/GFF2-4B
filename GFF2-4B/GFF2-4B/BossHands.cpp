@@ -12,8 +12,8 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//‘S˜r‹¤’Ê‚Ì‰Šú‰»
 	frame = 0;
 	Hands_Img_num = 0;//ƒCƒ‹ƒJ
-	//Hands_who = 0;
-	Hands_who = boss->Hand_Num;
+	Hands_who = 0;
+	//Hands_who = boss->Hand_Num;
 	erea.height = (float)hands_height[Hands_who];
 	erea.width = (float)hands_width[Hands_who];
 	who = _who;
@@ -473,7 +473,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 						hitflg = false;
 					}
 				}
-				else if (Zakuro_Direction == 1 && location.x > 490) {
+				else if (Zakuro_Direction == 1 && location.x > 300) {
 					if (location.x < main->GetPlayerLocation().x) {
 						zakuro_state = Z_NOCKBACK;
 					}
