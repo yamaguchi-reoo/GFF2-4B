@@ -140,6 +140,9 @@ public:
     //プレイヤーにステージの高さを渡す用
     int GetStageHeight() { return stage_height; }
 
+    //ステージに他のステージのtype情報を渡す用
+    int GetStageType(int _i, int _j);
+
     //ボスにプレイヤーの座標を渡す用
     Location GetPlayerLocation();
 

@@ -161,14 +161,7 @@ void BossHands::Draw() const {
 			break;
 		case 1:
 			//シアン
-			//if (Direction == 0) {
-			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
-			//}
-			//else {
-			//	DrawRotaGraph(location.x, location.y, 1, 0, Hands_img[Hands_Img_num], TRUE);
-			//}
-			
-			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
+			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_rad, turu_img, TRUE, FALSE);
 			if (face_angle > 0.0f && face_angle < 0.7f)
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
@@ -194,9 +187,7 @@ void BossHands::Draw() const {
 			break;
 		case 2:
 			//イエロー
-			//local_location.xが0の時はturu_location.xに+640、1280のときは+0
-			//local_location.xが0、local_location.yが720の時は+、local_location.xが1280、local_location.yが720の時は-
-			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_angle, turu_img, TRUE, FALSE);
+			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_rad, turu_img, TRUE, FALSE);
 			if (hima_state != BossHimawariState::SF_DOWN)
 			{
 				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
@@ -212,8 +203,6 @@ void BossHands::Draw() const {
 
 				}
 			}
-
-
 			break;
 		default:
 			break;
@@ -1079,22 +1068,15 @@ void BossHands::YellowInit()
 	face_angle = 0;
 	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
 	turu_location = { 0,0 };
-	turu_angle = 0;
 	turu_rad = 0;
 }
 
 void BossHands::HandsYellow(GameMain* main)
 {
 
-	//turu_location.x = (SCREEN_WIDTH / 2) + (local_location.x + (erea.width / 2));
-	//turu_location.y = local_location.y + (erea.height / 2);
-	//turu_angle = atan2f(turu_location.y - (local_location.y + (erea.height / 2)), turu_location.x - (local_location.x + (erea.width / 2)));
-	//turu_rad = turu_angle * (float)M_PI * 2;
-
-	turu_location.x = local_location.x + (erea.width / 2);
-	turu_location.y = local_location.y + (erea.height / 2);
-	turu_angle = atan2f(turu_location.y, turu_location.x - SCREEN_WIDTH);
-	turu_rad = turu_angle * (float)M_PI * 2;
+	turu_rad = atan2f(local_location.y, local_location.x - SCREEN_WIDTH);
+	turu_location.x = local_location.x + (erea.width / 2) - (640 * cosf(turu_rad));
+	turu_location.y = local_location.y + (erea.height / 2) - (640 * sinf(turu_rad));
 
 	//生きているなら
 	if (Death_Flg == false) {
@@ -1283,6 +1265,7 @@ void BossHands::CyanInit()
 	}		
 	//出現位置
 	iruka_state = BossIrukaState::D_WAIT;
+	lottery_once = false;
 	location.x = SCREEN_WIDTH - erea.width + 10;
 	location.y = 50;
 	face_angle = 0.5f;
@@ -1293,7 +1276,6 @@ void BossHands::CyanInit()
 	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
 	count = 0;	//画像切り替え用
 	turu_location = { 0,0 };
-	turu_angle = 0;
 	Death_Flg = false;
 	acceleration = 0;
 	tackle_num = 0;
@@ -1304,10 +1286,9 @@ void BossHands::HandsCyan(GameMain* main) {
 	//仮
 	//つるの描画位置を計算
 
-	turu_location.x = (SCREEN_WIDTH / 2) + (local_location.x + (erea.width / 2));
-	turu_location.y = local_location.y + (erea.height / 2);
-	turu_angle = atan2f(turu_location.y - (local_location.y+(erea.height/2)), turu_location.x - (local_location.x + (erea.width / 2)));
-	turu_rad = turu_angle * (float)M_PI * 2;
+	turu_rad = atan2f(local_location.y, local_location.x - SCREEN_WIDTH);
+	turu_location.x = local_location.x + (erea.width / 2) - (640 * cosf(turu_rad)) - (50 * cosf(iruka_rad));
+	turu_location.y = local_location.y + (erea.height / 2) - (640 * sinf(turu_rad)) - (50 * sinf(iruka_rad));
 
 	//アニメーション用
 	if (
@@ -1375,25 +1356,35 @@ void BossHands::HandsCyan(GameMain* main) {
 					face_angle = face_angle - 0.5f;
 					ref_num++;
 				}
-				if (main->GetPlayerLocation().x > location.x - 10 && main->GetPlayerLocation().x < location.x + 10 && ref_num>0 && GetRand(1) == 0)
+				if (main->GetPlayerLocation().x > location.x - 50 && main->GetPlayerLocation().x < location.x + 50 && ref_num>0)
 				{
-					if (tackle_num > 2)
+					if (lottery_once == false)
 					{
-						tackle_num = 0;
-						ref_num = 0;
-						iruka_state = BossIrukaState::D_DASH;
-						timer = 100;
-						acceleration = 90;
-					}
-					else
-					{
-						ref_num = 0;
-						iruka_state = BossIrukaState::D_MOVE;
-						timer = 50;
-						acceleration = 70;
+						if (GetRand(1) == 0)
+						{
+							if (tackle_num > 2)
+							{
+								tackle_num = 0;
+								ref_num = 0;
+								iruka_state = BossIrukaState::D_DASH;
+								timer = 100;
+								acceleration = 90;
+							}
+							else
+							{
+								ref_num = 0;
+								iruka_state = BossIrukaState::D_MOVE;
+								timer = 50;
+								acceleration = 70;
+							}
+						}
+						lottery_once = true;
 					}
 				}
-
+				else
+				{
+					lottery_once = false;
+				}
 			}
 			break;
 		case BossIrukaState::D_MOVE:
