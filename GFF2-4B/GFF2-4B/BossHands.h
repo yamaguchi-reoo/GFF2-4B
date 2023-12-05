@@ -84,13 +84,14 @@ public:
     bool Damage_flg;//ダメージ受け付けるかどうか
 
     int Cutin_img[3];//カットイン用画像
+    int Cutin_backimg[3];//カットイン用画像
     int Font_img;
     bool Cutflg;
     int x1;
     int x2;
     int CO;//開けたり閉めたりするやつ
     bool Cutin_flg;//カットイン一回だけ用
-
+    int alpha;
 
     //手のHP用
     int Hands_HPimg[10];

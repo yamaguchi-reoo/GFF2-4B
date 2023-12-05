@@ -25,7 +25,7 @@ Boss::Boss() {
 	Boss_state = 2;
 	Once_Flg = true;
 	Boss_step = 0;
-	Boss_Handmove=0;
+	Boss_Handmove=6;
 	Explosion_ImgNum = 0;
 	Expl_count = 0;
 
@@ -142,7 +142,6 @@ void Boss::Update(GameMain* main) {
 	case 7:
 		//身体上がって来て
 				//本体上がってくる
-
 		if (Boss_Body_Y > 0) {
 			Boss_Body_Y -= 10;
 			if (timer++ < 1) {
@@ -154,9 +153,18 @@ void Boss::Update(GameMain* main) {
 			}
 		}
 		else {
+			Boss_Handmove++;
 			Boss_Body_Y = 0;
 			Boss_Body_X = 440;
 		}
+	case 8:
+
+		//爆発して死ぬ
+		
+		//if()
+			Boss_Body_X += 10;
+			Boss_Body_X -= 10;
+
 		break;
 	default:
 		break;
@@ -259,7 +267,11 @@ void Boss::Draw() const {
 		break;
 	case 7:
 		//本体
-		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[0], TRUE);
+		break;
+	case 8:
+		//本体
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[4], TRUE);
 
 		break;
 	default:
@@ -276,10 +288,10 @@ void Boss::Draw() const {
 void Boss::BossImgChange(GameMain* main) {
 	
 	if (main->GetPlayerLocation().x < 426) {
-		Bossbody_ImgNum = 0;
+		Bossbody_ImgNum = 1;
 	}
 	else if (main->GetPlayerLocation().x < 852) {
-		Bossbody_ImgNum = 1;
+		Bossbody_ImgNum = 0;
 	}
 	else {
 		Bossbody_ImgNum = 2;
