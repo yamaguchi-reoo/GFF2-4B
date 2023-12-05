@@ -11,7 +11,7 @@
 #define ZAKURO_ANIM_MOVE 0			//移動アニメーション開始地点
 #define ZAKURO_DEATH 0				//死亡アニメーション開始地
 #define ZAKURO_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
-#define ZAKURO_DEATH_ANIM 5		//次の画像に切り替えるまでの時間（フレーム）
+#define ZAKURO_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
 
 
 Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
@@ -49,6 +49,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	death_flg = false;
 
 	zakuro_anim = 0;
+	zakuro_death_anim = 0;
 	hp = 3;
 
 	Date.magenta = 15.0f;
@@ -98,18 +99,8 @@ void Zakuro::Update(GameMain* main)
 	HitWall();
 	//描画関連の変数を動かす
 	ZakuroAnim();
-	if (death_flg == true)
-	{
-		zakuro_state = ZakuroState::DEATH;
-	}
 	//各移動用変数をリセット
 	ZakuroReset();
-	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM + 2))
-	{
-		//スポーンフラグを
-		spawn_flg = true;
-	}
 }
 
 void Zakuro::Draw() const
@@ -133,7 +124,7 @@ void Zakuro::Draw() const
 			DrawGraphF(local_location.x - ZAKURO_IMAGE_SHIFT_X, local_location.y - ZAKURO_IMAGE_SHIFT_Y, zakuro_image[ZAKURO_ANIM_MOVE + zakuro_anim], true);
 			break;
 		case ZakuroState::DEATH:
-			DrawGraphF(local_location.x, local_location.y + (ZAKURO_IMAGE_SHIFT_Y + 10), zakuro_death_image[ZAKURO_ANIM_MOVE + zakuro_anim], true);
+			DrawGraphF(local_location.x, local_location.y + (ZAKURO_IMAGE_SHIFT_Y + 10), zakuro_death_image[/*ZAKURO_ANIM_MOVE + */ zakuro_death_anim], true);
 			break;
 		default:
 			break;
@@ -324,6 +315,29 @@ void Zakuro::ZakuroAnim()
 			}
 		}
 	}
+	if (death_flg == true)
+	{
+		zakuro_state = ZakuroState::DEATH;
+		if (++count > ZAKURO_DEATH_ANIM)
+		{
+			zakuro_death_anim = 0;
+		}
+		if (++count > ZAKURO_DEATH_ANIM + 20)
+		{
+			zakuro_death_anim = 1;
+		}
+		if (++count > ZAKURO_DEATH_ANIM + 40)
+		{
+			spawn_flg = true;
+		}
+	}
+	//フラグがtrueになってからcountが12以上になったら
+	//if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM))
+	//{
+	//	//スポーンフラグを
+	//	spawn_flg = true;
+	//	count = 0;
+	//}
 }
 
 ColorDate Zakuro::GetColorDate()

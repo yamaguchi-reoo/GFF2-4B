@@ -97,25 +97,6 @@ void Iruka::Update(GameMain* main)
 	IrukaReset();
 	//描画関連の変数を動かす
 	IrukaAnim();
-	//フラグがtrueになったらイルカの状態をDEATHにする
-	if (death_flg == true)
-	{
-		//空中にいるなら
-		if (iruka_state == IrukaState::RIGHT || iruka_state == IrukaState::LEFT) {
-			iruka_state = IrukaState::DEATH;
-		}
-		//下降または上昇中なら
-		else
-		{
-			iruka_state = IrukaState::FALL_DEATH;
-		}
-	}
-	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (IRUKA_DEATH_ANIM + 2))
-	{
-		//スポーンフラグを
-		spawn_flg = true;
-	}
 }
 
 void Iruka::Draw() const
@@ -145,10 +126,10 @@ void Iruka::Draw() const
 			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 5), 1, TRUN_RAD, iruka_image[IRUKA_ANIM_MOVE + iruka_anim], true, false);
 			break;
 		case IrukaState::DEATH:
-			DrawGraphF(local_location.x, local_location.y + IRUKA_IMAGE_SHIFT_Y, iruka_image[IRUKA_DEATH + iruka_anim], true);
+			DrawGraphF(local_location.x, local_location.y + IRUKA_IMAGE_SHIFT_Y, iruka_image[/*IRUKA_DEATH + */iruka_anim], true);
 			break;
 		case IrukaState::FALL_DEATH:
-			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, TRUN_RAD, iruka_image[IRUKA_DEATH + iruka_anim], true, true);
+			DrawRotaGraphF(local_location.x + (IRUKA_IMAGE_SHIFT_X * 2), local_location.y + erea.height - (IRUKA_IMAGE_SHIFT_Y * 4), 1, TRUN_RAD, iruka_image[/*IRUKA_DEATH + */ iruka_anim], true, true);
 			break;
 		default:
 			break;
@@ -371,6 +352,39 @@ void Iruka::IrukaAnim()
 			}
 		}
 	}
+	//フラグがtrueになったらイルカの状態をDEATHにする
+	if (death_flg == true)
+	{
+		//空中にいるなら
+		if (iruka_state == IrukaState::RIGHT || iruka_state == IrukaState::LEFT) {
+			iruka_state = IrukaState::DEATH;
+		}
+		//下降または上昇中なら
+		else if(iruka_state == IrukaState::RIGHT_FALL || iruka_state == IrukaState::LEFT_FALL || 
+			    iruka_state == IrukaState::RIGHT_RETURN || iruka_state == IrukaState::LEFT_RETURN)
+		{
+			iruka_state = IrukaState::FALL_DEATH;
+		}
+		if (++count > IRUKA_DEATH_ANIM)
+		{
+			iruka_anim = 2;
+		}
+		if (++count > IRUKA_DEATH_ANIM + 20)
+		{
+			iruka_anim = 3;
+		}
+		if (++count > IRUKA_DEATH_ANIM + 40)
+		{
+			spawn_flg = true;
+		}
+	}
+	//フラグがtrueになってからcountが12以上になったら
+	//if (++count >= (IRUKA_DEATH_ANIM))
+	//{
+	//	//スポーンフラグを
+	//	spawn_flg = true;
+	//	count = 0;
+	//}
 	//else
 	//{
 	//	//アニメーション用変数を回す
