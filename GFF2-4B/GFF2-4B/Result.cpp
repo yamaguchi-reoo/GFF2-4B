@@ -2,6 +2,7 @@
 #include "SelectStage.h"
 #include "Score.h"
 #include "PadInput.h"
+#include "LoadingScene.h"
 
 //コンストラクタ
 Result::Result()
@@ -67,7 +68,7 @@ AbstractScene* Result::Update()
 				)
 			{
 				Score::ResetScore();
-				return new SelectStage();
+				return new Loading();
 			}
 		}
 	}

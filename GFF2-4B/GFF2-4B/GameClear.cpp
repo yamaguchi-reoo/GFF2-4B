@@ -85,6 +85,7 @@ AbstractScene* GameClear::Update()
 		//リザルト画面へ遷移
 		return new Result();
 	}
+	//シーン切り替え用タイマーが30を越えたらResult画面に切り替え
 	if (scene_change_timer >= 30) { return new Result; }
 
 	//フォント表示用フラグのOn,Offの切り替え処理
@@ -108,8 +109,11 @@ void GameClear::Draw() const
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, clear_font_alpha);
 	//現在のステージがBossステージ以外ならstage_goal_imageを表示
 	//現在のステージがBossステージならboss_beat_imageを表示
+
 	if (stage_num != 3) { DrawGraphF(250.f, 50.f, stage_goal_image, TRUE); }
+
 	if (stage_num == 3) { DrawGraphF(250.f, 50.f, boss_beat_image, TRUE); }
+
 	//描画ブレンドをNoBlendにする
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
