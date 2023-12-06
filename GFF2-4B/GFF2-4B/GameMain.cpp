@@ -565,7 +565,7 @@ void GameMain::Draw() const
 {
 	DrawBox(0, 0, 1280, 720, 0xbdbdbd, true);
 
-	DrawGraph(0, 0, Back_Img, TRUE);
+	DrawGraph(-camera_location.x/(stage_width/1000), 0, Back_Img, TRUE);
 	
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
 
@@ -1151,8 +1151,8 @@ void GameMain::SetStage(int _stage)
 		//hands = new BossHands(who++, boss);
 	}
 
-	//プレイヤーのリスポーン(プレイヤーが生成されているなら)
-	Location res_location = { 100,stage_height-500 };
+	//プレイヤーのリスポーン
+	Location res_location = { 100,stage_height - 500 };
 	player->Respawn(res_location);
 
 	//カメラのリセット
