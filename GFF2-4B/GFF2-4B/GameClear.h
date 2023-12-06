@@ -36,6 +36,7 @@ private:
     int clear_font_alpha;   //クリア画像のα値
 
     bool font_flg;          //フォント表示を開始するフラグ
+    int scene_change_timer; //シーン切り替え用のタイマー
 
 public:
 
