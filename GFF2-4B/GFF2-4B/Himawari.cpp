@@ -13,7 +13,7 @@
 #define HIMAWARI_DEATH 3				//死亡アニメーション開始地
 #define HIMAWARI_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
 #define HIMAWARI_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
-#define HIMAWARI_CHARGE_ANIM_DURATION 60 //チャージアニメーションのフレーム数
+#define HIMAWARI_CHARGE_ANIM_DURATION 30 //チャージアニメーションのフレーム数
 
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
@@ -264,13 +264,13 @@ void Himawari::Attack(GameMain* main)
 			}
 		}
 	}
-	else if (--attack_interval_count <= 30)
+	//チャージモーション状態に移行
+	else if (--attack_interval_count <= HIMAWARI_CHARGE_ANIM_DURATION)
 	{
 		// 弾を発射する前にアニメーションステートを設定
 		if (himawari_direction == false)
 		{
 			himawari_state = HimawariState::RIGHT_CHARGE;
-
 		}
 		else
 		{
