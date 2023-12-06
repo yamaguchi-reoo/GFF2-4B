@@ -44,7 +44,8 @@ GameClear::GameClear(int _stage_num)
 
 	clear_font_alpha = 0;			//クリア画像のα値
 
-	font_flg = false;
+	font_flg = false;				//クリアフォント表示用フラグ
+	scene_change_timer = 0;			//シーン遷移カウント用タイマー
 }
 
 GameClear::~GameClear()
@@ -74,7 +75,7 @@ AbstractScene* GameClear::Update()
 	if (
 #ifdef _DEBUG
 		//デバッグモードの間Aボタン/Enterキーを押すと画面遷移
-		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
+		PadInput::OnButton((XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN))
 #else	
 		//ReleaseモードならAボタンで画面遷移
 		PadInput::OnButton(XINPUT_BUTTON_A)
@@ -84,7 +85,12 @@ AbstractScene* GameClear::Update()
 		//リザルト画面へ遷移
 		return new Result();
 	}
+	if (scene_change_timer >= 30) { return new Result; }
+
+	//フォント表示用フラグのOn,Offの切り替え処理
 	if (font_flg == true) { clear_font_alpha += 5; }
+	//フォント表示が完了したらタイマーを起動する
+	if (clear_font_alpha >= 255) { scene_change_timer += 1; }
 
 	return this;
 }
