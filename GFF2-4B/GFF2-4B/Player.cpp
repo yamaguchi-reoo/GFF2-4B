@@ -524,6 +524,8 @@ void Player::Attack(GameMain* main)
 			//ˆê’èŠÔŠu‚ª‰ß‚¬‚é‘O‚ÉUŒ‚‚ğs‚Á‚Ä‚¢‚½‚È‚ç
 			if (ca_interval_count > 0)
 			{
+				SoundManager::StopSound(PLAYER_ATTACK_SOUND);
+
 				//Å‘åUŒ‚‚Å‚Í‚È‚¢‚È‚ç
 				if (attack_step < 3)
 				{
@@ -548,6 +550,8 @@ void Player::Attack(GameMain* main)
 			}
 			//UŒ‚‚ğ¶¬‚·‚é
 			main->SpawnAttack(CreateAttactData(attack_step));
+			//UŒ‚‰¹‚ÌÄ¶
+			SoundManager::StartSound(PLAYER_ATTACK_SOUND);
 			//­‚µ‘OˆÚ“®
 			acs[direction + 2] += 5;
 		}
@@ -757,10 +761,10 @@ void Player::Move(GameMain* main)
 
 	
 	//•às‰¹‚ğÄ¶‚·‚é
-	if (next_location.x != old_location.x && onfloor_flg == true)
+	/*if (next_location.x != old_location.x && onfloor_flg == true)
 	{
 		SoundManager::StartSound(PLAYER_WALK_SOUND);
-	}
+	}*/
 
 	//YÀ•W‚ªˆê’è‚ğã‰ñ‚Á‚½‚ç€
 	if (location.y > main->GetStageHeight() + 100)
