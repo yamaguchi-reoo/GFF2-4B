@@ -23,8 +23,14 @@ private:
 	bool attack_flg;	// 攻撃しているか	
 	int stop_count;		
 	bool spawn_flg;		//スポーンしているか
+	bool death_flg;		//死んでいるか
 	bool zakuro_direction;//向き(0 = 右 1 = 左)
 	bool knockback_flg;
+	//アニメーション
+	int zakuro_image[2];			//ザクロ画像
+	int zakuro_death_image[2];		//ザクロの死亡時の画像
+	int zakuro_anim;				//画像アニメーション用
+	int zakuro_death_anim;			//画像アニメーション用
 
 	//当たり判定関連
 	bool onfloor_flg;	//いずれかの地面に触れているかどうか
@@ -66,7 +72,7 @@ public:
 
 	int GetAttackFlg() { return attack_flg; }
 	//アニメーション
-	//void ZakuroAnim();
+	void ZakuroAnim();
 	//向きの反転
 	//void ReverseDirection();
 
