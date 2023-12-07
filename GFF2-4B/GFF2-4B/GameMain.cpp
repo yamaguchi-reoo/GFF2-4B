@@ -1331,6 +1331,10 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 		//ダメージ量に応じた画面揺れ
 		impact_timer = (10 * attack->GetAttackData().damage);
 		//character->MoveNockBack();
+		
+		// しぶきのスポーン処理
+		SpawnEffect(character);
+
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
@@ -1356,8 +1360,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 			{
 				venemy_num2++;
 			}
-			// しぶきのスポーン処理
-			SpawnEffect(character);
+	
 		}
 	}
 }
