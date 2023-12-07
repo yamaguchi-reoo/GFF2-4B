@@ -895,16 +895,16 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpwnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
 					zakuro[i]->HitZakuro();
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpwnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
 					zakuro[j]->HitZakuro();
 				}
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpwnFlg() == false && zakuro[j]->GetAttackFlg() == false) {
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == false) {
 					zakuro[i]->Push(5, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpwnFlg() == false && zakuro[i]->GetAttackFlg() == false) {
+				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == false) {
 					zakuro[j]->Push(5, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
 			}
@@ -1298,7 +1298,7 @@ template<class T>
 void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, HealItem* heal, Koban* koban*/)
 {
 	//攻撃がヒットボックスに当たり、ダメージが適用可能で、キャラクターがスポーンしている場合
-	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpwnFlg() == false) {		
+	if (attack->HitBox(character) && attack->GetAttackData().who_attack == PLAYER && attack->GetCanApplyDamage() == true && character->GetSpawnFlg() == false) {		
 		character->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 
@@ -1420,8 +1420,11 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 	if (attack->HitBox(object) == true && attack->GetCanApplyDamage() == true && attack->GetAttackData().who_attack == PLAYER && object->GetSpwnFlg() == true)
 	{
 		//ダメージ量に応じた画面揺れ
+		if (player->GetJumpFlg() == true)
+		{
+			object->JumpAttack(true);
+		}
 		ImpactCamera(10 * attack->GetAttackData().damage);
-
 		object->ApplyDamage(attack->GetAttackData().damage);
 		attack->DeleteAttack();
 		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定

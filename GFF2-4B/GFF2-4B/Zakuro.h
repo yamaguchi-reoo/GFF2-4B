@@ -68,7 +68,7 @@ public:
 	//HPの取得
 	int GetHp() { return hp; }
 	//スポーンフラグの取得
-	int GetSpwnFlg() { return spawn_flg; }
+	int GetSpawnFlg() { return spawn_flg; }
 
 	int GetAttackFlg() { return attack_flg; }
 	//アニメーション

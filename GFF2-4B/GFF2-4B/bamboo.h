@@ -2,7 +2,8 @@
 #include "CharaBase.h"
 enum  class BambooState {
     IDLE = 0,
-    DEATH
+    DEATH,
+    JUMP_ATTACK_DEATH
 };
 class Bamboo:
     public CharaBase
@@ -19,6 +20,8 @@ private:
 
     bool onfloor_flg;	//いずれかの地面に触れているかどうか
     bool apply_gravity;		//重力を適用するかどうか
+    bool jump_attack;
+    bool hidden_flg;			//画像点滅用
 public:
     //コンストラクタ
     Bamboo(float pos_x, float pos_y);
@@ -45,5 +48,7 @@ public:
     void FalseGravity();
 
     void BambooAnim();
+
+    void JumpAttack(bool flg) { jump_attack = flg; }
 };
 

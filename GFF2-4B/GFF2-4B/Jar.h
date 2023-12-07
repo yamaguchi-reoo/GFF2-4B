@@ -9,6 +9,8 @@ private:
 
 	bool onfloor_flg;	//いずれかの地面に触れているかどうか
 	bool apply_gravity;		//重力を適用するかどうか
+	bool jump_attack;
+	bool hidden_flg;			//画像点滅用
 
 	int hp;
 
@@ -33,5 +35,6 @@ public:
 
 	int GetHp() { return hp; }
 
+	void JumpAttack(bool flg) { jump_attack = flg; }
 };
 
