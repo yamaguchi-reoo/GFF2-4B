@@ -1203,7 +1203,7 @@ void Player::PlayerSound()
 	if (player_state==JUMP_RIGHT || player_state == JUMP_LEFT) {
 		SoundManager::StartSound(PLAYER_JUMP_SOUND);
 	}
-	else {
+	else if(onfloor_flg == true) {
 		SoundManager::StopSound(PLAYER_JUMP_SOUND);
 	}
 
