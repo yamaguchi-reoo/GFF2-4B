@@ -7,8 +7,9 @@
 #define BAMBOO_IMAGE_SHIFT_Y 48/*20*/		//画像ずらし用
 #define BAMBOO_IDLE 0				//アイドル状態の画像
 #define BAMBOO_ON_DEATH 1			//上から攻撃されたときの画像
-#define BAMBOO_DEATH 3				//死亡アニメーション開始地
+#define BAMBOO_DEATH 2				//死亡アニメーション開始地
 #define BAMBOO_DEATH_ANIM 10		//次の画像に切り替えるまでの時間（フレーム）
+#define BAMBOO_ON_DEATH_ANIM 10	
 
 
 Bamboo::Bamboo(float pos_x, float pos_y)
@@ -30,6 +31,8 @@ Bamboo::Bamboo(float pos_x, float pos_y)
 	onfloor_flg = false;
 	spawn_flg = true;
 	death_flg = false;
+	jump_attack = false;
+	hidden_flg = false;
 	Date.cyan = 10;
 	Date.magenta = 0;
 	Date.yellow = 10;
@@ -59,8 +62,9 @@ void Bamboo::Update(GameMain* main)
 
 void Bamboo::Draw() const
 {
-	if (spawn_flg == true)
+	if (hidden_flg == false)
 	{
+		//DrawFormatString(400, 400, 0xfffff, "%d", jump_attack);
 		/*DrawGraphF(local_location.x, local_location.y, image, FALSE);*/
 		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
 		switch (bamboo_state)
@@ -69,7 +73,10 @@ void Bamboo::Draw() const
 			DrawGraphF(local_location.x - BAMBOO_IMAGE_SHIFT_X, local_location.y - BAMBOO_IMAGE_SHIFT_Y, bamboo_image[BAMBOO_IDLE], true);
 			break;
 		case BambooState::DEATH:
-			DrawGraphF(local_location.x - BAMBOO_IMAGE_SHIFT_X, local_location.y - BAMBOO_IMAGE_SHIFT_Y, bamboo_image[BAMBOO_DEATH], true);
+			DrawGraphF(local_location.x - BAMBOO_IMAGE_SHIFT_X, local_location.y - BAMBOO_IMAGE_SHIFT_Y, bamboo_image[BAMBOO_DEATH + bamboo_anim], true);
+			break;
+		case BambooState::JUMP_ATTACK_DEATH:
+			DrawGraphF(local_location.x - BAMBOO_IMAGE_SHIFT_X, local_location.y - BAMBOO_IMAGE_SHIFT_Y, bamboo_image[BAMBOO_ON_DEATH + bamboo_anim], true);
 			break;
 		default:
 			break;
@@ -78,7 +85,6 @@ void Bamboo::Draw() const
 	//DrawFormatString(200, 400, 0xfffff, "%d", spawn_flg);
 }
 	
-
 void Bamboo::BambooReset()
 {	//重力が働くかの判定をリセット
 	apply_gravity = true;
@@ -109,6 +115,9 @@ bool Bamboo::ApplyDamage(int num)
 		
 		/*spawn_flg = false;*/
 		death_flg = true;
+
+		spawn_flg = false;
+
 		return true;
 	}
 	return false;
@@ -121,24 +130,52 @@ void Bamboo::FalseGravity()
 void Bamboo::BambooAnim()
 {
 	//アニメーション用変数を回す
-	if (anim_frame % BAMBOO_DEATH_ANIM == 0)
+	//ジャンプ攻撃ではなく地上での攻撃で死んだ場合
+	if (death_flg == true && jump_attack == false)
 	{
-		if (++bamboo_anim > 1)
+		bamboo_state = BambooState::DEATH;
+		if (++count > BAMBOO_DEATH_ANIM)
+		{
+			bamboo_anim = 0;
+
+		}
+		if (++count > BAMBOO_DEATH_ANIM + 20)
+		{
+			bamboo_anim = 1;
+		}
+		if (++count > BAMBOO_DEATH_ANIM + 40)
+		{
+			hidden_flg = true;
+			//spawn_flg = false;
+		}
+	}
+	// 地上での攻撃ではなくジャンプ攻撃で死んだ場合
+	if (death_flg == true && jump_attack == true)
+	{
+		bamboo_state = BambooState::JUMP_ATTACK_DEATH;
+		if (++count > BAMBOO_ON_DEATH_ANIM)
 		{
 			bamboo_anim = 0;
 		}
-	}
-
-	if (death_flg == true)
-	{
-		bamboo_state = BambooState::DEATH;
+		if (++count > BAMBOO_ON_DEATH_ANIM + 40)
+		{
+			bamboo_anim = 1;
+		}
+		if (++count > BAMBOO_ON_DEATH_ANIM + 70)
+		{
+			bamboo_anim = 2;
+		}
+		if (++count > BAMBOO_ON_DEATH_ANIM + 100)
+		{
+			hidden_flg = true;
+		}
 	}
 	//フラグがtrueになってからcountが12以上になったら
-	if (death_flg == true && ++count >= (BAMBOO_DEATH_ANIM))
-	{
-		//スポーンフラグを
-		spawn_flg = false;
-		count = 0;
-	}
+	//if (death_flg == true && ++count >= (BAMBOO_DEATH_ANIM))
+	//{
+	//	//スポーンフラグを
+	//	spawn_flg = false;
+	//	count = 0;
+	//}
 }
 
