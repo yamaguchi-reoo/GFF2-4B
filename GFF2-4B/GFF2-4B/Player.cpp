@@ -172,10 +172,6 @@ void Player::Draw()const
 	//プレイヤー画像表示
 	if (hidden_flg == false)
 	{
-		if (powerup_flg == true)
-		{
-			DrawGraphF(local_location.x - erea.width, local_location.y - (erea.height / 2), player_effect_image[player_effect_anim], false);
-		}
 		switch (player_state)
 		{
 		case IDOL_RIGHT:
@@ -254,7 +250,12 @@ void Player::Draw()const
 			DrawStringF(local_location.x, local_location.y, "no image", 0xff0000);
 			break;
 		}
+		if (powerup_flg == true)
+		{
+			DrawGraphF(local_location.x - 80, local_location.y - (erea.height / 2), player_effect_image[player_effect_anim], true);
+		}
 	}
+
 
 	//デバッグ用表示
 #ifdef _DEBUG
