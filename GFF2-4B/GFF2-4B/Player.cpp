@@ -79,7 +79,11 @@ Player::Player()
 
 	SetPlayerAttackData();
 	LoadDivGraph("resource/images/Player_Animation.png", 35, 10, 4, 256, 256, player_image);
+	player_effect_image[0] = LoadGraph("resource/images/Effect01.png");
+	player_effect_image[1] = LoadGraph("resource/images/Effect02.png");
+	player_effect_image[2] = LoadGraph("resource/images/Effect03.png");
 	player_anim = 0;
+	player_effect_anim = 0;
 	attack_anim = 0;
 	player_anim_speed = PLAYER_ANIM;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
