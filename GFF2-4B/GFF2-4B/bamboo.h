@@ -2,12 +2,14 @@
 #include "CharaBase.h"
 enum  class BambooState {
     IDLE = 0,
-    DEATH
+    DEATH,
+    JUMP_ATTACK_DEATH
 };
 class Bamboo:
     public CharaBase
 {
 private:
+    ColorDate Date{ 0 };
     int anim_frame;     //アニメーションフレーム測定
     int count;			//カウント
     BambooState bamboo_state;
@@ -19,6 +21,8 @@ private:
 
     bool onfloor_flg;	//いずれかの地面に触れているかどうか
     bool apply_gravity;		//重力を適用するかどうか
+    bool jump_attack;
+    bool hidden_flg;			//画像点滅用
 public:
     //コンストラクタ
     Bamboo(float pos_x, float pos_y);
@@ -36,7 +40,7 @@ public:
     void Draw()const override;
 
     //ダメージを受ける処理
-    void ApplyDamage(int num);
+    bool ApplyDamage(int num);
     //スポーンフラグ取得
     int GetSpwnFlg() { return spawn_flg; }
 
@@ -45,5 +49,12 @@ public:
     void FalseGravity();
 
     void BambooAnim();
+
+    void JumpAttack(bool flg) { jump_attack = flg; }
+
+    int GetHiddenFlg() { return hidden_flg; }
+
+    //色の取得
+    ColorDate GetColorDate() { return Date; }
 };
 

@@ -1,14 +1,17 @@
 #pragma once
-#include "BoxCollider.h"
+#include "CharaBase.h"
 class Jar:
 	public BoxCollider
 {
 private:
+	ColorDate Date{ 0 };
 	bool spawn_flg;
 	int jar_image;
 
 	bool onfloor_flg;	//いずれかの地面に触れているかどうか
 	bool apply_gravity;		//重力を適用するかどうか
+	bool jump_attack;
+	bool hidden_flg;			//画像点滅用
 
 	int hp;
 
@@ -27,11 +30,14 @@ public:
 	void Push(int num, Location _sub_location, Erea _sub_erea);
 
 	//ダメージを受ける処理
-	void ApplyDamage(int num);
+	bool ApplyDamage(int num);
 	//スポーンフラグ取得
 	int GetSpwnFlg() { return spawn_flg; }
 
 	int GetHp() { return hp; }
 
+	void JumpAttack(bool flg) { jump_attack = flg; }
+	//色の取得
+	ColorDate GetColorDate() { return Date; }
 };
 

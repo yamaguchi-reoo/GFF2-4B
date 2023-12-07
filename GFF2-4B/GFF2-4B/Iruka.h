@@ -73,7 +73,7 @@ public:
     //ダメージ受ける処理
     void ApplyDamage(int num);
     //スポーンフラグの取得
-    int GetSpwnFlg() { return spawn_flg; }
+    int GetSpawnFlg() { return spawn_flg; }
     //hp取得
     int GetHp() { return hp; }
     //アニメーション
