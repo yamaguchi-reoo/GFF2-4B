@@ -50,7 +50,7 @@
 #define JAR_MAX 14  //壺の最大数
 
 //エフェクト
-#define SPLASH_MAX 50
+#define SPLASH_MAX 100
 
 #define ATTACK_EFFECT_NUM 15			//攻撃エフェクトの画像数
 //攻撃エフェクト発生用
