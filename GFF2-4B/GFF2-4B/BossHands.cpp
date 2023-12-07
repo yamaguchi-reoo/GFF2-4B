@@ -5,6 +5,8 @@
 //デグリーからラジアンに変換
 #define DEGREE_RADIAN(_deg)	(M_PI*(_deg)/180.0f)
 
+bool BossHands::Cutin_flg=false;
+
 float checkabs=0;
 
 BossHands::BossHands(int _who,Boss* boss) {
@@ -32,12 +34,16 @@ BossHands::BossHands(int _who,Boss* boss) {
 	LoadDivGraph("resource/images/Boss/Bosshp.png",3,3,1,70,70,Hands_HPimg);
 	//LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
 
+	Date.magenta = 15.0f;
+	Date.cyan = 15.0f;
+	Date.yellow = 15.0f;
+
 #ifdef _DEBUG
 	if (Hands_who == 0) {
-		hp = 0;
+		hp = 5;
 	}
 	else {
-		hp = 0;
+		hp = 5;
 	}
 #else
 	hp = 5;
@@ -322,7 +328,7 @@ void BossHands::MagentaInit()
 	x1 = -450;
 	x2 =1100;
 	CO = 0;
-	Cutin_flg = false;
+	//Cutin_flg = false;
 	F_switching = 0;
 	F_count = 700;
 	alpha = 0;
@@ -1757,3 +1763,7 @@ float BossHands::GetRandAngle(int _wall)
 	return 0;
 }
 
+ColorDate BossHands::GetColorDate()
+{
+	return Date;
+}

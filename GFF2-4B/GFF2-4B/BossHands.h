@@ -91,7 +91,7 @@ public:
     int x1;
     int x2;
     int CO;//開けたり閉めたりするやつ
-    bool Cutin_flg;//カットイン一回だけ用
+   static bool Cutin_flg;//カットイン一回だけ用
     int alpha;
 
     //手のHP用
@@ -179,6 +179,7 @@ public:
     void YellowInit();                      //イエロー（ひまわり）で使う変数初期化
     void HandsYellow(GameMain* main);       //イエロー（ひまわり）の更新
 
+    ColorDate GetColorDate();
 
     void ApplyDamage(int num);
     float GetHandsY() { return location.y; };
