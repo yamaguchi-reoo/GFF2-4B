@@ -2,6 +2,7 @@
 #include "Title.h"
 #include "GameMain.h"
 #include "PadInput.h"
+#include"SoundManager.h"
 
 int SelectStage::stage_num = 0;
 int SelectStage::goal_flg[3] = {1,1,1}; //デバック用に1
@@ -126,7 +127,9 @@ AbstractScene* SelectStage::Update()
 			PadInput::OnButton(XINPUT_BUTTON_A)
 #endif
 			)
+			SoundManager::StartSound(SYSTEM_SELECT_SOUND);
 		{
+
 			return new GameMain(stage_num);
 		}
 

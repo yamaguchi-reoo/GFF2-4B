@@ -6,7 +6,8 @@ enum  class HimawariState {
     LEFT,
     RIGHT_SHOOT,
     LEFT_SHOOT,
-    CHARGE,
+    RIGHT_CHARGE,
+    LEFT_CHARGE,
     DEATH
 };
 
@@ -16,6 +17,7 @@ class Himawari :
 private:
     int anim_frame;     //アニメーションフレーム測定
     int count;			//カウント
+    int charge_anim_count; // チャージアニメーションのカウンタ
     HimawariState himawari_state;
 
     bool attack_flg;    //攻撃しているか
@@ -29,8 +31,8 @@ private:
     int himawari_anim;				//画像アニメーション用
 
     int rapid_fire_interval;
-
     int bullet_num;
+    bool charge_flg;
 
    int img[10];
    int num;
@@ -64,7 +66,7 @@ public:
     //ダメージを受ける処理
     void ApplyDamage(int num);
     //スポーンフラグ取得
-    int GetSpwnFlg() { return spawn_flg; }
+    int GetSpawnFlg() { return spawn_flg; }
     //hp取得
     int GetHp() { return hp; }
 

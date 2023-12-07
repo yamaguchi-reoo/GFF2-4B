@@ -1,6 +1,8 @@
 #pragma once
 #include "AbstractScene.h"
-#include "common.h"
+
+//カットイン速度変更タイミング
+#define CUTIN_POS_TIMING 200
 
 //カットイン01座標
 struct CutIn01Pos { float x; float y; };
@@ -30,6 +32,11 @@ private:
 
     //stage数取得用変数
     int stage_num;          //stage数の情報を確保する変数
+
+    int clear_font_alpha;   //クリア画像のα値
+
+    bool font_flg;          //フォント表示を開始するフラグ
+    int scene_change_timer; //シーン切り替え用のタイマー
 
 public:
 

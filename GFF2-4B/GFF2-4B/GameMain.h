@@ -57,7 +57,7 @@ private:
     PowerGauge* powergauge;  //強化ゲージのオブジェクト
     PlayerHP* playerhp;  //プレイヤーHPUIのオブジェクト
     HealItem* heal[ITEM_MAX];     //回復アイテム
-    Koban* koban; //小判
+    Koban* koban[KOBAN_NUM]; //小判
     Score* score; //スコアUIのオブジェクト
 
     Jar* jar[JAR_MAX]; //壺

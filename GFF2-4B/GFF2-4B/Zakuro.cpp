@@ -174,7 +174,7 @@ void Zakuro::MoveNockBack()
 	if (stop_count <= 0)
 	{
 		attack_flg = true;
-		stop_count = 120;
+		stop_count = 60;
 		//knockback_flg = false;
 	}
 }

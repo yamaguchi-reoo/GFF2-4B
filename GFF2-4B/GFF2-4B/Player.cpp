@@ -144,6 +144,8 @@ void Player::Update(GameMain* main)
 	//移動処理
 	Move(main);
 
+	PlayerSound();
+
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
 	//床に触れていないなら
@@ -511,8 +513,8 @@ void Player::Attack(GameMain* main)
 #endif
 		&& attack_interval_count <= 0)
 	{
-		//空中に居ないなら
-		SoundManager::StartSound(PLAYER_ATTACK_SOUND);
+		SoundManager::StopSound(PLAYER_ATTACK_SOUND);
+
 		if (acs[DOWN] == 0)
 		{
 			//攻撃間隔の測定を開始
@@ -524,6 +526,7 @@ void Player::Attack(GameMain* main)
 			//一定間隔が過ぎる前に攻撃を行っていたなら
 			if (ca_interval_count > 0)
 			{
+
 				//最大攻撃ではないなら
 				if (attack_step < 3)
 				{
@@ -548,6 +551,8 @@ void Player::Attack(GameMain* main)
 			}
 			//攻撃を生成する
 			main->SpawnAttack(CreateAttactData(attack_step));
+			//空中に居ないなら
+			SoundManager::StartSound(PLAYER_ATTACK_SOUND);
 			//少し前移動
 			acs[direction + 2] += 5;
 		}
@@ -676,7 +681,7 @@ void Player::Move(GameMain* main)
 	//右移動
 	if (
 #ifdef _DEBUG
-	(KeyInput::OnPresed(KEY_INPUT_D) == true || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
+	((KeyInput::OnPresed(KEY_INPUT_D) == true&& KeyInput::OnPresed(KEY_INPUT_A) == false) || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
 #else
 		PadInput::TipLeftLStick(STICKL_X) >= 0.5
 #endif 
@@ -699,6 +704,8 @@ void Player::Move(GameMain* main)
 			DecAcs(RIGHT);
 		}
 
+	
+
 	//ジャンプ
 	if (
 #ifdef _DEBUG
@@ -710,12 +717,15 @@ void Player::Move(GameMain* main)
 		{
 			acs[UP] = jump_power;
 			jump_flg = true;
+			
 		}
 	else
 		{
 			//ジャンプしていない時は上に加速する力を弱める
 			DecAcs(UP);
 		}
+	
+
 	//顔の方向処理
 	if (acs[LEFT] < acs[RIGHT] && move_flg == true)
 	{
@@ -756,11 +766,7 @@ void Player::Move(GameMain* main)
 	MoveLocation(main, next_location.x - old_location.x, next_location.y - old_location.y);
 
 	
-	//歩行音を再生する
-	if (next_location.x != old_location.x && onfloor_flg == true)
-	{
-		SoundManager::StartSound(PLAYER_WALK_SOUND);
-	}
+	
 
 	//Y座標が一定を上回ったら死
 	if (location.y > main->GetStageHeight() + 100)
@@ -1188,5 +1194,26 @@ void Player::MoveLocation(GameMain* main, float _x, float _y)
 			main->PlayerFloorHitCheck();
 			location.x-=0.1f;
 		}
+	}
+}
+
+void Player::PlayerSound()
+{
+
+	if (jump_flg==true) {
+		SoundManager::StartSound(PLAYER_JUMP_SOUND);
+	}
+	else {
+		SoundManager::StopSound(PLAYER_JUMP_SOUND);
+	}
+
+	//歩行音を再生する
+	if (next_location.x != old_location.x && onfloor_flg == true)
+	{
+		SoundManager::StartSound(PLAYER_WALK_SOUND);
+	}
+	else if (next_location.x == old_location.x) {
+		SoundManager::StopSound(PLAYER_WALK_SOUND);
+
 	}
 }

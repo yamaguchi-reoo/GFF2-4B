@@ -217,6 +217,11 @@ public:
 	//１マス移動毎に床との当たり判定をチェックする
 	void MoveLocation(GameMain* main,float _x, float _y);
 
+	//hpを減らす
 	void AddPlayerHp() { hp += 1; }
+
+	bool GetJumpFlg() { return jump_flg; }
+
+	void PlayerSound();
 };
 

@@ -55,8 +55,8 @@ void Koban::Draw() const
 //ï\é¶à íuÇê›íË
 void Koban::SetLocation(Location _location)
 {
-	location.x = _location.x;
-	location.y = _location.y;
+	location.x = _location.x - 20;
+	location.y = _location.y - 20;
 }
 
 void Koban::SetScoreLocation()

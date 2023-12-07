@@ -3,6 +3,7 @@
 #include "GameMain.h"
 #include "PadInput.h"
 #include "SelectStage.h"
+#include"SoundManager.h"
 
 //‰æ‘œ“Ç‰Šú‰»—pŠÖ”
 void Title::ImageLoad(int& _handle, const char* _file_name)
@@ -56,6 +57,7 @@ AbstractScene* Title::Update()
 		PadInput::OnButton(XINPUT_BUTTON_A)
 #endif
 		)
+	SoundManager::StartSound(SYSTEM_SELECT_SOUND);
 	{
 		if(title_alpha<=150.f){ title_alpha += 150.f; }
 
@@ -124,6 +126,8 @@ AbstractScene* Title::Update()
 			PadInput::OnButton(XINPUT_BUTTON_A)
 #endif
 			)
+			
+				
 		{
 			switch (static_cast<TITLE_MENU>(Select))
 			{

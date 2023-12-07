@@ -302,7 +302,7 @@ void Boss::Boss_MakeHand() {
 		if (timer++ > 100) {
 			switch (Boss_step) {
 			case 0:
-				Boss_state = Boss_Y;
+				Boss_state = Boss_C;
 				Boss_step++;
 				break;
 			case 1:
