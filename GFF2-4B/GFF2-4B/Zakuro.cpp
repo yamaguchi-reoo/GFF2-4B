@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "GameMain.h"
 #include "common.h"
+#include"SoundManager.h"
 
 #define MOVE_SPEED  1	//速度
 #define ZAKURO_GRAVITY  5//重力
@@ -330,6 +331,7 @@ void Zakuro::ZakuroAnim()
 		{
 			spawn_flg = true;
 		}
+		SoundManager::StopSound(ENEMY_EXPLOSION_SOUND);
 	}
 	//フラグがtrueになってからcountが12以上になったら
 	//if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM))
