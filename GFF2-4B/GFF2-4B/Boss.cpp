@@ -6,7 +6,7 @@ Boss::Boss() {
 	LoadDivGraph("resource/images/Boss/explosionMini.png", 4, 4, 1, 180, 180, Explosion);
 
 	timer = 0;
-
+	Boss_Dieflg = false;
 
 	Boss_Arm_Rightx=800;
 	Boss_Arm_Righty=0;
@@ -158,7 +158,7 @@ void Boss::Update(GameMain* main) {
 	case 8:
 
 		//”š”­‚µ‚ÄŽ€‚Ê
-		
+		Boss_Dieflg = true;
 		//if()
 			//Boss_Body_X += 10;
 			//Boss_Body_X -= 10;
@@ -302,7 +302,7 @@ void Boss::Boss_MakeHand() {
 		if (timer++ > 100) {
 			switch (Boss_step) {
 			case 0:
-				Boss_state = Boss_C;
+				Boss_state = Boss_Y;
 				Boss_step++;
 				break;
 			case 1:

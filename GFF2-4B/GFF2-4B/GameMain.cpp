@@ -238,6 +238,12 @@ AbstractScene* GameMain::Update()
 						hands = new BossHands(who++, boss);
 						boss->New_Hand_Flg = false;
 					}
+
+
+					if (boss->Boss_Dieflg == true) {
+						return new SelectStage();
+					}
+
 				}
 
 				if (hands != nullptr) {

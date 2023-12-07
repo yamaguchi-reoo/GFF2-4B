@@ -34,10 +34,10 @@ BossHands::BossHands(int _who,Boss* boss) {
 
 #ifdef _DEBUG
 	if (Hands_who == 0) {
-		hp = 5;
+		hp = 0;
 	}
 	else {
-		hp = 2;
+		hp = 0;
 	}
 #else
 	hp = 5;
