@@ -221,5 +221,7 @@ public:
 	void AddPlayerHp() { hp += 1; }
 
 	bool GetJumpFlg() { return jump_flg; }
+
+	void PlayerSound();
 };
 

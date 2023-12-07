@@ -1,16 +1,21 @@
 #pragma once
 #include"DxLib.h"
 
-#define SOUND_NUM 3	//効果音の数
+#define SOUND_NUM 100
+//効果音の数
 #define BGM_NUM 1		//BGMの数
 
 #define PLAYER_ATTACK_SOUND  0    //プレイヤーの足音
 #define PLAYER_WALK_SOUND  1    //プレイヤーの足音
+#define PLAYER_JUMP_SOUND  2    //プレイヤーのジャンプ音
+
 
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
 static char sound_filepath[SOUND_NUM][256] =
 {
 	"resource/sounds/通常攻撃.mp3",
+	"resource/sounds/足音.mp3",
+	"resource/sounds/ジャンプ.mp3",
 	"resource/sounds/打撃4.mp3",
 	"resource/sounds/体育館で歩く.mp3",
 	
@@ -70,35 +75,16 @@ public :
 
 			}
 		}
-		for (int i = 0; i < SOUND_NUM; i++)
-		{
-			//再生するなら
-			if (sound_data[i].play_flg == true)
-			{
-				if (CheckSoundMem(sound_data[i].dat) == false) {
-					StopSound(i); // 再生が終了したら停止
-				}
-				//その音が再生中でない且つ、今再生されている音より再生優先度が高いかなら
-				if (CheckSoundMem(sound_data[i].dat) == false && now_play_sound >= sound_data[i].num)
-				{
-					//優先度が高い音を再生する
-					PlaySoundMem(sound_data[i].dat, DX_PLAYTYPE_BACK);
-					//優先度が低い音は停止する
-					if (now_play_sound != sound_data[i].num)
-					{
-						StopSoundMem(sound_data[now_play_sound].dat);
-						sound_data[now_play_sound].play_flg = false;
-						now_play_sound = sound_data[i].num;
-					}
-				}
 
-			}
-		}
 		
 	}
 	static void StartSound(int _num)
 	{
-		sound_data[_num].play_flg = true;
+		if (CheckSoundMem(sound_data[_num].dat) == false) {
+
+			PlaySoundMem(sound_data[_num].dat, DX_PLAYTYPE_BACK);
+		}
+		
 	}
 	static void StopSound(int _num)
 	{

@@ -9,6 +9,7 @@ class Bamboo:
     public CharaBase
 {
 private:
+    ColorDate Date{ 0 };
     int anim_frame;     //アニメーションフレーム測定
     int count;			//カウント
     BambooState bamboo_state;
@@ -39,7 +40,7 @@ public:
     void Draw()const override;
 
     //ダメージを受ける処理
-    void ApplyDamage(int num);
+    bool ApplyDamage(int num);
     //スポーンフラグ取得
     int GetSpwnFlg() { return spawn_flg; }
 
@@ -52,5 +53,8 @@ public:
     void JumpAttack(bool flg) { jump_attack = flg; }
 
     int GetHiddenFlg() { return hidden_flg; }
+
+    //色の取得
+    ColorDate GetColorDate() { return Date; }
 };
 

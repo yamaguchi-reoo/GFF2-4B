@@ -49,8 +49,10 @@ GameMain::GameMain(int _stage)
 		heal[i] = nullptr;
 	}
 
-	koban = new Koban();
-
+	for (int i = 0; i < KOBAN_NUM; i++)
+	{
+		koban[i] = new Koban();
+	}
 	loading_scene = new Loading();
 
 	flg = false;
@@ -78,6 +80,11 @@ GameMain::GameMain(int _stage)
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
 
+	//チュートリアルステージ以外なら、はじめから強化状態になれるようにする
+	if (now_stage != 0)
+	{
+		powergauge->SetCanPowerUp(true);
+	}
 }
 
 GameMain::~GameMain()
@@ -141,7 +148,10 @@ GameMain::~GameMain()
 	delete loading_scene;
 	delete boss;
 	delete hands;
-	delete koban;
+	for (int i = 0; i < KOBAN_NUM; i++)
+	{
+		delete koban[i];
+	}
 }
 
 AbstractScene* GameMain::Update()
@@ -271,11 +281,12 @@ AbstractScene* GameMain::Update()
 					heal[i]->SetScreenPosition(camera_location);
 				}
 			}
-			koban->SetScreenPosition(camera_location);
-
+			for (int i = 0; i < KOBAN_NUM; i++)
+			{
+				koban[i]->SetScreenPosition(camera_location);
+				koban[i]->Update();
+			}
 			score->Update();
-
-			koban->Update();
 
 			for (int i = 0; i < SPLASH_MAX; i++)
 			{
@@ -421,8 +432,8 @@ AbstractScene* GameMain::Update()
 			{
 				for (int j = 0; j < stage_width_num; j++)
 				{
-					stage[i][j]->Update();
 					stage[i][j]->SetScreenPosition(camera_location);
+					stage[i][j]->Update();
 				}
 			}
 
@@ -543,6 +554,7 @@ AbstractScene* GameMain::Update()
 					sighboard[i]->Update(stage_height, player->GetLocation(), player->GetLocalLocation());
 					sighboard[i]->SetScreenPosition(camera_location);
 				}
+
 			}
 			if (
 #ifdef _DEBUG
@@ -554,6 +566,11 @@ AbstractScene* GameMain::Update()
 			{
 				tuto_flg = false;
 				sighboard[now_tuto]->SetDispFlg(false);
+				//表示していた看板が強化状態の説明看板なら、プレイヤーが強化状態になれるようにする
+				if (sighboard[now_tuto]->GetSighTypeFlg() == 12)
+				{
+					powergauge->SetCanPowerUp(true);
+				}
 			}
 		}
 	}
@@ -656,7 +673,10 @@ void GameMain::Draw() const
 	}
 
 	//小判の描画
-	koban->Draw();
+	for (int i = 0; i < KOBAN_NUM; i++)
+	{
+		koban[i]->Draw();
+	}
 
 	
 	for (int i = 0; i < ATTACK_NUM; i++)
@@ -805,11 +825,6 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				//プレイヤーと壺が触れたとき
 				HitPlayer(attack[i], jar[j]);
-				if (jar[j]->GetHp() <= 0)
-				{
-					// アイテムの位置を設定
-					koban->SetLocation(jar[j]->GetLocation());
-				}
 
 			}
 		}
@@ -952,12 +967,15 @@ void GameMain::HitCheck(GameMain* main)
 			}
 		}
 	}
-	if (player->HitBox(koban) == true && koban->GetSpawnFlg() == true)
+	for (int i = 0; i < KOBAN_NUM; i++)
 	{
-		score->AddScore(300);
-		koban->SetScoreLocation();
-		koban->SetSpawnFlg(false);
-		koban->SetScoreFlg(true);
+		if (player->HitBox(koban[i]) == true && koban[i]->GetSpawnFlg() == true)
+		{
+			score->AddScore(300);
+			koban[i]->SetScoreLocation();
+			koban[i]->SetSpawnFlg(false);
+			koban[i]->SetScoreFlg(true);
+		}
 	}
 }
 
@@ -1312,8 +1330,15 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f) ||
 				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
 			{
-				// アイテムの位置を設定
-				koban->SetLocation(character->GetLocation());
+				//// アイテムの位置を設定
+				//for (int i = 0; i < KOBAN_NUM; i++)
+				//{
+				//	if (koban[i]->GetLocation().x == 0 && koban[i]->GetLocation().y == 0)
+				//	{
+				//		koban[i]->SetLocation(character->GetLocation());
+				//		break;
+				//	}
+				//}
 				// アイテムのスポーン処理
 				ItemSpwanRand(character);
 
@@ -1385,7 +1410,17 @@ void GameMain::ItemSpwanRand(T* character)
 	// コインのスポーン
 	else if (85 <= item_rand && item_rand < 100)  // 85から99までがコインの範囲
 	{
-		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+		for (int i = 0; i < KOBAN_NUM; i++)
+		{
+			if (koban[i]->GetSpawnFlg() == false)
+			{
+				// コインをスポーンさせるフラグを設定
+				koban[i]->SetSpawnFlg(true); 
+				//座標をセット
+				koban[i]->SetLocation(character->GetLocation());
+				break;
+			}
+		}
 	}
 }
 
@@ -1425,9 +1460,24 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 			object->JumpAttack(true);
 		}
 		ImpactCamera(10 * attack->GetAttackData().damage);
-		object->ApplyDamage(attack->GetAttackData().damage);
+
+		if (object->ApplyDamage(attack->GetAttackData().damage) == true)
+		{
+			SpawnEffect(object);
+		}
 		attack->DeleteAttack();
-		koban->SetSpawnFlg(true); // コインをスポーンさせるフラグを設定
+		for (int i = 0; i < KOBAN_NUM; i++)
+		{
+			//小判をスポーンさせる
+			if (koban[i]->GetSpawnFlg() == false)
+			{
+				// アイテムの位置を設定
+				koban[i]->SetLocation(object->GetLocation());
+				//アイテムのフラグ
+				koban[i]->SetSpawnFlg(true);
+				break;
+			}
+		}
 	}
 	//プレイヤーと竹の当たり判定
 	if (player->HitBox(object) == true && object->GetSpwnFlg() == true)

@@ -1015,7 +1015,8 @@ void BossHands::CyanInit()
 	iruka_rad = 0;
 	turu_rad = 0;
 	ref_num = 0;
-	LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);
+	/*LoadDivGraph("resource/images/Boss/Iruka.png", 4, 2, 2, 256, 256, Hands_img);*/
+	LoadDivGraph("resource/images/Boss/BossIruka.png", 2, 2, 1, 256, 256, Hands_img);
 	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
 	count = 0;	//画像切り替え用
 	turu_location = { 0,0 };
@@ -1030,8 +1031,8 @@ void BossHands::HandsCyan(GameMain* main) {
 	//つるの描画位置を計算
 
 	turu_rad = atan2f(local_location.y, local_location.x - SCREEN_WIDTH);
-	turu_location.x = local_location.x + (erea.width / 2) - (640 * cosf(turu_rad)) - (50 * cosf(iruka_rad));
-	turu_location.y = local_location.y + (erea.height / 2) - (640 * sinf(turu_rad)) - (50 * sinf(iruka_rad));
+	turu_location.x = local_location.x + (erea.width / 2) - (650 * cosf(turu_rad)) - (100 * cosf(iruka_rad));
+	turu_location.y = local_location.y + (erea.height / 2) - (650 * sinf(turu_rad)) - (100 * sinf(iruka_rad));
 
 	//アニメーション用
 	if (
@@ -1092,12 +1093,14 @@ void BossHands::HandsCyan(GameMain* main) {
 					location.x = SCREEN_WIDTH - erea.width;
 					face_angle = face_angle - 0.5f;
 					ref_num++;
+					main->ImpactCamera(5);
 				}
 				if (location.x < 0)
 				{
 					location.x = 0;
 					face_angle = face_angle - 0.5f;
 					ref_num++;
+					main->ImpactCamera(5);
 				}
 				if (main->GetPlayerLocation().x > location.x - 50 && main->GetPlayerLocation().x < location.x + 50 && ref_num>0)
 				{
@@ -1154,6 +1157,7 @@ void BossHands::HandsCyan(GameMain* main) {
 						ref_num++;
 						timer = 20;
 						iruka_rad = face_angle * (float)M_PI * 2;
+						main->ImpactCamera(10);
 					}
 					else if (location.x > SCREEN_WIDTH - erea.width)
 					{
@@ -1162,6 +1166,7 @@ void BossHands::HandsCyan(GameMain* main) {
 						ref_num++;
 						timer = 20;
 						iruka_rad = face_angle * (float)M_PI * 2;
+						main->ImpactCamera(10);
 					}
 					else if (location.y < 0)
 					{
@@ -1170,12 +1175,14 @@ void BossHands::HandsCyan(GameMain* main) {
 						ref_num++;
 						timer = 20;
 						iruka_rad = face_angle * (float)M_PI * 2;
+						main->ImpactCamera(10);
 					}
 					else if (location.y > SCREEN_HEIGHT - erea.height)
 					{
 						location.y = SCREEN_HEIGHT - erea.height;
 						face_angle = 1 - face_angle;
 						iruka_rad = face_angle * (float)M_PI * 2;
+						main->ImpactCamera(10);
 					}
 				}
 				//5回床以外に反射したら大技
@@ -1221,6 +1228,7 @@ void BossHands::HandsCyan(GameMain* main) {
 						acceleration = 70;
 						iruka_state = BossIrukaState::D_RISE;
 						timer = 30;
+						main->ImpactCamera(10);
 					}
 				}
 			}
@@ -1284,21 +1292,25 @@ void BossHands::HandsCyan(GameMain* main) {
 				{
 					location.x = 0;
 					ref_num++;
+					main->ImpactCamera(20);
 				}
 				else if (location.x > SCREEN_WIDTH - erea.width)
 				{
 					location.x = SCREEN_WIDTH - erea.width;
 					ref_num++;
+					main->ImpactCamera(20);
 				}
 				else if (location.y < 0)
 				{
 					location.y = 0;
 					ref_num++;
+					main->ImpactCamera(20);
 				}
 				else if (location.y > SCREEN_HEIGHT - erea.height)
 				{
 					location.y = SCREEN_HEIGHT - erea.height;
 					ref_num++;
+					main->ImpactCamera(20);
 				}
 				if (ref_num > 1)
 				{

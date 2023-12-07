@@ -1,4 +1,6 @@
 #include "Stage.h"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #define DOWN 0	//下加速度用
 #define UP 1	//上加速度用
@@ -17,7 +19,8 @@ Stage::Stage(float _x, float _y, float _width, float _height,int _type)
 	{
 		//地面
 	case 1:
-		//LoadDivGraph("", 2, 2, 1, 48, 48, stage_img);
+		stage_img[0] = LoadGraph("resource/images/MapTip/MT_G_Center.png");
+		stage_img[1] = LoadGraph("resource/images/MapTip/MT_G_edge.png");
 		break;
 		//木
 	case 2:
@@ -25,7 +28,8 @@ Stage::Stage(float _x, float _y, float _width, float _height,int _type)
 		break;
 		//岩
 	case 3:	
-		//LoadDivGraph("", 2, 2, 1, 48, 48, stage_img);
+		stage_img[0] = LoadGraph("resource/images/MapTip/MT_R_Center.png");
+		stage_img[1] = LoadGraph("resource/images/MapTip/MT_R_Edge.png");
 		break;
 		//雲
 	case 4:
@@ -36,10 +40,14 @@ Stage::Stage(float _x, float _y, float _width, float _height,int _type)
 		inv_flg = true;
 		break;
 	}
-	end_flg[UP] = false;
-	end_flg[DOWN] = false;
-	end_flg[RIGHT] = false;
-	end_flg[LEFT] = false;
+	for (int i = 0; i < 4; i++)
+	{
+		end_flg[i] = false;
+	}
+	draw_rad[UP] = 0;
+	draw_rad[LEFT] = 0.75 * M_PI * 2;
+	draw_rad[RIGHT] = 0.25 * M_PI * 2;
+	draw_rad[DOWN] = 0.5 * M_PI * 2;
 	debug_flg = false;
 }
 
@@ -51,10 +59,10 @@ Stage::~Stage()
 void Stage::Update()
 {
 	if (inv_flg == false){
-		draw_location[UP] = { local_location.x + (erea.width / 2),local_location.y };
-		draw_location[DOWN] = { local_location.x + (erea.width / 2),local_location.y + erea.height };
-		draw_location[LEFT] = { local_location.x,local_location.y + (erea.height / 2) };
-		draw_location[RIGHT] = { local_location.x + erea.width,local_location.y + (erea.height / 2) };
+		draw_location[UP] = { local_location.x + (erea.width / 2),local_location.y + (erea.height / 2) };
+		draw_location[DOWN] = { local_location.x + (erea.width / 2),local_location.y - (erea.height / 2) + erea.height };
+		draw_location[LEFT] = { local_location.x + (erea.width / 2),local_location.y + (erea.height / 2) };
+		draw_location[RIGHT] = { local_location.x - (erea.width / 2) + erea.width,local_location.y + (erea.height / 2) };
 	}
 }
 
@@ -138,7 +146,7 @@ void Stage::Draw()const
 				break;
 				//地面
 			case 1:
-				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x4C444D, true);
+				//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x4C444D, true);
 				break;
 				//木
 			case 2:
@@ -156,13 +164,15 @@ void Stage::Draw()const
 			default:
 				break;
 			}
+			DrawGraphF(local_location.x, local_location.y, stage_img[0], true);
 			for (int i = 0; i < 4; i++)
 			{
 				if (end_flg[i] == true)
 				{
 #ifdef _DEBUG
-					DrawFormatStringF(draw_location[i].x, draw_location[i].y, 0x00ffff, "%d", i);
+					//DrawFormatStringF(local_location.x, local_location.y, 0x00ffff, "%d", i);
 #endif
+					DrawRotaGraphF(draw_location[i].x, draw_location[i].y,1,draw_rad[i], stage_img[1], true);
 				}
 			}
 		}
