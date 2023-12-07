@@ -33,7 +33,8 @@ Stage::Stage(float _x, float _y, float _width, float _height,int _type)
 		break;
 		//â_
 	case 4:
-		//LoadDivGraph("", 2, 2, 1, 48, 48, stage_img);
+		stage_img[0] = LoadGraph("resource/images/MapTip/MT_C_Center.png");
+		stage_img[1] = LoadGraph("resource/images/MapTip/MT_C_Edge.png");
 		break;
 		//ÇªÇÍà»äOÅiï`âÊñ≥ÇµÅj
 	default:
@@ -154,12 +155,12 @@ void Stage::Draw()const
 				break;
 				//ä‚
 			case 3:
-				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x333333, true);
-				break;
+				/*DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x333333, true);
+			*/	break;
 				//â_
 			case 4:
-				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xdddddd, true);
-				break;
+				/*DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xdddddd, true);
+				*/break;
 				//ñ≥
 			default:
 				break;
