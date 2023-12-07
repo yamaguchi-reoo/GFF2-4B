@@ -899,7 +899,7 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
 				{
-					/*ImpactCamera(3);*/
+					sighboard[i]->Impact(3);
 					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0 && sighboard[j]->GetBreakFlg() == false)
 					{
 						sighboard[j]->SetBreak(player->GetPlayerDirection());
