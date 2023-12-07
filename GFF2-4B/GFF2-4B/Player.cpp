@@ -680,7 +680,7 @@ void Player::Move(GameMain* main)
 	//‰EˆÚ“®
 	if (
 #ifdef _DEBUG
-	(KeyInput::OnPresed(KEY_INPUT_D) == true || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
+	((KeyInput::OnPresed(KEY_INPUT_D) == true&& KeyInput::OnPresed(KEY_INPUT_A) == false) || PadInput::TipLeftLStick(STICKL_X) >= 0.5)
 #else
 		PadInput::TipLeftLStick(STICKL_X) >= 0.5
 #endif 

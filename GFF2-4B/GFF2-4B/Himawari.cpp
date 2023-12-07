@@ -13,12 +13,14 @@
 #define HIMAWARI_DEATH 3				//死亡アニメーション開始地
 #define HIMAWARI_ANIM 20				//次の画像に切り替えるまでの時間（フレーム）
 #define HIMAWARI_DEATH_ANIM 10			//次の画像に切り替えるまでの時間（フレーム）
+#define HIMAWARI_CHARGE_ANIM_DURATION 30 //チャージアニメーションのフレーム数
 
 
 Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 {
 	anim_frame = 0;
 	count = 0;
+	charge_anim_count = 60;
 
 	himawari_state = HimawariState::LEFT;
 
@@ -46,6 +48,7 @@ Himawari::Himawari(float pos_x, float pos_y, bool direction, int _who)
 	rapid_fire_interval = RAPID_INTERVAL;
 	attack_interval_count = BULLET_INTERVAL;
 	bullet_num = BULLET_NUM_MAX ;
+	charge_flg = false;
 
 	Date.magenta = 5.0f;
 	Date.cyan = 5.0f;
@@ -59,26 +62,27 @@ Himawari::~Himawari()
 void Himawari::Update(GameMain* main)
 {
 	anim_frame++;
-	//スポーンしているかつアタックフラグが立っているとき
+	// スポーンしているかつアタックフラグが立っているとき
 	if (spawn_flg == false && attack_flg == true)
 	{
-		//攻撃
+		// チャージが完了したら通常のアップデート処理へ
+		//charge_anim_count = -120;
+		// 攻撃
 		Attack(main);
-		//行動
+		// 行動
 		Move();
 	}
+	//if (spawn_flg == false && attack_flg == true)
+	//{
+	//	// 攻撃
+	//	Attack(main);
+	//	// 行動
+	//	Move();
+	//}
 	//床に乗っていたら重力OFF
 	if (onfloor_flg == true)
 	{
 		apply_gravity = false;
-		//if (himawari_direction == true)
-		//{
-		//	himawari_state = HimawariState::LEFT;
-		//}
-		//else
-		//{
-		//	himawari_state = HimawariState::RIGHT;
-		//}
 	}
 	//床に触れていないなら
 	if (apply_gravity == true)
@@ -107,12 +111,16 @@ void Himawari::Draw() const
 			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_Y, himawari_image[HIMAWARI_ANIM_MOVE + himawari_anim], true);
 			break;
 		case HimawariState::RIGHT_SHOOT:
-			DrawTurnGraphF(local_location.x - HIMAWARI_IMAGE_SHIFT_X, local_location.y - HIMAWARI_IMAGE_SHIFT_Y, himawari_image[HIMAWARI_ANIM_ATTACK], true);
+			DrawTurnGraphF(local_location.x - HIMAWARI_IMAGE_SHIFT_X, local_location.y - (HIMAWARI_IMAGE_SHIFT_Y - 5), himawari_image[HIMAWARI_ANIM_ATTACK], true);
 			break;
 		case HimawariState::LEFT_SHOOT:
-			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_Y, himawari_image[HIMAWARI_ANIM_ATTACK], true);
+			DrawGraphF(local_location.x, local_location.y - (HIMAWARI_IMAGE_SHIFT_Y - 5), himawari_image[HIMAWARI_ANIM_ATTACK], true);
 			break;
-		case HimawariState::CHARGE:
+		case HimawariState::RIGHT_CHARGE:
+			DrawTurnGraphF(local_location.x - HIMAWARI_IMAGE_SHIFT_X + GetRand(3), local_location.y - HIMAWARI_IMAGE_SHIFT_Y + GetRand(3), himawari_image[HIMAWARI_ANIM_MOVE + himawari_anim], true);
+			break;
+		case HimawariState::LEFT_CHARGE:
+			DrawGraphF(local_location.x + GetRand(3), local_location.y - HIMAWARI_IMAGE_SHIFT_Y + GetRand(3), himawari_image[HIMAWARI_ANIM_MOVE + himawari_anim], true);
 			break;
 		case HimawariState::DEATH:
 			DrawGraphF(local_location.x, local_location.y - HIMAWARI_IMAGE_SHIFT_Y, himawari_image[/*HIMAWARI_DEATH + */himawari_anim], true);
@@ -135,6 +143,14 @@ void Himawari::Move()
 	{
 		himawari_direction = false;
 	}
+	/*if (himawari_state == HimawariState::RIGHT_CHARGE)
+	{
+		himawari_state = HimawariState::RIGHT;
+	}
+	else
+	{
+		himawari_state = HimawariState::LEFT;
+	}*/
 }
 
 void Himawari::HimawariReset()
@@ -237,9 +253,8 @@ void Himawari::Attack(GameMain* main)
 			if (bullet_num <= 0) {
 				bullet_num = BULLET_NUM_MAX;
 				attack_interval_count = BULLET_INTERVAL;
+				// 弾を発射した後の一定時間が経過する前に元のアニメーションステートに戻す
 			}
-
-			// 弾を発射した後にアニメーションステートを設定
 			if (himawari_direction == false)
 			{
 				himawari_state = HimawariState::RIGHT_SHOOT;
@@ -250,16 +265,29 @@ void Himawari::Attack(GameMain* main)
 			}
 		}
 	}
+	//チャージモーション状態に移行
+	else if (--attack_interval_count <= HIMAWARI_CHARGE_ANIM_DURATION)
+	{
+		// 弾を発射する前にアニメーションステートを設定
+		if (himawari_direction == false)
+		{
+			himawari_state = HimawariState::RIGHT_CHARGE;
+		}
+		else
+		{
+			himawari_state = HimawariState::LEFT_CHARGE;
+		}
+	}
 	else
 	{
 		// 弾を発射した後の一定時間が経過する前に元のアニメーションステートに戻す
 		if (himawari_direction == false)
 		{
-			himawari_state = HimawariState::RIGHT;
+			himawari_state = HimawariState::RIGHT/*_CHARGE*/;
 		}
 		else
 		{
-			himawari_state = HimawariState::LEFT;
+			himawari_state = HimawariState::LEFT/*_CHARGE*/;
 		}
 	}
 }
