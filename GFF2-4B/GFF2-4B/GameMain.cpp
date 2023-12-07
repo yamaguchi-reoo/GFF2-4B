@@ -1472,7 +1472,7 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 			if (koban[i]->GetSpawnFlg() == false)
 			{
 				// アイテムの位置を設定
-				koban[i]->SetLocation(object->GetLocation());
+				koban[i]->SetLocation(object->GetCenterLocation());
 				//アイテムのフラグ
 				koban[i]->SetSpawnFlg(true);
 				break;
