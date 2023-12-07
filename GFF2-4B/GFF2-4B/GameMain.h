@@ -69,6 +69,8 @@ private:
 
     SighBoard* sighboard[SIGH_BOARD_NUM];      //看板のオブジェクト
 
+    int torii_image[2];
+    Location goal_location;
     int flg;               //
     int count[2];          //実験用
     int who;                //誰が攻撃したか判断する用

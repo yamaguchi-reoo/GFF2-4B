@@ -18,6 +18,8 @@ GameMain::GameMain(int _stage)
 	pause_flg = false;
 	Back_Img = LoadGraph("resource/images/Backimg.png");
 	Pause_Img = LoadGraph("resource/images/UI/PouseImage.png");
+	torii_image[0] = LoadGraph("resource/images/Torii_Behind.png");
+	torii_image[1] = LoadGraph("resource/images/Torii_Front.png");
 	now_stage = _stage;
 	now_tuto = 0;
 	tuto_flg = false;
@@ -79,6 +81,8 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
+
+	goal_location = { 0 ,0 };
 
 	//チュートリアルステージ以外なら、はじめから強化状態になれるようにする
 	if (now_stage != 0)
@@ -585,7 +589,6 @@ void GameMain::Draw() const
 	DrawGraph(-camera_location.x/(stage_width/1000), 0, Back_Img, TRUE);
 	
 	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
-
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -612,7 +615,8 @@ void GameMain::Draw() const
 
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
-		//描画
+	//描画
+	/*DrawGraph(goal_location, 400, torii_image[0],TRUE);*/
 	player->Draw();
 
 	// イルカ
