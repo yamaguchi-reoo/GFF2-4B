@@ -50,5 +50,7 @@ public:
     void BambooAnim();
 
     void JumpAttack(bool flg) { jump_attack = flg; }
+
+    int GetHiddenFlg() { return hidden_flg; }
 };
 

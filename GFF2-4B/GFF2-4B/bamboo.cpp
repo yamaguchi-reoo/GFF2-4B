@@ -59,7 +59,7 @@ void Bamboo::Update(GameMain* main)
 
 void Bamboo::Draw() const
 {
-	if (spawn_flg == true)
+	if (hidden_flg == false)
 	{
 		//DrawFormatString(400, 400, 0xfffff, "%d", jump_attack);
 		/*DrawGraphF(local_location.x, local_location.y, image, FALSE);*/
@@ -111,7 +111,9 @@ void Bamboo::ApplyDamage(int num)
 	if (hp <= 0) {
 		/*spawn_flg = false;*/
 		death_flg = true;
-		//spawn_flg = false;
+
+		spawn_flg = false;
+
 	}
 }
 void Bamboo::FalseGravity()
@@ -122,13 +124,14 @@ void Bamboo::FalseGravity()
 void Bamboo::BambooAnim()
 {
 	//アニメーション用変数を回す
-
+	//ジャンプ攻撃ではなく地上での攻撃で死んだ場合
 	if (death_flg == true && jump_attack == false)
 	{
 		bamboo_state = BambooState::DEATH;
 		if (++count > BAMBOO_DEATH_ANIM)
 		{
 			bamboo_anim = 0;
+
 		}
 		if (++count > BAMBOO_DEATH_ANIM + 20)
 		{
@@ -136,9 +139,11 @@ void Bamboo::BambooAnim()
 		}
 		if (++count > BAMBOO_DEATH_ANIM + 40)
 		{
-			spawn_flg = false;
+			hidden_flg = true;
+			//spawn_flg = false;
 		}
 	}
+	// 地上での攻撃ではなくジャンプ攻撃で死んだ場合
 	if (death_flg == true && jump_attack == true)
 	{
 		bamboo_state = BambooState::JUMP_ATTACK_DEATH;
@@ -156,8 +161,7 @@ void Bamboo::BambooAnim()
 		}
 		if (++count > BAMBOO_ON_DEATH_ANIM + 100)
 		{
-			//hidden_flg == true;
-			spawn_flg = false;
+			hidden_flg = true;
 		}
 	}
 	//フラグがtrueになってからcountが12以上になったら
