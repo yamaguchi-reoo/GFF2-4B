@@ -1,7 +1,7 @@
 #include "Himawari.h"
 #include "GameMain.h"
 
-#define BULLET_INTERVAL 120		//インターバル
+#define BULLET_INTERVAL 240		//インターバル
 #define RAPID_INTERVAL 9		//連射インターバル	
 #define HIMAWARI_GRAVITY  10	// 重力
 #define BULLET_NUM_MAX 3		//弾の最大連射数
@@ -243,7 +243,7 @@ void Himawari::Attack(GameMain* main)
 	{
 		if (--rapid_fire_interval <= 0) {
 			bullet_num--;
-			rapid_fire_interval = RAPID_INTERVAL*4;
+			rapid_fire_interval = RAPID_INTERVAL;
 
 			// 攻撃を生成する
 			main->SpawnAttack(CreateAttactData());
