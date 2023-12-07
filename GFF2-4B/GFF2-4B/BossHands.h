@@ -60,6 +60,7 @@ public:
     int hands_width[3] = { 360,190,190 };
     int Hands_img[IMGMAX];
     int Zakuro_img[IMGMAX];
+    int Zakurored_img[IMGMAX];
 
     int Zakuro_Imgnum;//ザクロの画像切り替え用
     int Zakuro_Direction;//ザクロの向き　右:1 左:0

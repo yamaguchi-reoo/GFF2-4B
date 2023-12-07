@@ -3,7 +3,7 @@
 Boss::Boss() {
 	LoadDivGraph("resource/images/Boss/BossBody.png", 4, 4, 1, 360, 700,Boss_MainBody);
 	LoadDivGraph("resource/images/Boss/BossArm.png", 2, 2, 1, 420, 700,Boss_MainArm);
-	LoadDivGraph("resource/images/Boss/explosionMini.png", 2, 2, 1, 160, 160, Explosion);
+	LoadDivGraph("resource/images/Boss/explosionMini.png", 4, 4, 1, 180, 180, Explosion);
 
 	timer = 0;
 
@@ -25,7 +25,7 @@ Boss::Boss() {
 	Boss_state = 2;
 	Once_Flg = true;
 	Boss_step = 0;
-	Boss_Handmove = 7;
+	Boss_Handmove = 0;
 	Explosion_ImgNum = 0;
 	Expl_count = 0;
 
@@ -38,8 +38,6 @@ Boss::~Boss() {
 }
 
 void Boss::Update(GameMain* main) {
-
-
 
 	if (Boss_state!= BossState::Boss_M) {
 		BossImgChange(main);
@@ -271,7 +269,7 @@ void Boss::Draw() const {
 		break;
 	case 8:
 		//–{‘Ì
-		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[4], TRUE);
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[3], TRUE);
 
 		break;
 	default:
@@ -308,7 +306,7 @@ void Boss::Boss_MakeHand() {
 				Boss_step++;
 				break;
 			case 1:
-					//Boss_Body_Y += 400;
+				//Boss_Body_Y += 400;
 					Boss_state = Boss_M;
 					Boss_step++;
 				break;
@@ -340,27 +338,31 @@ void Boss::Boss_MakeHand() {
 void Boss::ExplosionAnim() {
 
 	Expl_count++;
-
+	
 	switch (Expl_count)
 	{
-	case 30:
+	case 0:
+		Explosion_ImgNum = 0;
+		break;
+	case 10:
 		Explosion_ImgNum = 1;
 		break;
-	case 40:
-		Explosion_ImgNum = 0;
+	case 12:
+		Explosion_ImgNum = 2;
+		break;
+	case 15:
+		Explosion_ImgNum = 3;
 		//Expl_count = 0;
-		Explosion_X -= 20;
-		Explosion_Y += 60;
 		break;
 	case 50:
-		Explosion_ImgNum = 1;
+		Explosion_ImgNum = 0;
 		Expl_count = 0;
 		Boss_Handmove++;
-		Explosion_X = Boss_Arm_Rightx;
 		Explosion_Y = 0;
 		break;
 	default:
 		break;
 	}
+	
 
 }

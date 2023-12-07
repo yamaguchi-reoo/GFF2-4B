@@ -215,7 +215,7 @@ AttackData Himawari::CreateAttactData()
 	{
 		attack_data.angle = 0.5f;
 	}
-	attack_data.speed = 10;
+	attack_data.speed = 7;
 
 	return attack_data;
 	
@@ -227,7 +227,7 @@ void Himawari::Attack(GameMain* main)
 	{
 		if (--rapid_fire_interval <= 0) {
 			bullet_num--;
-			rapid_fire_interval = RAPID_INTERVAL;
+			rapid_fire_interval = RAPID_INTERVAL*4;
 
 			// UŒ‚‚ð¶¬‚·‚é
 			main->SpawnAttack(CreateAttactData());
@@ -267,6 +267,7 @@ void Himawari::ApplyDamage(int num)
 {
 	hp -= num;
 	if (hp <= 0) {
+		//rapid_fire_interval = RAPID_INTERVAL * 3;
 		death_flg = true;
 		//ƒvƒŒƒCƒ„[‚ªŽa‚Á‚½“G‚Ì”‚ðƒJƒEƒ“ƒg
 		Score::SetAttackEnemyNum(2);

@@ -12,8 +12,8 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//全腕共通の初期化
 	frame = 0;
 	Hands_Img_num = 0;//イルカ
-	Hands_who = 0;
-	//Hands_who = boss->Hand_Num;
+	//Hands_who = 0;
+	Hands_who = boss->Hand_Num;
 	erea.height = (float)hands_height[Hands_who];
 	erea.width = (float)hands_width[Hands_who];
 	who = _who;
@@ -37,7 +37,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 		hp = 5;
 	}
 	else {
-		hp = 5;
+		hp = 2;
 	}
 #else
 	hp = 5;
@@ -109,6 +109,8 @@ void BossHands::Update(GameMain* main) {
 	}
 	else {
 		//手の種類に応じて実行するUpdateを変える
+		Blinking();
+
 		switch (Hands_who)
 		{
 		case 0:
@@ -118,12 +120,10 @@ void BossHands::Update(GameMain* main) {
 		case 1:
 			//シアン
 			HandsCyan(main);
-			Blinking();
 			break;
 		case 2:
 			//イエロー
 			HandsYellow(main);
-			Blinking();
 			break;
 		default:
 			break;
@@ -143,9 +143,13 @@ void BossHands::Draw() const {
 			//マゼンタ
 				//DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
 			DrawRotaGraphF(location.x + 150, location.y + 170, 1, Zakuro_rad, Zakuro_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
-			
+
 			if (zakuro_state == BossZakuroState::Z_FAINTING && F_switching==1) {
 				DrawGraphF(location.x + 150, location.y - 40, Fainting_img[CF], TRUE);
+			}
+
+			if (Display == true) {
+				DrawRotaGraphF(location.x + 150, location.y + 170, 1, Zakuro_rad, Zakurored_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
 			}
 
 			if (zakuro_state == Z_CUTIN) {
@@ -293,6 +297,7 @@ void BossHands::MagentaInit()
 	time = 0;
 	rad=sita*pi/180;//ラジアンに変換
 	LoadDivGraph("resource/images/Boss/Zakuro.png", 8, 4, 2, 360, 360, Zakuro_img);
+	LoadDivGraph("resource/images/Boss/Zakurored.png", 8, 4, 2, 360, 360, Zakurored_img);
 	LoadDivGraph("resource/images/Boss/kizetu.png", 2, 2, 1, 120, 50, Fainting_img);
 	LoadDivGraph("resource/images/Boss/KatinZ.png", 2, 2, 1, 640, 720, Cutin_img);
 	LoadDivGraph("resource/images/Boss/Kback.png", 2, 2, 1, 640, 720, Cutin_backimg);
@@ -1701,12 +1706,13 @@ void BossHands::BossAttack(GameMain* main)
 void BossHands::ApplyDamage(int num) {
 	//攻撃がヒットした回数で倒れる
 	//if (HitJumpAttack!=true) {
-		if (Blinking_Flg == false) {
-			Blinking_Flg = true;
-		}
 			hitflg = true;
 
 			if (Damage_flg == false) {
+				if (Blinking_Flg == false) {
+					Blinking_Flg = true;
+				}
+
 				hp--;
 			}
 	//}
