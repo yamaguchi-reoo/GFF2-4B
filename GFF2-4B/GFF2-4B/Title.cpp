@@ -49,6 +49,8 @@ Title::~Title()
 
 AbstractScene* Title::Update()
 {
+	
+
 	if (
 #ifdef _DEBUG
 		PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
@@ -56,7 +58,6 @@ AbstractScene* Title::Update()
 		PadInput::OnButton(XINPUT_BUTTON_A)
 #endif
 		)
-	SoundManager::StartSound(SYSTEM_SELECT_SOUND);
 	{
 		if(title_alpha<=150.f){ title_alpha += 150.f; }
 
@@ -126,21 +127,21 @@ AbstractScene* Title::Update()
 #endif
 			)
 			
-				
+			
 		{
+			SoundManager::StartSound(SYSTEM_SELECT_SOUND);
 			switch (static_cast<TITLE_MENU>(Select))
 			{
 				//ÉQÅ[ÉÄâÊñ Ç÷
 			case TITLE_MENU::GAME_START:
-
 				return new SelectStage();
 				//ÉGÉìÉhâÊñ Ç÷
 			case TITLE_MENU::GAME_END:
-
 				return nullptr;
 			default:
 				break;
 			}
+			SoundManager::StopSound(SYSTEM_SELECT_SOUND);
 		}
 	}
 
