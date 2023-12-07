@@ -16,6 +16,9 @@ Jar::Jar(float pos_x, float pos_y)
 	spawn_flg = true;
 
 	hp = 1;
+	Date.cyan = 0;
+	Date.magenta = 5;
+	Date.yellow = 5;
 }
 
 Jar::~Jar()
@@ -71,11 +74,13 @@ void Jar::Push(int num, Location _sub_location, Erea _sub_erea)
 	}
 }
 
-void Jar::ApplyDamage(int num)
+bool Jar::ApplyDamage(int num)
 {
 	hp -= num;
-	if (hp <= 0) {
+	if (hp <= 0 && spawn_flg == true) {
 		spawn_flg = false;
+		return true;
 	}
+	return false;
 }
 
