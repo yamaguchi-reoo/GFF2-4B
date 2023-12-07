@@ -676,7 +676,6 @@ void GameMain::Draw() const
 	for (int i = 0; i < KOBAN_NUM; i++)
 	{
 		koban[i]->Draw();
-		DrawFormatString(300 + (i * 20), 400, 0x00ff00, "%d", koban[i]->GetSpawnFlg());
 	}
 
 	
@@ -1458,7 +1457,10 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 		//ダメージ量に応じた画面揺れ
 		ImpactCamera(10 * attack->GetAttackData().damage);
 
-		object->ApplyDamage(attack->GetAttackData().damage);
+		if (object->ApplyDamage(attack->GetAttackData().damage) == true)
+		{
+			SpawnEffect(object);
+		}
 		attack->DeleteAttack();
 		for (int i = 0; i < KOBAN_NUM; i++)
 		{

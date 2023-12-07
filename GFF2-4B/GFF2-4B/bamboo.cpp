@@ -30,6 +30,9 @@ Bamboo::Bamboo(float pos_x, float pos_y)
 	onfloor_flg = false;
 	spawn_flg = true;
 	death_flg = false;
+	Date.cyan = 10;
+	Date.magenta = 0;
+	Date.yellow = 10;
 }
 
 Bamboo::~Bamboo()
@@ -99,13 +102,16 @@ void Bamboo::Push(int num, Location _sub_location, Erea _sub_erea)
 		onfloor_flg = true;
 	}
 }
-void Bamboo::ApplyDamage(int num)
+bool Bamboo::ApplyDamage(int num)
 {
 	hp = -num;
-	if (hp <= 0) {
+	if (hp <= 0 && death_flg == false) {
+		
 		/*spawn_flg = false;*/
 		death_flg = true;
+		return true;
 	}
+	return false;
 }
 void Bamboo::FalseGravity()
 {

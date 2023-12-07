@@ -1,9 +1,10 @@
 #pragma once
-#include "BoxCollider.h"
+#include "CharaBase.h"
 class Jar:
 	public BoxCollider
 {
 private:
+	ColorDate Date{ 0 };
 	bool spawn_flg;
 	int jar_image;
 
@@ -27,11 +28,13 @@ public:
 	void Push(int num, Location _sub_location, Erea _sub_erea);
 
 	//ダメージを受ける処理
-	void ApplyDamage(int num);
+	bool ApplyDamage(int num);
 	//スポーンフラグ取得
 	int GetSpwnFlg() { return spawn_flg; }
 
 	int GetHp() { return hp; }
 
+	//色の取得
+	ColorDate GetColorDate() { return Date; }
 };
 
