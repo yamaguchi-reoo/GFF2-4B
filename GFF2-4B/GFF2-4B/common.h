@@ -48,7 +48,7 @@
 //アイテム
 #define ITEM_MAX 10 //画面に出現できるアイテムの最大数
 #define JAR_MAX 14  //壺の最大数
-
+#define KOBAN_NUM 10 //小判の最大数
 //エフェクト
 #define SPLASH_MAX 50
 

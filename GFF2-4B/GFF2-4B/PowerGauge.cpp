@@ -53,6 +53,8 @@ PowerGauge::PowerGauge()
 	j = 0;
 
 	remainder = 0;
+
+	can_powerup_flg = false;
 }
 
 //デストラクタ
@@ -102,8 +104,8 @@ void PowerGauge::Update(GameMain* main)
 	}
 	else if(black.maxFlg == 1)
 	{
-		//強化ゲージがMAXかつ、Xボタンが押されたら強化状態フラグを1に
-		if ((black.maxFlg == 1) && (PadInput::OnButton(XINPUT_BUTTON_Y) == true))
+		//強化ゲージがMAXかつ、プレイヤーが強化状態に入れる状態で、Xボタンが押されたら強化状態フラグを1に
+		if ((black.maxFlg == 1) && (can_powerup_flg == true) && (PadInput::OnButton(XINPUT_BUTTON_Y) == true))
 		{
 			power_flg = 1;
 		}
