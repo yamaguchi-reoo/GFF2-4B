@@ -152,6 +152,7 @@ void Player::Update(GameMain* main)
 
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
+
 	//床に触れていないなら
 	if (onfloor_flg == false)
 	{
@@ -171,6 +172,10 @@ void Player::Draw()const
 	//プレイヤー画像表示
 	if (hidden_flg == false)
 	{
+		if (powerup_flg == true)
+		{
+			DrawGraphF(local_location.x - erea.width, local_location.y - (erea.height / 2), player_effect_image[player_effect_anim], false);
+		}
 		switch (player_state)
 		{
 		case IDOL_RIGHT:
@@ -788,6 +793,13 @@ void Player::Anim()
 		if (++player_anim > 5)
 		{
 			player_anim = 0;
+		}
+	}
+	if (frame % 5 == 0)
+	{
+		if (++player_effect_anim > 2)
+		{
+			player_effect_anim = 0;
 		}
 	}
 	//攻撃アニメーション用変数を回す

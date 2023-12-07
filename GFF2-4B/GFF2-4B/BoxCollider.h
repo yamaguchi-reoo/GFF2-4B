@@ -40,6 +40,7 @@ protected:
 	Location local_location;	//画面上での座標
 	Erea erea;					//範囲
 	int who;	//プレイヤーか敵か、敵ならどの種類の何体目かを保存する
+	int impact = 0;	//振動用
 public:
 
 	//当たり判定 (0,0 = 当たっていない それ以外 = 相手の中心座標)
@@ -64,4 +65,7 @@ public:
 	void SetScreenPosition(Location _world_to_screen);
 
 	float GetLocaLocationX() { return local_location.x; }
+
+	//振動開始処理
+	void Impact(int _power) { impact = _power; }
 };
