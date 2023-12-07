@@ -119,6 +119,7 @@ private:
 
 	//描画関連
 	int player_image[35];					//プレイヤー画像
+	int player_effect_image[3];				//プレイヤー強化状態エフェクト画像
 	PlayerState player_state;				//プレイヤーの状態格納
 	//攻撃アニメーション画像の描画の順番
 	int attack_anim_num[5][12] = { 
@@ -129,6 +130,7 @@ private:
 		{ 0,0,0,0,1,-6,-6,-6,-6,-6,-6,-6} ,
 		};	
 	int player_anim;						//プレイヤー画像アニメーション用
+	int player_effect_anim;					//プレイヤー強化状態エフェクト画像アニメーション用
 	int attack_anim;						//プレイヤー攻撃アニメーション用
 	int player_anim_speed;					//プレイヤーのアニメーション速度
 	bool hidden_flg;						//画像点滅用

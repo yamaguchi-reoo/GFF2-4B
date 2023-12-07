@@ -79,7 +79,11 @@ Player::Player()
 
 	SetPlayerAttackData();
 	LoadDivGraph("resource/images/Player_Animation.png", 35, 10, 4, 256, 256, player_image);
+	player_effect_image[0] = LoadGraph("resource/images/Effect01.png");
+	player_effect_image[1] = LoadGraph("resource/images/Effect02.png");
+	player_effect_image[2] = LoadGraph("resource/images/Effect03.png");
 	player_anim = 0;
+	player_effect_anim = 0;
 	attack_anim = 0;
 	player_anim_speed = PLAYER_ANIM;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
@@ -148,6 +152,7 @@ void Player::Update(GameMain* main)
 
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
+
 	//床に触れていないなら
 	if (onfloor_flg == false)
 	{
@@ -167,6 +172,10 @@ void Player::Draw()const
 	//プレイヤー画像表示
 	if (hidden_flg == false)
 	{
+		if (powerup_flg == true)
+		{
+			DrawGraphF(local_location.x - erea.width, local_location.y - (erea.height / 2), player_effect_image[player_effect_anim], false);
+		}
 		switch (player_state)
 		{
 		case IDOL_RIGHT:
@@ -784,6 +793,13 @@ void Player::Anim()
 		if (++player_anim > 5)
 		{
 			player_anim = 0;
+		}
+	}
+	if (frame % 5 == 0)
+	{
+		if (++player_effect_anim > 2)
+		{
+			player_effect_anim = 0;
 		}
 	}
 	//攻撃アニメーション用変数を回す
