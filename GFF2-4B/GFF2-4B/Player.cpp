@@ -1200,7 +1200,7 @@ void Player::MoveLocation(GameMain* main, float _x, float _y)
 void Player::PlayerSound()
 {
 
-	if (jump_flg==true) {
+	if (player_state==JUMP_RIGHT || player_state == JUMP_LEFT) {
 		SoundManager::StartSound(PLAYER_JUMP_SOUND);
 	}
 	else {
