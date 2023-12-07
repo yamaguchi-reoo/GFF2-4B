@@ -8,6 +8,8 @@ private:
 	static int goal_flg[3]; //どこまでクリアしたか
 	bool botton_flg;
 	int img[11];
+	int Limg;
+	int Stage_img[10];
 	int x1, x2; //巻物アニメーション用
 	int anim_flg; //巻物アニメーション用
 

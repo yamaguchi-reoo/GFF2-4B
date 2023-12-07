@@ -40,6 +40,7 @@ Title::Title()
 	//‰æ‘œ‰Šú‰»(I—¹)
 	ImageLoad(game_finish_image, "resource/font/GameFinishFont.png");
 	ImageLoad(game_finish_select, "resource/font/GameFinishSelect.png");
+
 }
 
 Title::~Title()

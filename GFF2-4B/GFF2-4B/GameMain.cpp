@@ -27,10 +27,10 @@ GameMain::GameMain(int _stage)
 	item_rand = 0;
 	distinguish = 0;
 
-	/*if (now_stage == 3) {
+	if (now_stage == 3) {
 		boss = new Boss();
 		hands = nullptr;
-	}*/
+	}
 
 	SetStage(now_stage);
 	for (int i = 0; i < 2; i++)
@@ -238,6 +238,12 @@ AbstractScene* GameMain::Update()
 						hands = new BossHands(who++, boss);
 						boss->New_Hand_Flg = false;
 					}
+
+
+					if (boss->Boss_Dieflg == true) {
+						return new SelectStage();
+					}
+
 				}
 
 				if (hands != nullptr) {
@@ -832,7 +838,8 @@ void GameMain::HitCheck(GameMain* main)
 			if (hands != nullptr) {
 				if (attack[i]->HitBox(hands) == true && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && hands->Death_Flg == false)
 				{
-					ImpactCamera(10 * attack[i]->GetAttackData().damage);
+					/*ImpactCamera(10 * attack[i]->GetAttackData().damage);*/
+					hands->Impact(10 * attack[i]->GetAttackData().damage);
 					//ボスのダメージ処理
 					if (hands->zakuro_state != 0) {
 						hands->ApplyDamage(attack[i]->GetAttackData().damage);
@@ -892,12 +899,13 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
 				{
-					ImpactCamera(3);
+					sighboard[i]->Impact(3);
 					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0 && sighboard[j]->GetBreakFlg() == false)
 					{
 						sighboard[j]->SetBreak(player->GetPlayerDirection());
 						SpawnEffect(sighboard[j]);						// しぶきのスポーン処理
-						ImpactCamera(10 * attack[i]->GetAttackData().damage);
+						/*ImpactCamera(10 * attack[i]->GetAttackData().damage);*/
+						sighboard[j]->Impact(10 * attack[i]->GetAttackData().damage);
 					}
 				}
 			}
@@ -1165,7 +1173,9 @@ void GameMain::SetStage(int _stage)
 	//�r���ŃX�e�[�W�̐؂�ւ����������ꍇ�g�p
 	if (now_stage == 3 && old_stage != now_stage) {
 		//Hands_Delete_Flg = false;
-		boss = new Boss();
+		if (boss == nullptr) {
+			boss = new Boss();
+		}
 		//hands = new BossHands(who++, boss);
 	}
 
@@ -1321,8 +1331,13 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 		attack->DeleteAttack();
 
 		//ダメージ量に応じた画面揺れ
-		impact_timer = (10 * attack->GetAttackData().damage);
+		/*ImpactCamera(10 * attack->GetAttackData().damage);*/
+		character->Impact(20 * attack->GetAttackData().damage);
 		//character->MoveNockBack();
+		
+		// しぶきのスポーン処理
+		SpawnEffect(character);
+
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
@@ -1348,8 +1363,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 			{
 				venemy_num2++;
 			}
-			// しぶきのスポーン処理
-			SpawnEffect(character);
+	
 		}
 	}
 }
@@ -1459,8 +1473,8 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 		{
 			object->JumpAttack(true);
 		}
-		ImpactCamera(10 * attack->GetAttackData().damage);
-
+		/*ImpactCamera(10 * attack->GetAttackData().damage);*/
+		object->Impact(20 * attack->GetAttackData().damage);
 		if (object->ApplyDamage(attack->GetAttackData().damage) == true)
 		{
 			SpawnEffect(object);
