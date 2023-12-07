@@ -10,6 +10,7 @@ private:
 	int stage_img[2];	//‰æ‘œŠi”[—p
 	bool end_flg[4];	//’[‚©‚Ç‚¤‚©”»’f
 	Location draw_location[4];	//Še’[‚Ì•`‰æˆÊ’u
+	float draw_rad[4];	//Še’[‚Ì•`‰æŠp“x
 	float draw_angle;			//Še’[‚Ì•`‰æŠp“x
 	bool debug_flg;		//” ‚ÌŽí—Þ‚ð•\Ž¦‚·‚é‚©
 public:

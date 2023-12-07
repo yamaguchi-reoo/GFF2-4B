@@ -35,6 +35,8 @@ private:
 
 	int remainder; //溢れた分
 
+	bool can_powerup_flg;							//強化状態になれるかどうか
+
 public:
 	//コンストラクタ
 	PowerGauge();
@@ -95,4 +97,10 @@ public:
 	float GetCyanVolume() const {
 		return cyan.volume;
 	}
+
+	//強化状態になれる状態にする
+	void SetCanPowerUp(bool _flg) { can_powerup_flg = _flg; }
+
+	//強化状態になれる状態か取得
+	bool GetCanPowerUp() { return can_powerup_flg; }
 };

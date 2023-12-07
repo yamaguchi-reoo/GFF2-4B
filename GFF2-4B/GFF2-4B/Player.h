@@ -218,5 +218,7 @@ public:
 	void MoveLocation(GameMain* main,float _x, float _y);
 
 	void AddPlayerHp() { hp += 1; }
+
+	void PlayerSound();
 };
 
