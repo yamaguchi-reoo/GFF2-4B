@@ -43,6 +43,7 @@ SelectStage::~SelectStage()
 // 描画以外の更新を実装
 AbstractScene* SelectStage::Update()
 {
+
 	if (anim_flg == 0)
 	{
 		AnimMakimono();
@@ -59,7 +60,6 @@ AbstractScene* SelectStage::Update()
 			&& botton_flg == false)
 		{//左移動
 			botton_flg = true;
-
 			--stage_num;
 
 			if (goal_flg[1] == 1)
@@ -117,6 +117,7 @@ AbstractScene* SelectStage::Update()
 		{
 			//何もしてないとき
 			botton_flg = false;
+			SoundManager::StopSound(SYSTEM_SELECT_SOUND);
 		}
 
 		//Aボタンが押されたらゲームメインに遷移
@@ -127,12 +128,10 @@ AbstractScene* SelectStage::Update()
 			PadInput::OnButton(XINPUT_BUTTON_A)
 #endif
 			)
-			SoundManager::StartSound(SYSTEM_SELECT_SOUND);
 		{
-
+			SoundManager::StartSound(SYSTEM_SELECT_SOUND);
 			return new GameMain(stage_num);
 		}
-
 		//Bボタンが押されたらタイトルに遷移
 		if (
 #ifdef _DEBUG
@@ -144,6 +143,7 @@ AbstractScene* SelectStage::Update()
 		{
 			return new Title();
 		}
+
 	}
 	return this;
 }
