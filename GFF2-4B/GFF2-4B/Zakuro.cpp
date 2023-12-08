@@ -21,7 +21,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	anim_frame = 0;
 	count = 0;
 
-	zakuro_state = ZakuroState::IDLE;
+	zakuro_state = ZakuroState::RIGHT;
 
 	location.x = pos_x;
 	location.y = pos_y;

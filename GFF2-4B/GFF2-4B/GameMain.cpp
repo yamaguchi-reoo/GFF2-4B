@@ -899,7 +899,7 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
 				{
-					sighboard[i]->Impact(3);
+					sighboard[j]->Impact(3);
 					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0 && sighboard[j]->GetBreakFlg() == false)
 					{
 						sighboard[j]->SetBreak(player->GetPlayerDirection());
@@ -949,6 +949,7 @@ void GameMain::HitCheck(GameMain* main)
 	//腕が死んだ場合
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
+			score->AddScore(1000);
 			boss->Count_Death--;
 			hands = nullptr;
 			boss->Once_Flg = true;
@@ -1563,7 +1564,7 @@ void GameMain::BattleZone()
 	}
 
 	//ザクロを15匹生成
-	if (lock_flg == 3 && venemy_num1 < 2)
+	if (lock_flg == 3 && venemy_num1 < 15)
 	{
 		venemy_cnt++;
 		if (venemy_cnt >= 60)
@@ -1574,7 +1575,7 @@ void GameMain::BattleZone()
 	}
 
 	//ザクロを15匹倒したら蔓から解放
-	if (lock_flg == 3 && venemy_num2 >= 2)
+	if (lock_flg == 3 && venemy_num2 >= 15)
 	{
 		lock_flg = 4;
 	}
