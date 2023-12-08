@@ -67,5 +67,5 @@ public:
 	float GetLocaLocationX() { return local_location.x; }
 
 	//U“®ŠJnˆ—
-	void Impact(int _power) { impact = _power; }
+ 	void Impact(int _power) { impact = _power; }
 };

@@ -82,7 +82,7 @@ GameMain::GameMain(int _stage)
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
 
-	goal_location = { 0 ,0 };
+	goal_location = { 0 ,450 };
 
 	//チュートリアルステージ以外なら、はじめから強化状態になれるようにする
 	if (now_stage != 0)
@@ -178,6 +178,13 @@ AbstractScene* GameMain::Update()
 			//カメラの更新
 			UpdateCamera();
 
+			if (now_stage == 0) {
+				goal_location.x = STAGE_1_MAX;
+			}
+			else
+			{
+				goal_location.x = STAGE_2_MAX;
+			}
 			//ザクロ
 			for (int i = 0; i < ZAKURO_MAX; i++)
 			{
@@ -594,7 +601,7 @@ void GameMain::Draw() const
 
 	DrawGraph(-camera_location.x/(stage_width/1000), 0, Back_Img, TRUE);
 	
-	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
+	DrawFormatString(600, 100, 0xff000f, "%d", stage_width);
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -622,8 +629,9 @@ void GameMain::Draw() const
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
 	//描画
-	/*DrawGraph(goal_location, 400, torii_image[0],TRUE);*/
+	DrawGraph((goal_location.x - TORII_GOAL) - camera_location.x, goal_location.y - camera_location.y, torii_image[0], TRUE);
 	player->Draw();
+
 
 	// イルカ
 	for (int i = 0; i < IRUKA_MAX; i++)
@@ -640,6 +648,8 @@ void GameMain::Draw() const
 			stage[i][j]->Draw();
 		}
 	}
+
+	DrawGraph((goal_location.x - TORII_GOAL + TORII_IMAGE_SHIFT_X) - camera_location.x, goal_location.y - camera_location.y, torii_image[1], TRUE);
 	//エネミーの描画
 	// ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
