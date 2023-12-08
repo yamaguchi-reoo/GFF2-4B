@@ -1,12 +1,12 @@
 #include "Boss.h"
 
 Boss::Boss() {
-	LoadDivGraph("resource/images/Boss/BossBody.png", 3, 3, 1, 360, 700,Boss_MainBody);
+	LoadDivGraph("resource/images/Boss/BossBody.png", 4, 4, 1, 360, 700,Boss_MainBody);
 	LoadDivGraph("resource/images/Boss/BossArm.png", 2, 2, 1, 420, 700,Boss_MainArm);
-	LoadDivGraph("resource/images/Boss/explosionMini.png", 2, 2, 1, 160, 160, Explosion);
+	LoadDivGraph("resource/images/Boss/explosionMini.png", 4, 4, 1, 180, 180, Explosion);
 
 	timer = 0;
-
+	Boss_Dieflg = false;
 
 	Boss_Arm_Rightx=800;
 	Boss_Arm_Righty=0;
@@ -25,7 +25,7 @@ Boss::Boss() {
 	Boss_state = 2;
 	Once_Flg = true;
 	Boss_step = 0;
-	Boss_Handmove=0;
+	Boss_Handmove = 0;
 	Explosion_ImgNum = 0;
 	Expl_count = 0;
 
@@ -38,8 +38,6 @@ Boss::~Boss() {
 }
 
 void Boss::Update(GameMain* main) {
-
-
 
 	if (Boss_state!= BossState::Boss_M) {
 		BossImgChange(main);
@@ -142,7 +140,6 @@ void Boss::Update(GameMain* main) {
 	case 7:
 		//身体上がって来て
 				//本体上がってくる
-
 		if (Boss_Body_Y > 0) {
 			Boss_Body_Y -= 10;
 			if (timer++ < 1) {
@@ -156,7 +153,16 @@ void Boss::Update(GameMain* main) {
 		else {
 			Boss_Body_Y = 0;
 			Boss_Body_X = 440;
+			Boss_Handmove++;
 		}
+	case 8:
+
+		//爆発して死ぬ
+		Boss_Dieflg = true;
+		//if()
+			//Boss_Body_X += 10;
+			//Boss_Body_X -= 10;
+
 		break;
 	default:
 		break;
@@ -259,7 +265,11 @@ void Boss::Draw() const {
 		break;
 	case 7:
 		//本体
-		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[Bossbody_ImgNum], TRUE);
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[0], TRUE);
+		break;
+	case 8:
+		//本体
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[3], TRUE);
 
 		break;
 	default:
@@ -276,10 +286,10 @@ void Boss::Draw() const {
 void Boss::BossImgChange(GameMain* main) {
 	
 	if (main->GetPlayerLocation().x < 426) {
-		Bossbody_ImgNum = 0;
+		Bossbody_ImgNum = 1;
 	}
 	else if (main->GetPlayerLocation().x < 852) {
-		Bossbody_ImgNum = 1;
+		Bossbody_ImgNum = 0;
 	}
 	else {
 		Bossbody_ImgNum = 2;
@@ -292,11 +302,11 @@ void Boss::Boss_MakeHand() {
 		if (timer++ > 100) {
 			switch (Boss_step) {
 			case 0:
-				Boss_state = Boss_C;
+				Boss_state = Boss_Y;
 				Boss_step++;
 				break;
 			case 1:
-					//Boss_Body_Y += 400;
+				//Boss_Body_Y += 400;
 					Boss_state = Boss_M;
 					Boss_step++;
 				break;
@@ -328,27 +338,31 @@ void Boss::Boss_MakeHand() {
 void Boss::ExplosionAnim() {
 
 	Expl_count++;
-
+	
 	switch (Expl_count)
 	{
-	case 30:
+	case 0:
+		Explosion_ImgNum = 0;
+		break;
+	case 10:
 		Explosion_ImgNum = 1;
 		break;
-	case 40:
-		Explosion_ImgNum = 0;
+	case 12:
+		Explosion_ImgNum = 2;
+		break;
+	case 15:
+		Explosion_ImgNum = 3;
 		//Expl_count = 0;
-		Explosion_X -= 20;
-		Explosion_Y += 60;
 		break;
 	case 50:
-		Explosion_ImgNum = 1;
+		Explosion_ImgNum = 0;
 		Expl_count = 0;
 		Boss_Handmove++;
-		Explosion_X = Boss_Arm_Rightx;
 		Explosion_Y = 0;
 		break;
 	default:
 		break;
 	}
+	
 
 }

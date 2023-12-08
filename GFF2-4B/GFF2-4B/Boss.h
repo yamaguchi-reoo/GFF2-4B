@@ -47,6 +47,7 @@ public:
     int Boss_step;
     bool Once_Flg;
     int Boss_Handmove;//ボスの手を作るときの動き用
+    bool Boss_Dieflg;//ボス本体が死ぬときにtrue
 
     Boss();
     ~Boss();

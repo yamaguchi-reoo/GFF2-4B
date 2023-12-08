@@ -26,6 +26,7 @@ private:
     int font_alpha;             //フォント画像の透明度
     int title_x;                //タイトルのX座標
 
+
 public:
     //コンストラクタ
     Title();

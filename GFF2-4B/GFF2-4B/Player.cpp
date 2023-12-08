@@ -79,7 +79,11 @@ Player::Player()
 
 	SetPlayerAttackData();
 	LoadDivGraph("resource/images/Player_Animation.png", 35, 10, 4, 256, 256, player_image);
+	player_effect_image[0] = LoadGraph("resource/images/Effect01.png");
+	player_effect_image[1] = LoadGraph("resource/images/Effect02.png");
+	player_effect_image[2] = LoadGraph("resource/images/Effect03.png");
 	player_anim = 0;
+	player_effect_anim = 0;
 	attack_anim = 0;
 	player_anim_speed = PLAYER_ANIM;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
@@ -148,6 +152,7 @@ void Player::Update(GameMain* main)
 
 	//プレイヤーの状態を更新する
 	UpdatePlayerState();
+
 	//床に触れていないなら
 	if (onfloor_flg == false)
 	{
@@ -245,7 +250,12 @@ void Player::Draw()const
 			DrawStringF(local_location.x, local_location.y, "no image", 0xff0000);
 			break;
 		}
+		if (powerup_flg == true)
+		{
+			DrawGraphF(local_location.x - 80, local_location.y - (erea.height / 2), player_effect_image[player_effect_anim], true);
+		}
 	}
+
 
 	//デバッグ用表示
 #ifdef _DEBUG
@@ -786,6 +796,13 @@ void Player::Anim()
 			player_anim = 0;
 		}
 	}
+	if (frame % 5 == 0)
+	{
+		if (++player_effect_anim > 2)
+		{
+			player_effect_anim = 0;
+		}
+	}
 	//攻撃アニメーション用変数を回す
 	if (PlayAnyAttack() == true)
 	{
@@ -1200,10 +1217,10 @@ void Player::MoveLocation(GameMain* main, float _x, float _y)
 void Player::PlayerSound()
 {
 
-	if (jump_flg==true) {
+	if (player_state==JUMP_RIGHT || player_state == JUMP_LEFT) {
 		SoundManager::StartSound(PLAYER_JUMP_SOUND);
 	}
-	else {
+	else if(onfloor_flg == true) {
 		SoundManager::StopSound(PLAYER_JUMP_SOUND);
 	}
 

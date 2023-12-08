@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "GameMain.h"
 #include "common.h"
+#include"SoundManager.h"
 
 #define MOVE_SPEED  1	//速度
 #define ZAKURO_GRAVITY  5//重力
@@ -55,6 +56,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	Date.magenta = 15.0f;
 	Date.cyan = 5.0f;
 	Date.yellow = 5.0f;
+	impact = 0;
 }
 Zakuro::~Zakuro()
 {
@@ -62,6 +64,10 @@ Zakuro::~Zakuro()
 void Zakuro::Update(GameMain* main)
 {
 	anim_frame++;
+	if (--impact < 0)
+	{
+		impact = 0;
+	}
 	if (spawn_flg == false) 
 	{
 		if (attack_flg == true) 
@@ -170,7 +176,7 @@ void Zakuro::MoveNockBack()
 	{
 		location.x -= speed * 0.8f;
 	}
-	stop_count -= 2;
+	stop_count -= 1;
 	if (stop_count <= 0)
 	{
 		attack_flg = true;
@@ -330,6 +336,7 @@ void Zakuro::ZakuroAnim()
 		{
 			spawn_flg = true;
 		}
+		SoundManager::StopSound(ENEMY_EXPLOSION_SOUND);
 	}
 	//フラグがtrueになってからcountが12以上になったら
 	//if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM))
@@ -338,6 +345,7 @@ void Zakuro::ZakuroAnim()
 	//	spawn_flg = true;
 	//	count = 0;
 	//}
+
 }
 
 ColorDate Zakuro::GetColorDate()

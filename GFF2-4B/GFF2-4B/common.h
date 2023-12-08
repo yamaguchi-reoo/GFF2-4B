@@ -16,7 +16,7 @@
 
 //竹
 #define BAMBOO_NUM 3 //竹の積まれている数
-#define BAMBOO_MAX 15 //竹の最大数
+#define BAMBOO_MAX 80 //竹の最大数
 
 #define ATTACK_NUM 200   //画面に存在できる最大の攻撃数
 #define ATTACK_SUB_NUM 100   //forする際の存在できる最大の攻撃数
@@ -50,7 +50,7 @@
 #define JAR_MAX 14  //壺の最大数
 #define KOBAN_NUM 10 //小判の最大数
 //エフェクト
-#define SPLASH_MAX 50
+#define SPLASH_MAX 100
 
 #define ATTACK_EFFECT_NUM 15			//攻撃エフェクトの画像数
 //攻撃エフェクト発生用

@@ -23,7 +23,6 @@ enum BossIrukaState {
 //ザクロの状態
 enum BossZakuroState {
     Z_ANIM_UP=0,
-    Z_ANIM_FALLING,
     Z_ANIM_DEAD,
     Z_MOVE,
     Z_JUMP_RIGHT,
@@ -32,6 +31,8 @@ enum BossZakuroState {
     Z_RUSH,
     Z_ANIM_RUSH,
     Z_NOCKBACK,
+    Z_FAINTING,
+    Z_CUTIN,
 };
 
 class BossHands :
@@ -59,6 +60,7 @@ public:
     int hands_width[3] = { 360,190,190 };
     int Hands_img[IMGMAX];
     int Zakuro_img[IMGMAX];
+    int Zakurored_img[IMGMAX];
 
     int Zakuro_Imgnum;//ザクロの画像切り替え用
     int Zakuro_Direction;//ザクロの向き　右:1 左:0
@@ -76,6 +78,21 @@ public:
     bool Go_Flg;
     int Charge;
     float Rush_speed;
+    int Fainting_img[10];//気絶の画像用
+    int CF;//気絶の画像切り替え用
+    int F_switching;//気絶内部状態切り替え用
+    int F_count;//気絶時間カウント
+    bool Damage_flg;//ダメージ受け付けるかどうか
+
+    int Cutin_img[3];//カットイン用画像
+    int Cutin_backimg[3];//カットイン用画像
+    int Font_img;
+    bool Cutflg;
+    int x1;
+    int x2;
+    int CO;//開けたり閉めたりするやつ
+   static bool Cutin_flg;//カットイン一回だけ用
+    int alpha;
 
     //手のHP用
     int Hands_HPimg[10];
@@ -146,10 +163,11 @@ public:
     void Blinking();
 
     //マゼンタ（ザクロ）用関数
-    void MagentaInit();                     //マゼンタ（ザクロ）で使う変数初期化
+    void MagentaInit();                  //マゼンタ（ザクロ）で使う変数初期化
     void JumpInit();
     void RushStartAnim();
     void NockBack();
+    void DrawCutin()const;
     void HandsMagenta(GameMain* main);      //マゼンタ（ザクロ）の更新
 
     //シアン（イルカ）用関数
@@ -161,6 +179,7 @@ public:
     void YellowInit();                      //イエロー（ひまわり）で使う変数初期化
     void HandsYellow(GameMain* main);       //イエロー（ひまわり）の更新
 
+    ColorDate GetColorDate();
 
     void ApplyDamage(int num);
     float GetHandsY() { return location.y; };
