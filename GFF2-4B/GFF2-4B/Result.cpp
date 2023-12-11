@@ -63,7 +63,7 @@ AbstractScene* Result::Update()
 #ifdef _DEBUG
 				PadInput::OnButton(XINPUT_BUTTON_A) || KeyInput::OnKey(KEY_INPUT_RETURN)
 #else
-				PadInput::OnButton(XINPUT_BUTTON_A)
+				PadInput::OnButton(XINPUT_BUTTON_A) || PadInput::OnButton(XINPUT_BUTTON_B)
 #endif
 				)
 			{
