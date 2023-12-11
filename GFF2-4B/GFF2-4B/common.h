@@ -18,8 +18,8 @@
 #define BAMBOO_NUM 3 //竹の積まれている数
 #define BAMBOO_MAX 80 //竹の最大数
 
-#define ATTACK_NUM 200   //画面に存在できる最大の攻撃数
-#define ATTACK_SUB_NUM 100   //forする際の存在できる最大の攻撃数
+#define ATTACK_NUM 150   //画面に存在できる最大の攻撃数
+#define ATTACK_SUB_NUM 150   //forする際の存在できる最大の攻撃数
 
 //攻撃時に誰が攻撃したのか判断する用
 #define PLAYER	0	//プレイヤー
@@ -36,6 +36,10 @@
 #define MAX_STAGE_WIDTH  1000			//ステージのブロックの横の最大個数
 #define STAGE_GOAL (BOX_WIDTH*5)		//ステージでゴールとなる座標
 #define SIGH_BOARD_NUM 5				//看板の数
+#define TORII_IMAGE_SHIFT_X 17
+#define TORII_GOAL 48
+#define STAGE_1_MAX 9480
+#define STAGE_2_MAX 14600
 
 //強制戦闘
 #define BATTLE_ZONE_NUM 5

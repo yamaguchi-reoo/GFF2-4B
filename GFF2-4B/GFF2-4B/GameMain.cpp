@@ -18,6 +18,8 @@ GameMain::GameMain(int _stage)
 	pause_flg = false;
 	Back_Img = LoadGraph("resource/images/Backimg.png");
 	Pause_Img = LoadGraph("resource/images/UI/PouseImage.png");
+	torii_image[0] = LoadGraph("resource/images/Torii_Behind.png");
+	torii_image[1] = LoadGraph("resource/images/Torii_Front.png");
 	now_stage = _stage;
 	now_tuto = 0;
 	tuto_flg = false;
@@ -79,6 +81,8 @@ GameMain::GameMain(int _stage)
 	venemy_num2 = 0;
 	vine_img[0] = LoadGraph("resource/images/KUKYOTR.png");
 	vine_img[1] = LoadGraph("resource/images/kusa.png");
+
+	goal_location = { 0 ,450 };
 
 	//チュートリアルステージ以外なら、はじめから強化状態になれるようにする
 	if (now_stage != 0)
@@ -174,6 +178,13 @@ AbstractScene* GameMain::Update()
 			//カメラの更新
 			UpdateCamera();
 
+			if (now_stage == 0) {
+				goal_location.x = STAGE_1_MAX;
+			}
+			else
+			{
+				goal_location.x = STAGE_2_MAX;
+			}
 			//ザクロ
 			for (int i = 0; i < ZAKURO_MAX; i++)
 			{
@@ -590,8 +601,7 @@ void GameMain::Draw() const
 
 	DrawGraph(-camera_location.x/(stage_width/1000), 0, Back_Img, TRUE);
 	
-	//DrawFormatString(600, 100, 0xff000f, "%d", item_rand);
-
+	DrawFormatString(600, 100, 0xff000f, "%d", stage_width);
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -618,8 +628,10 @@ void GameMain::Draw() const
 
 	SetFontSize(42);
 	//	DrawString(400, 0, "GameMain", 0xffffff);
-		//描画
+	//描画
+	DrawGraph((goal_location.x - TORII_GOAL) - camera_location.x, goal_location.y - camera_location.y, torii_image[0], TRUE);
 	player->Draw();
+
 
 	// イルカ
 	for (int i = 0; i < IRUKA_MAX; i++)
@@ -636,6 +648,8 @@ void GameMain::Draw() const
 			stage[i][j]->Draw();
 		}
 	}
+
+	DrawGraph((goal_location.x - TORII_GOAL + TORII_IMAGE_SHIFT_X) - camera_location.x, goal_location.y - camera_location.y, torii_image[1], TRUE);
 	//エネミーの描画
 	// ザクロ
 	for (int i = 0; i < ZAKURO_MAX; i++)
@@ -899,7 +913,7 @@ void GameMain::HitCheck(GameMain* main)
 			{
 				if (attack[i]->HitBox(sighboard[j]) && attack[i]->GetAttackData().who_attack == PLAYER && attack[i]->GetCanApplyDamage() == true && sighboard[j]->GetDispOnce() == true)
 				{
-					sighboard[i]->Impact(3);
+					sighboard[j]->Impact(3);
 					if (sighboard[j]->ApplyDamage(attack[i]->GetAttackData().damage) < 0 && sighboard[j]->GetBreakFlg() == false)
 					{
 						sighboard[j]->SetBreak(player->GetPlayerDirection());
@@ -949,6 +963,7 @@ void GameMain::HitCheck(GameMain* main)
 	//腕が死んだ場合
 	if (hands != nullptr) {
 		if (Hands_Delete_Flg==true) {
+			score->AddScore(1000);
 			boss->Count_Death--;
 			hands = nullptr;
 			boss->Once_Flg = true;
@@ -1563,7 +1578,7 @@ void GameMain::BattleZone()
 	}
 
 	//ザクロを15匹生成
-	if (lock_flg == 3 && venemy_num1 < 2)
+	if (lock_flg == 3 && venemy_num1 < 15)
 	{
 		venemy_cnt++;
 		if (venemy_cnt >= 60)
@@ -1574,7 +1589,7 @@ void GameMain::BattleZone()
 	}
 
 	//ザクロを15匹倒したら蔓から解放
-	if (lock_flg == 3 && venemy_num2 >= 2)
+	if (lock_flg == 3 && venemy_num2 >= 15)
 	{
 		lock_flg = 4;
 	}

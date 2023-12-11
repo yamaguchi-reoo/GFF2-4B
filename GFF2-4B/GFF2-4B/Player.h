@@ -132,7 +132,8 @@ private:
 	int player_anim;						//プレイヤー画像アニメーション用
 	int player_effect_anim;					//プレイヤー強化状態エフェクト画像アニメーション用
 	int attack_anim;						//プレイヤー攻撃アニメーション用
-	int player_anim_speed;					//プレイヤーのアニメーション速度
+	int player_attack_anim_speed;			//プレイヤーの攻撃アニメーション速度
+	int player_move_anim_speed;			//プレイヤーの移動アニメーション速度
 	bool hidden_flg;						//画像点滅用
 
 public:
