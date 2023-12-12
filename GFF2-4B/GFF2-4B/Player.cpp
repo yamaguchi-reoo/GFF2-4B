@@ -454,6 +454,7 @@ void Player::ApplyDamage(GameMain* main,int num)
 		acs[!direction + 2] += 10; //¡©•ª‚ÌŠç‚ªŒü‚¢‚Ä‚¢‚é•ûŒü‚Æ‹t•ûŒü‚É
 		//‘Ì—Í‚ğŒ¸‚ç‚·
 		hp -= num;
+		SoundManager::StartSound(PLAYER_HP_SOUND);
 		if (hp < 0)
 		{
 			//‰¼‚ÉHP‚ğƒŠƒZƒbƒg‚·‚é

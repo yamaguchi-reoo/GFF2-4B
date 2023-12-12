@@ -243,12 +243,15 @@ void Himawari::Attack(GameMain* main)
 {
 	if (--attack_interval_count <= 0)
 	{
+		SoundManager::StopSound(HIMAWARI_SHOT_SOUND);
+
 		if (--rapid_fire_interval <= 0) {
 			bullet_num--;
 			rapid_fire_interval = RAPID_INTERVAL;
 
 			// 攻撃を生成する
 			main->SpawnAttack(CreateAttactData());
+			SoundManager::StartSound(HIMAWARI_SHOT_SOUND);
 
 			// クールダウン
 			if (bullet_num <= 0) {
