@@ -30,7 +30,7 @@ AbstractScene* Loading::Update()
 	while (loading_time < 100)
 	{
 		loading_time += 1;
-		loading_mark_time = (loading_time / 30);
+		loading_mark_time = (loading_time / 34);
 		return this;
 	}
 	return new SelectStage();
@@ -38,5 +38,5 @@ AbstractScene* Loading::Update()
 void Loading::Draw()const
 {
 	DrawGraph(950, 620, loading_image, FALSE);
-	DrawCircle(1170 + (loading_mark_time * 25), 655, 7, 0xffffff, TRUE);
+	DrawCircle(1170 + (loading_mark_time * 30), 655, 7, 0xffffff, TRUE);
 }
