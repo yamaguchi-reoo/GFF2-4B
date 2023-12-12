@@ -932,12 +932,12 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
-					zakuro[i]->HitZakuro();
-				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
-					zakuro[j]->HitZakuro();
-				}
+				//if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
+				//	zakuro[i]->HitZakuro();
+				//}
+				//if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
+				//	zakuro[j]->HitZakuro();
+				//}
 				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false/* && zakuro[j]->GetAttackFlg() == false*/) {
 					zakuro[i]->Push(zakuro[j]->GetLocation(), zakuro[j]->GetErea());
 					zakuro[j]->Push(zakuro[i]->GetLocation(), zakuro[i]->GetErea());
@@ -1097,7 +1097,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), true, who++);
+						zakuro[k] = new Zakuro((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT)-20, true, who++);
 						break;
 					}
 				}
