@@ -96,7 +96,7 @@ void Bamboo::BambooGiveGravity()
 	location.y += BAMBOO_GRAVITY;
 }
 
-void Bamboo::Push(int num, Location _sub_location, Erea _sub_erea)
+void Bamboo::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location b_center = { 0 };
 	b_center.x = location.x + (erea.width / 2);

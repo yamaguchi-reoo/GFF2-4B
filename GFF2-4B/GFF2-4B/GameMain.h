@@ -161,7 +161,7 @@ public:
     void SetGameOver() { game_over_flg = true; }
     //エネミーのPushを関数化
     template <class T>
-    void ProcessCharacterCollision(T* character, Stage* stageObject, int index);
+    void ProcessCharacterCollision(T* character, Stage* stageObject);
     //竹とエネミーの当たり判定
     template <class T>
     void HitBamboo(T* character);
