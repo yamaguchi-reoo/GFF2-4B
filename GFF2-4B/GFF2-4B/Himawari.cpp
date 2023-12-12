@@ -1,5 +1,6 @@
 #include "Himawari.h"
 #include "GameMain.h"
+#include"SoundManager.h"
 
 #define BULLET_INTERVAL 240		//インターバル
 #define RAPID_INTERVAL 9		//連射インターバル	
@@ -300,6 +301,7 @@ void Himawari::ApplyDamage(int num)
 		death_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(2);
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 	}
 }
 

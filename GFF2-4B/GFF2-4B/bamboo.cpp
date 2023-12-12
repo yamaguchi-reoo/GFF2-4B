@@ -1,5 +1,6 @@
 #include "bamboo.h"
 #include "PadInput.h"
+#include"SoundManager.h"
 
 #define BAMBOO_GRAVITY  10
 
@@ -118,6 +119,7 @@ bool Bamboo::ApplyDamage(int num)
 
 		spawn_flg = false;
 
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 		return true;
 	}
 	return false;
