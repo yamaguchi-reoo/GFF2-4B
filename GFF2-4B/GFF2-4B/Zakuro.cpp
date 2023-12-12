@@ -53,9 +53,9 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	zakuro_death_anim = 0;
 	hp = 3;
 
-	Date.magenta = 15.0f;
-	Date.cyan = 5.0f;
-	Date.yellow = 5.0f;
+	Date.magenta = 5.5f;
+	Date.cyan = 1.6f;
+	Date.yellow = 1.6f;
 	impact = 0;
 }
 Zakuro::~Zakuro()
