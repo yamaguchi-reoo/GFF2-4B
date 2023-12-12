@@ -53,9 +53,9 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	zakuro_death_anim = 0;
 	hp = 3;
 
-	Date.magenta = 15.0f;
-	Date.cyan = 5.0f;
-	Date.yellow = 5.0f;
+	Date.magenta = 5.5f;
+	Date.cyan = 1.6f;
+	Date.yellow = 1.6f;
 	impact = 0;
 }
 Zakuro::~Zakuro()
@@ -273,7 +273,7 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = (-erea.height / 4) + 31/*(- erea.height / 4) + 20*/;
+	attack_data.shift_y = (-erea.height / 4) + 40/*(- erea.height / 4) + 20*/;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;

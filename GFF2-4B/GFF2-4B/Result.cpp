@@ -13,9 +13,9 @@ Result::Result()
 	img[7] = LoadGraph("resource/images/Result/makimono3.png");
 
 
-	img[1] = LoadGraph("resource/images/Enemy/zakuro.png");
-	img[2] = LoadGraph("resource/images/Enemy/H.png");
-	img[3] = LoadGraph("resource/images/Enemy/I.png");
+	img[1] = LoadGraph("resource/images/Enemy/Zakuro02.png");
+	img[2] = LoadGraph("resource/images/Enemy/Himawari02.png");
+	img[3] = LoadGraph("resource/images/Enemy/Iruka02.png");
 	img[4] = LoadGraph("resource/images/Result/Result1.png");
 	img[5] = LoadGraph("resource/images/Result/Result2.png");
 
@@ -96,13 +96,13 @@ void Result::Draw() const
 	DrawGraph(460 + 40 - 33, 280 + 10, num_img[himawari_num % 10], TRUE);
 
 	//ÉCÉãÉJ
-	DrawGraph(555, 300 + 10, img[3], TRUE);
+	DrawGraph(555, 300, img[3], TRUE);
 	DrawFormatString(665, 295 + 10, 0x000000, "Å~");
 	DrawGraph(695 - 15, 280 + 10, num_img[iruka_num / 10], TRUE);
 	DrawGraph(695 + 40 - 10, 280 + 10, num_img[iruka_num % 10], TRUE);
 
 	//ÉUÉNÉç
-	DrawGraph(815, 290 + 10, img[1], TRUE);
+	DrawGraph(815, 290, img[1], TRUE);
 	DrawFormatString(900, 295 + 10, 0x000000, "Å~");
 	DrawGraph(930 - 15, 280 + 10, num_img[zakuro_num / 10], TRUE);
 	DrawGraph(930 + 40 - 10, 280 + 10, num_img[zakuro_num % 10], TRUE);
