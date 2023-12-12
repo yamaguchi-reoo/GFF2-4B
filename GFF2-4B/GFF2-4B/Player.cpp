@@ -85,7 +85,8 @@ Player::Player()
 	player_anim = 0;
 	player_effect_anim = 0;
 	attack_anim = 0;
-	player_anim_speed = PLAYER_ANIM;
+	player_attack_anim_speed = PLAYER_ANIM;
+	player_move_anim_speed = PLAYER_ANIM;
 	inv_time = DEFAULT_INVINCIBLE_TIME;
 	damage_time = DEFAULT_INVINCIBLE_TIME / 2;
 	death_time = 120;
@@ -496,7 +497,7 @@ void Player::SetPowerUp()
 	jump_power = DEFAULT_JUMP_POWER * 1.2f;			//跳躍力を1.2倍
 	attack_interval = DEFAULT_ATTACK_INTERVAL / 2;	//攻撃間隔を半分に
 	combo_attack_interval = DEFAULT_ATTACK_INTERVAL;//連続攻撃受付時間を半分に
-	player_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
+	player_attack_anim_speed = PLAYER_ANIM / 2;			//アニメーション切り替え間隔を二倍
 	attack_time = DEFAULT_ATTACK_INTERVAL / 2;		//プレイヤーが動けない時間を半分に
 }
 
@@ -508,7 +509,7 @@ void Player::StopPowerUp()
 	jump_power = DEFAULT_JUMP_POWER;
 	attack_interval = DEFAULT_ATTACK_INTERVAL;
 	combo_attack_interval = (int)(DEFAULT_ATTACK_INTERVAL * 1.5f);
-	player_anim_speed = PLAYER_ANIM;
+	player_attack_anim_speed = PLAYER_ANIM;
 	attack_time = DEFAULT_ATTACK_INTERVAL;		
 }
 
@@ -745,7 +746,13 @@ void Player::Move(GameMain* main)
 	{
 		direction = true;
 	}
-	
+
+	//現在の速度に応じてアニメーションを回す速度をかえる
+	player_move_anim_speed = 10 - (int)(fabs(acs[RIGHT]-acs[LEFT]));
+	if (player_move_anim_speed < 2)
+	{
+		player_move_anim_speed = 2;
+	}
 	//ジャンプ中にダメージを受けた時、急速落下する
 	if (jump_flg == true && damage_flg == true)
 	{
@@ -789,7 +796,12 @@ void Player::Move(GameMain* main)
 void Player::Anim()
 {
 	//アニメーション用変数を回す
-	if (frame % (PLAYER_ANIM-(int)powerup_flg) == 0)
+	if (
+#if powerup_flg
+		frame % (player_move_anim_speed - 1) == 0)
+#else
+		frame % (player_move_anim_speed) == 0)
+#endif
 	{
 		if (++player_anim > 5)
 		{
@@ -806,7 +818,7 @@ void Player::Anim()
 	//攻撃アニメーション用変数を回す
 	if (PlayAnyAttack() == true)
 	{
-		if (frame % (player_anim_speed/2) == 0 && attack_anim < 11)
+		if (frame % (player_attack_anim_speed /2) == 0 && attack_anim < 11)
 		{
 			attack_anim++;
 		}
@@ -1225,7 +1237,7 @@ void Player::PlayerSound()
 	}
 
 	//歩行音を再生する
-	if (next_location.x != old_location.x && onfloor_flg == true)
+	if (next_location.x != old_location.x && onfloor_flg == true && (player_anim == 1 || player_anim == 4))
 	{
 		SoundManager::StartSound(PLAYER_WALK_SOUND);
 	}

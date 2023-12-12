@@ -61,7 +61,7 @@ void Jar::JarGiveGravity()
 	location.y += JAR_GRAVITY;
 }
 
-void Jar::Push(int num, Location _sub_location, Erea _sub_erea)
+void Jar::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location b_center = { 0 };
 	b_center.x = location.x + (erea.width / 2);

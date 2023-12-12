@@ -113,7 +113,7 @@ void Attack::Draw()const
 	if (can_apply_damage == true)
 	{
 		//‰¼•`‰æiŒ©‚Ã‚ç‚³–h~j
-		if (attack_data.effect_type == HIMAWARI_BULLET || attack_data.effect_type == BOSSHIMAWARI_BULLET)
+		if (attack_data.effect_type == HIMAWARI_BULLET)
 		{
 			DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
 		}
@@ -125,7 +125,7 @@ void Attack::Draw()const
 		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
 		{
 			//•`‰æ‚·‚é
-			DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][0], false);
+			DrawRotaGraph(local_location.x + (erea.width/2), local_location.y + (erea.height/2), 1, attack_data.angle * M_PI * 2, bullet_img[attack_data.effect_type][0], true);
 		}
 	}
 	if (cut_flg ==true && cut_time < CUT_ANIM_TIME)
@@ -135,7 +135,7 @@ void Attack::Draw()const
 		if(attack_data.effect_type == BOSSHIMAWARI_BULLET)
 		{
 			//•`‰æ‚·‚é
-			DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][1], false);
+			DrawRotaGraph(local_location.x + (erea.width / 2), local_location.y + (erea.height / 2), 1, attack_data.angle * M_PI * 2, bullet_img[attack_data.effect_type][1], true);
 		}
 		else
 		{

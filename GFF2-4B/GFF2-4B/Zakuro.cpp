@@ -21,7 +21,7 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	anim_frame = 0;
 	count = 0;
 
-	zakuro_state = ZakuroState::IDLE;
+	zakuro_state = ZakuroState::RIGHT;
 
 	location.x = pos_x;
 	location.y = pos_y;
@@ -143,8 +143,11 @@ void Zakuro::Move()
 	//¶ˆÚ“®
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		location.x -= MOVE_SPEED;
-		zakuro_direction = true;
+		if (leftwall_flg == false)
+		{
+			location.x -= MOVE_SPEED;
+		}
+		/*zakuro_direction = true;*/
 	/*	if (location.x < 0) 
 		{
 			zakuro_state = ZakuroState::RIGHT;
@@ -154,8 +157,11 @@ void Zakuro::Move()
 	//‰EˆÚ“®
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		location.x += MOVE_SPEED;
-		zakuro_direction = false;
+		if (rightwall_flg == false)
+		{
+			location.x += MOVE_SPEED;
+		}
+		/*zakuro_direction = false;*/
 	/*	if (location.x > SCREEN_WIDTH - 50) 
 		{
 			zakuro_state = ZakuroState::LEFT;
@@ -207,56 +213,59 @@ void Zakuro::ZakuroGiveGravity()
 	location.y += ZAKURO_GRAVITY;
 }
 
-void Zakuro::Push(int num, Location _sub_location, Erea _sub_erea)
+void Zakuro::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location z_center = { 0 };
 	z_center.x = location.x + (erea.width / 2);
 	z_center.y = location.y + (erea.height / 2);
 	//°‚ÉG‚ê‚½
-	if (location.y + erea.height - 12 < _sub_location.y)
+	if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
+		location.y = _sub_location.y - erea.height - 0.05f;
 		onfloor_flg = true;
 	}
 	//‰E‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x + erea.width - 10 < _sub_location.x)
+	if (location.x + erea.width - 24 < _sub_location.x && location.y + erea.height - 12 > _sub_location.y)
 	{
 		location.x = _sub_location.x - erea.width;
-
+		/*zakuro_state = ZakuroState::LEFT;*/
+		zakuro_direction = true;
 		//‰E‚Ì•Ç‚ÉG‚ê‚½ƒtƒ‰ƒO‚ğ—§‚Ä‚é
 		rightwall_flg = true;
 	}
 	//¶‚Ì•Ç‚ÉG‚ê‚½
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width)
+	if (location.x + 24 > _sub_location.x + _sub_erea.width && location.y + erea.height - 12 > _sub_location.y)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
-
+		/*zakuro_state = ZakuroState::RIGHT;*/
+		zakuro_direction = false;
 		//¶‚Ì•Ç‚ÉG‚ê‚½ƒtƒ‰ƒO‚ğ—§‚Ä‚é
 		leftwall_flg = true;
 	}
-	//‚Ç‚Á‚¿‚Ì•Ç‚É‚àG‚ê‚Ä‚¢‚È‚¢‚Æ‚«‚Ì’n–Ê‚·‚è”²‚¯–h~
-	else
-	{
-		location.y = _sub_location.y - erea.height;
-		onfloor_flg = true;
-	}
+	////‚Ç‚Á‚¿‚Ì•Ç‚É‚àG‚ê‚Ä‚¢‚È‚¢‚Æ‚«‚Ì’n–Ê‚·‚è”²‚¯–h~
+	//else
+	//{
+	//	location.y = _sub_location.y - erea.height;
+	//	onfloor_flg = true;
+	//}
 
 }
 
 void Zakuro::HitWall()
 {
-	//¶‚Ì•Ç‚É‚Ô‚Â‚©‚Á‚½‚ç‰E‚ÉˆÚ“®
-	if (leftwall_flg == true) {
-		zakuro_state = ZakuroState::RIGHT;
-		zakuro_direction = false;
-		leftwall_flg = false;
-	}
-	//‰E‚Ì•Ç‚É‚Ô‚Â‚©‚Á‚½‚ç¶‚ÉˆÚ“®
-	if (rightwall_flg == true) {
-		zakuro_state = ZakuroState::LEFT;
-		zakuro_direction = true;
-		rightwall_flg = false;
-	}
+	////¶‚Ì•Ç‚É‚Ô‚Â‚©‚Á‚½‚ç‰E‚ÉˆÚ“®
+	//if (leftwall_flg == true) {
+	//	zakuro_state = ZakuroState::RIGHT;
+	//	zakuro_direction = false;
+	//	leftwall_flg = false;
+	//}
+	////‰E‚Ì•Ç‚É‚Ô‚Â‚©‚Á‚½‚ç¶‚ÉˆÚ“®
+	//if (rightwall_flg == true) {
+	//	zakuro_state = ZakuroState::LEFT;
+	//	zakuro_direction = true;
+	//	rightwall_flg = false;
+	//}
+
 }
 
 AttackData Zakuro::CreateAttactData()
@@ -296,16 +305,16 @@ void Zakuro::ApplyDamage(int num)
 
 void Zakuro::HitZakuro()
 {
-	switch (zakuro_state) {
-	case ZakuroState::RIGHT:
-		zakuro_state = ZakuroState::LEFT;
-		zakuro_direction = true;
-		break;
-	case ZakuroState::LEFT:
-		zakuro_state = ZakuroState::RIGHT;
-		zakuro_direction = false;
-		break;
-	}
+	//switch (zakuro_state) {
+	//case ZakuroState::RIGHT:
+	//	zakuro_state = ZakuroState::LEFT;
+	//	zakuro_direction = true;
+	//	break;
+	//case ZakuroState::LEFT:
+	//	zakuro_state = ZakuroState::RIGHT;
+	//	zakuro_direction = false;
+	//	break;
+	//}
 }
 
 void Zakuro::ZakuroAnim()

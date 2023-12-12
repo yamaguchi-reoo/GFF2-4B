@@ -39,7 +39,7 @@ void SighBoard::Update(int _stage_height,Location _player_location, Location _pl
 	{
 		frame = 0;
 	}
-	if (location.x - 100 < _player_location.x && location.x + erea.width + 100 > _player_location.x && location.y-200<_player_location.y&& disp_once == false)
+	if (location.x - 100 < _player_location.x && location.x + erea.width + 100 > _player_location.x && location.y-200<_player_location.y&& location.y +erea.height +100 >_player_location.y && disp_once == false)
 	{
 		tuto_disp_flg = true;
 	}
@@ -73,13 +73,13 @@ void SighBoard::Draw()const
 	
 	if (tuto_disp_flg == true)
 	{
-		if (local_location.y > 400)
+		if (local_location.y < 300)
 		{
-			DrawGraphF(local_location.x-30, local_location.y - 370, sb_img[disp_type - 9], false);
+			DrawGraphF(local_location.x - 30, local_location.y + 70, sb_img[disp_type - 9], true);
 		}
 		else
 		{
-			DrawGraphF(local_location.x-30, local_location.y + 70, sb_img[disp_type - 9], false);
+			DrawGraphF(local_location.x - 30, local_location.y - 370, sb_img[disp_type - 9], true);
 		}
 		if (frame < 15)
 		{

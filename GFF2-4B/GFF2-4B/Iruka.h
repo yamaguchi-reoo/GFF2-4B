@@ -61,8 +61,8 @@ public:
 
     int  GetReturnFlg() { return return_flg; }
 
-    //押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
-    void Push(int num, Location _sub_location, Erea _sub_erea);
+    //押し出す(_sub = 当たっている床の左上座標、幅、高さ)
+    void Push(Location _sub_location, Erea _sub_erea);
     //床に触れている時の処理(num = 当たっている床 _sub = 当たっている床の中心座標)
     void IrukaOnFloor();
 
@@ -82,5 +82,7 @@ public:
     void SetDeathFlg(bool flg) { death_flg = flg; }
 
     ColorDate GetColorDate();
+
+    void HitWall(){}
 };
 

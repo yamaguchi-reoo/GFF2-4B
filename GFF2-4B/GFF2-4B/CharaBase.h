@@ -21,5 +21,4 @@ protected:
 public:
 	virtual void Update(GameMain* main) = 0;
 	virtual void Draw()const = 0;
-
 };

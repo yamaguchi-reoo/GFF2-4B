@@ -1682,10 +1682,10 @@ AttackData BossHands::BossAttactData()
 		break;
 		//‚Ð‚Ü‚í‚è’e
 	case 3:
-		attack_data.shift_x = 0;
+		attack_data.shift_x = -erea.width/2;
 		attack_data.shift_y = 0;
-		attack_data.width = 50;
-		attack_data.height = 50;
+		attack_data.width = 70;
+		attack_data.height = 70;
 		attack_data.who_attack = who;
 		attack_data.attack_time = 300;
 		attack_data.delay = 3;
