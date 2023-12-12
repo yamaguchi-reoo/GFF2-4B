@@ -1,6 +1,7 @@
 #include "Iruka.h"
 #include "GameMain.h"
 #include "PadInput.h"
+#include"SoundManager.h"
 
 #define MOVE_SPEED  3
 #define MOVE_FALL_SPEED  5
@@ -331,6 +332,7 @@ void Iruka::ApplyDamage(int num)
 		//spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(1);
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 	}
 }
 

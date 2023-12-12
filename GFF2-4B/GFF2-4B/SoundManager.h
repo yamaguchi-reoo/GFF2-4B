@@ -95,6 +95,7 @@ public :
 		if (CheckSoundMem(sound_data[_num].dat) == false) {
 
 			PlaySoundMem(sound_data[_num].dat, DX_PLAYTYPE_BACK);
+			
 		}
 		
 	}
