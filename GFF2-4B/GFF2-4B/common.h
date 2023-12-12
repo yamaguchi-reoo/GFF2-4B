@@ -36,7 +36,7 @@
 #define MAX_STAGE_WIDTH  1000			//ステージのブロックの横の最大個数
 #define STAGE_GOAL (BOX_WIDTH*5)		//ステージでゴールとなる座標
 #define SIGH_BOARD_NUM 5				//看板の数
-#define TORII_IMAGE_SHIFT_X 17
+#define TORII_IMAGE_SHIFT_X 14
 #define TORII_GOAL 48
 #define STAGE_1_MAX 9480
 #define STAGE_2_MAX 14600

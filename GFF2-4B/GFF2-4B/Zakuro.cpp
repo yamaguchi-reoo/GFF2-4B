@@ -263,7 +263,7 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = (-erea.height / 4) + 31/*(- erea.height / 4) + 20*/;
+	attack_data.shift_y = (-erea.height / 4) + 40/*(- erea.height / 4) + 20*/;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;

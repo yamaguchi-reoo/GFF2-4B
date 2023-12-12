@@ -66,7 +66,7 @@ void Bamboo::Draw() const
 	{
 		//DrawFormatString(400, 400, 0xfffff, "%d", jump_attack);
 		/*DrawGraphF(local_location.x, local_location.y, image, FALSE);*/
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
+		//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
 		switch (bamboo_state)
 		{
 		case BambooState::IDLE:

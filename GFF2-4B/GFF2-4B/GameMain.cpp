@@ -601,7 +601,7 @@ void GameMain::Draw() const
 
 	DrawGraph(-camera_location.x/(stage_width/1000), 0, Back_Img, TRUE);
 	
-	DrawFormatString(600, 100, 0xff000f, "%d", stage_width);
+	//DrawFormatString(600, 100, 0xff000f, "%d", stage_width);
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {

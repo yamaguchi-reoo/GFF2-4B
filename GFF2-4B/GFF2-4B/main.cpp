@@ -42,7 +42,7 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         sceneMng->Draw();
 
         FPSC->All();
-        FPSC->Disp();
+        //FPSC->Disp();
 
         //強制終了
         //Escapeキーまたはバックボタンを押したら強制終了
