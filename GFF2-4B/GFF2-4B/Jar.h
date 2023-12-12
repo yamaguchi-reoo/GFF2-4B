@@ -27,7 +27,7 @@ public:
 	//重力が働く
 	void JarGiveGravity();
 	//押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
-	void Push(int num, Location _sub_location, Erea _sub_erea);
+	void Push(Location _sub_location, Erea _sub_erea);
 
 	//ダメージを受ける処理
 	bool ApplyDamage(int num);
@@ -39,5 +39,7 @@ public:
 	void JumpAttack(bool flg) { jump_attack = flg; }
 	//色の取得
 	ColorDate GetColorDate() { return Date; }
+
+	void HitWall() {}
 };
 
