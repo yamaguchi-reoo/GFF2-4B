@@ -749,9 +749,9 @@ void Player::Move(GameMain* main)
 
 	//現在の速度に応じてアニメーションを回す速度をかえる
 	player_move_anim_speed = 10 - (int)(fabs(acs[RIGHT]-acs[LEFT]));
-	if (player_move_anim_speed <= 0)
+	if (player_move_anim_speed < 2)
 	{
-		player_move_anim_speed = 1;
+		player_move_anim_speed = 2;
 	}
 	//ジャンプ中にダメージを受けた時、急速落下する
 	if (jump_flg == true && damage_flg == true)
@@ -796,7 +796,12 @@ void Player::Move(GameMain* main)
 void Player::Anim()
 {
 	//アニメーション用変数を回す
-	if (frame % (player_move_anim_speed -(int)powerup_flg) == 0)
+	if (
+#if powerup_flg
+		frame % (player_move_anim_speed - 1) == 0)
+#else
+		frame % (player_move_anim_speed) == 0)
+#endif
 	{
 		if (++player_anim > 5)
 		{
