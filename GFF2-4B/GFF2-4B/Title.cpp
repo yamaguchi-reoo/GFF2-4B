@@ -4,6 +4,7 @@
 #include "PadInput.h"
 #include "SelectStage.h"
 #include"SoundManager.h"
+#include "Credit.h"
 
 //‰æ‘œ“Ç‰Šú‰»—pŠÖ”
 void Title::ImageLoad(int& _handle, const char* _file_name)
@@ -45,7 +46,6 @@ Title::Title()
 
 Title::~Title()
 {
-
 }
 
 AbstractScene* Title::Update()
@@ -138,7 +138,7 @@ AbstractScene* Title::Update()
 				return new SelectStage();
 				//ƒGƒ“ƒh‰æ–Ê‚Ö
 			case TITLE_MENU::GAME_END:
-				return nullptr;
+				return new Credit();
 			default:
 				break;
 			}
