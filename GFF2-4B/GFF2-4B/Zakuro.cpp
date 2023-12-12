@@ -148,7 +148,7 @@ void Zakuro::Move()
 		{
 			location.x -= MOVE_SPEED;
 		}
-		zakuro_direction = true;
+		/*zakuro_direction = true;*/
 	/*	if (location.x < 0) 
 		{
 			zakuro_state = ZakuroState::RIGHT;
@@ -162,7 +162,7 @@ void Zakuro::Move()
 		{
 			location.x += MOVE_SPEED;
 		}
-		zakuro_direction = false;
+		/*zakuro_direction = false;*/
 	/*	if (location.x > SCREEN_WIDTH - 50) 
 		{
 			zakuro_state = ZakuroState::LEFT;
@@ -229,7 +229,7 @@ void Zakuro::Push(Location _sub_location, Erea _sub_erea)
 	if (location.x + erea.width - 24 < _sub_location.x && location.y + erea.height - 12 > _sub_location.y)
 	{
 		location.x = _sub_location.x - erea.width;
-		zakuro_state = ZakuroState::LEFT;
+		/*zakuro_state = ZakuroState::LEFT;*/
 		zakuro_direction = true;
 		//右の壁に触れたフラグを立てる
 		rightwall_flg = true;
@@ -238,7 +238,7 @@ void Zakuro::Push(Location _sub_location, Erea _sub_erea)
 	if (location.x + 24 > _sub_location.x + _sub_erea.width && location.y + erea.height - 12 > _sub_location.y)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
-		zakuro_state = ZakuroState::RIGHT;
+		/*zakuro_state = ZakuroState::RIGHT;*/
 		zakuro_direction = false;
 		//左の壁に触れたフラグを立てる
 		leftwall_flg = true;
@@ -254,18 +254,18 @@ void Zakuro::Push(Location _sub_location, Erea _sub_erea)
 
 void Zakuro::HitWall()
 {
-	//左の壁にぶつかったら右に移動
-	if (leftwall_flg == true) {
-		zakuro_state = ZakuroState::RIGHT;
-		zakuro_direction = false;
-		leftwall_flg = false;
-	}
-	//右の壁にぶつかったら左に移動
-	if (rightwall_flg == true) {
-		zakuro_state = ZakuroState::LEFT;
-		zakuro_direction = true;
-		rightwall_flg = false;
-	}
+	////左の壁にぶつかったら右に移動
+	//if (leftwall_flg == true) {
+	//	zakuro_state = ZakuroState::RIGHT;
+	//	zakuro_direction = false;
+	//	leftwall_flg = false;
+	//}
+	////右の壁にぶつかったら左に移動
+	//if (rightwall_flg == true) {
+	//	zakuro_state = ZakuroState::LEFT;
+	//	zakuro_direction = true;
+	//	rightwall_flg = false;
+	//}
 
 }
 
