@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #define CUT_ANIM_TIME 20
+
 Attack::Attack()
 {
 	attack_flg = false;
@@ -115,7 +116,7 @@ void Attack::Draw()const
 		//âºï`âÊÅiå©Ç√ÇÁÇ≥ñhé~Åj
 		if (attack_data.effect_type == HIMAWARI_BULLET)
 		{
-			DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
+			DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
 		}
 		else
 		{
@@ -139,8 +140,8 @@ void Attack::Draw()const
 		}
 		else
 		{
-			DrawBox(local_location.x, local_location.y - cut_time, local_location.x + erea.width, local_location.y - (erea.height / 2) - cut_time, 0x00ff00, true);
-			DrawBox(local_location.x, local_location.y + cut_time, local_location.x + erea.width, local_location.y + (erea.height / 2) + cut_time, 0x00ff00, true);
+			DrawBox(local_location.x, local_location.y - cut_time, local_location.x + erea.width, local_location.y - (erea.height / 2) - cut_time, 0xffff00, true);
+			DrawBox(local_location.x, local_location.y + cut_time, local_location.x + erea.width, local_location.y + (erea.height / 2) + cut_time, 0xffff00, true);
 		}
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}

@@ -50,8 +50,8 @@ public:
 	void ZakuroReset();// 当たり判定のリセット
 	//重力が働く
 	void ZakuroGiveGravity();
-	//押し出す( _sub = 当たっている床の左上座標 _type = 当たった床の種類)
-	void Push(int num, Location _sub_location, Erea _sub_erea);
+	//押し出す( _sub = 当たっている床の左上座標、幅、高さ)
+	void Push(Location _sub_location, Erea _sub_erea);
 
 	//void Push(Location _sub_location, Erea _sub_erea, int _type);
 	void HitWall();
@@ -76,7 +76,9 @@ public:
 	//向きの反転
 	//void ReverseDirection();
 
+
 	ZakuroState GetZakuroState(){return zakuro_state;}
 	ColorDate GetColorDate();
+
 
 };

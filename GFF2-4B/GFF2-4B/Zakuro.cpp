@@ -53,9 +53,9 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	zakuro_death_anim = 0;
 	hp = 3;
 
-	Date.magenta = 15.0f;
-	Date.cyan = 5.0f;
-	Date.yellow = 5.0f;
+	Date.magenta = 5.5f;
+	Date.cyan = 1.6f;
+	Date.yellow = 1.6f;
 	impact = 0;
 }
 Zakuro::~Zakuro()
@@ -64,10 +64,6 @@ Zakuro::~Zakuro()
 void Zakuro::Update(GameMain* main)
 {
 	anim_frame++;
-	if (--impact < 0)
-	{
-		impact = 0;
-	}
 	if (spawn_flg == false) 
 	{
 		if (attack_flg == true) 
@@ -107,6 +103,7 @@ void Zakuro::Update(GameMain* main)
 	ZakuroAnim();
 	//各移動用変数をリセット
 	ZakuroReset();
+	
 }
 
 void Zakuro::Draw() const
@@ -143,8 +140,11 @@ void Zakuro::Move()
 	//左移動
 	if (zakuro_state == ZakuroState::LEFT) 
 	{
-		location.x -= MOVE_SPEED;
-		zakuro_direction = true;
+		if (leftwall_flg == false)
+		{
+			location.x -= MOVE_SPEED;
+		}
+		/*zakuro_direction = true;*/
 	/*	if (location.x < 0) 
 		{
 			zakuro_state = ZakuroState::RIGHT;
@@ -154,8 +154,11 @@ void Zakuro::Move()
 	//右移動
 	if (zakuro_state == ZakuroState::RIGHT) 
 	{
-		location.x += MOVE_SPEED;
-		zakuro_direction = false;
+		if (rightwall_flg == false)
+		{
+			location.x += MOVE_SPEED;
+		}
+		/*zakuro_direction = false;*/
 	/*	if (location.x > SCREEN_WIDTH - 50) 
 		{
 			zakuro_state = ZakuroState::LEFT;
@@ -207,63 +210,66 @@ void Zakuro::ZakuroGiveGravity()
 	location.y += ZAKURO_GRAVITY;
 }
 
-void Zakuro::Push(int num, Location _sub_location, Erea _sub_erea)
+void Zakuro::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location z_center = { 0 };
 	z_center.x = location.x + (erea.width / 2);
 	z_center.y = location.y + (erea.height / 2);
 	//床に触れた時
-	if (location.y + erea.height - 12 < _sub_location.y)
+	if (location.y + erea.height - 30 < _sub_location.y)
 	{
-		location.y = _sub_location.y - erea.height + 0.1f;
+		location.y = _sub_location.y - erea.height - 0.05f;
 		onfloor_flg = true;
 	}
 	//右の壁に触れた時
-	else if (location.x + erea.width - 10 < _sub_location.x)
+	if (location.x + erea.width - 24 < _sub_location.x && location.y + erea.height - 12 > _sub_location.y)
 	{
 		location.x = _sub_location.x - erea.width;
-
+		/*zakuro_state = ZakuroState::LEFT;*/
+		zakuro_direction = true;
 		//右の壁に触れたフラグを立てる
 		rightwall_flg = true;
 	}
 	//左の壁に触れた時
-	else if (location.x + 10 > _sub_location.x + _sub_erea.width)
+	if (location.x + 24 > _sub_location.x + _sub_erea.width && location.y + erea.height - 12 > _sub_location.y)
 	{
 		location.x = _sub_location.x + _sub_erea.width;
-
+		/*zakuro_state = ZakuroState::RIGHT;*/
+		zakuro_direction = false;
 		//左の壁に触れたフラグを立てる
 		leftwall_flg = true;
 	}
-	//どっちの壁にも触れていないときの地面すり抜け防止
-	else
-	{
-		location.y = _sub_location.y - erea.height;
-		onfloor_flg = true;
-	}
+	////どっちの壁にも触れていないときの地面すり抜け防止
+	//else
+	//{
+	//	location.y = _sub_location.y - erea.height;
+	//	onfloor_flg = true;
+	//}
 
 }
 
 void Zakuro::HitWall()
 {
-	//左の壁にぶつかったら右に移動
-	if (leftwall_flg == true) {
-		zakuro_state = ZakuroState::RIGHT;
-		zakuro_direction = false;
-		leftwall_flg = false;
-	}
-	//右の壁にぶつかったら左に移動
-	if (rightwall_flg == true) {
-		zakuro_state = ZakuroState::LEFT;
-		zakuro_direction = true;
-		rightwall_flg = false;
-	}
+	////左の壁にぶつかったら右に移動
+	//if (leftwall_flg == true) {
+	//	zakuro_state = ZakuroState::RIGHT;
+	//	zakuro_direction = false;
+	//	leftwall_flg = false;
+	//}
+	////右の壁にぶつかったら左に移動
+	//if (rightwall_flg == true) {
+	//	zakuro_state = ZakuroState::LEFT;
+	//	zakuro_direction = true;
+	//	rightwall_flg = false;
+	//}
+
 }
 
 AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = (-erea.height / 4) + 31/*(- erea.height / 4) + 20*/;
+	attack_data.shift_y = (-erea.height / 4) + 40/*(- erea.height / 4) + 20*/;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
@@ -291,27 +297,29 @@ void Zakuro::ApplyDamage(int num)
 		death_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(0);
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 	}
 }
 
 void Zakuro::HitZakuro()
 {
-	switch (zakuro_state) {
-	case ZakuroState::RIGHT:
-		zakuro_state = ZakuroState::LEFT;
-		zakuro_direction = true;
-		break;
-	case ZakuroState::LEFT:
-		zakuro_state = ZakuroState::RIGHT;
-		zakuro_direction = false;
-		break;
-	}
+	//switch (zakuro_state) {
+	//case ZakuroState::RIGHT:
+	//	zakuro_state = ZakuroState::LEFT;
+	//	zakuro_direction = true;
+	//	break;
+	//case ZakuroState::LEFT:
+	//	zakuro_state = ZakuroState::RIGHT;
+	//	zakuro_direction = false;
+	//	break;
+	//}
 }
 
 void Zakuro::ZakuroAnim()
 {
 	if (spawn_flg == false)
 	{
+		
 		//アニメーション用変数を回す
 		if (anim_frame % ZAKURO_ANIM == 0)
 		{
@@ -331,12 +339,15 @@ void Zakuro::ZakuroAnim()
 		if (++count > ZAKURO_DEATH_ANIM + 20)
 		{
 			zakuro_death_anim = 1;
+			
 		}
 		if (++count > ZAKURO_DEATH_ANIM + 40)
 		{
 			spawn_flg = true;
+			location.x = -100;
 		}
-		SoundManager::StopSound(ENEMY_EXPLOSION_SOUND);
+		
+		
 	}
 	//フラグがtrueになってからcountが12以上になったら
 	//if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM))
@@ -347,6 +358,7 @@ void Zakuro::ZakuroAnim()
 	//}
 
 }
+
 
 ColorDate Zakuro::GetColorDate()
 {

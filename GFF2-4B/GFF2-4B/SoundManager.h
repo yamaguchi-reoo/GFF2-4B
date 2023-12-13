@@ -9,12 +9,16 @@
 #define PLAYER_ATTACK_SOUND  0    //プレイヤーの足音
 #define PLAYER_WALK_SOUND  1    //プレイヤーの足音
 #define PLAYER_JUMP_SOUND  2    //プレイヤーのジャンプ音
+#define PLAYER_HP_SOUND  3    //プレイヤーのHP
+
 
 //エネミー
-#define ENEMY_EXPLOSION_SOUND  3    //エネミーの爆発音
+#define ENEMY_EXPLOSION_SOUND  4    //エネミーの爆発音
+#define HIMAWARI_SHOT_SOUND  5    //エネミーの爆発音
+
 
 //システム
-#define SYSTEM_SELECT_SOUND  4    //決定音
+#define SYSTEM_SELECT_SOUND  6   //決定音
 
 
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
@@ -24,8 +28,12 @@ static char sound_filepath[SOUND_NUM][256] =
 	"resource/sounds/通常攻撃.mp3",
 	"resource/sounds/足音.mp3",
 	"resource/sounds/ジャンプ.mp3",
+	"resource/sounds/紙破る.mp3",
+
 	//エネミー
 	"resource/sounds/爆発音.mp3",
+	"resource/sounds/ショット.mp3",
+
 	//システム
 	"resource/sounds/決定音(太鼓).mp3",
 
@@ -95,6 +103,7 @@ public :
 		if (CheckSoundMem(sound_data[_num].dat) == false) {
 
 			PlaySoundMem(sound_data[_num].dat, DX_PLAYTYPE_BACK);
+			
 		}
 		
 	}

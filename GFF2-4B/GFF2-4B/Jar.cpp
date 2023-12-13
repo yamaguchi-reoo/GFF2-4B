@@ -45,7 +45,7 @@ void Jar::Draw() const
 	if (spawn_flg == true)
 	{
 		DrawRotaGraph(local_location.x + 20, local_location.y + 15, 0.2f, 0, jar_image, TRUE, FALSE);
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xBB8B38, false);
+		//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xBB8B38, false);
 	}
 }
 
@@ -61,7 +61,7 @@ void Jar::JarGiveGravity()
 	location.y += JAR_GRAVITY;
 }
 
-void Jar::Push(int num, Location _sub_location, Erea _sub_erea)
+void Jar::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location b_center = { 0 };
 	b_center.x = location.x + (erea.width / 2);

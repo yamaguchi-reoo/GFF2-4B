@@ -56,8 +56,8 @@ public:
     void HimawariReset();// 当たり判定のリセット
     //重力が働く
     void HimawariGiveGravity();
-    //押し出す(num = 当たっている床 _sub = 当たっている床の左上座標)
-    void Push(int num, Location _sub_location, Erea _sub_erea);
+    //押し出す(_sub = 当たっている床の左上座標、幅、高さ)
+    void Push(Location _sub_location, Erea _sub_erea);
     void Move();
     AttackData CreateAttactData();
 
@@ -77,5 +77,6 @@ public:
 
     ColorDate GetColorDate();
     
+    void HitWall(){}
 };
 

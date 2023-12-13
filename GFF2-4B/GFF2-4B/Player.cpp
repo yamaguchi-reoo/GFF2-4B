@@ -454,6 +454,7 @@ void Player::ApplyDamage(GameMain* main,int num)
 		acs[!direction + 2] += 10; //今自分の顔が向いている方向と逆方向に
 		//体力を減らす
 		hp -= num;
+		SoundManager::StartSound(PLAYER_HP_SOUND);
 		if (hp < 0)
 		{
 			//仮にHPをリセットする
@@ -749,9 +750,9 @@ void Player::Move(GameMain* main)
 
 	//現在の速度に応じてアニメーションを回す速度をかえる
 	player_move_anim_speed = 10 - (int)(fabs(acs[RIGHT]-acs[LEFT]));
-	if (player_move_anim_speed <= 0)
+	if (player_move_anim_speed < 2)
 	{
-		player_move_anim_speed = 1;
+		player_move_anim_speed = 2;
 	}
 	//ジャンプ中にダメージを受けた時、急速落下する
 	if (jump_flg == true && damage_flg == true)
@@ -796,7 +797,12 @@ void Player::Move(GameMain* main)
 void Player::Anim()
 {
 	//アニメーション用変数を回す
-	if (frame % (player_move_anim_speed -(int)powerup_flg) == 0)
+	if (
+#if powerup_flg
+		frame % (player_move_anim_speed - 1) == 0)
+#else
+		frame % (player_move_anim_speed) == 0)
+#endif
 	{
 		if (++player_anim > 5)
 		{
@@ -1009,8 +1015,8 @@ void Player::SetPlayerAttackData()
 	//一段階目　
 	player_attack_data[0].shift_x = -erea.width;
 	player_attack_data[0].shift_y = -100;
-	player_attack_data[0].width = erea.width + 120;
-	player_attack_data[0].height = 220;
+	player_attack_data[0].width = erea.width + 120;  //195
+	player_attack_data[0].height = 220;				 //220
 	player_attack_data[0].who_attack = 0;
 	player_attack_data[0].attack_time = 17;
 	player_attack_data[0].damage = 1;

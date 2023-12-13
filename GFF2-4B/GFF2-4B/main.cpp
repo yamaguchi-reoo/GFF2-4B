@@ -10,7 +10,7 @@
 //メインプログラム 開始
 
 int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR LpCmdLine, _In_ int NCmdShow) {
-    SetMainWindowText("GFF2-4B");         // ウィンドウタイトルを設定
+    SetMainWindowText("禊(misogi)");         // ウィンドウタイトルを設定
 
     ChangeWindowMode(TRUE);                        // ウインドウモードで起動
 
@@ -42,7 +42,9 @@ int WINAPI WinMain(_In_ HINSTANCE  hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         sceneMng->Draw();
 
         FPSC->All();
+#ifdef _DEBUG
         FPSC->Disp();
+#endif
 
         //強制終了
         //Escapeキーまたはバックボタンを押したら強制終了

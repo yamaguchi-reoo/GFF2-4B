@@ -252,7 +252,7 @@ AbstractScene* GameMain::Update()
 
 
 					if (boss->Boss_Dieflg == true) {
-						return new SelectStage();
+						return new GameClear(now_stage);
 					}
 
 				}
@@ -601,7 +601,7 @@ void GameMain::Draw() const
 
 	DrawGraph(-camera_location.x/(stage_width/1000), 0, Back_Img, TRUE);
 	
-	DrawFormatString(600, 100, 0xff000f, "%d", stage_width);
+	/*DrawFormatString(600, 100, 0xff000f, "%d", stage_width);*/
 	//ボス表示
 	if (now_stage == 3) {
 		if (boss != nullptr) {
@@ -776,27 +776,27 @@ void GameMain::HitCheck(GameMain* main)
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
-				ProcessCharacterCollision(zakuro[k], stage[i][j], 5);
+				ProcessCharacterCollision(zakuro[k], stage[i][j]);
 			}
 			//イルカの数だけ繰り返す
 			for (int k = 0; k < IRUKA_MAX; k++)
 			{
-				ProcessCharacterCollision(iruka[k], stage[i][j], i);
+				ProcessCharacterCollision(iruka[k], stage[i][j]);
 			}
 			//ひまわりの数だけ繰り返す
 			for (int k = 0; k < HIMAWARI_MAX; k++)
 			{
-				ProcessCharacterCollision(himawari[k], stage[i][j], i);
+				ProcessCharacterCollision(himawari[k], stage[i][j]);
 			}
 			//竹の数だけ繰り返す
 			for (int k = 0; k < BAMBOO_MAX; k++)
 			{
-				ProcessCharacterCollision(bamboo[k], stage[i][j], i);
+				ProcessCharacterCollision(bamboo[k], stage[i][j]);
 			}
 			//竹の数だけ繰り返す
 			for (int k = 0; k < JAR_MAX; k++)
 			{
-				ProcessCharacterCollision(jar[k], stage[i][j], i);
+				ProcessCharacterCollision(jar[k], stage[i][j]);
 			}
 		}
 	}
@@ -932,18 +932,19 @@ void GameMain::HitCheck(GameMain* main)
 		{
 			if (zakuro[i] != nullptr && zakuro[j] != nullptr)
 			{
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
-					zakuro[i]->HitZakuro();
+				//if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == true) {
+				//	zakuro[i]->HitZakuro();
+				//}
+				//if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
+				//	zakuro[j]->HitZakuro();
+				//}
+				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false/* && zakuro[j]->GetAttackFlg() == false*/) {
+					zakuro[i]->Push(zakuro[j]->GetLocation(), zakuro[j]->GetErea());
+					zakuro[j]->Push(zakuro[i]->GetLocation(), zakuro[i]->GetErea());
 				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == true) {
-					zakuro[j]->HitZakuro();
-				}
-				if (zakuro[i]->HitBox(zakuro[j]) == true && zakuro[j]->GetSpawnFlg() == false && zakuro[j]->GetAttackFlg() == false) {
-					zakuro[i]->Push(5, zakuro[j]->GetLocation(), zakuro[j]->GetErea());
-				}
-				if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == false) {
-					zakuro[j]->Push(5, zakuro[i]->GetLocation(), zakuro[i]->GetErea());
-				}
+				//if (zakuro[j]->HitBox(zakuro[i]) == true && zakuro[i]->GetSpawnFlg() == false && zakuro[i]->GetAttackFlg() == false) {
+				//	zakuro[j]->Push(zakuro[i]->GetLocation(), zakuro[i]->GetErea());
+				//}
 			}
 		}
 	}
@@ -1096,7 +1097,7 @@ void GameMain::SetStage(int _stage)
 				{
 					if (zakuro[k] == nullptr)
 					{
-						zakuro[k] = new Zakuro((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT), true, who++);
+						zakuro[k] = new Zakuro((float)(j * BOX_WIDTH), (float)(i * BOX_HEIGHT)-20, true, who++);
 						break;
 					}
 				}
@@ -1315,7 +1316,7 @@ void GameMain::UpdateCamera()
 	}
 	else if (lock_flg != 0)
 	{
-		CameraLocation(battle_start_pos[now_battle].x, battle_start_pos[now_battle].y-(SCREEN_HEIGHT/2)+144);
+		CameraLocation(battle_start_pos[now_battle].x, battle_start_pos[now_battle].y-(SCREEN_HEIGHT/2)+96);
 	}
 	if (--impact_timer < 0)
 	{
@@ -1329,11 +1330,29 @@ Location GameMain::GetCameraLocation()
 }
 
 template <class T>
-void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject, int index) {
+void GameMain::ProcessCharacterCollision(T* character, Stage* stageObject) {
 	// キャラクターオブジェクトが存在し、ヒットボックスがステージオブジェクトと交差し、かつステージの当たり判定がある場合
 	if (character != nullptr && character->HitBox(stageObject) == true && stageObject->GetStageCollisionType() != 0) {
 		// キャラクターの押し出し処理
-		character->Push(index, stageObject->GetLocation(), stageObject->GetErea());
+		character->Push(stageObject->GetLocation(), stageObject->GetErea());
+	}
+	//キャラクターオブジェクトが存在し、強制戦闘が始まっている状態で、キャラクターが画面端と接触したら
+	if (character != nullptr &&  lock_flg!=0 && (character->GetLocation().x < camera_location.x+100|| character->GetLocation().x +character->GetErea().width > camera_location.x + SCREEN_WIDTH-100))
+	{
+		// キャラクターの押し出し処理
+		if (character->GetLocation().x < camera_location.x + 100)
+		{
+			Location wall_location{ camera_location.x,camera_location.y };
+			Erea wall_erea{ 100,100 };
+			character->Push(wall_location, wall_erea);
+		}
+		// キャラクターの押し出し処理
+		if (character->GetLocation().x + character->GetErea().width > camera_location.x + SCREEN_WIDTH - 100)
+		{
+			Location wall_location{ camera_location.x + SCREEN_WIDTH - 100,camera_location.y };
+			Erea wall_erea{ 100,100 };
+			character->Push(wall_location, wall_erea);
+		}
 	}
 }
 
@@ -1356,7 +1375,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
-			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 15.0f) ||
+			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 5.5f) ||
 				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f) ||
 				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
 			{
@@ -1394,7 +1413,7 @@ void GameMain::HitBamboo(T* character)
 			if (bamboo[i] != nullptr && character->HitBox(bamboo[i]) == true && bamboo[i]->GetSpwnFlg() == true)
 			{
 				//触れた面に応じて押し出す
-				character->Push(i, bamboo[i]->GetLocation(), bamboo[i]->GetErea());
+				character->Push(bamboo[i]->GetLocation(), bamboo[i]->GetErea());
 			}
 		}
 		//壺とエネミーの当たり判定
@@ -1403,7 +1422,7 @@ void GameMain::HitBamboo(T* character)
 			if (jar[i] != nullptr && character->HitBox(jar[i]) == true && jar[i]->GetSpwnFlg() == true)
 			{
 				//触れた面に応じて押し出す
-				character->Push(i, jar[i]->GetLocation(), jar[i]->GetErea());
+				character->Push(jar[i]->GetLocation(), jar[i]->GetErea());
 			}
 		}
 	}
@@ -1488,7 +1507,6 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 		{
 			object->JumpAttack(true);
 		}
-		/*ImpactCamera(10 * attack->GetAttackData().damage);*/
 		object->Impact(20 * attack->GetAttackData().damage);
 		if (object->ApplyDamage(attack->GetAttackData().damage) == true)
 		{
@@ -1617,4 +1635,3 @@ void GameMain::BattleZone()
 		lock_flg = 0;
 	}
 }
-

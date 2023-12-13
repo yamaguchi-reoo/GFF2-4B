@@ -4,6 +4,7 @@
 #include "PadInput.h"
 #include "SelectStage.h"
 #include"SoundManager.h"
+#include "Credit.h"
 
 //画像読込初期化用関数
 void Title::ImageLoad(int& _handle, const char* _file_name)
@@ -45,7 +46,6 @@ Title::Title()
 
 Title::~Title()
 {
-
 }
 
 AbstractScene* Title::Update()
@@ -138,7 +138,7 @@ AbstractScene* Title::Update()
 				return new SelectStage();
 				//エンド画面へ
 			case TITLE_MENU::GAME_END:
-				return nullptr;
+				return new Credit();
 			default:
 				break;
 			}
@@ -181,7 +181,7 @@ void Title::Draw()const
 		if (Select == 1) { DrawGraph(850, 575, game_finish_select, TRUE); }
 
 		//カーソルの表示
-		DrawTriangle(790, 500 + (Select * 90), 820, 520 + (Select * 90), 790, 540 + (Select * 90), 0xff0000, TRUE);
+		DrawTriangle(790, 500 + (Select * 90), 820, 520 + (Select * 90), 790, 540 + (Select * 90), 0xafafaf, TRUE);
 		//描画ブレンドをNoBlendにする
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 	}

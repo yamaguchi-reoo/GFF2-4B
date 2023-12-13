@@ -1,6 +1,7 @@
 #include "Iruka.h"
 #include "GameMain.h"
 #include "PadInput.h"
+#include"SoundManager.h"
 
 #define MOVE_SPEED  3
 #define MOVE_FALL_SPEED  5
@@ -241,7 +242,7 @@ void Iruka::IrukaOnFloor()
 	}
 }
 
-void Iruka::Push(int num, Location _sub_location, Erea _sub_erea)
+void Iruka::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location i_center = { 0 };
 	i_center.x = location.x + (erea.width / 2);
@@ -331,6 +332,7 @@ void Iruka::ApplyDamage(int num)
 		//spawn_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(1);
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 	}
 }
 

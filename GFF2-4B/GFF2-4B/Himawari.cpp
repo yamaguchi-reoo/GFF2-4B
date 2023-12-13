@@ -1,5 +1,6 @@
 #include "Himawari.h"
 #include "GameMain.h"
+#include"SoundManager.h"
 
 #define BULLET_INTERVAL 240		//インターバル
 #define RAPID_INTERVAL 9		//連射インターバル	
@@ -167,7 +168,7 @@ void Himawari::HimawariGiveGravity()
 	location.y += HIMAWARI_GRAVITY;
 }
 
-void Himawari::Push(int num, Location _sub_location, Erea _sub_erea)
+void Himawari::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location h_center = { 0 };
 	h_center.x = location.x + (erea.width / 2);
@@ -242,12 +243,15 @@ void Himawari::Attack(GameMain* main)
 {
 	if (--attack_interval_count <= 0)
 	{
+		SoundManager::StopSound(HIMAWARI_SHOT_SOUND);
+
 		if (--rapid_fire_interval <= 0) {
 			bullet_num--;
 			rapid_fire_interval = RAPID_INTERVAL;
 
 			// 攻撃を生成する
 			main->SpawnAttack(CreateAttactData());
+			SoundManager::StartSound(HIMAWARI_SHOT_SOUND);
 
 			// クールダウン
 			if (bullet_num <= 0) {
@@ -300,6 +304,7 @@ void Himawari::ApplyDamage(int num)
 		death_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(2);
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 	}
 }
 

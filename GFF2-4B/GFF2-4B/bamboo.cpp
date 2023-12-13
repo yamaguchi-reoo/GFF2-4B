@@ -1,5 +1,6 @@
 #include "bamboo.h"
 #include "PadInput.h"
+#include"SoundManager.h"
 
 #define BAMBOO_GRAVITY  10
 
@@ -66,7 +67,7 @@ void Bamboo::Draw() const
 	{
 		//DrawFormatString(400, 400, 0xfffff, "%d", jump_attack);
 		/*DrawGraphF(local_location.x, local_location.y, image, FALSE);*/
-		DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
+		//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffffff, FALSE);
 		switch (bamboo_state)
 		{
 		case BambooState::IDLE:
@@ -96,7 +97,7 @@ void Bamboo::BambooGiveGravity()
 	location.y += BAMBOO_GRAVITY;
 }
 
-void Bamboo::Push(int num, Location _sub_location, Erea _sub_erea)
+void Bamboo::Push(Location _sub_location, Erea _sub_erea)
 {
 	Location b_center = { 0 };
 	b_center.x = location.x + (erea.width / 2);
@@ -118,6 +119,7 @@ bool Bamboo::ApplyDamage(int num)
 
 		spawn_flg = false;
 
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 		return true;
 	}
 	return false;
