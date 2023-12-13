@@ -1507,7 +1507,6 @@ void GameMain::HitPlayer(Attack* attack , T* object)
 		{
 			object->JumpAttack(true);
 		}
-		/*ImpactCamera(10 * attack->GetAttackData().damage);*/
 		object->Impact(20 * attack->GetAttackData().damage);
 		if (object->ApplyDamage(attack->GetAttackData().damage) == true)
 		{

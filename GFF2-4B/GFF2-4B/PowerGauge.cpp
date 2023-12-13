@@ -70,6 +70,7 @@ void PowerGauge::Update(GameMain* main)
 {
 	if ((black.maxFlg == 0) && (rota_flg == 0))
 	{
+#ifdef _DEBUG
 		//デバック用(LBをおしたら強化ゲージが溜まる)
 		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_LEFT_SHOULDER) == true))
 		{
@@ -86,16 +87,16 @@ void PowerGauge::Update(GameMain* main)
 				yellow.volume += 40.0f;
 			}
 		}
-
-		CheckVolumeMax();
-
-		VolumeSet();
-
 		//デバック用(RBをおしたら強化ゲージがMAXになる)
 		if ((black.maxFlg == 0) && (PadInput::OnButton(XINPUT_BUTTON_RIGHT_SHOULDER) == true))
 		{
 			rota_flg = 1;
 		}
+#endif
+		CheckVolumeMax();
+
+		VolumeSet();
+
 
 	}
 	else if(rota_flg == 1)
