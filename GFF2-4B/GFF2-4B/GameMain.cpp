@@ -252,7 +252,7 @@ AbstractScene* GameMain::Update()
 
 
 					if (boss->Boss_Dieflg == true) {
-						return new SelectStage();
+						return new GameClear(now_stage);
 					}
 
 				}
@@ -1636,4 +1636,3 @@ void GameMain::BattleZone()
 		lock_flg = 0;
 	}
 }
-
