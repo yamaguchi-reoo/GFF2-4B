@@ -14,7 +14,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	//全腕共通の初期化
 	frame = 0;
 	Hands_Img_num = 0;//イルカ
-	//Hands_who = 0;
+	//Hands_who = 1;
 	Hands_who = boss->Hand_Num;
 	erea.height = (float)hands_height[Hands_who];
 	erea.width = (float)hands_width[Hands_who];
@@ -39,12 +39,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Date.yellow = 15.0f;
 
 #ifdef _DEBUG
-	if (Hands_who == 0) {
-		hp = 5;
-	}
-	else {
-		hp = 5;
-	}
+		hp = 0;
 #else
 	hp = 5;
 #endif // _DEBUG
@@ -59,7 +54,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	case 1:
 		//シアン初期化
 		CyanInit();
-		LoadDivGraph("resource/images/Boss/Irukared.png", 4, 2, 2, 256, 256, Blinking_Img);
+		LoadDivGraph("resource/images/Boss/Irukared.png", 2, 2, 1, 256, 256, Blinking_Img);
 		break;
 	case 2:
 		//イエロー初期化
@@ -139,7 +134,6 @@ void BossHands::Update(GameMain* main) {
 
 void BossHands::Draw() const {
 
-	//DrawGraphF(location.x + 100, location.y + 50, bosf[1], TRUE);
 	if (Make_hpflg != true) {
 	}
 	else {
@@ -147,27 +141,23 @@ void BossHands::Draw() const {
 		{
 		case 0:
 			//マゼンタ
-				//DrawGraphF(location.x, location.y, Zakuro_img[Zakuro_Imgnum], TRUE);
 			DrawRotaGraphF(location.x + 150, location.y + 170, 1, Zakuro_rad, Zakuro_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
 
-			if (zakuro_state == BossZakuroState::Z_FAINTING && F_switching==1) {
-				DrawGraphF(location.x + 150, location.y - 40, Fainting_img[CF], TRUE);
+			if (Death_Flg == false) {
+				if (zakuro_state == BossZakuroState::Z_FAINTING && F_switching == 1) {
+					DrawGraphF(location.x + 150, location.y - 40, Fainting_img[CF], TRUE);
+				}
 			}
 
 			if (Display == true) {
 				DrawRotaGraphF(location.x + 150, location.y + 170, 1, Zakuro_rad, Zakurored_img[Zakuro_Imgnum], TRUE, Zakuro_Direction);
 			}
 
+		
+
 			if (zakuro_state == Z_CUTIN) {
-				//DrawGraphF(x1, 0, Cutin_img[0], TRUE);
-				//DrawGraphF(x2, 0, Cutin_img[1], TRUE);
-				//DrawGraph(420, 300, Font_img, TRUE);
 				DrawCutin();
 			}
-			////HP表示
-			//for (int i = 0; i < hp; i++) {
-			//	DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
-			//}
 			break;
 		case 1:
 			//シアン
@@ -189,10 +179,6 @@ void BossHands::Draw() const {
 				}
 			}
 
-			////HP表示
-			//for (int i = 0; i < hp; i++) {
-			//	DrawGraph(500 + i * 50, 650, Hands_HPimg[2], TRUE);
-			//}
 
 			break;
 		case 2:
@@ -396,106 +382,6 @@ void BossHands::HandsMagenta(GameMain* main) {
 
 	if (Death_Flg == false) {
 
-		/*
-		//ボスの拳の攻撃判定
-		if (switching != 3) {
-			Attack_Num = 0;
-			BossAttack(main);
-		}
-
-		//衝撃波を出す
-		if (hitflg == true && onceflg == true) {
-			//ボスが第二形態だったら
-			if (Power_Up == true) {
-				Rock_Once = true;
-				//if (rock != nullptr) {
-				//	rock->Update();
-				//}
-			}
-
-			switch (switching) {
-			case 0:
-				Attack_Num = 1;
-				BossAttack(main);
-
-				break;
-			case 1:
-				Attack_Num = 2;
-				BossAttack(main);
-
-				break;
-			case 2:
-				Attack_Num = 1;
-				BossAttack(main);
-				Attack_Num = 2;
-				BossAttack(main);
-				break;
-			default:
-				break;
-			}
-			onceflg = false;
-		}
-
-		if (switching < 2) {
-			//地面に付いた後カウントが0より小さくなったら、次の出現位置に移動
-			if (count < 0) {
-				location.y -= 10;
-			}
-			//次の出現位置に移動
-			if (location.y < -500) {
-				hitflg = false;
-				onceflg = true;
-				location.y = -500;
-				count = STOPBOSS;
-				switching++;
-			}
-		}
-
-		//拳を振り下ろす動き
-		if (hitflg != true) {
-			location.y += 5;
-		}
-		else {
-			count--;
-		}
-
-		if (switching == 2 && hitflg == true) {
-			count = 300;
-			switching++;
-		}
-
-		//拳出現位置セット用
-		switch (switching) {
-		case 0:
-			//右に出現
-			location.x = (float)Magentax[switching];
-			break;
-		case 1:
-			//左に出現
-			location.x = (float)Magentax[switching];
-			break;
-		case 2:
-			//中央に出現
-			location.x = (float)Magentax[switching];
-			break;
-		case 3:
-			count--;
-			if (count < 0) {
-				location.y -= 10;
-			}
-			if (location.y < -500) {
-				hitflg = false;
-				onceflg = true;
-				location.y = -500;
-				count = STOPBOSS;
-				switching = 0;
-			}
-			break;
-		default:
-			break;
-		}
-		*/
-
 		switch (zakuro_state) {
 		case BossZakuroState::Z_ANIM_UP:
 			Zakuro_Imgnum = 3;
@@ -509,7 +395,6 @@ void BossHands::HandsMagenta(GameMain* main) {
 		case BossZakuroState::Z_MOVE:
 			
 			Zwalk();
-			//Zakuro_Imgnum = 0;
 			Zakuro_rad = 0;
 
 			if (hitflg == true) {
@@ -696,11 +581,11 @@ void BossHands::HandsMagenta(GameMain* main) {
 			RushStartAnim();
 			break;
 		case BossZakuroState::Z_RUSH:
-			Zakuro_rad = 0;
 			Attack_Num = 4;
 			BossAttack(main);
 
 			if (--Stop_Count < -50) {
+				Zakuro_rad = 0;
 				Damage_flg = false;
 				Zwalk();
 

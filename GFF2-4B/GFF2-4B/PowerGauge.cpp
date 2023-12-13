@@ -136,7 +136,7 @@ void PowerGauge::Draw() const
 	if ((black.maxFlg == 0) && (rota_flg == 0))
 	{
 		//ロードしたマスクデータを画面の左上に描画
-		DrawMask(5, 3, mask_handle[0], DX_MASKTRANS_NONE);
+		DrawMask(5, 10, mask_handle[0], DX_MASKTRANS_NONE);
 
 		//勾玉の背景を白に
 		DrawBox(5, 3, 155, 153, 0x7d7d7d, TRUE);

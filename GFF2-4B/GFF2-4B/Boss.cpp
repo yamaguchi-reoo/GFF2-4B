@@ -4,6 +4,7 @@ Boss::Boss() {
 	LoadDivGraph("resource/images/Boss/BossBody.png", 4, 4, 1, 360, 700,Boss_MainBody);
 	LoadDivGraph("resource/images/Boss/BossArm.png", 2, 2, 1, 420, 700,Boss_MainArm);
 	LoadDivGraph("resource/images/Boss/explosionMini.png", 4, 4, 1, 180, 180, Explosion);
+	LoadDivGraph("resource/images/Boss/explosionbig.png", 4, 4, 1, 720, 720, ExplosionBig);
 
 	timer = 0;
 	Boss_Dieflg = false;
@@ -41,9 +42,9 @@ Boss::~Boss() {
 
 void Boss::Update(GameMain* main) {
 
-	if (Boss_state!= BossState::Boss_M) {
+	
 		BossImgChange(main);
-	}
+	
 
 	switch (Boss_Handmove)
 	{
@@ -76,7 +77,6 @@ void Boss::Update(GameMain* main) {
 		ExplosionAnim();
 		break;
 	case 2:
-		Bossbody_ImgNum = 0;
 		//頭下がる
 		if (Boss_Body_Y <700) {
 			Boss_Body_Y += 10;
@@ -109,13 +109,12 @@ void Boss::Update(GameMain* main) {
 
 		break;
 	case 4:
-		Bossbody_ImgNum = 0;
 		//左手を左に
 		if (Boss_Arm_Leftx > -200) {
 			Boss_Arm_Leftx -= 10;
 		}
 		else {
-			Explosion_X = Boss_Arm_Leftx;
+			Explosion_X = 60;
 			Boss_MakeHand();
 		}
 		break;
@@ -139,7 +138,6 @@ void Boss::Update(GameMain* main) {
 
 		break;
 	case 6:
-		Bossbody_ImgNum = 0;
 		//頭下がる
 		if (Boss_Body_Y < 700) {
 			Boss_Body_Y += 10;
@@ -162,17 +160,23 @@ void Boss::Update(GameMain* main) {
 			}
 		}
 		else {
-			Boss_Body_Y = 0;
-			Boss_Body_X = 440;
-			Explosion_X = Boss_Body_X;
+			Explosion_X = 550;
 			Explosion_Y = 200;
 			ExplosionAnim();//大爆発起こす
+
 		}
+		break;
 	case 8:
+		ExplosionAnim();//大爆発起こす
 
-		//爆発して死ぬ
-		Boss_Dieflg = true;
-
+		break;
+	case 9:
+		if (timer++ < 10) {
+		}
+		else {
+			//爆発して死ぬ
+			Boss_Dieflg = true;
+		}
 
 		break;
 	default:
@@ -273,11 +277,14 @@ void Boss::Draw() const {
 		break;
 	case 7:
 		//本体
-		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[0], TRUE);
+		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[3], TRUE);
+		DrawGraph(Explosion_X, Explosion_Y, Explosion[Explosion_ImgNum], TRUE);
+
 		break;
 	case 8:
 		//本体
-		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[3], TRUE);
+//		DrawGraph(Boss_Body_X, Boss_Body_Y, Boss_MainBody[3], TRUE);
+		DrawGraph(Explosion_X, Explosion_Y, ExplosionBig[Explosion_ImgNum], TRUE);
 
 		break;
 	default:
@@ -365,6 +372,11 @@ void Boss::ExplosionAnim() {
 			Explosion_ImgNum = 0;
 			Expl_count = 0;
 			Boss_Handmove++;
+			if (Boss_Handmove == 8) {
+				Explosion_X = 250;
+				Explosion_Y = 60;
+
+			}
 			break;
 		default:
 			break;

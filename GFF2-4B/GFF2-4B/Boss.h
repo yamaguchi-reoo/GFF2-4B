@@ -16,6 +16,7 @@ private:
     int Boss_MainBody[10];//ボス本体の画像
     int Boss_MainArm[10];//ボス本体腕の画像
     int Explosion[10];//爆発
+    int ExplosionBig[10];//でかい爆発
 
     enum bosshand
     {
