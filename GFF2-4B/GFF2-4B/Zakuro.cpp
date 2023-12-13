@@ -53,9 +53,9 @@ Zakuro::Zakuro(float pos_x, float pos_y, bool direction,int _who)
 	zakuro_death_anim = 0;
 	hp = 3;
 
-	Date.magenta = 15.0f;
-	Date.cyan = 5.0f;
-	Date.yellow = 5.0f;
+	Date.magenta = 5.5f;
+	Date.cyan = 1.6f;
+	Date.yellow = 1.6f;
 	impact = 0;
 }
 Zakuro::~Zakuro()
@@ -64,10 +64,6 @@ Zakuro::~Zakuro()
 void Zakuro::Update(GameMain* main)
 {
 	anim_frame++;
-	if (--impact < 0)
-	{
-		impact = 0;
-	}
 	if (spawn_flg == false) 
 	{
 		if (attack_flg == true) 
@@ -107,6 +103,7 @@ void Zakuro::Update(GameMain* main)
 	ZakuroAnim();
 	//各移動用変数をリセット
 	ZakuroReset();
+	
 }
 
 void Zakuro::Draw() const
@@ -272,7 +269,7 @@ AttackData Zakuro::CreateAttactData()
 {
 	AttackData attack_data;
 	attack_data.shift_x = -erea.width;
-	attack_data.shift_y = (-erea.height / 4) + 31/*(- erea.height / 4) + 20*/;
+	attack_data.shift_y = (-erea.height / 4) + 40/*(- erea.height / 4) + 20*/;
 	attack_data.width = erea.width;
 	attack_data.height = erea.height;
 	attack_data.who_attack = who;
@@ -300,6 +297,7 @@ void Zakuro::ApplyDamage(int num)
 		death_flg = true;
 		//プレイヤーが斬った敵の数をカウント
 		Score::SetAttackEnemyNum(0);
+		SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 	}
 }
 
@@ -321,6 +319,7 @@ void Zakuro::ZakuroAnim()
 {
 	if (spawn_flg == false)
 	{
+		
 		//アニメーション用変数を回す
 		if (anim_frame % ZAKURO_ANIM == 0)
 		{
@@ -340,12 +339,15 @@ void Zakuro::ZakuroAnim()
 		if (++count > ZAKURO_DEATH_ANIM + 20)
 		{
 			zakuro_death_anim = 1;
+			
 		}
 		if (++count > ZAKURO_DEATH_ANIM + 40)
 		{
 			spawn_flg = true;
+			location.x = -100;
 		}
-		SoundManager::StopSound(ENEMY_EXPLOSION_SOUND);
+		
+		
 	}
 	//フラグがtrueになってからcountが12以上になったら
 	//if (death_flg == true && ++count >= (ZAKURO_DEATH_ANIM))
@@ -356,6 +358,7 @@ void Zakuro::ZakuroAnim()
 	//}
 
 }
+
 
 ColorDate Zakuro::GetColorDate()
 {

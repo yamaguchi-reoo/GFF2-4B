@@ -1375,7 +1375,7 @@ void GameMain::ProcessAttack(Attack* attack, T* character/*,Effect* effect, Heal
 		//hpが0なら
 		if (character->GetHp() <= 0)
 		{	
-			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 15.0f) ||
+			if ((powergauge->GetMagentaVolume() >= 100.0f && character->GetColorDate().magenta == 5.5f) ||
 				(powergauge->GetYellowVolume() >= 100.0f && character->GetColorDate().yellow == 15.0f) ||
 				(powergauge->GetCyanVolume() >= 100.0f && character->GetColorDate().cyan == 15.0f))
 			{

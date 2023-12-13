@@ -76,7 +76,9 @@ public:
 	//Œü‚«‚Ì”½“]
 	//void ReverseDirection();
 
+
 	ZakuroState GetZakuroState(){return zakuro_state;}
 	ColorDate GetColorDate();
+
 
 };
