@@ -62,6 +62,8 @@ public:
     int Zakuro_img[IMGMAX];
     int Zakurored_img[IMGMAX];
 
+    int Zwalk_count;
+
     int Zakuro_Imgnum;//ザクロの画像切り替え用
     int Zakuro_Direction;//ザクロの向き　右:1 左:0
     float Magentax[10] = { 1000,100,500 };    //Mの拳が降りてくるX座標
@@ -164,6 +166,7 @@ public:
 
     //マゼンタ（ザクロ）用関数
     void MagentaInit();                  //マゼンタ（ザクロ）で使う変数初期化
+    void Zwalk();                       //ザクロ歩く
     void JumpInit();
     void RushStartAnim();
     void NockBack();
