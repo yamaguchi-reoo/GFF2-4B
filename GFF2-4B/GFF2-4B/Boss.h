@@ -40,6 +40,7 @@ public:
 
     float Explosion_X;
     float Explosion_Y;
+    int Excount;
 
     int Hand_Num;
     bool New_Hand_Flg;//ƒ{ƒX‚Ìè‚ğ”­¶‚³‚¹‚é—p
