@@ -64,10 +64,6 @@ Zakuro::~Zakuro()
 void Zakuro::Update(GameMain* main)
 {
 	anim_frame++;
-	if (--impact < 0)
-	{
-		impact = 0;
-	}
 	if (spawn_flg == false) 
 	{
 		if (attack_flg == true) 
@@ -348,6 +344,7 @@ void Zakuro::ZakuroAnim()
 		if (++count > ZAKURO_DEATH_ANIM + 40)
 		{
 			spawn_flg = true;
+			location.x = -100;
 		}
 		
 		
