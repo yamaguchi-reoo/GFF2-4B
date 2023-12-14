@@ -1112,7 +1112,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].shift_x = -erea.width;
 	player_attack_data[8].shift_y = 0;
 	player_attack_data[8].width = erea.width+120;
-	player_attack_data[8].height = 150;
+	player_attack_data[8].height = 200;
 	player_attack_data[8].who_attack = 0;
 	player_attack_data[8].attack_time = 300;
 	player_attack_data[8].damage = 1;
