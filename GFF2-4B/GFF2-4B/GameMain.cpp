@@ -171,6 +171,8 @@ AbstractScene* GameMain::Update()
 	{
 		pause_flg = !pause_flg;
 	}
+
+	SoundManager::StartSound(BGM1);
 	//看板非表示時
 	if (pause_flg == false)
 	{

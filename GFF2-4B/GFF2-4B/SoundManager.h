@@ -28,6 +28,9 @@
 #define ITEM_THAKUTI_SOUND  10   //着地
 
 
+#define BGM1  10   //着地
+
+
 
 
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
@@ -46,7 +49,7 @@ static char sound_filepath[SOUND_NUM][256] =
 	"resource/sounds/壺.mp3",
 	"resource/sounds/着地.mp3",
 
-
+		"resource/sounds/Battle-Ayakashi.mp3",
 
 };
 //使用する音源のパス一覧(優先度は無く、後から再生されたBGMが優先される)
@@ -62,6 +65,7 @@ struct Sound {
 };
 struct BGM {
 	int dat;		//サウンド格納用変数
+	int num;
 	bool play_flg;	//再生中かどうか
 };
 class SoundManager
@@ -70,7 +74,7 @@ private:
 	static Sound sound_data[SOUND_NUM];
 	static int now_play_sound;	//何番目の音が再生中か
 
-	static BGM bgm_data[SOUND_NUM];
+	static BGM bgm_data[BGM_NUM];
 	static int now_bgm;
 public :
 	static void LoadSound()
@@ -81,6 +85,15 @@ public :
 			sound_data[i].dat = LoadSoundMem(sound_filepath[i]);
 			sound_data[i].num = i;
 			sound_data[i].play_flg = false;
+		}
+	}
+	static void LoadBgm()
+	{
+		now_bgm = BGM_NUM;
+		for (int i = 0; i < BGM_NUM; i++)
+		{
+			bgm_data[i].dat = LoadSoundMem(bgm_filepath[i]);
+			bgm_data[i].play_flg = false;
 		}
 	}
 	static void DeleteSound()
