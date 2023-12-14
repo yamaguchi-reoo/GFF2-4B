@@ -5,7 +5,7 @@
 #include"SoundManager.h"
 
 int SelectStage::stage_num = 0;
-int SelectStage::goal_flg[3] = {0,0,0}; //デバック用に1
+int SelectStage::goal_flg[3] = {1,1,1}; //デバック用に1
 
 //コンストラクタ
 SelectStage::SelectStage()
