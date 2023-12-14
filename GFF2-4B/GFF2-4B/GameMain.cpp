@@ -494,9 +494,11 @@ AbstractScene* GameMain::Update()
 				//boss = new Boss();
 				//hands = new BossHands(who++, boss);
 			}
+
 		}
 		else
 		{
+			SelectStage::goal_flg[now_stage] = 1;
 			return new GameClear(now_stage);
 		}
 	}

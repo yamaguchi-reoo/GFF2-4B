@@ -5,7 +5,7 @@
 #include"SoundManager.h"
 
 int SelectStage::stage_num = 0;
-int SelectStage::goal_flg[3] = {1,1,1}; //デバック用に1
+int SelectStage::goal_flg[3] = {0,0,0}; //デバック用に1
 
 //コンストラクタ
 SelectStage::SelectStage()
@@ -171,15 +171,15 @@ void SelectStage::Draw() const
 			
 			//1
 			DrawGraph(155, 160, Stage_img[0], TRUE);
-			DrawGraph(150, 460, Stage_img[6], TRUE);
+			DrawGraph(160, 460, Stage_img[7], TRUE);
 
 			//2
 			DrawGraph(505, 160, Stage_img[4], TRUE);
-			DrawGraph(495, 465, Stage_img[7], TRUE);
+			DrawGraph(485, 465, Stage_img[6], TRUE);
 
 			//3
 			DrawGraph(815, 160, Stage_img[5], TRUE);
-			DrawGraph(805, 465, Stage_img[7], TRUE);
+			DrawGraph(805, 465, Stage_img[6], TRUE);
 
 			break;
 
@@ -187,30 +187,30 @@ void SelectStage::Draw() const
 
 			//1
 			DrawGraph(155, 160, Stage_img[3], TRUE);
-			DrawGraph(160, 460, Stage_img[7], TRUE);
+			DrawGraph(150, 460, Stage_img[6], TRUE);
 
 			//2
 			DrawGraph(505, 160, Stage_img[1], TRUE);
-			DrawGraph(480, 465, Stage_img[6], TRUE);
+			DrawGraph(495, 465, Stage_img[7], TRUE);
 
 			//3
 			DrawGraph(815, 160, Stage_img[5], TRUE);
-			DrawGraph(805, 465, Stage_img[7], TRUE);
+			DrawGraph(805, 465, Stage_img[6], TRUE);
 
 			break;
 
 		case 2:
 			//1
 			DrawGraph(155, 160, Stage_img[3], TRUE);
-			DrawGraph(160, 460, Stage_img[7], TRUE);
+			DrawGraph(150, 460, Stage_img[6], TRUE);
 
 			//2
 			DrawGraph(505, 160, Stage_img[4], TRUE);
-			DrawGraph(495, 465, Stage_img[7], TRUE);
+			DrawGraph(485, 465, Stage_img[6], TRUE);
 
 			//3
 			DrawGraph(815, 160, Stage_img[2], TRUE);
-			DrawGraph(790, 465, Stage_img[6], TRUE);
+			DrawGraph(813, 465, Stage_img[7], TRUE);
 
 			break;
 
@@ -226,7 +226,7 @@ void SelectStage::Draw() const
 		if (goal_flg[1] == 1)
 		{
 			SetFontSize(20);
-			DrawFormatString(695, 592, 0x000000, "- - - - - - - - - -");
+			DrawFormatString(700, 592, 0x000000, "- - - - - - - - - -");
 		}
 	}
 

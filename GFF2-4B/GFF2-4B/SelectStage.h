@@ -5,7 +5,6 @@ class SelectStage :public AbstractScene
 {
 private:
 	static int stage_num;
-	static int goal_flg[3]; //どこまでクリアしたか
 	bool botton_flg;
 	int img[12];
 	int Limg;
@@ -14,6 +13,8 @@ private:
 	int anim_flg; //巻物アニメーション用
 
 public:
+	static int goal_flg[3]; //どこまでクリアしたか
+
 	//コンストラクタ
 	SelectStage();
 
