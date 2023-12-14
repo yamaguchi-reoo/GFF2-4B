@@ -24,7 +24,7 @@ private:
 
 	int power_flg; //(0:それ以外 1:強化中 2:強化解除)
 
-	int image[3];  //画像用変数
+	int image[4];  //画像用変数
 
 	int mask_handle[2]; //マスク画像用変数
 

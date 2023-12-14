@@ -10,22 +10,22 @@ PowerGauge::PowerGauge()
 	erea.height = 140;
 	erea.width = 150;
 
-	magenta.x = 112.0f;
-	magenta.y = 70.0f;
-	magenta.h = 65.0f;
+	magenta.x = 120.0f;
+	magenta.y = 52.0f;
+	magenta.h = 44.0f;
 	magenta.volume = 0.0f;
 	magenta.ratio = 0.0f;
 	magenta.maxFlg = 0;
 
 	cyan.x = 152.0f;
-	cyan.y = 130.0f;
-	cyan.h = 115.0f;
+	cyan.y = 140.0f;
+	cyan.h = 90.0f;
 	cyan.volume = 0.0f;
 	cyan.ratio = 0.0f;
 	cyan.maxFlg = 0;
 
 	yellow.x = 103.0f;
-	yellow.y = 150.0f;
+	yellow.y = 135.0f;
 	yellow.h = 84.0f;
 	yellow.volume = 0.0f;
 	yellow.ratio = 0.0f;
@@ -43,6 +43,7 @@ PowerGauge::PowerGauge()
 	image[0] = LoadGraph("resource/images/UI/koban.png");
 	image[1] = LoadGraph("resource/images/UI/black.png");
 	image[2] = LoadGraph("resource/images/UI/magatama_max.png");
+	image[3] = LoadGraph("resource/images/UI/magatama_line.png");
 
 	mask_handle[0] = LoadMask("resource/images/UI/Magatama_mask1.png");
 	mask_handle[1] = LoadMask("resource/images/UI/black_mask.png");
@@ -136,10 +137,10 @@ void PowerGauge::Draw() const
 	if ((black.maxFlg == 0) && (rota_flg == 0))
 	{
 		//ロードしたマスクデータを画面の左上に描画
-		DrawMask(5, 10, mask_handle[0], DX_MASKTRANS_NONE);
+		DrawMask(5, 4, mask_handle[0], DX_MASKTRANS_NONE);
 
 		//勾玉の背景を白に
-		DrawBox(5, 3, 155, 153, 0x7d7d7d, TRUE);
+		DrawBox(5, 4, 155, 140, 0x7d7d7d, TRUE);
 
 		//強化ゲージが0%以上の時に表示
 		
@@ -164,7 +165,7 @@ void PowerGauge::Draw() const
 
 		if (cyan.volume >= 2.0f)
 		{
-			DrawBoxAA(87, 130 - ((cyan.volume * 2.0f) / 100.0f * 57.5f), 112.0f, 130.0f, 0x00ffff, TRUE);
+			DrawBoxAA(87, 140 - ((cyan.volume * 2.0f) / 100.0f * 44.5f), 112.0f, 140.0f, 0x00ffff, TRUE);
 		}
 
 		if (magenta.volume >= 2.0f)
@@ -180,9 +181,12 @@ void PowerGauge::Draw() const
 
 		if (magenta.volume >= 14.0f)
 		{
-			DrawBoxAA(80.0f, 70.0f - ((magenta.volume * 1.1f) / 100.0f * 59.5f ), 112.0f, 70.0f, 0xe4007f, TRUE);
+			DrawBoxAA(80.0f, 52.0f - ((magenta.volume * 1.1f) / 100.0f * 40.0f ), 112.0f, 52.0f, 0xe4007f, TRUE);
 		}
 		/**図形描画の重なりを隠す(ここまで)**/
+
+			//強化ゲージを回転描画
+		DrawRotaGraph(80, 75, 1.0f, PI / 180 * num, image[3], TRUE, FALSE);
 	}
 	else if ((rota_flg == 1) && (black.maxFlg == 0))
 	{
@@ -209,6 +213,7 @@ void PowerGauge::Draw() const
 
 		DrawBoxAA(black.x - 135.0f, black.y - black.ratio, black.x, black.y, 0x000000, TRUE);
 	}
+
 
 	// マスク画面を削除
 	DeleteMaskScreen();
