@@ -19,25 +19,34 @@
 
 //システム
 #define SYSTEM_SELECT_SOUND  6   //決定音
+#define SYSTEM_KOZENI_SOUND  7   //小銭(リザルト)
+
+//アイテム
+#define ITEM_KOZENI_SOUND  8   //小銭(アイテム)
+#define ITEM_TUBO_SOUND  9   //壺割れる音
+
+#define ITEM_THAKUTI_SOUND  10   //着地
+
+
 
 
 //使用する音源のパス一覧（上のファイルほど再生優先度が高い）
 static char sound_filepath[SOUND_NUM][256] =
 {
-	//プレイヤー
+
 	"resource/sounds/通常攻撃.mp3",
 	"resource/sounds/足音.mp3",
 	"resource/sounds/ジャンプ.mp3",
 	"resource/sounds/紙破る.mp3",
-
-	//エネミー
 	"resource/sounds/爆発音.mp3",
 	"resource/sounds/ショット.mp3",
-
-	//システム
 	"resource/sounds/決定音(太鼓).mp3",
+	"resource/sounds/小銭1.mp3"
+	"resource/sounds/小銭2.mp3",
+	"resource/sounds/壺.mp3",
+	"resource/sounds/着地.mp3",
 
-	
+
 
 };
 //使用する音源のパス一覧(優先度は無く、後から再生されたBGMが優先される)
@@ -106,6 +115,14 @@ public :
 			
 		}
 		
+	}
+	static void StartSound2(int _num)
+	{
+
+			PlaySoundMem(sound_data[_num].dat, DX_PLAYTYPE_BACK);
+
+	
+
 	}
 	static void StopSound(int _num)
 	{

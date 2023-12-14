@@ -251,7 +251,7 @@ void Himawari::Attack(GameMain* main)
 
 			// 攻撃を生成する
 			main->SpawnAttack(CreateAttactData());
-			SoundManager::StartSound(HIMAWARI_SHOT_SOUND);
+			SoundManager::StartSound2(HIMAWARI_SHOT_SOUND);
 
 			// クールダウン
 			if (bullet_num <= 0) {

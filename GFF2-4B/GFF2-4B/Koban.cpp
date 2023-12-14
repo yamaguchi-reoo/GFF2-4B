@@ -1,4 +1,5 @@
 #include "Koban.h"
+#include"SoundManager.h"
 
 //コンストラクタ
 Koban::Koban(/*float pos_x, float pos_y*/)
@@ -29,12 +30,14 @@ void Koban::Update()
 	if (score_flg == true)
 	{
 		score_time++;
-
+		
 		if (score_time > 60)
 		{
 			score_flg = false;
 			score_time = 0;
+			
 		}
+		
 	}
 }
 
@@ -61,6 +64,7 @@ void Koban::SetLocation(Location _location)
 
 void Koban::SetScoreLocation()
 {
+	SoundManager::StartSound(ITEM_KOZENI_SOUND);
 	score_x = local_location.x;
 	score_y = local_location.y;
 }

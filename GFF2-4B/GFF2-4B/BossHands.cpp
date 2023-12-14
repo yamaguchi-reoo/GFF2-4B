@@ -2,6 +2,7 @@
 #include"GameMain.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include"SoundManager.h"
 //デグリーからラジアンに変換
 #define DEGREE_RADIAN(_deg)	(M_PI*(_deg)/180.0f)
 
@@ -630,6 +631,8 @@ void BossHands::HandsMagenta(GameMain* main) {
 			Attack_Num = 4;
 			BossAttack(main);
 			if (location.y>310) {
+				SoundManager::StartSound(ITEM_THAKUTI_SOUND);
+
 				//Attack_Num = 1;
 				//BossAttack(main);
 				//Attack_Num = 2;
@@ -637,6 +640,7 @@ void BossHands::HandsMagenta(GameMain* main) {
 				//zakuro_state = BossZakuroState::Z_FAINTING;
 				hitflg = false;
 				zakuro_state = BossZakuroState::Z_MOVE;
+				
 			}
 				location.y += 10;
 			break;
@@ -1141,6 +1145,7 @@ void BossHands::HandsYellow(GameMain* main)
 					{
 						Attack_Num = 3;
 						BossAttack(main);
+						SoundManager::StartSound2(HIMAWARI_SHOT_SOUND);
 						attack_combo = 10;
 						attack_num--;
 					}
@@ -1168,6 +1173,7 @@ void BossHands::HandsYellow(GameMain* main)
 					{
 						Attack_Num = 3;
 						BossAttack(main);
+						SoundManager::StartSound2(HIMAWARI_SHOT_SOUND);
 						attack_combo = 10;
 						attack_num--;
 					}
@@ -1211,6 +1217,7 @@ void BossHands::HandsYellow(GameMain* main)
 			{
 				Attack_Num = 3;
 				BossAttack(main);
+				SoundManager::StartSound2(HIMAWARI_SHOT_SOUND);
 				attack_cd = 30;
 			}
 			break;
