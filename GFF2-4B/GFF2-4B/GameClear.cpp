@@ -2,6 +2,7 @@
 #include "PadInput.h"
 #include "Title.h"
 #include "Result.h"
+#include"SoundManager.h"
 
 void GameClear::ImageLoad(int& _handle, const char* _file_name)
 {

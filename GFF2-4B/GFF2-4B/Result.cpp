@@ -3,6 +3,7 @@
 #include "Score.h"
 #include "PadInput.h"
 #include "LoadingScene.h"
+#include"SoundManager.h"
 
 //コンストラクタ
 Result::Result()
@@ -45,19 +46,23 @@ AbstractScene* Result::Update()
 	}
 	else
 	{
+		SoundManager::StartSound(SYSTEM_KOZENI_SOUND);
 		//スコアを少しずつ増やす(画面表示)
 		if (score > draw_score)
 		{
 			draw_score += 110;
+			
 		}
 		else if (score < draw_score)
 		{
 			draw_score = score;
+			
+
 		}
 
 		if (draw_score == score)
 		{
-
+			SoundManager::StopSound(SYSTEM_KOZENI_SOUND);
 			//Aボタンが押されたらステージ選択画面に遷移
 			if (
 #ifdef _DEBUG

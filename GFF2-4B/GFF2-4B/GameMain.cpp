@@ -8,6 +8,7 @@
 #include "EditScene.h"
 #include "GameClear.h"
 #include "GameOver.h"
+#include"SoundManager.h"
 
 static Location camera_location = { 0,0};	//カメラの座標
 static Location screen_origin = { (SCREEN_WIDTH / 2),0 };
@@ -170,6 +171,8 @@ AbstractScene* GameMain::Update()
 	{
 		pause_flg = !pause_flg;
 	}
+
+	SoundManager::StartSound(BGM1);
 	//看板非表示時
 	if (pause_flg == false)
 	{
@@ -494,9 +497,11 @@ AbstractScene* GameMain::Update()
 				//boss = new Boss();
 				//hands = new BossHands(who++, boss);
 			}
+
 		}
 		else
 		{
+			SelectStage::goal_flg[now_stage] = 1;
 			return new GameClear(now_stage);
 		}
 	}
@@ -773,6 +778,8 @@ void GameMain::HitCheck(GameMain* main)
 			//	}
 			//}
 
+		
+
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
@@ -857,6 +864,7 @@ void GameMain::HitCheck(GameMain* main)
 					//ボスのダメージ処理
 					if (hands->zakuro_state != 0) {
 						hands->ApplyDamage(attack[i]->GetAttackData().damage);
+						SpawnEffect(hands);
 					}
 					attack[i]->DeleteAttack();
 					//ジャンプ攻撃多段防止
@@ -970,7 +978,9 @@ void GameMain::HitCheck(GameMain* main)
 			boss->Once_Flg = true;
 			boss->Boss_Handmove++;
 			Hands_Delete_Flg = false;
+			SoundManager::StartSound(ENEMY_EXPLOSION_SOUND);
 		}
+		
 	}
 
 	for (int i = 0; i < ITEM_MAX; i++)
@@ -995,6 +1005,7 @@ void GameMain::HitCheck(GameMain* main)
 	{
 		if (player->HitBox(koban[i]) == true && koban[i]->GetSpawnFlg() == true)
 		{
+			SoundManager::StopSound(ITEM_KOZENI_SOUND);
 			score->AddScore(300);
 			koban[i]->SetScoreLocation();
 			koban[i]->SetSpawnFlg(false);
