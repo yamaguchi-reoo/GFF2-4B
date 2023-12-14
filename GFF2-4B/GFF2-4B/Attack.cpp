@@ -12,6 +12,12 @@ Attack::Attack()
 	cut_flg = false;
 	cut_time = 0;
 	LoadDivGraph("resource/images/Boss/BossBullet.png", 2, 2, 1, 100, 64, bullet_img[BOSSHIMAWARI_BULLET]);
+	LoadDivGraph("resource/images/SlashEffect.png", 5, 5, 1, 200, 200, slash_img);
+	bullet_img[PLAYER_SLASH_ONE][0] = slash_img[0];
+	bullet_img[PLAYER_SLASH_TWO][0] = slash_img[1];
+	bullet_img[PLAYER_SLASH_THREE][0] = slash_img[2];
+	bullet_img[PLAYER_SLASH_FOUR][0] = slash_img[3];
+	bullet_img[4][0] = slash_img[4];
 }
 
 Attack::~Attack()
@@ -118,15 +124,35 @@ void Attack::Draw()const
 		{
 			DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
 		}
-		else
-		{
-			//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, false);
-		}
 		//攻撃エフェクトがあるなら
-		if (attack_data.effect_type >= 0 && attack_data.effect_type < 15)
+		if (attack_data.effect_type == BOSSHIMAWARI_BULLET)
 		{
 			//描画する
 			DrawRotaGraph(local_location.x + (erea.width/2), local_location.y + (erea.height/2), 1, attack_data.angle * M_PI * 2, bullet_img[attack_data.effect_type][0], true);
+		}
+		else if (attack_data.who_attack == PLAYER && attack_data.effect_type >= 0 && attack_data.effect_type <= 5)
+		{
+			if (attack_data.direction == false)
+			{
+				DrawGraph(local_location.x, local_location.y, bullet_img[attack_data.effect_type][0], true);
+			}
+			else
+			{
+				DrawTurnGraph(local_location.x , local_location.y, bullet_img[attack_data.effect_type][0], true);
+
+			}
+		}
+		else if (attack_data.who_attack == PLAYER && attack_data.effect_type >= 6 && attack_data.effect_type <= 11)
+		{
+			if (attack_data.direction == false)
+			{
+				DrawGraph(local_location.x, local_location.y, bullet_img[4][0], true);
+			}
+			else
+			{
+				DrawTurnGraph(local_location.x, local_location.y, bullet_img[4][0], true);
+
+			}
 		}
 	}
 	if (cut_flg ==true && cut_time < CUT_ANIM_TIME)

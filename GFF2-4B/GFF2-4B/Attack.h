@@ -15,6 +15,7 @@ private:
 	int cut_time;				//切られた演出をする時間
 
 	int bullet_img[ATTACK_EFFECT_NUM][10];              //エフェクト画像用
+	int slash_img[5];							
 public:
 	Attack();
 	~Attack();

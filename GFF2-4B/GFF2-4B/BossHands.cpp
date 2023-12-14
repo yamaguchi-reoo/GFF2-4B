@@ -166,17 +166,17 @@ void BossHands::Draw() const {
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 
-				if (Display == true) {
+				/*if (Display == true) {
 					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
-				}
+				}*/
 			}
 			else
 			{
 				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Hands_img[Hands_Img_num], TRUE, TRUE);
 
-				if (Display == true) {
+			/*	if (Display == true) {
 					DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, iruka_rad, Blinking_Img[Hands_Img_num], TRUE, TRUE);
-				}
+				}*/
 			}
 
 
@@ -186,18 +186,18 @@ void BossHands::Draw() const {
 			DrawRotaGraphF(turu_location.x, turu_location.y, 1, turu_rad, turu_img, TRUE, FALSE);
 			if (hima_state != BossHimawariState::SF_DOWN)
 			{
-				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xffff00, true);
-				if (Display == true) {
-					DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xff0000, true);
-				}
+				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, face_angle * M_PI * 2, Hands_img[Hands_Img_num], TRUE, TRUE);
+				//if (Display == true) {
+				//	DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0xff0000, true);
+				//}
 			}
 			else
 			{
-				DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xffff00, true);
-				if (Display == true) {
-					DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xff0000, true);
+				DrawRotaGraphF(local_location.x + 75, local_location.y + 75, 1, face_angle * M_PI * 2, Hands_img[Hands_Img_num], TRUE, TRUE);				
+				//if (Display == true) {
+				//	DrawBoxAA(local_location.x + GetRand(10), local_location.y + GetRand(10), local_location.x + erea.width + GetRand(10), local_location.y + erea.height + GetRand(10), 0xff0000, true);
 
-				}
+				//}
 			}
 			break;
 		default:
@@ -1015,6 +1015,7 @@ void BossHands::YellowInit()
 	attack_num = 3;
 	move_count = 0;
 	face_angle = 0;
+	LoadDivGraph("resource/images/Boss/ヒマワリボス　全部.png", 3, 3, 1, 256, 256, Hands_img);
 	turu_img = LoadGraph("resource/images/Boss/LongLongTuru.png", true);
 	turu_location = { 0,0 };
 	turu_rad = 0;
@@ -1026,7 +1027,15 @@ void BossHands::HandsYellow(GameMain* main)
 	turu_rad = atan2f(local_location.y, local_location.x - SCREEN_WIDTH);
 	turu_location.x = local_location.x + (erea.width / 2) - (640 * cosf(turu_rad));
 	turu_location.y = local_location.y + (erea.height / 2) - (640 * sinf(turu_rad));
-
+	Hands_Img_num = 0;
+	if ((attack_cd >= 25 && attack_cd <= 30) || (attack_combo >= 6 && attack_combo <= 10))
+	{
+		Hands_Img_num = 2;
+	}
+	if ((attack_cd >= 1 && attack_cd <= 5) || (attack_combo >= 1 && attack_combo <= 5))
+	{
+		Hands_Img_num = 1;
+	}
 	//生きているなら
 	if (Death_Flg == false) {
 
@@ -1149,7 +1158,7 @@ void BossHands::HandsYellow(GameMain* main)
 			{
 				Attack_Num = 3;
 				BossAttack(main);
-				attack_cd = 30;
+				attack_cd = 31;
 			}
 			break;
 			//やられ
@@ -1670,6 +1679,7 @@ void BossHands::ApplyDamage(int num) {
 				}
 
 				hp--;
+				impact = 10;
 			}
 	//}
 	

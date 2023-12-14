@@ -1544,7 +1544,7 @@ void GameMain::VineEnemy(void)
 	{
 		if (zakuro[k] == nullptr)
 		{
-			zakuro[k] = new Zakuro(battle_start_pos[now_battle].x + (150 * num), battle_start_pos[now_battle].y-400, true, who++);
+			zakuro[k] = new Zakuro(battle_start_pos[now_battle].x + (150 * num), battle_start_pos[now_battle].y-600, true, who++);
 			venemy_num1++;
 			break;
 		}
