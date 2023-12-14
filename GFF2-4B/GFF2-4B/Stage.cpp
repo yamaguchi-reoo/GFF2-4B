@@ -24,7 +24,8 @@ Stage::Stage(float _x, float _y, float _width, float _height,int _type)
 		break;
 		//–Ø
 	case 2:
-		//LoadDivGraph("", 2, 2, 1, 48, 48, stage_img);
+		stage_img[0] = LoadGraph("resource/images/MapTip/MT_L_Center.png");
+		stage_img[1] = LoadGraph("resource/images/MapTip/MT_L_edge.png");
 		break;
 		//Šâ
 	case 3:	
@@ -151,7 +152,7 @@ void Stage::Draw()const
 				break;
 				//–Ø
 			case 2:
-				DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
+				//DrawBoxAA(local_location.x, local_location.y, local_location.x + erea.width, local_location.y + erea.height, 0x00ff00, true);
 				break;
 				//Šâ
 			case 3:
