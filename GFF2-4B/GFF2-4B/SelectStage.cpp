@@ -22,6 +22,7 @@ SelectStage::SelectStage()
 	img[8] = LoadGraph("resource/images/Result/makimono2.png");
 	img[9] = LoadGraph("resource/images/Result/makimono3.png");
 	img[10] = LoadGraph("resource/images/SelectStage/SelectStageFont.png");
+	img[11] = LoadGraph("resource/images/SelectStage/UI.png");
 
 	LoadDivGraph("resource/images/SelectStage/Mapselect.png", 9, 3, 3, 300, 300, Stage_img);
 
@@ -158,41 +159,59 @@ void SelectStage::Draw() const
 	switch (stage_num)
 	{
 		case 0:
-			DrawCircle(330, 240 + 75, 120, 0x000000, TRUE, 1);
-			DrawCircle(660 - 20, 240 + 75, 120, 0x000000, FALSE, 5);
-			DrawCircle(980 - 25, 240 + 75, 120, 0x000000, FALSE, 5);
-			DrawGraph(245, 220 + 75, img[4], TRUE);
-			DrawGraph(580 - 20, 220 + 75, img[2], TRUE);
-			DrawGraph(895 - 25, 220 + 75, img[3], TRUE);
-			DrawOval(325, 550 + 50, 25, 10, 0x000000, TRUE);
-			DrawOval(640, 550 + 50, 25, 10, 0x000000, FALSE);
-			DrawOval(955, 550 + 50, 25, 10, 0x000000, FALSE);
+			//DrawCircle(330, 240 + 75, 120, 0x000000, TRUE, 1);
+			//DrawCircle(660 - 20, 240 + 75, 120, 0x000000, FALSE, 5);
+			//DrawCircle(980 - 25, 240 + 75, 120, 0x000000, FALSE, 5);
+			//DrawGraph(245, 220 + 75, img[4], TRUE);
+			//DrawGraph(580 - 20, 220 + 75, img[2], TRUE);
+			//DrawGraph(895 - 25, 220 + 75, img[3], TRUE);
+			//DrawOval(325, 550 + 50, 25, 10, 0x000000, TRUE);
+			//DrawOval(640, 550 + 50, 25, 10, 0x000000, FALSE);
+			//DrawOval(955, 550 + 50, 25, 10, 0x000000, FALSE);
+			
+			//1
+			DrawGraph(155, 160, Stage_img[0], TRUE);
+			DrawGraph(150, 460, Stage_img[6], TRUE);
 
+			//2
+			DrawGraph(505, 160, Stage_img[4], TRUE);
+			DrawGraph(495, 465, Stage_img[7], TRUE);
+
+			//3
+			DrawGraph(815, 160, Stage_img[5], TRUE);
+			DrawGraph(805, 465, Stage_img[7], TRUE);
 
 			break;
 
 		case 1:
-			DrawCircle(330, 240 + 75, 120, 0x000000, FALSE, 5);
-			DrawCircle(660 - 20, 240 + 75, 120, 0x000000, TRUE, 1);
-			DrawCircle(980 - 25, 240 + 75, 120, 0x000000, FALSE, 5);
-			DrawGraph(245, 220 + 75, img[1], TRUE);
-			DrawGraph(580 - 20, 220 + 75, img[5], TRUE);
-			DrawGraph(895 - 25, 220 + 75, img[3], TRUE);
-			DrawOval(325, 550 + 50, 25, 10, 0x000000, FALSE);
-			DrawOval(640, 550 + 50, 25, 10, 0x000000, TRUE);
-			DrawOval(955, 550 + 50, 25,10, 0x000000, FALSE);
+
+			//1
+			DrawGraph(155, 160, Stage_img[3], TRUE);
+			DrawGraph(160, 460, Stage_img[7], TRUE);
+
+			//2
+			DrawGraph(505, 160, Stage_img[1], TRUE);
+			DrawGraph(480, 465, Stage_img[6], TRUE);
+
+			//3
+			DrawGraph(815, 160, Stage_img[5], TRUE);
+			DrawGraph(805, 465, Stage_img[7], TRUE);
+
 			break;
 
 		case 2:
-			DrawCircle(330, 240 + 75, 120, 0x000000, FALSE, 5);
-			DrawCircle(660 - 20, 240 + 75, 120, 0x000000, FALSE, 5);
-			DrawCircle(980 - 25, 240 + 75, 120, 0x000000, TRUE, 1);
-			DrawGraph(245, 220 + 75, img[1], TRUE);
-			DrawGraph(580 - 20, 220 + 75, img[2], TRUE);
-			DrawGraph(895 - 25, 220 + 75, img[6], TRUE);
-			DrawOval(325, 550 + 50, 25, 10, 0x000000, FALSE);
-			DrawOval(640, 550 + 50, 25, 10, 0x000000, FALSE);
-			DrawOval(955, 550 + 50, 25, 10, 0x000000, TRUE);
+			//1
+			DrawGraph(155, 160, Stage_img[3], TRUE);
+			DrawGraph(160, 460, Stage_img[7], TRUE);
+
+			//2
+			DrawGraph(505, 160, Stage_img[4], TRUE);
+			DrawGraph(495, 465, Stage_img[7], TRUE);
+
+			//3
+			DrawGraph(815, 160, Stage_img[2], TRUE);
+			DrawGraph(790, 465, Stage_img[6], TRUE);
+
 			break;
 
 		default:
@@ -214,15 +233,12 @@ void SelectStage::Draw() const
 	DrawGraph(265 + (stage_num * 317), 410 + 60, img[0], TRUE);
 
 	DrawGraph(440, 130, img[10], TRUE);
+	DrawGraph(400, 635, img[11], TRUE);
 
 	//Šª•¨
 	DrawGraph(x1, 0, img[9], TRUE);
 	DrawGraph(x2, 0, img[7], TRUE);
 
-	//DrawGraph(155, 160, Stage_img[0], TRUE);
-	//DrawGraph(280, 500, Stage_img[6], TRUE);
-	//DrawGraph(980 - 25, 240 + 75, Stage_img[2], TRUE);
-	//5DrawGraph(980 - 25,600, Limg, TRUE);
 	
 
 
