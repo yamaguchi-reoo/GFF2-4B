@@ -42,6 +42,8 @@ Title::Title()
 	ImageLoad(game_finish_image, "resource/font/GameFinishFont.png");
 	ImageLoad(game_finish_select, "resource/font/GameFinishSelect.png");
 
+	Title_UI = LoadGraph("resource/images/UI/titleUI.png");
+
 }
 
 Title::~Title()
@@ -179,6 +181,9 @@ void Title::Draw()const
 		//文字描画(終了)
 		if (Select == 0) { DrawGraph(850, 575, game_finish_image, TRUE); }
 		if (Select == 1) { DrawGraph(850, 575, game_finish_select, TRUE); }
+
+		//タイトルUI表示
+		DrawGraph(240, 650, Title_UI, TRUE);
 
 		//カーソルの表示
 		DrawTriangle(790, 500 + (Select * 90), 820, 520 + (Select * 90), 790, 540 + (Select * 90), 0xafafaf, TRUE);

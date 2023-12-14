@@ -22,6 +22,7 @@ SelectStage::SelectStage()
 	img[8] = LoadGraph("resource/images/Result/makimono2.png");
 	img[9] = LoadGraph("resource/images/Result/makimono3.png");
 	img[10] = LoadGraph("resource/images/SelectStage/SelectStageFont.png");
+	img[11] = LoadGraph("resource/images/SelectStage/UI.png");
 
 	LoadDivGraph("resource/images/SelectStage/Mapselect.png", 9, 3, 3, 300, 300, Stage_img);
 
@@ -232,6 +233,7 @@ void SelectStage::Draw() const
 	DrawGraph(265 + (stage_num * 317), 410 + 60, img[0], TRUE);
 
 	DrawGraph(440, 130, img[10], TRUE);
+	DrawGraph(400, 635, img[11], TRUE);
 
 	//Šª•¨
 	DrawGraph(x1, 0, img[9], TRUE);
