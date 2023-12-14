@@ -773,6 +773,8 @@ void GameMain::HitCheck(GameMain* main)
 			//	}
 			//}
 
+		
+
 			//ザクロの数だけ繰り返す
 			for (int k = 0; k < ZAKURO_MAX; k++)
 			{
@@ -857,6 +859,7 @@ void GameMain::HitCheck(GameMain* main)
 					//ボスのダメージ処理
 					if (hands->zakuro_state != 0) {
 						hands->ApplyDamage(attack[i]->GetAttackData().damage);
+						SpawnEffect(hands);
 					}
 					attack[i]->DeleteAttack();
 					//ジャンプ攻撃多段防止
