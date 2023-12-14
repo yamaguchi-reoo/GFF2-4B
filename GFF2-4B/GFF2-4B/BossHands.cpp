@@ -39,7 +39,7 @@ BossHands::BossHands(int _who,Boss* boss) {
 	Date.yellow = 15.0f;
 
 #ifdef _DEBUG
-		hp = 0;
+		hp = 5;
 #else
 	hp = 5;
 #endif // _DEBUG
