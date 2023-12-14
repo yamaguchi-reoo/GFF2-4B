@@ -130,7 +130,7 @@ void Attack::Draw()const
 			//•`‰æ‚·‚é
 			DrawRotaGraph(local_location.x + (erea.width/2), local_location.y + (erea.height/2), 1, attack_data.angle * M_PI * 2, bullet_img[attack_data.effect_type][0], true);
 		}
-		else if (attack_data.effect_type >= 0 && attack_data.effect_type <= 5)
+		else if (attack_data.who_attack == PLAYER && attack_data.effect_type >= 0 && attack_data.effect_type <= 5)
 		{
 			if (attack_data.direction == false)
 			{
@@ -142,7 +142,7 @@ void Attack::Draw()const
 
 			}
 		}
-		else if (attack_data.effect_type >= 6 && attack_data.effect_type <= 11)
+		else if (attack_data.who_attack == PLAYER && attack_data.effect_type >= 6 && attack_data.effect_type <= 11)
 		{
 			if (attack_data.direction == false)
 			{
