@@ -26,6 +26,7 @@
 #define ENEMY	1	//“G
 
 //UŒ‚‚Ìí—Ş
+
 #define MELEE 0		//‹ßÚUŒ‚
 #define BULLET 1	//‰“‹——£UŒ‚i”g“®‚àŠÜ‚Şj
 

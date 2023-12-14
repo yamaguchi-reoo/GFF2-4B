@@ -1015,8 +1015,8 @@ void Player::SetPlayerAttackData()
 	//ˆê’iŠK–Ú@
 	player_attack_data[0].shift_x = -erea.width;
 	player_attack_data[0].shift_y = -100;
-	player_attack_data[0].width = erea.width + 120;
-	player_attack_data[0].height = 220;
+	player_attack_data[0].width = erea.width + 120;  //195
+	player_attack_data[0].height = 220;				 //220
 	player_attack_data[0].who_attack = 0;
 	player_attack_data[0].attack_time = 17;
 	player_attack_data[0].damage = 1;
@@ -1112,7 +1112,7 @@ void Player::SetPlayerAttackData()
 	player_attack_data[8].shift_x = -erea.width;
 	player_attack_data[8].shift_y = 0;
 	player_attack_data[8].width = erea.width+120;
-	player_attack_data[8].height = 150;
+	player_attack_data[8].height = 200;
 	player_attack_data[8].who_attack = 0;
 	player_attack_data[8].attack_time = 300;
 	player_attack_data[8].damage = 1;
