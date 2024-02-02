@@ -590,6 +590,7 @@ int EditScene::ChechSelectErea()
 
 void EditScene::MoveInsideScreen()
 {
+	//スクリーン内から出ないようにツールボックスのX座標をマウスに沿って移動
 	tool_location.x = cursor.x - (tool_size.width / 2);
 	if (tool_location.x < 0)
 	{
@@ -599,7 +600,10 @@ void EditScene::MoveInsideScreen()
 	{
 		tool_location.x = SCREEN_WIDTH - tool_size.width;
 	}
+	width_button_location.x = tool_location.x + (tool_size.width - WIDTH_BUTTON_POS_X);
+	height_button_location.x = tool_location.x + (tool_size.width - HEIGHT_BUTTON_POS_X);
 
+	//スクリーン内から出ないようにツールボックスのY座標をマウスに沿って移動
 	tool_location.y = cursor.y - (tool_size.height / 2);
 	if (tool_location.y < 0)
 	{
@@ -609,6 +613,8 @@ void EditScene::MoveInsideScreen()
 	{
 		tool_location.y = SCREEN_HEIGHT - tool_size.height;
 	}
+	width_button_location.y = tool_location.y + WIDTH_BUTTON_POS_Y;
+	height_button_location.y = tool_location.y + HEIGHT_BUTTON_POS_Y;
 }
 
 void EditScene::ResetSelectData()

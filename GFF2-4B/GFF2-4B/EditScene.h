@@ -6,7 +6,10 @@
 #include "PadInput.h"
 
 #define OBJECT_TYPE_NUM 15  //配置できるオブジェクトの種類数
-
+#define WIDTH_BUTTON_POS_X 100  //横幅調節ボタンのX位置
+#define WIDTH_BUTTON_POS_Y 40  //横幅調節ボタンのY位置
+#define HEIGHT_BUTTON_POS_X 180  //縦幅調節ボタンのX位置
+#define HEIGHT_BUTTON_POS_Y 35 //縦幅調節ボタンのY位置
  //エリア区分
 enum SelectErea
 {
